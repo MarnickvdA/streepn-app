@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Streepn</string>
+    <string name="title_activity_main">Streepn</string>
+    <string name="package_name">nl.strype.streepn</string>
+    <string name="custom_url_scheme">nl.strype.streepn</string>
+    <string name="admob_app_id">[APP_ID]</string>
+</resources>

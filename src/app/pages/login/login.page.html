@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <ion-item>
+      <ion-label position="stacked">Email address</ion-label>
+      <ion-input formControlName="email" clearInput type="email" autofocus enterkeyhint="next" inputmode="email"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Password</ion-label>
+      <ion-input formControlName="password" clearInput type="password" enterkeyhint="go"></ion-input>
+    </ion-item>
+
+    <ion-button type="submit">
+      <ion-label>Login</ion-label>
+    </ion-button>
+  </form>
+
+  <ion-button routerLink="/register">
+    <ion-label>Register</ion-label>
+  </ion-button>
+
+</ion-content>

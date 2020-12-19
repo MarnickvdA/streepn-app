@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "streepn-app": {
+      "hosting": {
+        "app": [
+          "streepn-app"
+        ]
+      }
+    }
+  }
+}

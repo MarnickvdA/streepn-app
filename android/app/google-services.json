@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "378314194804",
+    "project_id": "streepn-app",
+    "storage_bucket": "streepn-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:378314194804:android:dbafe1c23cfb7e9a1d7621",
+        "android_client_info": {
+          "package_name": "nl.strype.streepn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "378314194804-7vf0qt5olu01c9s356s4dbqmmbvn4vq5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4N4SeMfad54L_8iW3FDlomQNUbbAQn4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "378314194804-7vf0qt5olu01c9s356s4dbqmmbvn4vq5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "378314194804-b0rvrg7ae1crp6pu6ec15us3d8vhroqd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "nl.strype.streepn"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
