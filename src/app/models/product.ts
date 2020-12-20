@@ -1,14 +1,12 @@
 import {Timestamp} from '@firebase/firestore-types';
 
 export class Product {
-    readonly id: string;
     readonly createdAt: Timestamp;
     name: string;
     price: number;
 
 
-    constructor(id: string, createdAt: Timestamp, name: string, price: number) {
-        this.id = id;
+    constructor(createdAt: Timestamp, name: string, price: number) {
         this.createdAt = createdAt;
         this.name = name;
         this.price = price;
@@ -23,7 +21,7 @@ export const productConverter = {
             price: product.price
         };
     },
-    newProduct(id, data: { [key: string]: any }): Product {
-        return new Product(id, data.createdAt, data.name, data.price);
+    newProduct(data: { [key: string]: any }): Product {
+        return new Product(data.createdAt, data.name, data.price);
     }
 };

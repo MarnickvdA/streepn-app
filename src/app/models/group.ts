@@ -42,26 +42,36 @@ export class Group {
 
 export const groupConverter: FirestoreDataConverter<Group> = {
     toFirestore(group: Group) {
+        const accounts = [];
+        const products = [];
+        const sharedAccounts = [];
+
+        group.accounts?.forEach((account) => accounts.push(accountConverter.toFirestore(account)));
+        group.products?.forEach((product) => products.push(productConverter.toFirestore(product)));
+        group.sharedAccounts?.forEach((sharedAccount) => sharedAccounts.push(sharedAccountConverter.toFirestore(sharedAccount)));
+
         return {
             name: group.name,
             valuta: group.valuta,
             inviteLink: group.inviteLink,
             inviteLinkExpiry: group.inviteLinkExpiry,
             members: group.members,
-            accounts: group.accounts.map((account) => accountConverter.toFirestore(account)),
-            products: group.products.map((product) => productConverter.toFirestore(product)),
-            sharedAccounts: group.sharedAccounts.map((sharedAccount) => sharedAccountConverter.toFirestore(sharedAccount)),
+            accounts,
+            products,
+            sharedAccounts,
         };
     },
     fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Group {
         const data = snapshot.data(options);
 
         const accounts = [];
-        data.accounts.forEach((account, index) => accounts.push(accountConverter.newAccount(index, account)));
         const products = [];
-        data.accounts.forEach((product, index) => products.push(productConverter.newProduct(index, product)));
         const sharedAccounts = [];
-        data.accounts.forEach((sharedAccount, index) => sharedAccounts.push(sharedAccountConverter.newSharedAccount(index, sharedAccount)));
+
+        data.accounts?.forEach((account) => accounts.push(accountConverter.newAccount(account)));
+        data.products?.forEach((product) => products.push(productConverter.newProduct(product)));
+        data.sharedAccounts?.forEach((sharedAccount) =>
+            sharedAccounts.push(sharedAccountConverter.newSharedAccount(sharedAccount)));
 
         return new Group(snapshot.id, data.createdAt, data.name, data.valuta, data.inviteLink,
             data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts);

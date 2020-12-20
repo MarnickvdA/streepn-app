@@ -11,25 +11,23 @@ import {AppComponent} from './app.component';
 import {AngularFireModule} from '@angular/fire';
 
 import {environment} from '../environments/environment';
-import {AngularFireAuthModule} from '@angular/fire/auth';
-import {AngularFireFunctionsModule} from '@angular/fire/functions';
+import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/auth';
+import {AngularFireFunctionsModule, USE_EMULATOR as USE_FUNCTIONS_EMULATOR} from '@angular/fire/functions';
+import {AngularFirestoreModule, USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/firestore';
 import {AuthService} from './services/auth.service';
 import {EventsService} from './services/events.service';
-import {FirestoreService} from './services/firestore.service';
 import {GroupService} from './services/group.service';
 import {TransactionService} from './services/transaction.service';
 import {UserService} from './services/user.service';
 import {ProductService} from './services/product.service';
 import {HttpClient} from '@angular/common/http';
 import {Plugins} from '@capacitor/core';
-import {AngularFirestoreModule} from '@angular/fire/firestore';
 
 const {FirebaseCrashlytics} = Plugins;
 
 const SERVICES = [
     AuthService,
     EventsService,
-    FirestoreService,
     GroupService,
     TransactionService,
     UserService,
@@ -62,7 +60,6 @@ export function createTranslateLoader(http: HttpClient) {
         BrowserModule,
         IonicModule.forRoot(),
         AngularFireModule.initializeApp(environment.firebaseConfig),
-        AngularFirestoreModule.enablePersistence(),
         AngularFireAuthModule,
         AngularFireFunctionsModule,
         AppRoutingModule
@@ -72,6 +69,9 @@ export function createTranslateLoader(http: HttpClient) {
         SplashScreen,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
         {provide: ErrorHandler, useClass: CrashlyticsErrorHandler},
+        {provide: USE_AUTH_EMULATOR, useValue: !environment.production ? ['localhost', 9099] : undefined},
+        {provide: USE_FIRESTORE_EMULATOR, useValue: !environment.production ? ['localhost', 8080] : undefined},
+        {provide: USE_FUNCTIONS_EMULATOR, useValue: !environment.production ? ['localhost', 5001] : undefined},
         ...SERVICES,
     ],
     bootstrap: [AppComponent]

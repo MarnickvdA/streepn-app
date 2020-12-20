@@ -1,11 +1,13 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UserService} from '../../services/user.service';
-import {ActivatedRoute} from '@angular/router';
-import {Group, Transaction, transactionConverter} from '../../models';
+import {ActivatedRoute, Params} from '@angular/router';
+import {Account, Group, Product, Transaction, transactionConverter} from '../../models';
 import {IonInfiniteScroll} from '@ionic/angular';
-import {FirestoreService} from '../../services/firestore.service';
-import {BehaviorSubject} from 'rxjs';
-import {CollectionReference, Query, QueryDocumentSnapshot} from '@angular/fire/firestore';
+import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
+import {GroupService} from '../../services/group.service';
+import {TransactionService} from '../../services/transaction.service';
+import firebase from 'firebase/app';
+import Timestamp = firebase.firestore.Timestamp;
 
 @Component({
     selector: 'app-group',
@@ -13,63 +15,118 @@ import {CollectionReference, Query, QueryDocumentSnapshot} from '@angular/fire/f
     styleUrls: ['./group.page.scss'],
 })
 export class GroupPage implements OnInit {
+    private LIMIT = 20;
 
     @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
-    group: Group;
-    transactions$: BehaviorSubject<Transaction[]> = new BehaviorSubject<Transaction[]>([]);
+    group?: Group;
+    transactions: Transaction[];
 
-    private transactionsRef: CollectionReference<Transaction>;
-    private lastVisible?: QueryDocumentSnapshot<Transaction>;
-    private nextQueryRef: Query<Transaction>;
-    private done = false;
+    private lastSnapshot: QueryDocumentSnapshot<Transaction>;
+    doneLoading = false;
 
     constructor(private route: ActivatedRoute,
                 private userService: UserService,
-                private firestoreService: FirestoreService) {
-        this.route.params.subscribe(params => {
-            this.group = this.userService.groups.find(group => group.id === params.id);
-
-            this.transactionsRef = this.firestoreService.groupsCollection
-                .doc(this.group.id)
-                .collection('transactions')
-                .ref
-                .withConverter(transactionConverter);
-
-            this.nextQueryRef = this.transactionsRef;
+                private groupService: GroupService,
+                private transactionService: TransactionService,
+                private fs: AngularFirestore) {
+        this.route.params.subscribe((params: Params) => {
+            this.group = userService.groups.find(group => group.id === params.id);
+            if (!this.group) {
+                groupService.getGroup(params.id)
+                    .then(group => {
+                        this.group = group;
+                    });
+            }
         });
     }
 
-    ngOnInit() {
-        this.getTransactions();
+    ngOnInit(): void {
+        this.loadTransactions()
+            .then(transactions => {
+                this.transactions = transactions;
+            });
     }
 
-    loadData(event) {
-        if (!this.done) {
-            this.getTransactions();
-        } else {
-            event.target.disabled = true;
+    reset(event) {
+        this.doneLoading = false;
+        this.lastSnapshot = undefined;
+
+        this.loadTransactions()
+            .then(transactions => {
+                this.transactions = transactions;
+            })
+            .finally(() => {
+                event.target.complete();
+            });
+    }
+
+    loadNext() {
+        this.loadTransactions()
+            .then((transactions) => {
+                this.transactions.push(...transactions);
+            });
+    }
+
+    loadTransactions(): Promise<Transaction[]> {
+        if (this.doneLoading) {
+            return;
         }
-    }
 
-    private getTransactions() {
-        this.nextQueryRef
-            .orderBy('createdAt')
-            .limit(10)
-            .get()
-            .then((snapshot) => {
-                if (snapshot.docs.length < 10) {
-                    this.done = true;
+        let ref = this.fs.collection('groups')
+            .doc(this.group.id)
+            .collection('transactions')
+            .ref
+            .withConverter(transactionConverter)
+            .orderBy('createdAt', 'desc')
+            .limit(this.LIMIT);
+
+        if (this.lastSnapshot) {
+            ref = ref.startAfter(this.lastSnapshot);
+        }
+
+        return ref.get()
+            .then((result) => {
+                if (result.docs.length < this.LIMIT) {
+                    this.doneLoading = true;
                 }
 
-                this.lastVisible = snapshot.docs[snapshot.docs.length - 1];
+                if (result.docs.length === 0) {
+                    return;
+                }
 
-                this.transactions$.next(snapshot.docs.map((doc) => doc.data()));
+                const transactions: Transaction[] = [];
 
-                this.nextQueryRef = this.transactionsRef
-                    .orderBy('createdAt', 'desc')
-                    .startAfter(this.lastVisible)
-                    .limit(10);
+                this.lastSnapshot = result.docs[result.docs.length - 1];
+
+                result.docs.forEach((doc) => {
+                    transactions.push(doc.data());
+                });
+
+                return transactions;
+            });
+    }
+
+    addTransaction() {
+        const ts = [{
+            id: '0',
+            createdAt: Timestamp.now(),
+            amount: 2,
+            totalPrice: 100,
+            createdBy: 'Marnick',
+            createdById: '0DWh5RTZ7pl23c4uTSMNpCAl6dbQ',
+            account: {
+                userId: '0DWh5RTZ7pl23c4uTSMNpCAl6dbQ',
+                name: 'Marnick',
+            } as Account, product: {
+                name: 'Bier',
+                price: 50
+            } as Product
+        }];
+
+        this.transactionService.addTransaction(this.group.id, ts)
+            .subscribe(value => {
+                this.transactions = [...value, ...this.transactions];
             });
     }
 }

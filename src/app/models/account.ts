@@ -1,7 +1,6 @@
 import {Timestamp} from '@firebase/firestore-types';
 
 export class Account {
-    readonly id: string;
     readonly userId: string;
     readonly createdAt: Timestamp;
     name: string;
@@ -9,8 +8,7 @@ export class Account {
     roles: string[];
 
 
-    constructor(id: string, userId: string, createdAt: Timestamp, name: string, balance: number, roles: string[]) {
-        this.id = id;
+    constructor(userId: string, createdAt: Timestamp, name: string, balance: number, roles: string[]) {
         this.userId = userId;
         this.createdAt = createdAt;
         this.name = name;
@@ -29,8 +27,8 @@ export const accountConverter = {
             roles: account.roles
         };
     },
-    newAccount(id, data: { [key: string]: any }): Account {
-        return new Account(id, data.userId, data.createdAt, data.name, data.balance, data.roles);
+    newAccount(data: { [key: string]: any }): Account {
+        return new Account(data.userId, data.createdAt, data.name, data.balance, data.roles);
     }
 };
 

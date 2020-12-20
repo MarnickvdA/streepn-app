@@ -3,10 +3,9 @@ import {AuthService} from '../../services/auth.service';
 import {NavController} from '@ionic/angular';
 import {Observable} from 'rxjs';
 import firebase from 'firebase/app';
-import {Group} from '../../models';
 import {GroupService} from '../../services/group.service';
-import User = firebase.User;
 import {UserService} from '../../services/user.service';
+import User = firebase.User;
 
 @Component({
     selector: 'app-dashboard',
@@ -37,5 +36,9 @@ export class DashboardPage implements OnInit {
             .then(() => {
                 this.navController.navigateRoot('/login');
             });
+    }
+
+    addGroup() {
+        this.groupService.createGroup('Asgard');
     }
 }

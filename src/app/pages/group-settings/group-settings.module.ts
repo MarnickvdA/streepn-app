@@ -4,18 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { GroupPageRoutingModule } from './group-routing.module';
+import { GroupSettingsPageRoutingModule } from './group-settings-routing.module';
 
-import { GroupPage } from './group.page';
-import {AngularFirestoreModule} from '@angular/fire/firestore';
+import { GroupSettingsPage } from './group-settings.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    GroupPageRoutingModule
+    GroupSettingsPageRoutingModule
   ],
-  declarations: [GroupPage]
+  declarations: [GroupSettingsPage]
 })
-export class GroupPageModule {}
+export class GroupSettingsPageModule {}

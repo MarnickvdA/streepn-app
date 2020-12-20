@@ -9,7 +9,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "emulator": "firebase emulators:start --import ./data --export-on-exit=./data"
   },
   "private": true,
   "dependencies": {

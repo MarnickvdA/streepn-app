@@ -1,36 +1,50 @@
-<ion-header>
+<ion-header translucent="true">
     <ion-toolbar>
         <ion-buttons slot="start">
             <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title>{{group.name}}</ion-title>
+
+        <ion-title *ngIf="group">{{group.name}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button routerLink="settings" routerDirection="forward">
+                <ion-icon slot="icon-only" name="cog-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
 <ion-content>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large" *ngIf="group">{{group.name}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <ion-refresher slot="fixed" (ionRefresh)="reset($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
     <ion-list>
-        <ion-item *ngFor="let transaction of transactions$ | async">
-            <ion-label class="ion-text-wrap">
-                <ion-text>
-                    <h3>{{transaction.product.name}} </h3>
-                </ion-text>
-                <p>{{transaction.account.name}}</p>
-                <ion-text>
-                    <p>Paragraph line 2 secondary</p>
-                </ion-text>
-            </ion-label>
-        </ion-item>
+        <ion-spinner *ngIf="!transactions"></ion-spinner>
+        <ng-container *ngIf="transactions">
+            <ion-item *ngFor="let transaction of transactions">
+                <ion-label>
+                    <h3>
+                        {{transaction.amount}}x {{transaction.product.name}} voor {{transaction.account.name}}
+                    </h3>
+                    <p>
+                        Op {{transaction.createdAt.toDate().toLocaleString()}}
+                    </p>
+                </ion-label>
+            </ion-item>
+        </ng-container>
     </ion-list>
 
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-        <ion-infinite-scroll-content
-                loadingSpinner="bubbles"
-                loadingText="Loading more data...">
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNext()" [disabled]="doneLoading">
+        <ion-infinite-scroll-content>
         </ion-infinite-scroll-content>
     </ion-infinite-scroll>
 
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button>
+        <ion-fab-button (click)="addTransaction()">
             <ion-icon name="add-outline"></ion-icon>
         </ion-fab-button>
     </ion-fab>

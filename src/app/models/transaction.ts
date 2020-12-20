@@ -1,5 +1,5 @@
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
-import { Timestamp, FirestoreDataConverter } from '@firebase/firestore-types';
+import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {Product, productConverter} from './product';
 import {Account, accountConverter} from './account';
 
@@ -42,7 +42,11 @@ export const transactionConverter: FirestoreDataConverter<Transaction> = {
     fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Transaction {
         const data = snapshot.data(options);
 
-        return new Transaction(snapshot.id, data.createdAt, data.amount, data.totalPrice, data.createdBy,
-            data.createdById, accountConverter.newAccount(0, data.account), productConverter.newProduct(0, data.product));
-    }
+        return newTransaction(snapshot.id, data);
+    },
 };
+
+export function newTransaction(id: string, data: { [key: string]: any }): Transaction {
+    return new Transaction(id, data.createdAt as Timestamp, data.amount, data.totalPrice, data.createdBy,
+        data.createdById, accountConverter.newAccount(data.account), productConverter.newProduct(data.product));
+}

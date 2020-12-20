@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Account, Group, groupConverter} from '../models';
-import {FirestoreService} from './firestore.service';
 import {AuthService} from './auth.service';
 import {EventsService} from './events.service';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import firebase from 'firebase/app';
+import {AngularFirestore} from '@angular/fire/firestore';
 import Timestamp = firebase.firestore.Timestamp;
 
 @Injectable({
@@ -12,7 +12,7 @@ import Timestamp = firebase.firestore.Timestamp;
 })
 export class GroupService {
 
-    constructor(private firestoreService: FirestoreService,
+    constructor(private fs: AngularFirestore,
                 private functions: AngularFireFunctions,
                 private authService: AuthService,
                 private eventsService: EventsService) {
@@ -21,7 +21,7 @@ export class GroupService {
     getGroups(): Promise<Group[]> {
         return this.authService.currentUser
             .then(user => {
-                return this.firestoreService.groupsCollection
+                return this.fs.collection('groups')
                     .ref
                     .where(`members`, 'array-contains', user.uid)
                     .withConverter(groupConverter)
@@ -35,6 +35,17 @@ export class GroupService {
 
                         return groups;
                     });
+            });
+    }
+
+    getGroup(id: string): Promise<Group | undefined> {
+        return this.fs.collection('groups')
+            .doc(id)
+            .ref
+            .withConverter(groupConverter)
+            .get()
+            .then(querySnapshot => {
+                return querySnapshot.data();
             });
     }
 
@@ -66,7 +77,7 @@ export class GroupService {
                     inviteLinkExpiry: nextWeek,
                 } as Group;
 
-                return this.firestoreService.groupsCollection
+                return this.fs.collection('groups')
                     .add(groupConverter.toFirestore(group))
                     .then(docRef => {
                         return docRef.id;

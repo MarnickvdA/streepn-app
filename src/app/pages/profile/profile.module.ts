@@ -4,18 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { GroupPageRoutingModule } from './group-routing.module';
+import { ProfilePageRoutingModule } from './profile-routing.module';
 
-import { GroupPage } from './group.page';
-import {AngularFirestoreModule} from '@angular/fire/firestore';
+import { ProfilePage } from './profile.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    GroupPageRoutingModule
+    ProfilePageRoutingModule
   ],
-  declarations: [GroupPage]
+  declarations: [ProfilePage]
 })
-export class GroupPageModule {}
+export class ProfilePageModule {}

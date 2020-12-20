@@ -1,6 +1,5 @@
 export const environment = {
   production: true,
-  baseUrl: 'prod/v1',
   firebaseConfig: {
     apiKey: 'AIzaSyBFg-okgC8q0Axa_CH_RJu4v1Oz98bSF8M',
     authDomain: 'streepn-app.firebaseapp.com',

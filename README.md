@@ -18,6 +18,11 @@ Streepn App
 npm install
 ```
 
+### Start the Firebase emulator
+```
+firebase emulators:start --import ./data --export-on-exit=./data
+```
+
 ### Local native development
 ```
 ng build -c local
