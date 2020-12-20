@@ -64,16 +64,20 @@ export const groupConverter: FirestoreDataConverter<Group> = {
     fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Group {
         const data = snapshot.data(options);
 
-        const accounts = [];
-        const products = [];
-        const sharedAccounts = [];
-
-        data.accounts?.forEach((account) => accounts.push(accountConverter.newAccount(account)));
-        data.products?.forEach((product) => products.push(productConverter.newProduct(product)));
-        data.sharedAccounts?.forEach((sharedAccount) =>
-            sharedAccounts.push(sharedAccountConverter.newSharedAccount(sharedAccount)));
-
-        return new Group(snapshot.id, data.createdAt, data.name, data.valuta, data.inviteLink,
-            data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts);
+        return createGroup(snapshot.id, data);
     }
 };
+
+export function createGroup(id: string, data: { [key: string]: any }): Group {
+    const accounts = [];
+    const products = [];
+    const sharedAccounts = [];
+
+    data.accounts?.forEach((account) => accounts.push(accountConverter.newAccount(account)));
+    data.products?.forEach((product) => products.push(productConverter.newProduct(product)));
+    data.sharedAccounts?.forEach((sharedAccount) =>
+        sharedAccounts.push(sharedAccountConverter.newSharedAccount(sharedAccount)));
+
+    return new Group(id, data.createdAt, data.name, data.valuta, data.inviteLink,
+        data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts);
+}

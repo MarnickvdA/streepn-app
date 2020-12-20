@@ -31,28 +31,28 @@ export class GroupPage implements OnInit {
                 private transactionService: TransactionService,
                 private fs: AngularFirestore) {
         this.route.params.subscribe((params: Params) => {
-            this.group = userService.groups.find(group => group.id === params.id);
-            if (!this.group) {
-                groupService.getGroup(params.id)
-                    .then(group => {
-                        this.group = group;
+            groupService.getGroup(params.id)
+                .then(group => {
+                    this.group = group;
+                });
+
+            if (!this.transactions) {
+                this.loadTransactions(params.id)
+                    .then(transactions => {
+                        this.transactions = transactions;
                     });
             }
         });
     }
 
     ngOnInit(): void {
-        this.loadTransactions()
-            .then(transactions => {
-                this.transactions = transactions;
-            });
     }
 
     reset(event) {
         this.doneLoading = false;
         this.lastSnapshot = undefined;
 
-        this.loadTransactions()
+        this.loadTransactions(this.group.id)
             .then(transactions => {
                 this.transactions = transactions;
             })
@@ -62,19 +62,19 @@ export class GroupPage implements OnInit {
     }
 
     loadNext() {
-        this.loadTransactions()
+        this.loadTransactions(this.group.id)
             .then((transactions) => {
                 this.transactions.push(...transactions);
             });
     }
 
-    loadTransactions(): Promise<Transaction[]> {
+    loadTransactions(groupId: string): Promise<Transaction[]> {
         if (this.doneLoading) {
             return;
         }
 
         let ref = this.fs.collection('groups')
-            .doc(this.group.id)
+            .doc(groupId)
             .collection('transactions')
             .ref
             .withConverter(transactionConverter)
@@ -91,17 +91,15 @@ export class GroupPage implements OnInit {
                     this.doneLoading = true;
                 }
 
-                if (result.docs.length === 0) {
-                    return;
-                }
-
                 const transactions: Transaction[] = [];
 
-                this.lastSnapshot = result.docs[result.docs.length - 1];
+                if (result.docs.length > 0) {
+                    this.lastSnapshot = result.docs[result.docs.length - 1];
 
-                result.docs.forEach((doc) => {
-                    transactions.push(doc.data());
-                });
+                    result.docs.forEach((doc) => {
+                        transactions.push(doc.data());
+                    });
+                }
 
                 return transactions;
             });

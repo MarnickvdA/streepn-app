@@ -20,8 +20,10 @@ import {GroupService} from './services/group.service';
 import {TransactionService} from './services/transaction.service';
 import {UserService} from './services/user.service';
 import {ProductService} from './services/product.service';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {Plugins} from '@capacitor/core';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 const {FirebaseCrashlytics} = Plugins;
 
@@ -50,7 +52,7 @@ export class CrashlyticsErrorHandler implements ErrorHandler {
 }
 
 export function createTranslateLoader(http: HttpClient) {
-    // return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
+    return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -58,11 +60,24 @@ export function createTranslateLoader(http: HttpClient) {
     entryComponents: [],
     imports: [
         BrowserModule,
-        IonicModule.forRoot(),
+        IonicModule.forRoot({
+            backButtonText: ''
+        }),
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: (createTranslateLoader),
+                deps: [HttpClient]
+            }
+        }),
+        HttpClientModule,
         AngularFireModule.initializeApp(environment.firebaseConfig),
         AngularFireAuthModule,
         AngularFireFunctionsModule,
         AppRoutingModule
+    ],
+    exports: [
+        TranslateModule
     ],
     providers: [
         StatusBar,

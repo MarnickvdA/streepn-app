@@ -1,0 +1,75 @@
+{
+  "appName": "Streepn",
+  "actions": {
+    "yes": "Ja",
+    "no": "Nee",
+    "ok": "Oké",
+    "accept": "Accepteren",
+    "deny": "Weigeren",
+    "go": "Gaan",
+    "back": "Terug",
+    "proceed": "Doorgaan",
+    "stop": "Stoppen",
+    "start": "Starten",
+    "login": "Inloggen",
+    "logout": "Uitloggen",
+    "register": "Registeren",
+    "create": "Creeër",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "new": "Nieuw",
+    "add": "Toevoegen",
+    "next": "Volgende",
+    "previous": "Vorige",
+    "seeAll": "Zie alles",
+    "copy": "Kopiëer"
+  },
+  "login": {
+    "name": "Naam",
+    "email": "E-mail adres",
+    "password": "Wachtwoord",
+    "termsAndConditions": "Algemene voorwaarden",
+    "privacyStatement": "Privacyverklaring",
+    "errors": {
+      "email-already-in-use": "E-mail adres is bezet",
+      "invalid-email": "Incorrect e-mail adres",
+      "weak-password": "Zwak wachtwoord",
+      "operation-not-allowed": "Onbekende fout",
+      "user-disabled": "E-mail adres is geblokkeerd",
+      "user-not-found": "E-mail adres is niet bij ons bekend",
+      "wrong-password": "Onjuist wachtwoord"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "groups": "Groepen",
+    "profile": "Profiel",
+    "emailVerified": "Geverifieerd",
+    "memberSince": "Gebruiker sinds",
+    "createGroup": {
+      "header": "Nieuwe groep",
+      "groupName": "Groepsnaam"
+    }
+  },
+  "group": {
+    "transactions": {
+      "empty": "Er is nog niks gestreept"
+    },
+    "settings": {
+      "title": "Groepsoverzicht",
+      "accounts": "Deelnemers",
+      "admin": "Beheerder",
+      "sharedAccounts": "Gedeelde potjes",
+      "emptySharedAccounts": "Er zijn nog geen gedeelde potjes",
+      "products": "Producten",
+      "emptyProducts": "Er zijn nog geen producten",
+      "addAccount": {
+        "header": "Deelnemers toevoegen",
+        "message": "Deel de onderstaande code met je vrienden zodat ze deze groep kunnen deelnemen!",
+        "code": "code"
+      }
+    }
+  }
+}

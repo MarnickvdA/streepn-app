@@ -23,15 +23,19 @@
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
     <ion-list>
-        <ion-spinner *ngIf="!transactions"></ion-spinner>
         <ng-container *ngIf="transactions">
+            <ion-item *ngIf="transactions.length === 0" lines="none">
+                <ion-label>
+                    <p>{{'group.transactions.empty' | translate}}</p>
+                </ion-label>
+            </ion-item>
             <ion-item *ngFor="let transaction of transactions">
                 <ion-label>
                     <h3>
-                        {{transaction.amount}}x {{transaction.product.name}} voor {{transaction.account.name}}
+                        {{transaction.amount}} {{transaction.product.name}} {{transaction.account.name}}
                     </h3>
                     <p>
-                        Op {{transaction.createdAt.toDate().toLocaleString()}}
+                        {{transaction.createdAt.toDate().toLocaleString()}}
                     </p>
                 </ion-label>
             </ion-item>

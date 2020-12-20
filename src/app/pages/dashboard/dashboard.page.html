@@ -1,6 +1,6 @@
 <ion-header translucent="true">
     <ion-toolbar>
-        <ion-title>Dashboard</ion-title>
+        <ion-title>{{'dashboard.title' | translate}}</ion-title>
         <ion-buttons slot="end">
             <ion-button routerLink="/profile" routerDirection="forward">
                 <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
@@ -12,34 +12,19 @@
 <ion-content>
     <ion-header collapse="condense">
         <ion-toolbar>
-            <ion-title size="large">Dashboard</ion-title>
+            <ion-title size="large">{{'dashboard.title' | translate}}</ion-title>
         </ion-toolbar>
     </ion-header>
-    <div class="profile">
-        <ion-button (click)="logout()">
-            Log Out
-        </ion-button>
-    </div>
 
-    <ion-list>
-        <ion-item>
-            <ion-label>{{(user | async)?.displayName}}</ion-label>
-        </ion-item>
-
-
-        <ion-list-header>
-            <ion-label>Groups</ion-label>
+    <ion-list *ngIf="groups$.asObservable() | async; let groups">
+        <ion-list-header lines="full">
+            <ion-label>{{'dashboard.groups' | translate}}</ion-label>
+            <ion-button (click)="addGroup()">{{'actions.new' | translate}}</ion-button>
         </ion-list-header>
-        <ion-item *ngFor="let group of userService.groups" routerLink="/group/{{group.id}}">
+
+        <ion-item *ngFor="let group of groups" routerLink="/group/{{group.id}}">
             <ion-label>{{group.name}}</ion-label>
         </ion-item>
-
     </ion-list>
-
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button (click)="addGroup()">
-            <ion-icon name="add-outline"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
 
 </ion-content>

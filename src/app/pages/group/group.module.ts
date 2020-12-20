@@ -8,14 +8,16 @@ import { GroupPageRoutingModule } from './group-routing.module';
 
 import { GroupPage } from './group.page';
 import {AngularFirestoreModule} from '@angular/fire/firestore';
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    GroupPageRoutingModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        GroupPageRoutingModule,
+        TranslateModule
+    ],
   declarations: [GroupPage]
 })
 export class GroupPageModule {}

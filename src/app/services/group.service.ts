@@ -5,6 +5,9 @@ import {EventsService} from './events.service';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {createGroup} from '../models/group';
 import Timestamp = firebase.firestore.Timestamp;
 
 @Injectable({
@@ -18,24 +21,11 @@ export class GroupService {
                 private eventsService: EventsService) {
     }
 
-    getGroups(): Promise<Group[]> {
-        return this.authService.currentUser
-            .then(user => {
-                return this.fs.collection('groups')
-                    .ref
-                    .where(`members`, 'array-contains', user.uid)
-                    .withConverter(groupConverter)
-                    .get()
-                    .then(querySnapshot => {
-                        const groups: Group[] = [];
-
-                        querySnapshot.docs.forEach(doc => {
-                            groups.push(doc.data());
-                        });
-
-                        return groups;
-                    });
-            });
+    observeGroups(userId: string): firebase.firestore.Query<Group> {
+        return this.fs.collection('groups')
+            .ref
+            .where('members', 'array-contains', userId)
+            .withConverter(groupConverter);
     }
 
     getGroup(id: string): Promise<Group | undefined> {
@@ -47,6 +37,17 @@ export class GroupService {
             .then(querySnapshot => {
                 return querySnapshot.data();
             });
+    }
+
+    observeGroup(id: string): Observable<Group> {
+        return this.fs.collection('groups')
+            .doc(id)
+            .snapshotChanges()
+            .pipe(
+                map(action => {
+                    return createGroup(action.payload.id, action.payload.data());
+                })
+            );
     }
 
     /**
