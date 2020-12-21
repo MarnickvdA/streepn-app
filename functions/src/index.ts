@@ -7,10 +7,36 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
+exports.joinGroup = functions.https.onCall((data, context) => {
+
+    const userId = context.auth?.uid;
+    if (!userId) {
+        throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
+    }
+
+    const groupRef = db.collection('groups').doc(data.groupId);
+    const now = admin.firestore.Timestamp.now();
+
+    groupRef.update(
+        'members', admin.firestore.FieldValue.arrayUnion(userId)
+    );
+
+    groupRef.update(
+        'accounts', admin.firestore.FieldValue.arrayUnion({
+            id: uuidv4(),
+            name: data.displayName,
+            roles: [],
+            userId,
+            balance: 0,
+            createdAt: now
+        })
+    );
+
+});
+
 exports.addTransaction = functions.https.onCall((data, context) => {
 
-    const uid = context.auth?.uid;
-    if (!uid) {
+    if (!context.auth?.uid) {
         throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
     }
 
@@ -29,7 +55,7 @@ exports.addTransaction = functions.https.onCall((data, context) => {
                     }
 
                     // Check if the user is part of this group
-                    if (!group.members.includes(uid)) {
+                    if (!group.members.includes(context.auth?.uid)) {
                         throw new functions.https.HttpsError('permission-denied', 'User not member of group');
                     }
 

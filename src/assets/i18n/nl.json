@@ -24,11 +24,20 @@
     "next": "Volgende",
     "previous": "Vorige",
     "seeAll": "Zie alles",
-    "copy": "Kopiëer"
+    "copy": "Kopiëer",
+    "import": "Importeren",
+    "export": "Exporteren",
+    "invite": "Uitnodigen",
+    "saving": "Opslaan...",
+    "loading": "Aan het laden...",
+    "deleting": "Aan het verwijderen...",
+    "adding": "Aan het toevoegen...",
+    "streeping": "Aan het strepen...",
+    "joining": "Aan het deelnemen..."
   },
   "login": {
     "name": "Naam",
-    "email": "E-mail adres",
+    "email": "E-mailadres",
     "password": "Wachtwoord",
     "termsAndConditions": "Algemene voorwaarden",
     "privacyStatement": "Privacyverklaring",
@@ -48,9 +57,15 @@
     "profile": "Profiel",
     "emailVerified": "Geverifieerd",
     "memberSince": "Gebruiker sinds",
+    "emptyGroups": "Je hebt nog geen groepen.",
     "createGroup": {
       "header": "Nieuwe groep",
       "groupName": "Groepsnaam"
+    },
+    "toggleDarkMode": "Donkere modus",
+    "groupInvite": {
+      "header": "Uitnodiging",
+      "question": "Wil je toetreden tot "
     }
   },
   "group": {
@@ -69,6 +84,11 @@
         "header": "Deelnemers toevoegen",
         "message": "Deel de onderstaande code met je vrienden zodat ze deze groep kunnen deelnemen!",
         "code": "code"
+      },
+      "addProduct": {
+        "header": "Product toevoegen",
+        "productName": "Productnaam",
+        "productPrice": "Prijs"
       }
     }
   }

@@ -1,14 +1,14 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { GroupPageRoutingModule } from './group-routing.module';
+import {GroupPageRoutingModule} from './group-routing.module';
 
-import { GroupPage } from './group.page';
-import {AngularFirestoreModule} from '@angular/fire/firestore';
+import {GroupPage} from './group.page';
 import {TranslateModule} from '@ngx-translate/core';
+import {AddTransactionComponent} from './add-transaction/add-transaction.component';
 
 @NgModule({
     imports: [
@@ -18,6 +18,10 @@ import {TranslateModule} from '@ngx-translate/core';
         GroupPageRoutingModule,
         TranslateModule
     ],
-  declarations: [GroupPage]
+    declarations: [
+        GroupPage,
+        AddTransactionComponent
+    ]
 })
-export class GroupPageModule {}
+export class GroupPageModule {
+}

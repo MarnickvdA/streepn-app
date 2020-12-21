@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{group.name}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item lines="full">
+    <ion-label>Huidige product</ion-label>
+    <ion-select interface="popover" value="{{group.products[0].id}}" (ionChange)="selectProduct($event)">
+      <ion-select-option *ngFor="let product of group.products" value="{{product.id}}">
+        {{product.name}}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-list>
+    <ion-list-header lines="full">
+      <ion-label>{{'group.settings.accounts' | translate}}</ion-label>
+    </ion-list-header>
+
+    <ion-item *ngFor="let account of group.accounts" (click)="addItem(account)">
+      <ion-label>{{account.name}}</ion-label>
+    </ion-item>
+
+    <ng-container *ngIf="group.sharedAccounts.length > 0">
+      <ion-list-header lines="full">
+        <ion-label>{{'group.settings.sharedAccounts' | translate}}</ion-label>
+      </ion-list-header>
+
+      <ion-item *ngFor="let account of group.sharedAccounts">
+        <ion-label>{{account.name}}</ion-label>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+    <ion-fab-button color="success" disabled="{{!canCheckout}}" (click)="checkout()">
+      <ion-icon name="cart-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

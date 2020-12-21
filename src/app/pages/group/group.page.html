@@ -1,7 +1,7 @@
-<ion-header translucent="true">
+<ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button></ion-back-button>
+            <ion-back-button defaultHref="/dashboard"></ion-back-button>
         </ion-buttons>
 
         <ion-title *ngIf="group">{{group.name}}</ion-title>
@@ -32,10 +32,10 @@
             <ion-item *ngFor="let transaction of transactions">
                 <ion-label>
                     <h3>
-                        {{transaction.amount}} {{transaction.product.name}} {{transaction.account.name}}
+                        {{transaction.amount}} {{transaction.product.name}} voor {{transaction.account.name}}
                     </h3>
                     <p>
-                        {{transaction.createdAt.toDate().toLocaleString()}}
+                        Op {{transaction.createdAt.toDate().toLocaleString()}} door {{transaction.createdBy}}
                     </p>
                 </ion-label>
             </ion-item>
@@ -48,7 +48,7 @@
     </ion-infinite-scroll>
 
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button (click)="addTransaction()">
+        <ion-fab-button disabled="{{group?.products?.length === 0}}" (click)="addTransaction()">
             <ion-icon name="add-outline"></ion-icon>
         </ion-fab-button>
     </ion-fab>

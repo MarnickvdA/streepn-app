@@ -17,6 +17,11 @@ const routes: Routes = [
         ...canActivate(redirectLoggedInToDashboard)
     },
     {
+        path: 'register',
+        loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterPageModule),
+        ...canActivate(redirectLoggedInToDashboard)
+    },
+    {
         path: 'group',
         loadChildren: () => import('./pages/group/group.module').then(m => m.GroupPageModule),
         ...canActivate(redirectUnauthorizedToLogin)
@@ -27,17 +32,10 @@ const routes: Routes = [
         ...canActivate(redirectUnauthorizedToLogin)
     },
     {
-        path: 'register',
-        loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterPageModule)
+        path: 'profile',
+        loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule),
+        ...canActivate(redirectUnauthorizedToLogin)
     },
-  {
-    path: 'profile',
-    loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule)
-  },
-  {
-    path: 'group-settings',
-    loadChildren: () => import('./pages/group-settings/group-settings.module').then( m => m.GroupSettingsPageModule)
-  }
 ];
 
 @NgModule({

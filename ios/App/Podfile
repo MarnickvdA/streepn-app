@@ -12,7 +12,6 @@ def capacitor_pods
   pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorCommunityAdmob', :path => '../../node_modules/@capacitor-community/admob'
   pod 'CapacitorCommunityFirebaseAnalytics', :path => '../../node_modules/@capacitor-community/firebase-analytics'
-  pod 'CapacitorCommunityFirebaseCrashlytics', :path => '../../node_modules/@capacitor-community/firebase-crashlytics'
   # Do not delete
 end
 
@@ -21,7 +20,5 @@ target 'App' do
   # Add your Pods here
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
-  pod 'Firebase/Analytics'
   pod 'Firebase/Auth'
-  pod 'Firebase/Messaging'
 end

@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {AuthService} from './auth.service';
 import {Group} from '../models';
+import firebase from 'firebase';
+import User = firebase.User;
 
 @Injectable({
     providedIn: 'root'
@@ -8,8 +10,13 @@ import {Group} from '../models';
 export class UserService {
 
     groups: Group[] = [];
+    user: User;
 
     constructor(private authService: AuthService) {
+        this.authService.user
+            .subscribe(user => {
+                this.user = user;
+            });
     }
 
     setName(newName: string): Promise<void> {

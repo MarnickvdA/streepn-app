@@ -1,12 +1,13 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {GroupService} from '../../services/group.service';
 import {Observable} from 'rxjs';
-import {Group} from '../../models';
+import {Group, Product} from '../../models';
 import {ActivatedRoute, Params} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AlertController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Plugins} from '@capacitor/core';
+import {ProductService} from '../../services/product.service';
 
 const {Clipboard} = Plugins;
 
@@ -15,26 +16,30 @@ const {Clipboard} = Plugins;
     templateUrl: './group-settings.page.html',
     styleUrls: ['./group-settings.page.scss'],
 })
-export class GroupSettingsPage implements OnInit, OnDestroy {
+export class GroupSettingsPage {
 
+    groupId: string;
     isAdmin: boolean;
     inviteLink: string;
     group$: Observable<Group>;
-
-    private unsubscribe;
+    private group: Group;
 
     constructor(private groupService: GroupService,
                 private authService: AuthService,
                 private route: ActivatedRoute,
                 private alertController: AlertController,
-                private translate: TranslateService) {
+                private translate: TranslateService,
+                private productService: ProductService) {
         this.route.params.subscribe((params: Params) => {
+            this.groupId = params.id;
+
             this.group$ = this.groupService.observeGroup(params.id);
 
             this.authService.currentUser
                 .then(user => {
-                    this.unsubscribe = this.group$
+                    this.group$
                         .subscribe(group => {
+                            this.group = group;
                             this.inviteLink = group.inviteLink;
                             this.isAdmin = group.accounts.find(account => account.userId === user.uid)?.roles.includes('ADMIN') || false;
                         });
@@ -42,14 +47,7 @@ export class GroupSettingsPage implements OnInit, OnDestroy {
         });
     }
 
-    ngOnInit() {
-    }
-
-    ngOnDestroy() {
-        this.unsubscribe();
-    }
-
-    async addAccounts() {
+    async inviteAccounts() {
         const alert = await this.alertController.create({
             header: this.translate.instant('group.settings.addAccount.header'),
             message: this.translate.instant('group.settings.addAccount.message') + '<br><br><b>' + this.inviteLink + '</b>',
@@ -69,5 +67,44 @@ export class GroupSettingsPage implements OnInit, OnDestroy {
         });
 
         await alert.present();
+    }
+
+    async addProduct() {
+        const alert = await this.alertController.create({
+            header: this.translate.instant('group.settings.addProduct.header'),
+            inputs: [
+                {
+                    name: 'groupName',
+                    type: 'text',
+                    placeholder: this.translate.instant('group.settings.addProduct.productName')
+                },
+                {
+                    name: 'price',
+                    type: 'number',
+                    placeholder: this.translate.instant('group.settings.addProduct.productPrice')
+                }
+            ],
+            buttons: [
+                {
+                    text: this.translate.instant('actions.cancel'),
+                    role: 'cancel',
+                }, {
+                    text: this.translate.instant('actions.create'),
+                    handler: (result: { groupName: string, price: number }) => {
+                        if (result.groupName.length > 3 && result.price > 0) {
+                            this.productService.addProduct(this.group, result.groupName, result.price);
+                        } else {
+                            // TODO Error message
+                        }
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
+    }
+
+    removeProduct(product: Product) {
+        this.productService.removeProduct(this.group, product);
     }
 }

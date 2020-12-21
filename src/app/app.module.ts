@@ -13,7 +13,7 @@ import {AngularFireModule} from '@angular/fire';
 import {environment} from '../environments/environment';
 import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/auth';
 import {AngularFireFunctionsModule, USE_EMULATOR as USE_FUNCTIONS_EMULATOR} from '@angular/fire/functions';
-import {AngularFirestoreModule, USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/firestore';
+import {USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/firestore';
 import {AuthService} from './services/auth.service';
 import {EventsService} from './services/events.service';
 import {GroupService} from './services/group.service';
@@ -21,11 +21,8 @@ import {TransactionService} from './services/transaction.service';
 import {UserService} from './services/user.service';
 import {ProductService} from './services/product.service';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {Plugins} from '@capacitor/core';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-
-const {FirebaseCrashlytics} = Plugins;
 
 const SERVICES = [
     AuthService,
@@ -39,15 +36,12 @@ const SERVICES = [
 @Injectable({
     providedIn: 'root'
 })
-export class CrashlyticsErrorHandler implements ErrorHandler {
+export class AppErrorHandler implements ErrorHandler {
     constructor() {
     }
 
     handleError(error) {
         console.error(error);
-        FirebaseCrashlytics.crash({
-            message: error.message || 'Unknown error occurred',
-        });
     }
 }
 
@@ -61,6 +55,7 @@ export function createTranslateLoader(http: HttpClient) {
     imports: [
         BrowserModule,
         IonicModule.forRoot({
+            backButtonIcon: 'arrow-back-outline',
             backButtonText: ''
         }),
         TranslateModule.forRoot({
@@ -83,7 +78,7 @@ export function createTranslateLoader(http: HttpClient) {
         StatusBar,
         SplashScreen,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-        {provide: ErrorHandler, useClass: CrashlyticsErrorHandler},
+        {provide: ErrorHandler, useClass: AppErrorHandler},
         {provide: USE_AUTH_EMULATOR, useValue: !environment.production ? ['localhost', 9099] : undefined},
         {provide: USE_FIRESTORE_EMULATOR, useValue: !environment.production ? ['localhost', 8080] : undefined},
         {provide: USE_FUNCTIONS_EMULATOR, useValue: !environment.production ? ['localhost', 5001] : undefined},

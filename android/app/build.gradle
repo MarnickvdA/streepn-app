@@ -38,12 +38,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-anaytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
-    implementation 'com.google.firebase:firebase-messaging'
 }
 
 apply from: 'capacitor.build.gradle'
-
-apply plugin: 'com.google.firebase.crashlytics'
 
 try {
     def servicesJSON = file('google-services.json')

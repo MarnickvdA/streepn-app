@@ -5,9 +5,10 @@ import {EventsService} from './events.service';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {EMPTY, Observable} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {createGroup} from '../models/group';
+import {v4 as uuidv4} from 'uuid';
 import Timestamp = firebase.firestore.Timestamp;
 
 @Injectable({
@@ -39,6 +40,26 @@ export class GroupService {
             });
     }
 
+    getGroupByInviteLink(link: string): Promise<Group | undefined> {
+        return this.fs.collection('groups')
+            .ref
+            .where('inviteLink', '==', link)
+            .where('inviteLinkExpiry', '>', Timestamp.now())
+            .withConverter(groupConverter)
+            .get()
+            .then(querySnapshot => {
+                if (querySnapshot.empty) {
+                    return Promise.reject('No group not found');
+                }
+
+                return querySnapshot.docs.pop().data();
+            })
+            .catch(err => {
+                console.error(err);
+                return Promise.reject();
+            });
+    }
+
     observeGroup(id: string): Observable<Group> {
         return this.fs.collection('groups')
             .doc(id)
@@ -59,12 +80,15 @@ export class GroupService {
         return this.authService.currentUser
             .then(user => {
                 const now = Timestamp.now();
-                const nextWeek = Timestamp.fromMillis(new Date(Date.now() + 6.048e+8).getMilliseconds());
-                const randomLink = 'ABC123XX';
+                const date = new Date();
+                date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+                const nextWeek = Timestamp.fromDate(date);
+                const randomLink = uuidv4().substring(0, 8).toUpperCase();
 
                 const group = {
                     name,
                     accounts: [{
+                        id: uuidv4(),
                         name: user.displayName,
                         roles: ['ADMIN'],
                         userId: user.uid,
@@ -90,11 +114,15 @@ export class GroupService {
             });
     }
 
-    joinGroup(inviteLink: string) {
-        const callable = this.functions.httpsCallable('join-group');
-        callable({inviteLink})
+    joinGroup(groupId: string, displayName: string) {
+        const callable = this.functions.httpsCallable('joinGroup');
+        callable({groupId, displayName})
+            .pipe(catchError((err) => {
+                console.error(err);
+                return EMPTY;
+            }))
             .subscribe(data => {
-                // TODO Get id for group back and go to the group page
+                this.eventsService.publish('group:joined');
             });
     }
 }

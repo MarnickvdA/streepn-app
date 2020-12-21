@@ -1,13 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UserService} from '../../services/user.service';
 import {ActivatedRoute, Params} from '@angular/router';
-import {Account, Group, Product, Transaction, transactionConverter} from '../../models';
-import {IonInfiniteScroll} from '@ionic/angular';
+import {Group, Transaction, transactionConverter} from '../../models';
+import {IonInfiniteScroll, ModalController} from '@ionic/angular';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {GroupService} from '../../services/group.service';
 import {TransactionService} from '../../services/transaction.service';
-import firebase from 'firebase/app';
-import Timestamp = firebase.firestore.Timestamp;
+import {AddTransactionComponent} from './add-transaction/add-transaction.component';
 
 @Component({
     selector: 'app-group',
@@ -29,7 +28,8 @@ export class GroupPage implements OnInit {
                 private userService: UserService,
                 private groupService: GroupService,
                 private transactionService: TransactionService,
-                private fs: AngularFirestore) {
+                private fs: AngularFirestore,
+                private modalController: ModalController) {
         this.route.params.subscribe((params: Params) => {
             groupService.getGroup(params.id)
                 .then(group => {
@@ -48,7 +48,7 @@ export class GroupPage implements OnInit {
     ngOnInit(): void {
     }
 
-    reset(event) {
+    reset(event?) {
         this.doneLoading = false;
         this.lastSnapshot = undefined;
 
@@ -57,7 +57,9 @@ export class GroupPage implements OnInit {
                 this.transactions = transactions;
             })
             .finally(() => {
-                event.target.complete();
+                if (event) {
+                    event.target.complete();
+                }
             });
     }
 
@@ -106,25 +108,18 @@ export class GroupPage implements OnInit {
     }
 
     addTransaction() {
-        const ts = [{
-            id: '0',
-            createdAt: Timestamp.now(),
-            amount: 2,
-            totalPrice: 100,
-            createdBy: 'Marnick',
-            createdById: '0DWh5RTZ7pl23c4uTSMNpCAl6dbQ',
-            account: {
-                userId: '0DWh5RTZ7pl23c4uTSMNpCAl6dbQ',
-                name: 'Marnick',
-            } as Account, product: {
-                name: 'Bier',
-                price: 50
-            } as Product
-        }];
-
-        this.transactionService.addTransaction(this.group.id, ts)
-            .subscribe(value => {
-                this.transactions = [...value, ...this.transactions];
-            });
+        this.modalController.create({
+            component: AddTransactionComponent,
+            componentProps: {
+                group: this.group
+            },
+            swipeToClose: true
+        }).then((modal) => {
+            modal.present();
+            modal.onWillDismiss()
+                .then((callback) => {
+                    this.reset();
+                });
+        });
     }
 }

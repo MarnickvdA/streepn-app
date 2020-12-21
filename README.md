@@ -16,6 +16,7 @@ Streepn App
 ## Development
 ```
 npm install
+npm install -g @ionic/cli native-run cordova-res firebase-tools
 ```
 
 ### Start the Firebase emulator

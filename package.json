@@ -10,7 +10,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "emulator": "firebase emulators:start --import ./data --export-on-exit=./data"
+    "emulator": "firebase emulators:start --import ./data --export-on-exit=./data",
+    "postinstall": "npx jetifier && ngcc"
   },
   "private": true,
   "dependencies": {
@@ -23,7 +24,6 @@
     "@angular/router": "^11.0.5",
     "@capacitor-community/admob": "^1.2.5",
     "@capacitor-community/firebase-analytics": "^0.2.0",
-    "@capacitor-community/firebase-crashlytics": "^0.3.0",
     "@capacitor/android": "^2.4.5",
     "@capacitor/core": "2.4.5",
     "@capacitor/ios": "^2.4.5",
@@ -36,6 +36,7 @@
     "firebase": "^7.0 || ^8.0",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",
+    "uuid": "^8.3.1",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
