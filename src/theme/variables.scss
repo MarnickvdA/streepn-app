@@ -233,6 +233,8 @@ ion-back-button {
   padding-left: 0.75rem;
 }
 
-body {
-  padding-bottom: var(--ion-safe-area-bottom);
+ion-fab {
+  padding-bottom: 20px; /* Status bar height on iOS 10 */
+  padding-bottom: constant(safe-area-inset-top); /* Status bar height on iOS 11.0 */
+  padding-bottom: env(safe-area-inset-top); /* Status bar height on iOS 11+ */
 }
