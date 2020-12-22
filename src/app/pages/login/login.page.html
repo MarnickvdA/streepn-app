@@ -21,6 +21,11 @@
     </ion-button>
   </form>
 
+  <ion-button *ngIf="isIos" (click)="loginWithApple()" color="light">
+    <ion-icon name="logo-apple" slot="start"></ion-icon>
+    {{'login.loginWithApple' | translate}}
+  </ion-button>
+
   <ion-button routerLink="/register">
     <ion-label>{{'actions.register' | translate}}</ion-label>
   </ion-button>

@@ -8,6 +8,7 @@ import {UserService} from '../../services/user.service';
 import {Group} from '../../models';
 import {TranslateService} from '@ngx-translate/core';
 import {EventsService} from '../../services/events.service';
+import {PushService} from '../../services/push.service';
 import User = firebase.User;
 
 @Component({
@@ -32,10 +33,13 @@ export class DashboardPage implements OnInit, OnDestroy {
                 private translate: TranslateService,
                 private zone: NgZone,
                 private eventsService: EventsService,
-                private loadingController: LoadingController) {
+                private loadingController: LoadingController,
+                private pushService: PushService) {
     }
 
     ngOnInit() {
+        this.pushService.initialize();
+
         this.user$ = this.authService.user;
 
         this.user$.subscribe(user => {

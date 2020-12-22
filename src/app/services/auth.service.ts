@@ -3,7 +3,11 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import firebase from 'firebase/app';
 import {Observable} from 'rxjs';
 import {EventsService} from './events.service';
+import {ResponseSignInWithApplePlugin} from '@capacitor-community/apple-sign-in';
+import {Plugins} from '@capacitor/core';
 import User = firebase.User;
+
+const {SignInWithApple} = Plugins;
 
 @Injectable({
     providedIn: 'root'
@@ -17,11 +21,9 @@ export class AuthService {
     register(displayName: string, email: string, password: string) {
         return this.auth.createUserWithEmailAndPassword(email, password)
             .then(data => {
-                data.user.updateProfile({
-                    displayName
-                }).then(() => {
-                    this.eventsService.publish('auth:login');
-                });
+                return this.setDisplayName(data.user, displayName);
+            }).then(() => {
+                this.eventsService.publish('auth:login');
             })
             .catch(error => {
                 const errorCode = error.code;
@@ -69,6 +71,28 @@ export class AuthService {
             });
     }
 
+    loginWithApple() {
+        return SignInWithApple.Authorize()
+            .then((response: ResponseSignInWithApplePlugin) => {
+                const provider = new firebase.auth.OAuthProvider('apple.com');
+                const authCredential = provider.credential({
+                    idToken: response.response.identityToken
+                });
+
+                return firebase.auth().signInWithCredential(authCredential)
+                    .then(data => {
+                        const displayName = response.response.givenName;
+                        if (displayName) {
+                            return this.setDisplayName(data.user, displayName);
+                        }
+                    }).then(() => {
+                        this.eventsService.publish('auth:login');
+                    });
+            }).catch(err => {
+                console.log(err);
+            });
+    }
+
     logout() {
         return this.auth.signOut();
     }
@@ -84,5 +108,11 @@ export class AuthService {
 
                 return Promise.reject(err);
             });
+    }
+
+    private setDisplayName(user: User, displayName: string): Promise<void> {
+        return user.updateProfile({
+            displayName
+        });
     }
 }

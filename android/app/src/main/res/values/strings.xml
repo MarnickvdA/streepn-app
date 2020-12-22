@@ -4,5 +4,5 @@
     <string name="title_activity_main">Streepn</string>
     <string name="package_name">nl.strype.streepn</string>
     <string name="custom_url_scheme">nl.strype.streepn</string>
-    <string name="admob_app_id">[APP_ID]</string>
+    <string name="admob_app_id">ca-app-pub-5133412357979129~6121282538</string>
 </resources>

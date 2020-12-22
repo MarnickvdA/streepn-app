@@ -49,7 +49,8 @@
       "user-disabled": "E-mail adres is geblokkeerd",
       "user-not-found": "E-mail adres is niet bij ons bekend",
       "wrong-password": "Onjuist wachtwoord"
-    }
+    },
+    "loginWithApple": "Inloggen met Apple"
   },
   "dashboard": {
     "title": "Dashboard",

@@ -5,8 +5,10 @@ import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {TranslateService} from '@ngx-translate/core';
 import {Plugins} from '@capacitor/core';
+import {AdMobInitializationOptions} from '@capacitor-community/admob';
+import {environment} from '../environments/environment';
 
-const {App} = Plugins;
+const {App, AdMob} = Plugins;
 
 @Component({
     selector: 'app-root',
@@ -46,8 +48,8 @@ export class AppComponent {
         });
 
         this.platform.ready().then(() => {
-            this.translate.setDefaultLang('en');
-            this.translate.use('nl');
+            this.translate.setDefaultLang('en_GB');
+            this.translate.use('nl_NL');
 
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -55,7 +57,11 @@ export class AppComponent {
             prefersDark.addEventListener('change', (mediaQuery: MediaQueryListEvent) => this.toggleDarkTheme(mediaQuery.matches));
             this.toggleDarkTheme(window.localStorage.getItem('darkMode') === 'true' || prefersDark.matches);
 
-            // AdMob.initialize();
+            AdMob.initialize({
+                requestTrackingAuthorization: true,
+                testingDevices: ['2077ef9a63d2b398840261c8221a0c9b'],
+                initializeForTesting: !environment.production,
+            } as AdMobInitializationOptions);
 
             this.statusBar.styleDefault();
             this.splashScreen.hide();

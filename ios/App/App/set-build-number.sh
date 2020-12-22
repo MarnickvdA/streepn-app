@@ -6,9 +6,9 @@
 #  Created by Marnick van der Arend on 21/12/2020.
 #  
 git=$(sh /etc/profile; which git)
-number_of_commits=$((`"$git" rev-list HEAD --count --first-parent` + 10501))
+number_of_commits=$((`"$git" rev-list HEAD --count --first-parent`))
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-APP_VERSION=$(cat "${DIR}/../../package.json" | grep version | sed "s/[\",]//g" | tr -d "[[:space:]]" | tr -d "version:")
+APP_VERSION=$(cat "${DIR}/../../../package.json" | grep version | sed "s/[\",]//g" | tr -d "[[:space:]]" | tr -d "version:")
 
 target_plist="$TARGET_BUILD_DIR/$INFOPLIST_PATH"
 dsym_plist="$DWARF_DSYM_FOLDER_PATH/$DWARF_DSYM_FILE_NAME/Contents/Info.plist"

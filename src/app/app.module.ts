@@ -23,6 +23,8 @@ import {ProductService} from './services/product.service';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {PushService} from './services/push.service';
+import {AnalyticsService} from './services/analytics.service';
 
 const SERVICES = [
     AuthService,
@@ -30,7 +32,9 @@ const SERVICES = [
     GroupService,
     TransactionService,
     UserService,
-    ProductService
+    ProductService,
+    PushService,
+    AnalyticsService
 ];
 
 @Injectable({

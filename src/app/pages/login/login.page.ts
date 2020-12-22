@@ -3,6 +3,7 @@ import {AuthService} from '../../services/auth.service';
 import {NavController} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EventsService} from '../../services/events.service';
+import {Capacitor, Plugins} from '@capacitor/core';
 
 @Component({
     selector: 'app-login',
@@ -12,6 +13,7 @@ import {EventsService} from '../../services/events.service';
 export class LoginPage implements OnInit, OnDestroy {
     loginForm: FormGroup;
     private loginHandler;
+    isIos: boolean;
 
     constructor(private authService: AuthService,
                 private navController: NavController,
@@ -28,6 +30,8 @@ export class LoginPage implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.isIos = Capacitor.getPlatform() === 'ios';
+
         this.eventsService
             .subscribe('auth:login', this.loginHandler);
     }
@@ -41,4 +45,11 @@ export class LoginPage implements OnInit, OnDestroy {
         this.authService.login(this.loginForm.controls.email.value, this.loginForm.controls.password.value);
     }
 
+    async loginWithApple() {
+        try {
+            this.authService.loginWithApple();
+        } catch (e) {
+            console.error(e);
+        }
+    }
 }
