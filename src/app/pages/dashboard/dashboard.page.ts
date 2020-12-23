@@ -44,16 +44,19 @@ export class DashboardPage implements OnInit, OnDestroy {
 
         this.user$.subscribe(user => {
             this.user = user;
-            this.unsubscribe = this.groupService.observeGroups(user.uid)
-                .onSnapshot(snapshot => {
-                    const groups = [];
 
-                    snapshot.docs.forEach((doc) => {
-                        groups.push(doc.data());
+            if (user) {
+                this.unsubscribe = this.groupService.observeGroups(user.uid)
+                    .onSnapshot(snapshot => {
+                        const groups = [];
+
+                        snapshot.docs.forEach((doc) => {
+                            groups.push(doc.data());
+                        });
+
+                        this.groups$.next(groups);
                     });
-
-                    this.groups$.next(groups);
-                });
+            }
         });
 
         if (window.localStorage.getItem('groupInvite')) {

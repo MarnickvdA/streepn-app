@@ -41,16 +41,23 @@
     "password": "Wachtwoord",
     "termsAndConditions": "Algemene voorwaarden",
     "privacyStatement": "Privacyverklaring",
+    "registerAcceptance": "Door je te registreren ga je akkoord met de ",
+    "registerAcceptanceAnd": " en de ",
     "errors": {
-      "email-already-in-use": "E-mail adres is bezet",
-      "invalid-email": "Incorrect e-mail adres",
-      "weak-password": "Zwak wachtwoord",
+      "email-required": "Vul je e-mailadres in",
+      "password-required": "Vul een wachtwoord in",
+      "name-required": "Vul je naam in",
+      "email-already-in-use": "E-mailadres is bezet",
+      "invalid-email": "Incorrect e-mailadres",
+      "weak-password": "Te zwak wachtwoord",
       "operation-not-allowed": "Onbekende fout",
-      "user-disabled": "E-mail adres is geblokkeerd",
-      "user-not-found": "E-mail adres is niet bij ons bekend",
+      "user-disabled": "Deze login is geblokkeerd",
+      "user-not-found": "Deze login is niet bij ons bekend",
       "wrong-password": "Onjuist wachtwoord"
     },
-    "loginWithApple": "Inloggen met Apple"
+    "loginWithApple": "Inloggen met Apple",
+    "registerQuestion": "Heb je nog geen account?",
+    "registerNow": "Registreer je nu"
   },
   "dashboard": {
     "title": "Dashboard",

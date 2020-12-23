@@ -5,10 +5,9 @@ import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {TranslateService} from '@ngx-translate/core';
 import {Plugins} from '@capacitor/core';
-import {AdMobInitializationOptions} from '@capacitor-community/admob';
-import {environment} from '../environments/environment';
+import {AdsService} from './services/ads.service';
 
-const {App, AdMob} = Plugins;
+const {App} = Plugins;
 
 @Component({
     selector: 'app-root',
@@ -22,6 +21,7 @@ export class AppComponent {
         private statusBar: StatusBar,
         private translate: TranslateService,
         private zone: NgZone,
+        private adsService: AdsService
     ) {
         this.initializeApp();
     }
@@ -57,11 +57,7 @@ export class AppComponent {
             prefersDark.addEventListener('change', (mediaQuery: MediaQueryListEvent) => this.toggleDarkTheme(mediaQuery.matches));
             this.toggleDarkTheme(window.localStorage.getItem('darkMode') === 'true' || prefersDark.matches);
 
-            AdMob.initialize({
-                requestTrackingAuthorization: true,
-                testingDevices: ['2077ef9a63d2b398840261c8221a0c9b'],
-                initializeForTesting: !environment.production,
-            } as AdMobInitializationOptions);
+            this.adsService.initialize();
 
             this.statusBar.styleDefault();
             this.splashScreen.hide();

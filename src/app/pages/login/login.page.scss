@@ -1,0 +1,26 @@
+form {
+  ion-button {
+    margin-top: 1rem !important;
+  }
+}
+
+.login-content {
+  padding: 2rem;
+
+  .apple-login {
+    margin-top: 1rem;
+  }
+
+  ion-button {
+    margin-top: 2rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+}
+
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: .75rem;
+}

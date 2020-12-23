@@ -1,9 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
-import {NavController} from '@ionic/angular';
+import {LoadingController, NavController} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EventsService} from '../../services/events.service';
-import {Capacitor, Plugins} from '@capacitor/core';
+import {Capacitor} from '@capacitor/core';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-login',
@@ -12,13 +13,16 @@ import {Capacitor, Plugins} from '@capacitor/core';
 })
 export class LoginPage implements OnInit, OnDestroy {
     loginForm: FormGroup;
-    private loginHandler;
+    private readonly loginHandler;
     isIos: boolean;
+    isSubmitted: boolean;
 
     constructor(private authService: AuthService,
                 private navController: NavController,
                 private formBuilder: FormBuilder,
-                private eventsService: EventsService) {
+                private eventsService: EventsService,
+                private translate: TranslateService,
+                private loadingController: LoadingController) {
         this.loginForm = this.formBuilder.group({
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required]]
@@ -40,9 +44,52 @@ export class LoginPage implements OnInit, OnDestroy {
         this.eventsService.unsubscribe('auth:login', this.loginHandler);
     }
 
+    get form() {
+        return this.loginForm.controls;
+    }
 
-    login() {
-        this.authService.login(this.loginForm.controls.email.value, this.loginForm.controls.password.value);
+    async login() {
+        this.isSubmitted = true;
+
+        if (this.loginForm.invalid) {
+            return;
+        }
+
+        const loading = await this.loadingController.create({
+            message: this.translate.instant('actions.login') + '...',
+            backdropDismiss: false,
+        });
+
+        await loading.present();
+
+        this.authService.login(this.loginForm.controls.email.value, this.loginForm.controls.password.value)
+            .catch(errorCode => {
+                switch (errorCode) {
+                    case 'auth/invalid-email':
+                        this.form.email.setErrors({
+                            invalid: true
+                        });
+                        break;
+                    case 'auth/user-disabled':
+                        this.form.email.setErrors({
+                            blocked: true
+                        });
+                        break;
+                    case 'auth/user-not-found':
+                        this.form.email.setErrors({
+                            unknown: true
+                        });
+                        break;
+                    case 'auth/wrong-password':
+                        this.form.password.setErrors({
+                            wrong: true
+                        });
+                        break;
+                }
+            })
+            .finally(() => {
+                loading.dismiss();
+            });
     }
 
     async loginWithApple() {

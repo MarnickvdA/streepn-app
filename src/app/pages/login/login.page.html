@@ -1,33 +1,63 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>{{'actions.login' | translate}}</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-title>{{'actions.login' | translate}}</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="loginForm" (ngSubmit)="login()">
-    <ion-item>
-      <ion-label position="stacked">{{'login.email' | translate}}</ion-label>
-      <ion-input formControlName="email" clearInput type="email" enterkeyhint="next" inputmode="email"></ion-input>
-    </ion-item>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{'actions.login' | translate}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <div class="login-content">
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <ion-item class="form-input" lines="none">
+                <ion-icon name="mail-outline"></ion-icon>
+                <ion-input placeholder="{{'login.email' | translate}}" formControlName="email" clearInput type="email"
+                           autocomplete="email" enterkeyhint="next" inputmode="email"></ion-input>
+            </ion-item>
+            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.required">
+                {{'login.errors.email-required' | translate}}
+            </span>
+            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.invalid">
+                {{'login.errors.invalid-email' | translate}}
+            </span>
+            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.unknown">
+                {{'login.errors.user-not-found' | translate}}
+            </span>
+            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.blocked">
+                {{'login.errors.user-disabled' | translate}}
+            </span>
 
-    <ion-item>
-      <ion-label position="stacked">{{'login.password' | translate}}</ion-label>
-      <ion-input formControlName="password" clearInput type="password" enterkeyhint="go"></ion-input>
-    </ion-item>
+            <ion-item class="form-input ion-margin-top" lines="none">
+                <ion-icon name="key-outline"></ion-icon>
+                <ion-input placeholder="{{'login.password' | translate}}" formControlName="password" clearInput
+                           type="password" autocomplete="current-password" enterkeyhint="go"></ion-input>
+            </ion-item>
+            <span class="form-input-error" *ngIf="isSubmitted && form.password.errors?.required">
+                {{'login.errors.password-required' | translate}}
+            </span>
+            <span class="form-input-error" *ngIf="isSubmitted && form.password.errors?.wrong">
+                {{'login.errors.wrong-password' | translate}}
+            </span>
 
-    <ion-button type="submit">
-      <ion-label>{{'actions.login' | translate}}</ion-label>
-    </ion-button>
-  </form>
+            <ion-button expand="block" type="submit">
+                <ion-label>{{'actions.login' | translate}}</ion-label>
+            </ion-button>
+        </form>
 
-  <ion-button *ngIf="isIos" (click)="loginWithApple()" color="light">
-    <ion-icon name="logo-apple" slot="start"></ion-icon>
-    {{'login.loginWithApple' | translate}}
-  </ion-button>
+        <ion-button class="apple-login" expand="block" *ngIf="isIos" (click)="loginWithApple()" color="dark">
+            <ion-icon name="logo-apple" slot="start"></ion-icon>
+            {{'login.loginWithApple' | translate}}
+        </ion-button>
+    </div>
 
-  <ion-button routerLink="/register">
-    <ion-label>{{'actions.register' | translate}}</ion-label>
-  </ion-button>
+    <div class="register-container">
+        <span>{{'login.registerQuestion' | translate}}</span>
+        <ion-button fill="none" routerLink="/register">
+            <ion-label>{{'login.registerNow' | translate}}</ion-label>
+        </ion-button>
+    </div>
 
 </ion-content>

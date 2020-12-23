@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Plugins, PushNotification, PushNotificationActionPerformed, PushNotificationToken} from '@capacitor/core';
+import {Capacitor, Plugins, PushNotification, PushNotificationActionPerformed, PushNotificationToken} from '@capacitor/core';
 
 const {PushNotifications} = Plugins;
 
@@ -12,6 +12,10 @@ export class PushService {
     }
 
     initialize() {
+        if (!Capacitor.isPluginAvailable('PushNotifications')) {
+            return;
+        }
+
         // Request permission to use push notifications
         // iOS will prompt user and return if they granted permission or not
         // Android will just grant without prompting

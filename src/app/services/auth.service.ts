@@ -29,16 +29,7 @@ export class AuthService {
                 const errorCode = error.code;
                 const errorMessage = error.message;
 
-                switch (errorCode) {
-                    case 'auth/email-already-in-use':
-                        break;
-                    case 'auth/invalid-email':
-                        break;
-                    case 'auth/operation-not-allowed':
-                        break;
-                    case 'auth/weak-password':
-                        break;
-                }
+                return Promise.reject(errorCode);
             });
     }
 
@@ -48,26 +39,10 @@ export class AuthService {
                 this.eventsService.publish('auth:login');
             })
             .catch(error => {
-                console.error(error);
-
                 const errorCode = error.code;
                 const errorMessage = error.message;
 
-                switch (errorCode) {
-                    case 'auth/invalid-email':
-                        // Thrown if the email address is not valid.
-                        break;
-                    case 'auth/user-disabled':
-                        // Thrown if the user corresponding to the given email has been disabled.
-                        break;
-                    case 'auth/user-not-found':
-                        // Thrown if there is no user corresponding to the given email.
-                        break;
-                    case 'auth/wrong-password':
-                        // Thrown if the password is invalid for the given email, or the account corresponding to the
-                        // email does not have a password set.
-                        break;
-                }
+                return Promise.reject(errorCode);
             });
     }
 

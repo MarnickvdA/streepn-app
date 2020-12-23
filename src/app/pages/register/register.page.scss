@@ -1,0 +1,23 @@
+form {
+  ion-button {
+    margin-top: 1rem !important;
+  }
+}
+
+.register-content {
+  padding: 2rem;
+
+  ion-button {
+    margin-top: 2rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  .termsAndPrivacy {
+    text-align: center;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    font-size: 0.75rem;
+    color: var(--ion-color-medium);
+  }
+}

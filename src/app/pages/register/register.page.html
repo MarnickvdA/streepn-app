@@ -1,31 +1,68 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button  defaultHref="/login"></ion-back-button>
-    </ion-buttons>
-    <ion-title>{{'actions.register' | translate}}</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/login"></ion-back-button>
+        </ion-buttons>
+        <ion-title>{{'actions.register' | translate}}</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="registerForm" (ngSubmit)="register()">
-    <ion-item>
-      <ion-label position="stacked">{{'login.name' | translate}}</ion-label>
-      <ion-input formControlName="name" clearInput type="text" inputmode="text"></ion-input>
-    </ion-item>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{'actions.register' | translate}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <div class="register-content">
+        <form [formGroup]="registerForm" (ngSubmit)="register()">
 
-    <ion-item>
-      <ion-label position="stacked">{{'login.email' | translate}}</ion-label>
-      <ion-input formControlName="email" clearInput type="email" inputmode="email"></ion-input>
-    </ion-item>
+            <ion-item class="form-input" lines="none">
+                <ion-icon name="person-outline"></ion-icon>
+                <ion-input placeholder="{{'login.name' | translate}}" autocapitalize="words" formControlName="name"
+                           clearInput type="text"
+                           autocomplete="given-name" enterkeyhint="next" inputmode="text"></ion-input>
+            </ion-item>
+            <span class="form-input-error" *ngIf="isSubmitted && form.name.errors?.required">
+                {{'login.errors.name-required' | translate}}
+            </span>
 
-    <ion-item>
-      <ion-label position="stacked">{{'login.password' | translate}}</ion-label>
-      <ion-input formControlName="password" clearInput type="password" enterkeyhint="go"></ion-input>
-    </ion-item>
+            <ion-item class="form-input ion-margin-top" lines="none">
+                <ion-icon name="mail-outline"></ion-icon>
+                <ion-input placeholder="{{'login.email' | translate}}" formControlName="email" clearInput type="email"
+                           autocomplete="email" enterkeyhint="next" inputmode="email"></ion-input>
+            </ion-item>
+            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.required">
+                {{'login.errors.email-required' | translate}}
+            </span>
+            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.invalid">
+                {{'login.errors.invalid-email' | translate}}
+            </span>
+            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.inUse">
+                {{'login.errors.email-already-in-use' | translate}}
+            </span>
 
-    <ion-button type="submit">
-      <ion-label>{{'actions.register' | translate}}</ion-label>
-    </ion-button>
-  </form>
+            <ion-item class="form-input ion-margin-top" lines="none">
+                <ion-icon name="key-outline"></ion-icon>
+                <ion-input placeholder="{{'login.password' | translate}}" formControlName="password" clearInput
+                           type="password" autocomplete="current-password" enterkeyhint="go"></ion-input>
+            </ion-item>
+            <span class="form-input-error" *ngIf="isSubmitted && form.password.errors?.required">
+                {{'login.errors.password-required' | translate}}
+            </span>
+            <span class="form-input-error" *ngIf="isSubmitted && form.password.errors?.weak">
+                {{'login.errors.weak-password' | translate}}
+            </span>
+
+            <ion-button expand="block" type="submit">
+                <ion-label>{{'actions.register' | translate}}</ion-label>
+            </ion-button>
+
+            <p class="termsAndPrivacy">
+                {{'login.registerAcceptance' | translate}}
+                <a href="https://streepn.nl/algemene-voorwaarden">{{'login.termsAndConditions'|translate}}</a>
+                {{'login.registerAcceptanceAnd' | translate}}
+                <a href="https://streepn.nl/privacy">{{'login.privacyStatement'|translate}}</a>
+            </p>
+        </form>
+    </div>
 </ion-content>
