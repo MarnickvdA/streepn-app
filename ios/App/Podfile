@@ -13,6 +13,7 @@ def capacitor_pods
   pod 'CapacitorCommunityAdmob', :path => '../../node_modules/@capacitor-community/admob'
   pod 'CapacitorCommunityAppleSignIn', :path => '../../node_modules/@capacitor-community/apple-sign-in'
   pod 'CapacitorCommunityFirebaseAnalytics', :path => '../../node_modules/@capacitor-community/firebase-analytics'
+  pod 'CordovaPluginsStatic', :path => '../capacitor-cordova-ios-plugins'
   # Do not delete
 end
 

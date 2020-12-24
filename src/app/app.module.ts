@@ -28,6 +28,7 @@ import {AnalyticsService} from './services/analytics.service';
 import {AdsService} from './services/ads.service';
 import {StorageService} from './services/storage.service';
 import {UIService} from './services/ui.service';
+import {GooglePlus} from '@ionic-native/google-plus/ngx';
 
 const SERVICES = [
     AuthService,
@@ -97,6 +98,7 @@ export function createTranslateLoader(http: HttpClient) {
         {provide: USE_FIRESTORE_EMULATOR, useValue: !environment.production ? ['localhost', 8080] : undefined},
         {provide: USE_FUNCTIONS_EMULATOR, useValue: !environment.production ? ['localhost', 5001] : undefined},
         ...SERVICES,
+        GooglePlus,
     ],
     bootstrap: [AppComponent]
 })

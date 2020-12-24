@@ -43,8 +43,8 @@ export class GroupService {
     getGroupByInviteLink(link: string): Promise<Group | undefined> {
         return this.fs.collection('groups')
             .ref
-            .where('inviteLink', '==', link)
             .where('inviteLinkExpiry', '>', Timestamp.now())
+            .where('inviteLink', '==', link)
             .withConverter(groupConverter)
             .get()
             .then(querySnapshot => {

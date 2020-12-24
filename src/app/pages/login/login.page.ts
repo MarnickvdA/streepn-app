@@ -5,6 +5,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EventsService} from '../../services/events.service';
 import {Capacitor} from '@capacitor/core';
 import {TranslateService} from '@ngx-translate/core';
+import {UIService} from '../../services/ui.service';
 
 @Component({
     selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginPage implements OnInit, OnDestroy {
                 private formBuilder: FormBuilder,
                 private eventsService: EventsService,
                 private translate: TranslateService,
-                private loadingController: LoadingController) {
+                private loadingController: LoadingController,
+                private uiService: UIService) {
         this.loginForm = this.formBuilder.group({
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required]]
@@ -92,11 +94,21 @@ export class LoginPage implements OnInit, OnDestroy {
             });
     }
 
-    async loginWithApple() {
-        try {
-            this.authService.loginWithApple();
-        } catch (e) {
-            console.error(e);
-        }
+    loginWithApple() {
+        this.authService.loginWithApple()
+            .catch(err => {
+                console.error(err);
+
+                this.uiService.showError(this.translate.instant('errors.error'), this.translate.instant('login.errors.unknown-login'));
+            });
+    }
+
+    loginWithGoogle() {
+        this.authService.loginWithGoogle()
+            .catch(err => {
+                console.error(err);
+
+                this.uiService.showError(this.translate.instant('errors.error'), this.translate.instant('login.errors.unknown-login'));
+            });
     }
 }

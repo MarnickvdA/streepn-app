@@ -47,6 +47,15 @@
             </ion-button>
         </form>
 
+        <div class="horizontal-or">
+            <hr> <span>{{'login.or' | translate}}</span> <hr>
+        </div>
+
+        <ion-button class="google-login" expand="block" fill="outline" (click)="loginWithGoogle()" color="dark">
+            <ion-icon src="assets/svg/google-logo.svg" slot="start"></ion-icon>
+            {{'login.loginWithGoogle' | translate}}
+        </ion-button>
+
         <ion-button class="apple-login" expand="block" *ngIf="isIos" (click)="loginWithApple()" color="dark">
             <ion-icon name="logo-apple" slot="start"></ion-icon>
             {{'login.loginWithApple' | translate}}

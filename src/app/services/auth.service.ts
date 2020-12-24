@@ -6,6 +6,8 @@ import {EventsService} from './events.service';
 import {ResponseSignInWithApplePlugin} from '@capacitor-community/apple-sign-in';
 import {Plugins} from '@capacitor/core';
 import {StorageService} from './storage.service';
+import {GooglePlus} from '@ionic-native/google-plus/ngx';
+import {environment} from '../../environments/environment';
 import User = firebase.User;
 
 const {SignInWithApple} = Plugins;
@@ -17,13 +19,14 @@ export class AuthService {
 
     constructor(private auth: AngularFireAuth,
                 private eventsService: EventsService,
-                private storage: StorageService) {
+                private storage: StorageService,
+                private googlePlus: GooglePlus) {
     }
 
     register(displayName: string, email: string, password: string) {
         return this.auth.createUserWithEmailAndPassword(email, password)
             .then(data => {
-                return this.setDisplayName(data.user, displayName);
+                return this.setUserProfile(data.user, displayName);
             }).then(() => {
                 this.eventsService.publish('auth:login');
             })
@@ -48,7 +51,7 @@ export class AuthService {
             });
     }
 
-    loginWithApple() {
+    loginWithApple(): Promise<void> {
         return SignInWithApple.Authorize()
             .then((response: ResponseSignInWithApplePlugin) => {
                 const provider = new firebase.auth.OAuthProvider('apple.com');
@@ -60,13 +63,38 @@ export class AuthService {
                     .then(data => {
                         const displayName = response.response.givenName;
                         if (displayName) {
-                            return this.setDisplayName(data.user, displayName);
+                            return this.setUserProfile(data.user, displayName);
                         }
                     }).then(() => {
                         this.eventsService.publish('auth:login');
                     });
-            }).catch(err => {
-                console.log(err);
+            });
+    }
+
+    loginWithGoogle(): Promise<void> {
+        // TODO Google re-signs your app with a different certificate when you publish it in the Play Store. Once your app is published,
+        // copy the SHA-1 fingerprint of the "App signing certificate", found in the "App signing" section under "Release Management",
+        // in Google Play Console. Paste this fingerprint in the Release OAuth client ID in Google Credentials Manager.
+
+        return this.googlePlus.login({
+                webClientId: environment.firebaseConfig.apiKey
+            })
+            .then(res => {
+                const provider = new firebase.auth.OAuthProvider('google.com');
+                const authCredential = provider.credential({
+                    idToken: res.idToken
+                });
+
+                return firebase.auth().signInWithCredential(authCredential)
+                    .then(data => {
+                        const displayName = res.displayName;
+                        const photoUrl = res.imageUrl;
+                        if (displayName) {
+                            return this.setUserProfile(data.user, displayName, photoUrl);
+                        }
+                    }).then(() => {
+                        this.eventsService.publish('auth:login');
+                    });
             });
     }
 
@@ -88,9 +116,10 @@ export class AuthService {
             });
     }
 
-    private setDisplayName(user: User, displayName: string): Promise<void> {
+    private setUserProfile(user: User, displayName: string, photoUrl?: string): Promise<void> {
         return user.updateProfile({
-            displayName
+            displayName,
+            photoURL: photoUrl
         });
     }
 }

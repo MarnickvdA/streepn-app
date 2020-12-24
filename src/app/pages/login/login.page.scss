@@ -8,13 +8,36 @@ form {
   padding: 2rem;
 
   .apple-login {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
   }
 
   ion-button {
-    margin-top: 2rem;
     margin-left: 2rem;
     margin-right: 2rem;
+  }
+}
+
+.horizontal-or {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  hr {
+    margin: 0;
+    height: 1px;
+    background-color: var(--ion-color-medium);
+    opacity: 25%;
+    width: 4rem;
+  }
+
+  span {
+    color: var(--ion-color-medium);
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
 }
 

@@ -53,7 +53,7 @@
     "registerAcceptanceAnd": " en de ",
     "errors": {
       "email-required": "Vul je e-mailadres in",
-      "password-required": "Vul een wachtwoord in",
+      "password-required": "Vul je wachtwoord in",
       "name-required": "Vul je naam in",
       "email-already-in-use": "E-mailadres is bezet",
       "invalid-email": "Incorrect e-mailadres",
@@ -61,9 +61,13 @@
       "operation-not-allowed": "Onbekende fout",
       "user-disabled": "Deze login is geblokkeerd",
       "user-not-found": "Deze login is niet bij ons bekend",
-      "wrong-password": "Onjuist wachtwoord"
+      "wrong-password": "Onjuist wachtwoord",
+      "unknown-login": "Het is niet gelukt om je in te loggen. Probeer het nog eens.",
+      "unknown-register": "Het is niet gelukt om je in te registeren. Probeer het nog eens of neem contact op met support."
     },
+    "or": "Of",
     "loginWithApple": "Inloggen met Apple",
+    "loginWithGoogle": "Inloggen met Google",
     "registerQuestion": "Heb je nog geen account?",
     "registerNow": "Registreer je nu"
   },

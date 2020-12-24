@@ -12,7 +12,8 @@ dependencies {
     implementation project(':capacitor-community-admob')
     implementation project(':capacitor-community-apple-sign-in')
     implementation project(':capacitor-community-firebase-analytics')
-
+    implementation "com.google.android.gms:play-services-auth:15.0.1"
+    implementation "com.google.android.gms:play-services-identity:15.0.1"
 }
 
 
