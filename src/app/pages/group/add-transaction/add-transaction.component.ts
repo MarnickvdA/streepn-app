@@ -7,6 +7,7 @@ import {catchError} from 'rxjs/operators';
 import {EMPTY} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {UserService} from '../../../services/user.service';
+import {AnalyticsService} from '../../../services/analytics.service';
 
 const {Haptics} = Plugins;
 
@@ -32,7 +33,8 @@ export class AddTransactionComponent implements OnInit {
                 private transactionService: TransactionService,
                 private loadingController: LoadingController,
                 private translate: TranslateService,
-                private userService: UserService) {
+                private userService: UserService,
+                private analyticsService: AnalyticsService) {
     }
 
     ngOnInit() {
@@ -115,6 +117,10 @@ export class AddTransactionComponent implements OnInit {
                 })
             )
             .subscribe((value) => {
+                if (value?.length > 0) {
+                    this.analyticsService.logTransaction(this.userService.user.uid, this.group.id, value[0].id);
+                }
+
                 loading.dismiss();
                 this.dismiss(value);
             });

@@ -6,6 +6,8 @@
 	<string>378314194804-b0rvrg7ae1crp6pu6ec15us3d8vhroqd.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.378314194804-b0rvrg7ae1crp6pu6ec15us3d8vhroqd</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>378314194804-8g25qva1b1t7f0s8hdc422etl4mqc34a.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDSwibBM4e3tBZ44SHr-NqMR68pJD_KPiM</string>
 	<key>GCM_SENDER_ID</key>
@@ -19,16 +21,18 @@
 	<key>STORAGE_BUCKET</key>
 	<string>streepn-app.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:378314194804:ios:315953067b9559a31d7621</string>
+	<key>ADMOB_APP_ID</key>
+	<string>ca-app-pub-5133412357979129~3247707188</string>
 </dict>
 </plist>

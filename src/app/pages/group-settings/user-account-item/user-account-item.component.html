@@ -1,4 +1,4 @@
-<ion-item>
+<ion-item (click)="openAccount()" [button]="ownsAccount" [detail]="ownsAccount">
   <ion-avatar slot="start">
     <img *ngIf="account.photoUrl" src="{{account.photoUrl}}" alt="">
     <img *ngIf="!account.photoUrl" src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg" alt="">

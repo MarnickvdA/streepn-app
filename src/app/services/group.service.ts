@@ -9,6 +9,8 @@ import {EMPTY, Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {createGroup} from '../models/group';
 import {v4 as uuidv4} from 'uuid';
+import {AnalyticsService} from './analytics.service';
+import {UserService} from './user.service';
 import Timestamp = firebase.firestore.Timestamp;
 
 @Injectable({
@@ -19,7 +21,9 @@ export class GroupService {
     constructor(private fs: AngularFirestore,
                 private functions: AngularFireFunctions,
                 private authService: AuthService,
-                private eventsService: EventsService) {
+                private eventsService: EventsService,
+                private analyticsService: AnalyticsService,
+                private userService: UserService) {
     }
 
     observeGroups(userId: string): firebase.firestore.Query<Group> {
@@ -105,6 +109,9 @@ export class GroupService {
                 return this.fs.collection('groups')
                     .add(groupConverter.toFirestore(group))
                     .then(docRef => {
+
+                        this.analyticsService.logCreateGroup(this.userService.user.uid, docRef.id);
+
                         return docRef.id;
                     })
                     .catch(err => {
@@ -122,6 +129,8 @@ export class GroupService {
                 return EMPTY;
             }))
             .subscribe(data => {
+                this.analyticsService.logJoinGroup(this.userService.user.uid, groupId);
+
                 this.eventsService.publish('group:joined');
             });
     }

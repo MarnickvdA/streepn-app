@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "378314194804-8g25qva1b1t7f0s8hdc422etl4mqc34a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nl.strype.streepn",
+            "certificate_hash": "077f9b7746a580a511a2ebfeedc3f81cc07b5951"
+          }
+        },
+        {
+          "client_id": "378314194804-cutf5d6koua3p8uh7iuifqelau35ieh5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nl.strype.streepn",
+            "certificate_hash": "e2a33b02143e4ab4d3698036a6a88808f6020311"
+          }
+        },
+        {
           "client_id": "378314194804-7vf0qt5olu01c9s356s4dbqmmbvn4vq5.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -39,7 +55,8 @@
             }
           ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-5133412357979129~6121282538"
     }
   ],
   "configuration_version": "1"

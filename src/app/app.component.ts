@@ -4,9 +4,10 @@ import {Platform} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {TranslateService} from '@ngx-translate/core';
-import {Plugins} from '@capacitor/core';
+import {AppState, Plugins} from '@capacitor/core';
 import {AdsService} from './services/ads.service';
 import {StorageService} from './services/storage.service';
+import {EventsService} from './services/events.service';
 
 const {App} = Plugins;
 
@@ -23,7 +24,8 @@ export class AppComponent {
         private translate: TranslateService,
         private zone: NgZone,
         private adsService: AdsService,
-        private storage: StorageService
+        private storage: StorageService,
+        private events: EventsService
     ) {
         this.initializeApp();
     }
@@ -35,6 +37,8 @@ export class AppComponent {
 
                 if (slug.startsWith('/group-invite/')) {
                     const groupCode = slug.split('/group-invite/').pop();
+
+                    console.log('Setting groupCode in storage: ' + groupCode);
 
                     this.storage.set('groupInvite', groupCode);
                 }
@@ -56,6 +60,15 @@ export class AppComponent {
                 .catch(() => {
                     this.toggleDarkTheme(prefersDark.matches);
                 });
+
+            App.addListener('appStateChange', (state: AppState) => {
+                // state.isActive contains the active state
+                if (state.isActive) {
+                    this.events.publish('app:resume');
+                } else {
+                    this.events.publish('app:pause');
+                }
+            });
 
             this.adsService.initialize();
 

@@ -50,6 +50,8 @@ exports.addTransaction = functions
             throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
         }
 
+        let currentAccount: any;
+        let group: any;
         const groupRef = db.collection('groups').doc(data.groupId);
 
         const transactions: any[] = [];
@@ -57,7 +59,7 @@ exports.addTransaction = functions
         return db.runTransaction(transaction => {
                 return transaction.get(groupRef)
                     .then(groupDoc => {
-                        const group = groupDoc?.data();
+                        group = groupDoc?.data();
 
                         // Check if the group exists
                         if (!groupDoc.exists || !group) {
@@ -68,6 +70,8 @@ exports.addTransaction = functions
                         if (!group.members.includes(context.auth?.uid)) {
                             throw new functions.https.HttpsError('permission-denied', 'User not member of group');
                         }
+
+                        currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
 
                         // Timestamp must be the same for every transaction so they can be grouped.
                         const now = admin.firestore.FieldValue.serverTimestamp();
@@ -130,6 +134,27 @@ exports.addTransaction = functions
                     });
             })
             .then(() => {
+                try {
+                    const topic = `'group_${data.groupId}_all' in topics || 'group_${data.groupId}_transactions' in topics'`;
+
+                    const message = {
+                        notification: {
+                            title: `Nieuwe transactie in ${group.name}`,
+                            body: `${currentAccount.name} heeft ${transactions.length} transactie${transactions.length > 1 ? 's' : ''} gedaan!`
+                        },
+                        data: {
+                            groupId: data.groupId as string,
+                        },
+                        topic,
+                    };
+
+                    admin.messaging().send(message)
+                        .catch((error) => {
+                            console.error('Error sending message:', error);
+                        });
+                } catch (e) {
+                    console.error(e);
+                }
                 return transactions;
             })
             .catch(err => {

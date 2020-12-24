@@ -4,8 +4,6 @@ import {Transaction} from '../models';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {newTransaction} from '../models/transaction';
-import firebase from 'firebase/app';
-import Timestamp = firebase.firestore.Timestamp;
 
 @Injectable({
     providedIn: 'root'

@@ -8,6 +8,7 @@ import {Plugins} from '@capacitor/core';
 import {StorageService} from './storage.service';
 import {GooglePlus} from '@ionic-native/google-plus/ngx';
 import {environment} from '../../environments/environment';
+import {AnalyticsService} from './analytics.service';
 import User = firebase.User;
 
 const {SignInWithApple} = Plugins;
@@ -17,18 +18,32 @@ const {SignInWithApple} = Plugins;
 })
 export class AuthService {
 
+    private authUser?: User;
+
     constructor(private auth: AngularFireAuth,
                 private eventsService: EventsService,
                 private storage: StorageService,
-                private googlePlus: GooglePlus) {
+                private googlePlus: GooglePlus,
+                private analytics: AnalyticsService) {
+        this.eventsService.subscribe('auth:login', (userId) => {
+            this.analytics.setUser(userId);
+        });
+
+        this.user
+            .subscribe(user => {
+                this.authUser = user;
+            });
     }
 
     register(displayName: string, email: string, password: string) {
         return this.auth.createUserWithEmailAndPassword(email, password)
             .then(data => {
-                return this.setUserProfile(data.user, displayName);
-            }).then(() => {
-                this.eventsService.publish('auth:login');
+                this.analytics.logUserRegister(data.user.uid);
+                this.setUserProfile(data.user, displayName);
+
+                return data.user.uid;
+            }).then((id) => {
+                this.eventsService.publish('auth:login', {userId: id});
             })
             .catch(error => {
                 const errorCode = error.code;
@@ -41,7 +56,8 @@ export class AuthService {
     login(email: string, password: string) {
         return this.auth.signInWithEmailAndPassword(email, password)
             .then(data => {
-                this.eventsService.publish('auth:login');
+                this.analytics.logUserLogin(data.user.uid);
+                this.eventsService.publish('auth:login', {userId: data.user.uid});
             })
             .catch(error => {
                 const errorCode = error.code;
@@ -63,10 +79,12 @@ export class AuthService {
                     .then(data => {
                         const displayName = response.response.givenName;
                         if (displayName) {
-                            return this.setUserProfile(data.user, displayName);
+                            this.setUserProfile(data.user, displayName);
                         }
-                    }).then(() => {
-                        this.eventsService.publish('auth:login');
+
+                        return data.user.uid;
+                    }).then((id) => {
+                        this.eventsService.publish('auth:login', {userId: id});
                     });
             });
     }
@@ -90,15 +108,19 @@ export class AuthService {
                         const displayName = res.displayName;
                         const photoUrl = res.imageUrl;
                         if (displayName) {
-                            return this.setUserProfile(data.user, displayName, photoUrl);
+                            this.setUserProfile(data.user, displayName, photoUrl);
                         }
-                    }).then(() => {
-                        this.eventsService.publish('auth:login');
+
+                        return data.user.uid;
+                    }).then((id) => {
+                        this.eventsService.publish('auth:login', {userId: id});
                     });
             });
     }
 
     logout() {
+        this.analytics.logUserLogout(this.authUser.uid);
+        this.analytics.setUser(undefined);
         this.storage.nuke();
         return this.auth.signOut();
     }

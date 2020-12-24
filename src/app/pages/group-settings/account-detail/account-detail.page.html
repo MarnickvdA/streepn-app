@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/group/' + groupId + '/settings'"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{(account$ | async)?.name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<ng-container *ngIf="account$ | async; let account">
+  <ion-list>
+    <ion-item>
+      <ion-label>
+        {{account?.name}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        {{getBalance(account?.balance)}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        {{account?.roles}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        Push notificaties ontvangen
+      </ion-label>
+      <ion-toggle [(ngModel)]="toggleNotifications" slot="end"></ion-toggle>
+    </ion-item>
+
+  </ion-list>
+</ng-container>
+</ion-content>

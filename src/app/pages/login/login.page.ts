@@ -94,21 +94,42 @@ export class LoginPage implements OnInit, OnDestroy {
             });
     }
 
-    loginWithApple() {
+    async loginWithApple() {
+
+        const loading = await this.loadingController.create({
+            message: this.translate.instant('actions.login') + '...',
+            backdropDismiss: false,
+        });
+
+        await loading.present();
+
         this.authService.loginWithApple()
             .catch(err => {
                 console.error(err);
 
                 this.uiService.showError(this.translate.instant('errors.error'), this.translate.instant('login.errors.unknown-login'));
+            })
+            .finally(() => {
+                loading.dismiss();
             });
     }
 
-    loginWithGoogle() {
+    async loginWithGoogle() {
+        const loading = await this.loadingController.create({
+            message: this.translate.instant('actions.login') + '...',
+            backdropDismiss: false,
+        });
+
+        await loading.present();
+
         this.authService.loginWithGoogle()
             .catch(err => {
                 console.error(err);
 
                 this.uiService.showError(this.translate.instant('errors.error'), this.translate.instant('login.errors.unknown-login'));
+            })
+            .finally(() => {
+                loading.dismiss();
             });
     }
 }

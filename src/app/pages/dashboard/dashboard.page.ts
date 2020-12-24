@@ -76,10 +76,13 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                     this.groups$.next(groups);
                 });
         });
+
+        this.eventsService.subscribe('app:resume', this.checkForGroupInvite);
     }
 
     ngOnDestroy() {
         this.unsubscribeFn();
+        this.eventsService.unsubscribe('app:resume', this.checkForGroupInvite);
     }
 
     ngAfterViewInit() {
