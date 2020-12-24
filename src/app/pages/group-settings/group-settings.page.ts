@@ -6,10 +6,11 @@ import {ActivatedRoute, Params} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AlertController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {Plugins} from '@capacitor/core';
+import {Capacitor, Plugins} from '@capacitor/core';
 import {ProductService} from '../../services/product.service';
+import {AccountService} from 'src/app/services/account.service';
 
-const {Clipboard} = Plugins;
+const {Clipboard, Share} = Plugins;
 
 @Component({
     selector: 'app-group-settings',
@@ -29,7 +30,8 @@ export class GroupSettingsPage {
                 private route: ActivatedRoute,
                 private alertController: AlertController,
                 private translate: TranslateService,
-                private productService: ProductService) {
+                private productService: ProductService,
+                private accountService: AccountService) {
         this.route.params.subscribe((params: Params) => {
             this.groupId = params.id;
 
@@ -48,19 +50,58 @@ export class GroupSettingsPage {
     }
 
     async inviteAccounts() {
+        try {
+            await Share.share({
+                title: this.translate.instant('group.settings.inviteAccount.title', {group: this.group.name}),
+                text: this.translate.instant('group.settings.inviteAccount.description', {group: this.group.name}),
+                url: 'https://streepn.nl/group-invite/' + this.inviteLink,
+                dialogTitle: this.translate.instant('group.settings.inviteAccount.dialogTitle')
+            });
+        } catch (e) {
+            const alert = await this.alertController.create({
+                header: this.translate.instant('group.settings.addAccount.header'),
+                message: this.translate.instant('group.settings.addAccount.message') + '<br><br><b>' + this.inviteLink + '</b>',
+                buttons: [
+                    {
+                        text: this.translate.instant('actions.cancel'),
+                        role: 'cancel'
+                    }, {
+                        text: this.translate.instant('actions.copy') + ' ' + this.translate.instant('group.settings.addAccount.code'),
+                        handler: () => {
+                            Clipboard.write({
+                                string: this.inviteLink
+                            });
+                        }
+                    }
+                ]
+            });
+
+            await alert.present();
+        }
+    }
+
+    async addSharedAccount() {
         const alert = await this.alertController.create({
-            header: this.translate.instant('group.settings.addAccount.header'),
-            message: this.translate.instant('group.settings.addAccount.message') + '<br><br><b>' + this.inviteLink + '</b>',
+            header: this.translate.instant('group.settings.addSharedAccount.header'),
+            inputs: [
+                {
+                    name: 'accountName',
+                    type: 'text',
+                    placeholder: this.translate.instant('group.settings.addSharedAccount.accountName')
+                }
+            ],
             buttons: [
                 {
                     text: this.translate.instant('actions.cancel'),
-                    role: 'cancel'
+                    role: 'cancel',
                 }, {
-                    text: this.translate.instant('actions.copy') + ' ' + this.translate.instant('group.settings.addAccount.code'),
-                    handler: () => {
-                        Clipboard.write({
-                            string: this.inviteLink
-                        });
+                    text: this.translate.instant('actions.create'),
+                    handler: (result: { accountName: string }) => {
+                        if (result.accountName.length > 0) {
+                            this.accountService.addSharedAccount(this.group, result.accountName);
+                        } else {
+                            // TODO Error message
+                        }
                     }
                 }
             ]

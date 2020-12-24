@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Account, Group, groupConverter} from '../models';
+import {Group, groupConverter, UserAccount} from '../models';
 import {AuthService} from './auth.service';
 import {EventsService} from './events.service';
 import {AngularFireFunctions} from '@angular/fire/functions';
@@ -93,8 +93,8 @@ export class GroupService {
                         roles: ['ADMIN'],
                         userId: user.uid,
                         balance: 0,
-                        createdAt: now
-                    } as Account],
+                        createdAt: now,
+                    } as UserAccount],
                     members: [user.uid],
                     valuta: 'EUR',
                     createdAt: now,

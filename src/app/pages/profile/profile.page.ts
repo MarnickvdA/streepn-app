@@ -1,8 +1,9 @@
-import {Component, OnInit, Renderer2} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {Observable} from 'rxjs';
 import firebase from 'firebase/app';
 import {NavController} from '@ionic/angular';
+import {StorageService} from '../../services/storage.service';
 import User = firebase.User;
 
 @Component({
@@ -15,9 +16,13 @@ export class ProfilePage implements OnInit {
     isDarkMode: boolean;
 
     constructor(private authService: AuthService,
-                private navController: NavController) {
+                private navController: NavController,
+                private storage: StorageService) {
         this.user$ = this.authService.user;
-        this.isDarkMode = window.localStorage.getItem('darkMode') === 'true';
+        this.storage.get('darkMode')
+            .then((darkMode: boolean) => {
+                this.isDarkMode = darkMode;
+            });
     }
 
 
@@ -33,7 +38,7 @@ export class ProfilePage implements OnInit {
 
     onClick(event) {
         document.body.classList.toggle('dark', event.detail.checked);
-        window.localStorage.setItem('darkMode', event.detail.checked);
+        this.storage.set('darkMode', event.detail.checked);
     }
 
 }

@@ -8,6 +8,8 @@ import { GroupSettingsPageRoutingModule } from './group-settings-routing.module'
 
 import { GroupSettingsPage } from './group-settings.page';
 import {TranslateModule} from '@ngx-translate/core';
+import {ProductItemComponent} from './product-item/product-item.component';
+import {UserAccountItemComponent} from './user-account-item/user-account-item.component';
 
 @NgModule({
     imports: [
@@ -17,6 +19,6 @@ import {TranslateModule} from '@ngx-translate/core';
         GroupSettingsPageRoutingModule,
         TranslateModule
     ],
-  declarations: [GroupSettingsPage]
+    declarations: [GroupSettingsPage, ProductItemComponent, UserAccountItemComponent]
 })
 export class GroupSettingsPageModule {}

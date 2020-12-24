@@ -6,6 +6,7 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {TranslateService} from '@ngx-translate/core';
 import {Plugins} from '@capacitor/core';
 import {AdsService} from './services/ads.service';
+import {StorageService} from './services/storage.service';
 
 const {App} = Plugins;
 
@@ -21,7 +22,8 @@ export class AppComponent {
         private statusBar: StatusBar,
         private translate: TranslateService,
         private zone: NgZone,
-        private adsService: AdsService
+        private adsService: AdsService,
+        private storage: StorageService
     ) {
         this.initializeApp();
     }
@@ -29,21 +31,13 @@ export class AppComponent {
     initializeApp() {
         App.addListener('appUrlOpen', (data: any) => {
             this.zone.run(() => {
-                // Example url: https://beerswift.app/tabs/tab2
-                // slug = /tabs/tab2
                 const slug = data.url.split('streepn.nl').pop();
-
-                console.log('appUrlOpen: ' + slug);
 
                 if (slug.startsWith('/group-invite/')) {
                     const groupCode = slug.split('/group-invite/').pop();
 
-                    window.localStorage.setItem('groupInvite', groupCode);
-
-                    console.log('Group code: ' + groupCode);
+                    this.storage.set('groupInvite', groupCode);
                 }
-                // If no match, do nothing - let regular routing
-                // logic take over
             });
         });
 
@@ -55,7 +49,13 @@ export class AppComponent {
 
             // Listen for changes to the prefers-color-scheme media query
             prefersDark.addEventListener('change', (mediaQuery: MediaQueryListEvent) => this.toggleDarkTheme(mediaQuery.matches));
-            this.toggleDarkTheme(window.localStorage.getItem('darkMode') === 'true' || prefersDark.matches);
+            this.storage.get('darkMode')
+                .then((darkMode: boolean) => {
+                    this.toggleDarkTheme(darkMode || prefersDark.matches);
+                })
+                .catch(() => {
+                    this.toggleDarkTheme(prefersDark.matches);
+                });
 
             this.adsService.initialize();
 
@@ -65,7 +65,7 @@ export class AppComponent {
     }
 
     private toggleDarkTheme(isDarkMode: boolean) {
-        window.localStorage.setItem('darkMode', `${isDarkMode}`);
+        this.storage.set('darkMode', isDarkMode);
         document.body.classList.toggle('dark', isDarkMode);
     }
 }

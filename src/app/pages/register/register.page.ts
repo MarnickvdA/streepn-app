@@ -28,7 +28,6 @@ export class RegisterPage implements OnInit, OnDestroy {
         });
 
         this.registerHandler = () => {
-            console.log('navigating!');
             this.navController.navigateRoot('/dashboard');
         };
     }

@@ -8,3 +8,7 @@ export function toDate(t: Timestamp): Date {
 export function toTimestamp(d: Date): Timestamp {
     return Timestamp.fromDate(d);
 }
+
+export function getMoneyString(money: number, locale: string): string {
+    return `${(money / 100).toLocaleString('nl-NL', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+}

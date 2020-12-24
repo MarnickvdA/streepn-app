@@ -1,8 +1,8 @@
 import {Timestamp} from '@firebase/firestore-types';
 
 export class Product {
-    readonly id: string;
-    readonly createdAt: Timestamp;
+    id: string;
+    createdAt: Timestamp;
     name: string;
     price: number;
 

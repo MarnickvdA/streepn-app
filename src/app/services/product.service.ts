@@ -13,6 +13,16 @@ export class ProductService {
     constructor(private fs: AngularFirestore) {
     }
 
+    addProduct(group: Group, name: string, price: number) {
+        // TODO Add validity checks.
+
+        const product = new Product(uuidv4(), Timestamp.now(), name, price);
+
+        group.products.push(product);
+
+        return this.setProducts(group);
+    }
+
     editProduct(group: Group, product: Product) {
         group.products = group.products.map(obj => {
             if (obj.id === product.id) {
@@ -21,16 +31,6 @@ export class ProductService {
                 return obj;
             }
         });
-
-        return this.setProducts(group);
-    }
-
-    addProduct(group: Group, name: string, price: number) {
-        // TODO Add validity checks.
-
-        const product = new Product(uuidv4(), Timestamp.now(), name, price);
-
-        group.products.push(product);
 
         return this.setProducts(group);
     }

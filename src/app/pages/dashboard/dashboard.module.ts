@@ -1,13 +1,14 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { DashboardPageRoutingModule } from './dashboard-routing.module';
+import {DashboardPageRoutingModule} from './dashboard-routing.module';
 
-import { DashboardPage } from './dashboard.page';
+import {DashboardPage} from './dashboard.page';
 import {TranslateModule} from '@ngx-translate/core';
+import {OnboardingComponent} from './onboarding/onboarding.component';
 
 @NgModule({
     imports: [
@@ -15,8 +16,10 @@ import {TranslateModule} from '@ngx-translate/core';
         FormsModule,
         IonicModule,
         DashboardPageRoutingModule,
-        TranslateModule
+        TranslateModule,
+        ReactiveFormsModule
     ],
-  declarations: [DashboardPage]
+    declarations: [DashboardPage, OnboardingComponent]
 })
-export class DashboardPageModule {}
+export class DashboardPageModule {
+}

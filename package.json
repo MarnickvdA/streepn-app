@@ -11,7 +11,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "emulator": "firebase emulators:start --import ./data --export-on-exit=./data",
-    "postinstall": "npx jetifier && ngcc"
+    "postinstall": "npx jetifier && ngcc",
+    "resources": "cordova-res ios && cordova-res android && node scripts/resources.js"
   },
   "private": true,
   "dependencies": {

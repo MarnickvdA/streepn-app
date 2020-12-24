@@ -1,21 +1,19 @@
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {Product, productConverter} from './product';
-import {SharedAccount, sharedAccountConverter} from './shared-account';
-import {Account, accountConverter} from './account';
+import {SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from './account';
 
 export class Group {
     readonly id: string;
-    readonly createdAt: Timestamp;
+    createdAt: Timestamp;
     name: string;
     valuta: string;
     inviteLink: string;
     inviteLinkExpiry: Timestamp;
     members: string[];
-    accounts: Account[];
+    accounts: UserAccount[];
     products: Product[];
     sharedAccounts: SharedAccount[];
-
 
     constructor(id: string,
                 createdAt: Timestamp,
@@ -24,7 +22,7 @@ export class Group {
                 inviteLink: string,
                 inviteLinkExpiry: Timestamp,
                 members: string[],
-                accounts: Account[],
+                accounts: UserAccount[],
                 products: Product[],
                 sharedAccounts: SharedAccount[]) {
         this.id = id;
@@ -46,11 +44,12 @@ export const groupConverter: FirestoreDataConverter<Group> = {
         const products = [];
         const sharedAccounts = [];
 
-        group.accounts?.forEach((account) => accounts.push(accountConverter.toFirestore(account)));
+        group.accounts?.forEach((account) => accounts.push(userAccountConverter.toFirestore(account)));
         group.products?.forEach((product) => products.push(productConverter.toFirestore(product)));
         group.sharedAccounts?.forEach((sharedAccount) => sharedAccounts.push(sharedAccountConverter.toFirestore(sharedAccount)));
 
         return {
+            createdAt: group.createdAt,
             name: group.name,
             valuta: group.valuta,
             inviteLink: group.inviteLink,
@@ -73,7 +72,7 @@ export function createGroup(id: string, data: { [key: string]: any }): Group {
     const products = [];
     const sharedAccounts = [];
 
-    data.accounts?.forEach((account) => accounts.push(accountConverter.newAccount(account)));
+    data.accounts?.forEach((account) => accounts.push(userAccountConverter.newAccount(account)));
     data.products?.forEach((product) => products.push(productConverter.newProduct(product)));
     data.sharedAccounts?.forEach((sharedAccount) =>
         sharedAccounts.push(sharedAccountConverter.newSharedAccount(sharedAccount)));

@@ -1,0 +1,46 @@
+:host {
+  padding-bottom: 20px; /* Status bar height on iOS 10 */
+  padding-bottom: constant(safe-area-inset-top); /* Status bar height on iOS 11.0 */
+  padding-bottom: env(safe-area-inset-top); /* Status bar height on iOS 11+ */
+}
+
+ion-slides {
+  height: 100%;
+
+  ion-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    padding-top: 6rem;
+
+    font-size: .85rem;
+
+    ion-img.logo::part(image){
+      border-radius: 50%;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    ion-button {
+      margin-top: 2rem;
+    }
+
+    .text-area {
+      min-height: 8rem;
+    }
+
+    ion-icon.image {
+      font-size: 5rem;
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+ion-toolbar {
+  --border-style: none;
+}

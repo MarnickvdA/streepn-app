@@ -21,15 +21,15 @@
                 <ion-button (click)="inviteAccounts()">{{'actions.invite' | translate}}</ion-button>
             </ion-list-header>
 
-            <ion-item *ngFor="let account of group.accounts">
-                <ion-label>{{account.name}}</ion-label>
-            </ion-item>
+
+            <app-user-account-item *ngFor="let account of group.accounts" [account]="account"></app-user-account-item>
+
         </ion-list>
 
         <ion-list>
             <ion-list-header lines="full">
                 <ion-label>{{'group.settings.sharedAccounts' | translate}}</ion-label>
-                <ion-button>{{'actions.new' | translate}}</ion-button>
+                <ion-button *ngIf="isAdmin" (click)="addSharedAccount()">{{'actions.new' | translate}}</ion-button>
             </ion-list-header>
 
             <ion-item *ngIf="group.sharedAccounts.length === 0" lines="none">
@@ -60,13 +60,7 @@
             </ion-item>
 
             <ion-item-sliding *ngFor="let product of group.products">
-                <ion-item >
-                    <ion-label>{{product.name}}</ion-label>
-                    <ion-chip color="success" style="min-width: 5rem">
-                        <ion-icon name="pricetag-outline"></ion-icon>
-                        <ion-label>€ {{(product.price / 100).toLocaleString('nl-NL', {minimumFractionDigits: 2, maximumFractionDigits: 2})}}</ion-label>
-                    </ion-chip>
-                </ion-item>
+                <app-product-item [product]="product"></app-product-item>
                 <ion-item-options side="end">
                     <ion-item-option color="danger" (click)="removeProduct(product)" expandable>{{'actions.delete' | translate}}</ion-item-option>
                 </ion-item-options>

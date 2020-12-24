@@ -1,0 +1,10 @@
+<ion-item>
+  <ion-avatar slot="start">
+    <img *ngIf="account.photoUrl" src="{{account.photoUrl}}" alt="">
+    <img *ngIf="!account.photoUrl" src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg" alt="">
+  </ion-avatar>
+  <div class="content">
+    <ion-label>{{account.name}}</ion-label>
+    <ion-label [color]="account.balance >= 0 ? 'dark' : 'danger'">{{balanceString}}</ion-label>
+  </div>
+</ion-item>

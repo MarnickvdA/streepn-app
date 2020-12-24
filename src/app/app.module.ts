@@ -26,6 +26,8 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {PushService} from './services/push.service';
 import {AnalyticsService} from './services/analytics.service';
 import {AdsService} from './services/ads.service';
+import {StorageService} from './services/storage.service';
+import {UIService} from './services/ui.service';
 
 const SERVICES = [
     AuthService,
@@ -36,7 +38,9 @@ const SERVICES = [
     ProductService,
     PushService,
     AnalyticsService,
-    AdsService
+    AdsService,
+    StorageService,
+    UIService
 ];
 
 @Injectable({
@@ -47,6 +51,9 @@ export class AppErrorHandler implements ErrorHandler {
     }
 
     handleError(error) {
+        if (error.message.includes('#IGNORE')) {
+            return;
+        }
         console.error(error);
     }
 }

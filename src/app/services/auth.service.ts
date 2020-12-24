@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {EventsService} from './events.service';
 import {ResponseSignInWithApplePlugin} from '@capacitor-community/apple-sign-in';
 import {Plugins} from '@capacitor/core';
+import {StorageService} from './storage.service';
 import User = firebase.User;
 
 const {SignInWithApple} = Plugins;
@@ -15,7 +16,8 @@ const {SignInWithApple} = Plugins;
 export class AuthService {
 
     constructor(private auth: AngularFireAuth,
-                private eventsService: EventsService) {
+                private eventsService: EventsService,
+                private storage: StorageService) {
     }
 
     register(displayName: string, email: string, password: string) {
@@ -69,6 +71,7 @@ export class AuthService {
     }
 
     logout() {
+        this.storage.nuke();
         return this.auth.signOut();
     }
 

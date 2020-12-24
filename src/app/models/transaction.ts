@@ -5,7 +5,7 @@ import {Account, accountConverter} from './account';
 
 export class Transaction {
     readonly id: string;
-    readonly createdAt: Timestamp;
+    createdAt: Timestamp;
     amount: number;
     totalPrice: number;
     createdBy: string;
@@ -29,15 +29,17 @@ export class Transaction {
 
 export const transactionConverter: FirestoreDataConverter<Transaction> = {
     toFirestore(transaction: Transaction) {
-        return {
-            createdAt: transaction.createdAt,
-            amount: transaction.amount,
-            totalPrice: transaction.totalPrice,
-            createdBy: transaction.createdBy,
-            createdById: transaction.createdById,
-            account: accountConverter.toFirestore(transaction.account),
-            product: productConverter.toFirestore(transaction.product)
-        };
+        if (transaction.account) {
+            return {
+                createdAt: transaction.createdAt,
+                amount: transaction.amount,
+                totalPrice: transaction.totalPrice,
+                createdBy: transaction.createdBy,
+                createdById: transaction.createdById,
+                account: accountConverter.toFirestore(transaction.account),
+                product: productConverter.toFirestore(transaction.product)
+            };
+        }
     },
     fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Transaction {
         const data = snapshot.data(options);
@@ -48,5 +50,5 @@ export const transactionConverter: FirestoreDataConverter<Transaction> = {
 
 export function newTransaction(id: string, data: { [key: string]: any }): Transaction {
     return new Transaction(id, data.createdAt as Timestamp, data.amount, data.totalPrice, data.createdBy,
-        data.createdById, accountConverter.newAccount(data.account), productConverter.newProduct(data.product));
+        data.createdById, data.account, productConverter.newProduct(data.product));
 }

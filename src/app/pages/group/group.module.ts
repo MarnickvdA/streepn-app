@@ -9,6 +9,7 @@ import {GroupPageRoutingModule} from './group-routing.module';
 import {GroupPage} from './group.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {AddTransactionComponent} from './add-transaction/add-transaction.component';
+import {TransactionItemComponent} from './transaction-item/transaction-item.component';
 
 @NgModule({
     imports: [
@@ -20,7 +21,8 @@ import {AddTransactionComponent} from './add-transaction/add-transaction.compone
     ],
     declarations: [
         GroupPage,
-        AddTransactionComponent
+        AddTransactionComponent,
+        TransactionItemComponent
     ]
 })
 export class GroupPageModule {

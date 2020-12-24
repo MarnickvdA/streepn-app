@@ -4,11 +4,14 @@
     "yes": "Ja",
     "no": "Nee",
     "ok": "Oké",
+    "close": "Sluiten",
+    "skip": "Overslaan",
     "accept": "Accepteren",
     "deny": "Weigeren",
     "go": "Gaan",
     "back": "Terug",
     "proceed": "Doorgaan",
+    "join": "Deelnemen",
     "stop": "Stoppen",
     "start": "Starten",
     "login": "Inloggen",
@@ -28,12 +31,17 @@
     "import": "Importeren",
     "export": "Exporteren",
     "invite": "Uitnodigen",
+    "submit": "Invoeren",
     "saving": "Opslaan...",
     "loading": "Aan het laden...",
     "deleting": "Aan het verwijderen...",
     "adding": "Aan het toevoegen...",
     "streeping": "Aan het strepen...",
     "joining": "Aan het deelnemen..."
+  },
+  "errors": {
+    "error": "Foutmelding",
+    "warning": "Waarschuwing"
   },
   "login": {
     "name": "Naam",
@@ -68,17 +76,46 @@
     "emptyGroups": "Je hebt nog geen groepen.",
     "createGroup": {
       "header": "Nieuwe groep",
-      "groupName": "Groepsnaam"
+      "groupName": "Groepsnaam",
+      "invalidGroupName": "Groepsnaam te kort"
     },
     "toggleDarkMode": "Donkere modus",
+    "manualGroupJoin": "Toetreden via groepscode",
     "groupInvite": {
       "header": "Uitnodiging",
-      "question": "Wil je toetreden tot "
+      "question": "Wil je toetreden tot ",
+      "manualHeader": "Handmatige code invoer",
+      "code": "Groepscode",
+      "invalidCode": "Ongeldige groepscode"
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welkom",
+      "description": "Welkom bij <b>Streepn</b>! De digitale streeplijst die jou de komende tijd gaat helpen bij het bijhouden van allerlei dingetjes!"
+    },
+    "push": {
+      "title": "Push Notificaties",
+      "description": "Haal het maximale uit de Streepn app! Als je push meldingen inschakelt kunnen we je altijd op de hoogte stellen van de laatste updates die voor jou relevant is!",
+      "enable": "Push Notificaties inschakelen"
+    },
+    "setName":{
+      "title": "Naam instellen",
+      "description": "Je hebt nog geen gebruikersnaam voor de app, laten we dit nu eventjes instellen. Vul hieronder je naam in!"
+    },
+    "joinGroup":{
+      "title": "Je bent uitgenodigd voor",
+      "description": "Je bent hier gekomen door op een invite link te klikken. Wil je aan de groep deelnemen?"
+    },
+    "start": {
+      "title": "Let's go!",
+      "description": "Nu we de eerste belangrijke zaken hebben ingesteld kun je beginnen aan het Streepn avontuur! Maak zelf een groep aan of neem deel aan een groep met een groepslink!"
     }
   },
   "group": {
     "transactions": {
-      "empty": "Er is nog niks gestreept"
+      "empty": "Er is nog niks gestreept",
+      "currentProduct": "Geselecteerd product"
     },
     "settings": {
       "title": "Groepsoverzicht",
@@ -90,8 +127,17 @@
       "emptyProducts": "Er zijn nog geen producten",
       "addAccount": {
         "header": "Deelnemers toevoegen",
-        "message": "Deel de onderstaande code met je vrienden zodat ze deze groep kunnen deelnemen!",
+        "message": "Deel de onderstaande code met toekomstige deelnemers zodat ze deze groep kunnen deelnemen!",
         "code": "code"
+      },
+      "inviteAccount": {
+        "title": "Neem deel aan {{group}}",
+        "description": "De groep {{group}} wacht op je in de Streepn App!",
+        "dialogTitle": "Deel deze link met je vrienden!"
+      },
+      "addSharedAccount": {
+        "header": "Gedeeld potje toevoegen",
+        "accountName": "Naam van potje"
       },
       "addProduct": {
         "header": "Product toevoegen",

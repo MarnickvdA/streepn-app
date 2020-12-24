@@ -23,8 +23,6 @@ export class TransactionService {
         }).pipe(
             map(result => result.map(value => {
                 // There were some issues with getting the date nicely from the function, so we did a little ugly conversion.
-                value.createdAt = Timestamp.fromMillis(value.createdAt);
-
                 return newTransaction(value.id, value);
             }))
         );

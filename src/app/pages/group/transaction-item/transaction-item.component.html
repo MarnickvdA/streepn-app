@@ -1,0 +1,10 @@
+<ion-item>
+  <ion-label>
+    <h3>
+      {{transaction.amount}} {{transaction.product.name}} voor {{transaction.account.name}}
+    </h3>
+    <p>
+      Op {{transaction.createdAt.toDate().toLocaleString()}} door {{transaction.createdBy}}
+    </p>
+  </ion-label>
+</ion-item>

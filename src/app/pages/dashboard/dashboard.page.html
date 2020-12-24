@@ -33,6 +33,13 @@
         <ion-item *ngFor="let group of groups" routerLink="/group/{{group.id}}">
             <ion-label>{{group.name}}</ion-label>
         </ion-item>
+
+        <ion-item class="manualJoin" (click)="promptManualGroupJoin()" lines="none">
+            <ion-icon slot="start" name="ticket-outline"></ion-icon>
+            <ion-label>
+                {{'dashboard.manualGroupJoin' | translate}}
+            </ion-label>
+        </ion-item>
     </ion-list>
 
 </ion-content>

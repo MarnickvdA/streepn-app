@@ -1,0 +1,75 @@
+<ion-content>
+    <ion-slides id="slides" pager="true" [options]="slideOpts">
+        <ion-slide>
+            <ion-icon class="image" name="happy"></ion-icon>
+            <div class="text-area">
+                <h1>{{'onboarding.welcome.title' | translate}} {{name}}!</h1>
+                <p [innerHTML]='this.translate.instant("onboarding.welcome.description")'></p>
+            </div>
+            <ion-button expand="block" (click)="slideNext()">
+                {{'actions.next' | translate}}
+            </ion-button>
+        </ion-slide>
+        <ion-slide>
+            <ion-icon class="image" name="notifications-circle"></ion-icon>
+            <div class="text-area">
+                <h1>{{'onboarding.push.title' | translate}}</h1>
+                <p>{{'onboarding.push.description' | translate}}</p>
+            </div>
+            <ion-button expand="block" (click)="initPushNotifications()">
+                {{'onboarding.push.enable' | translate}}
+            </ion-button>
+            <ion-button fill="none" expand="block" (click)="slideNext()">
+                {{'actions.skip' | translate}}
+            </ion-button>
+        </ion-slide>
+        <ion-slide *ngIf="!name">
+            <ion-icon class="image" name="create"></ion-icon>
+            <div class="text-area">
+                <h1>{{'onboarding.setName.title' | translate}}</h1>
+                <p>{{'onboarding.setName.description' | translate}}</p>
+            </div>
+            <form class="ion-margin-top" [formGroup]="nameForm" (ngSubmit)="submitName()">
+
+                <ion-item class="form-input" lines="none">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <ion-input placeholder="{{'login.name' | translate}}" autocapitalize="words" formControlName="name"
+                               clearInput type="text"
+                               autocomplete="given-name" enterkeyhint="next" inputmode="text"></ion-input>
+                </ion-item>
+
+                <span class="form-input-error" *ngIf="isSubmitted && nameForm.controls.name.errors?.required">
+                    {{'login.errors.name-required' | translate}}
+                </span>
+
+                <ion-button type="submit">
+                    {{'actions.save' | translate}}
+                </ion-button>
+            </form>
+        </ion-slide>
+        <ion-slide *ngIf="group">
+            <ion-icon class="image" name="ticket-outline"></ion-icon>
+            <div class="text-area">
+                <h1>{{'onboarding.joinGroup.title' | translate}} {{group.name}}</h1>
+                <p>{{'onboarding.joinGroup.description' | translate}}</p>
+            </div>
+            <ion-button expand="block" (click)="joinGroup(group.id)">
+                {{'actions.join' | translate}}
+            </ion-button>
+            <ion-button color="danger" fill="outline" expand="block" (click)="slideNext()">
+                {{'actions.deny' | translate}}
+            </ion-button>
+        </ion-slide>
+        <ion-slide>
+            <ion-icon class="image" name="people-circle"></ion-icon>
+            <div class="text-area">
+                <h1>{{'onboarding.start.title' | translate}}</h1>
+                <p>{{'onboarding.start.description' | translate}}</p>
+            </div>
+            <ion-button fill="outline" expand="block" (click)="dismiss()">
+                {{'actions.start' | translate}}
+                <ion-icon slot="end" name="arrow-forward"></ion-icon>
+            </ion-button>
+        </ion-slide>
+    </ion-slides>
+</ion-content>

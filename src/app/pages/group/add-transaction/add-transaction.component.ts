@@ -20,15 +20,13 @@ export class AddTransactionComponent implements OnInit {
     @Input() group: Group;
     transactions: {
         [accountId: string]: {
-            [accountId: string]: {
+            [productId: string]: {
                 amount: number;
             }
         }
     } = {};
     currentProduct: Product;
-    canCheckout = false;
-
-    private loading?: HTMLIonLoadingElement;
+    transactionCount = 0;
 
     constructor(private modalController: ModalController,
                 private transactionService: TransactionService,
@@ -64,10 +62,10 @@ export class AddTransactionComponent implements OnInit {
 
         this.transactions[account.id][this.currentProduct.id].amount++;
 
-        this.canCheckout = true;
+        this.transactionCount++;
     }
 
-    checkout() {
+    async checkout() {
         const productDictionary: { [productId: string]: Product } = {};
         this.group.products.forEach(p => {
             productDictionary[p.id] = p;
@@ -75,6 +73,9 @@ export class AddTransactionComponent implements OnInit {
 
         const accountDictionary: { [accountId: string]: Account } = {};
         this.group.accounts.forEach(a => {
+            accountDictionary[a.id] = a;
+        });
+        this.group.sharedAccounts.forEach(a => {
             accountDictionary[a.id] = a;
         });
 
@@ -88,46 +89,43 @@ export class AddTransactionComponent implements OnInit {
                 const product = productDictionary[productId];
                 const amount = this.transactions[accountId][productId].amount;
 
-                const transaction = new Transaction(undefined, undefined, amount, amount * product.price,
-                    currentUserAccount.name, currentUserAccount.id, account, product);
+                if (amount > 0) {
+                    const transaction = new Transaction(undefined, undefined, amount, amount * product.price,
+                        currentUserAccount.name, currentUserAccount.id, account, product);
 
-                transactionList.push(transaction);
+                    transactionList.push(transaction);
+                }
             });
         });
 
-        this.showLoading();
-
-        this.transactionService.addTransaction(this.group.id, transactionList)
-            .pipe(
-                catchError(err => {
-                    console.error(err);
-                    this.loading?.dismiss();
-                    return EMPTY;
-                })
-            )
-            .subscribe((value) => {
-                this.dismiss(value);
-            });
-    }
-
-    dismiss(data?: Transaction[]) {
-        this.loading?.dismiss();
-
-        this.modalController.dismiss(data);
-    }
-
-    async showLoading() {
-        this.loading = await this.loadingController.create({
+        const loading = await this.loadingController.create({
             message: this.translate.instant('actions.streeping'),
             translucent: true,
             backdropDismiss: false
         });
 
-        await this.loading.present();
+        await loading.present();
 
-        this.loading.onDidDismiss()
-            .then(() => {
-                this.loading = undefined;
+        this.transactionService.addTransaction(this.group.id, transactionList)
+            .pipe(
+                catchError(err => {
+                    console.error(err);
+                    loading.dismiss(); // TODO Check if this is necessary.
+                    return EMPTY;
+                })
+            )
+            .subscribe((value) => {
+                loading.dismiss();
+                this.dismiss(value);
             });
+    }
+
+    dismiss(data?: Transaction[]) {
+        this.modalController.dismiss(data);
+    }
+
+    removeItem(account: Account) {
+        this.transactions[account.id][this.currentProduct.id].amount -= 2;
+        this.transactionCount -= 2;
     }
 }

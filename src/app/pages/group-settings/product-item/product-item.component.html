@@ -1,0 +1,7 @@
+<ion-item>
+  <ion-label>{{product.name}}</ion-label>
+  <ion-chip color="success" style="min-width: 5rem">
+    <ion-icon name="pricetag-outline"></ion-icon>
+    <ion-label>€ {{(product.price / 100).toLocaleString('nl-NL', {minimumFractionDigits: 2, maximumFractionDigits: 2})}}</ion-label>
+  </ion-chip>
+</ion-item>

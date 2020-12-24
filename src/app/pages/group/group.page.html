@@ -29,16 +29,8 @@
                     <p>{{'group.transactions.empty' | translate}}</p>
                 </ion-label>
             </ion-item>
-            <ion-item *ngFor="let transaction of transactions">
-                <ion-label>
-                    <h3>
-                        {{transaction.amount}} {{transaction.product.name}} voor {{transaction.account.name}}
-                    </h3>
-                    <p>
-                        Op {{transaction.createdAt.toDate().toLocaleString()}} door {{transaction.createdBy}}
-                    </p>
-                </ion-label>
-            </ion-item>
+            <app-transaction-item *ngFor="let transaction of transactions"
+                                  [transaction]="transaction"></app-transaction-item>
         </ng-container>
     </ion-list>
 

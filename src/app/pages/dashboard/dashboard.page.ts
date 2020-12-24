@@ -1,6 +1,6 @@
-import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
-import {AlertController, LoadingController, NavController} from '@ionic/angular';
+import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {BehaviorSubject, Observable} from 'rxjs';
 import firebase from 'firebase/app';
 import {GroupService} from '../../services/group.service';
@@ -8,7 +8,10 @@ import {UserService} from '../../services/user.service';
 import {Group} from '../../models';
 import {TranslateService} from '@ngx-translate/core';
 import {EventsService} from '../../services/events.service';
-import {PushService} from '../../services/push.service';
+import {take} from 'rxjs/operators';
+import {OnboardingComponent} from './onboarding/onboarding.component';
+import {StorageService} from '../../services/storage.service';
+import {UIService} from '../../services/ui.service';
 import User = firebase.User;
 
 @Component({
@@ -16,14 +19,14 @@ import User = firebase.User;
     templateUrl: './dashboard.page.html',
     styleUrls: ['./dashboard.page.scss'],
 })
-export class DashboardPage implements OnInit, OnDestroy {
+export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
 
     user$: Observable<User>;
     groups$: BehaviorSubject<Group[]> = new BehaviorSubject<Group[]>([]);
 
-    private unsubscribe;
     private user: User;
     private loadingGroupJoin?: HTMLIonLoadingElement;
+    private unsubscribeFn;
 
     constructor(private authService: AuthService,
                 private navController: NavController,
@@ -34,38 +37,75 @@ export class DashboardPage implements OnInit, OnDestroy {
                 private zone: NgZone,
                 private eventsService: EventsService,
                 private loadingController: LoadingController,
-                private pushService: PushService) {
+                private modalController: ModalController,
+                private storage: StorageService,
+                private uiService: UIService) {
     }
 
     ngOnInit() {
-        this.pushService.initialize();
-
         this.user$ = this.authService.user;
 
         this.user$.subscribe(user => {
             this.user = user;
-
-            if (user) {
-                this.unsubscribe = this.groupService.observeGroups(user.uid)
-                    .onSnapshot(snapshot => {
-                        const groups = [];
-
-                        snapshot.docs.forEach((doc) => {
-                            groups.push(doc.data());
-                        });
-
-                        this.groups$.next(groups);
-                    });
-            }
         });
 
-        if (window.localStorage.getItem('groupInvite')) {
-            this.promptGroupInvite(window.localStorage.getItem('groupInvite'));
-        }
+        this.user$.pipe(take(1)).subscribe(user => {
+            this.unsubscribeFn = this.groupService.observeGroups(user.uid)
+                .onSnapshot(snapshot => {
+                    let groups = [];
+
+                    snapshot.docs.forEach((doc) => {
+                        groups.push(doc.data());
+                    });
+
+                    groups = groups.sort((g1: Group, g2: Group) => {
+                        const d1 = g1.createdAt.toDate().getTime();
+                        const d2 = g2.createdAt.toDate().getTime();
+
+                        if (d1 === d2) {
+                            return 0;
+                        }
+                        if (d1 > d2) {
+                            return 1;
+                        }
+                        if (d1 < d2) {
+                            return -1;
+                        }
+                    });
+
+                    this.groups$.next(groups);
+                });
+        });
     }
 
-    ngOnDestroy(): void {
-        this.unsubscribe();
+    ngOnDestroy() {
+        this.unsubscribeFn();
+    }
+
+    ngAfterViewInit() {
+        this.storage.get('hasOnboarded')
+            .then((hasOnboarded: boolean) => {
+                if (!hasOnboarded) {
+                    this.checkForGroupInvite();
+                } else {
+                    this.launchOnBoarding();
+                }
+            })
+            .catch(() => {
+                this.launchOnBoarding();
+            });
+    }
+
+    private launchOnBoarding() {
+        this.modalController.create({
+            // swipeToClose: false,
+            // backdropDismiss: false,
+            component: OnboardingComponent
+        }).then((modal) => {
+            this.zone.run(() => {
+                modal.present();
+            });
+        });
     }
 
     async addGroup() {
@@ -88,7 +128,10 @@ export class DashboardPage implements OnInit, OnDestroy {
                         if (result.groupName.length > 3) {
                             this.groupService.createGroup(result.groupName);
                         } else {
-                            // TODO Error message
+                            this.uiService.showError(
+                                this.translate.instant('errors.error'),
+                                this.translate.instant('dashboard.createGroup.invalidGroupName')
+                            );
                         }
                     }
                 }
@@ -98,15 +141,24 @@ export class DashboardPage implements OnInit, OnDestroy {
         await alert.present();
     }
 
+    private checkForGroupInvite() {
+        this.storage.get('groupInvite')
+            .then((invite: string) => {
+                this.promptGroupInvite(invite);
+            })
+            .catch(() => {
+            });
+    }
+
     private promptGroupInvite(groupInvite: string) {
         // Fuck this item, don't want it more than once.
-        window.localStorage.removeItem('groupInvite');
+        this.storage.delete('groupInvite');
+
+        console.log('prompt for group: ' + groupInvite);
 
         this.groupService.getGroupByInviteLink(groupInvite)
             .then(group => {
                 this.zone.run(() => {
-                    console.log(groupInvite);
-                    console.log(group);
 
                     if (!group.members.find(uid => uid === this.user.uid)) {
                         this.alertController.create({
@@ -132,7 +184,6 @@ export class DashboardPage implements OnInit, OnDestroy {
     }
 
     private joinGroup(groupId: string) {
-        console.log('Joining: ' + groupId);
         this.showLoading();
 
         this.eventsService.subscribe('group:joined', () => {
@@ -159,5 +210,38 @@ export class DashboardPage implements OnInit, OnDestroy {
             .then(() => {
                 this.loadingGroupJoin = undefined;
             });
+    }
+
+    async promptManualGroupJoin() {
+        const alert = await this.alertController.create({
+            header: this.translate.instant('dashboard.groupInvite.manualHeader'),
+            inputs: [
+                {
+                    name: 'groupCode',
+                    type: 'text',
+                    placeholder: this.translate.instant('dashboard.groupInvite.code')
+                }
+            ],
+            buttons: [
+                {
+                    text: this.translate.instant('actions.cancel'),
+                    role: 'cancel',
+                }, {
+                    text: this.translate.instant('actions.submit'),
+                    handler: (result: { groupCode: string }) => {
+                        if (result.groupCode.length === 8) {
+                            this.promptGroupInvite(result.groupCode);
+                        } else {
+                            this.uiService.showError(
+                                this.translate.instant('errors.error'),
+                                this.translate.instant('dashboard.groupInvite.invalidCode')
+                            );
+                        }
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
     }
 }

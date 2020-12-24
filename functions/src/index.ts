@@ -73,14 +73,28 @@ exports.addTransaction = functions
                         const now = admin.firestore.FieldValue.serverTimestamp();
 
                         data.transactions.forEach((t: any) => {
-                            const acc = group.accounts.find((account: any) => account.userId === t.account.userId);
-                            const index = group.accounts.indexOf(acc);
+                            let acc: any;
+                            let index: number;
+                            switch (t.account.type) {
+                                case 'user':
+                                    acc = group.accounts.find((account: any) => account.id === t.account.id);
+                                    index = group.accounts.indexOf(acc);
+
+                                    // Update balance of the account
+                                    acc.balance -= t.totalPrice;
+                                    group.accounts[index] = acc;
+                                    break;
+                                case 'shared':
+                                    acc = group.sharedAccounts.find((account: any) => account.id === t.account.id);
+                                    index = group.sharedAccounts.indexOf(acc);
+
+                                    // Update balance of the account
+                                    acc.balance -= t.totalPrice;
+                                    group.sharedAccounts[index] = acc;
+                                    break;
+                            }
 
                             // TODO Implement edge case where account is not found, thus transactions are not saved correctly.
-
-                            // Update balance of the account
-                            acc.balance -= t.totalPrice;
-                            group.accounts[index] = acc;
 
                             // tslint:disable-next-line:no-shadowed-variable
                             const uid = uuidv4();
@@ -91,14 +105,8 @@ exports.addTransaction = functions
                                 createdById: t.createdById,
                                 amount: t.amount,
                                 totalPrice: t.totalPrice,
-                                account: {
-                                    name: t.account.name,
-                                    userId: t.account.userId,
-                                },
-                                product: {
-                                    name: t.product.name,
-                                    price: t.product.price,
-                                },
+                                account: t.account,
+                                product: t.product,
                             };
 
                             // Add the transaction to firestore
@@ -113,6 +121,7 @@ exports.addTransaction = functions
                         });
                         transaction.update(groupRef, {
                             accounts: group.accounts,
+                            sharedAccounts: group.sharedAccounts,
                         });
                     })
                     .catch(err => {
