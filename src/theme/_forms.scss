@@ -10,6 +10,14 @@ ion-item.form-input {
   --border-radius: 0.5rem;
   --border-style: solid;
   --border-width: 1px;
+
+  &:focus-within {
+    --border-color: rgba(var(--ion-color-primary-rgb), 0.5);
+
+    > ion-icon {
+      color: rgba(var(--ion-color-primary-rgb), 0.75);
+    }
+  }
   //--color	Color of the item
   //--color-activated	Color of the item when pressed
   //--color-focused	Color of the item when focused with the tab key
@@ -35,6 +43,7 @@ ion-item.form-input {
 
   ion-icon {
     color: rgba(var(--ion-color-medium-rgb), 0.75);
+
     font-size: 1.25rem;
     margin-right: 1rem;
   }

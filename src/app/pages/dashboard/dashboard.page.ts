@@ -85,7 +85,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit() {
         this.storage.get('hasOnboarded')
             .then((hasOnboarded: boolean) => {
-                if (!hasOnboarded) {
+                if (hasOnboarded) {
                     this.checkForGroupInvite();
                 } else {
                     this.launchOnBoarding();
