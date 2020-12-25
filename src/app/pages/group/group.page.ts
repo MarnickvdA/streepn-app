@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {UserService} from '../../services/user.service';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Group, Transaction, transactionConverter} from '../../models';
@@ -7,13 +7,14 @@ import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {GroupService} from '../../services/group.service';
 import {TransactionService} from '../../services/transaction.service';
 import {AddTransactionComponent} from './add-transaction/add-transaction.component';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-group',
     templateUrl: './group.page.html',
     styleUrls: ['./group.page.scss'],
 })
-export class GroupPage implements OnInit {
+export class GroupPage implements OnInit, OnDestroy {
     private LIMIT = 20;
 
     @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
@@ -22,6 +23,7 @@ export class GroupPage implements OnInit {
     transactions: Transaction[];
 
     private lastSnapshot: QueryDocumentSnapshot<Transaction>;
+    private routeSub: Subscription;
     doneLoading = false;
 
     constructor(private route: ActivatedRoute,
@@ -30,7 +32,7 @@ export class GroupPage implements OnInit {
                 private transactionService: TransactionService,
                 private fs: AngularFirestore,
                 private modalController: ModalController) {
-        this.route.params.subscribe((params: Params) => {
+        this.routeSub = this.route.params.subscribe((params: Params) => {
             groupService.getGroup(params.id)
                 .then(group => {
                     this.group = group;
@@ -46,6 +48,10 @@ export class GroupPage implements OnInit {
     }
 
     ngOnInit(): void {
+    }
+
+    ngOnDestroy(): void {
+        this.routeSub.unsubscribe();
     }
 
     reset(event?) {

@@ -120,7 +120,7 @@ export class OnboardingComponent implements OnInit {
 
         await loading.present();
 
-        this.groupService.joinGroup(groupId, this.userService.user.displayName);
+        this.groupService.joinGroup(groupId, this.userService.user);
 
         const joinedGroupFn = () => {
             loading.dismiss();

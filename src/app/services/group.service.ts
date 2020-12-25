@@ -12,6 +12,7 @@ import {v4 as uuidv4} from 'uuid';
 import {AnalyticsService} from './analytics.service';
 import {UserService} from './user.service';
 import Timestamp = firebase.firestore.Timestamp;
+import User = firebase.User;
 
 @Injectable({
     providedIn: 'root'
@@ -94,6 +95,7 @@ export class GroupService {
                     accounts: [{
                         id: uuidv4(),
                         name: user.displayName,
+                        photoUrl: user.photoURL,
                         roles: ['ADMIN'],
                         userId: user.uid,
                         balance: 0,
@@ -121,15 +123,15 @@ export class GroupService {
             });
     }
 
-    joinGroup(groupId: string, displayName: string) {
+    joinGroup(groupId: string, user: User) {
         const callable = this.functions.httpsCallable('joinGroup');
-        callable({groupId, displayName})
+        callable({groupId, user})
             .pipe(catchError((err) => {
                 console.error(err);
                 return EMPTY;
             }))
             .subscribe(data => {
-                this.analyticsService.logJoinGroup(this.userService.user.uid, groupId);
+                this.analyticsService.logJoinGroup(user.uid, groupId);
 
                 this.eventsService.publish('group:joined');
             });

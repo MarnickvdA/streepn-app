@@ -31,39 +31,39 @@ export class AnalyticsService {
     }
 
     logUserRegister(uid: string) {
-        this.logEvent('user:register', {
+        this.logEvent('user_registered', {
             userId: uid
         });
     }
 
     logUserLogin(uid: string) {
-        this.logEvent('user:login', {
+        this.logEvent('user_login', {
             userId: uid
         });
     }
 
     logUserLogout(uid: string) {
-        this.logEvent('user:logout', {
+        this.logEvent('user_logout', {
             userId: uid
         });
     }
 
     logCreateGroup(uid: string, groupId: string) {
-        this.logEvent('group:create', {
+        this.logEvent('group_created', {
             userId: uid,
             groupId
         });
     }
 
     logJoinGroup(uid: string, groupId: string) {
-        this.logEvent('group:join', {
+        this.logEvent('group_joined', {
             userId: uid,
             groupId
         });
     }
 
     logTransaction(uid: string, groupId: string, transactionId: string) {
-        this.logEvent('transaction:create', {
+        this.logEvent('transaction_created', {
             userId: uid,
             groupId,
             transactionId

@@ -19,7 +19,7 @@
     <ion-list *ngIf="groups$.asObservable() | async; let groups">
         <ion-list-header lines="full">
             <ion-label>{{'dashboard.groups' | translate}}</ion-label>
-            <ion-button (click)="addGroup()">{{'actions.new' | translate}}</ion-button>
+            <ion-button routerLink="new-group" routerDirection="forward">{{'actions.new' | translate}}</ion-button>
         </ion-list-header>
 
         <ion-item *ngIf="groups.length === 0" lines="none">

@@ -1,0 +1,54 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/dashboard"></ion-back-button>
+        </ion-buttons>
+
+        <ion-title>{{'dashboard.createGroup.title' | translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{'dashboard.createGroup.title' | translate}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <div class="form-content">
+        <ion-badge color="dark">Stap 1: Groepsnaam invullen</ion-badge>
+        <form [formGroup]="groupForm" (ngSubmit)="setName()">
+            <ion-item lines="none" class="form-input">
+                <ion-icon name="people-outline"></ion-icon>
+                <ion-input placeholder="{{'dashboard.createGroup.groupName' | translate}}" autocapitalize="words"
+                           formControlName="name" [attr.disabled]="groupCreated"
+                           clearInput type="text" enterkeyhint="next" inputmode="text"></ion-input>
+            </ion-item>
+            <span class="form-input-error" *ngIf="isSubmitted && form.name.errors?.required">
+                {{'dashboard.createGroup.errors.name-required' | translate}}
+            </span>
+            <span class="form-input-error" *ngIf="isSubmitted && form.name.errors?.length">
+                {{'dashboard.createGroup.errors.name-length' | translate}}
+            </span>
+
+            <ion-button expand="block" type="submit">
+                <ion-label>{{'actions.submit' | translate}}</ion-label>
+            </ion-button>
+        </form>
+
+        <div *ngIf="group">
+            <ion-badge color="dark">Stap 2</ion-badge>
+            <ion-button expand="block" (click)="shareGroup()">
+                <ion-label>{{'dashboard.createGroup.shareInvite' | translate}}</ion-label>
+            </ion-button>
+        </div>
+
+        <div *ngIf="group && sharedGroup">
+            <ion-badge color="dark">Stap 3</ion-badge>
+            <ion-button expand="block" (click)="navigateSettings()">
+                <ion-label>{{'dashboard.createGroup.navigateSettings' | translate}}</ion-label>
+            </ion-button>
+        </div>
+    </div>
+
+</ion-content>

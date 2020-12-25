@@ -48,7 +48,7 @@
         <ion-list>
             <ion-list-header lines="full">
                 <ion-label>{{'group.settings.products' | translate}}</ion-label>
-                <ion-button (click)="addProduct()">{{'actions.new' | translate}}</ion-button>
+                <ion-button *ngIf="isAdmin" (click)="addProduct()">{{'actions.new' | translate}}</ion-button>
             </ion-list-header>
 
             <ion-item *ngIf="group.products.length === 0" lines="none">
@@ -61,7 +61,7 @@
 
             <ion-item-sliding *ngFor="let product of group.products">
                 <app-product-item [product]="product"></app-product-item>
-                <ion-item-options side="end">
+                <ion-item-options *ngIf="isAdmin" side="end">
                     <ion-item-option color="danger" (click)="removeProduct(product)" expandable>{{'actions.delete' | translate}}</ion-item-option>
                 </ion-item-options>
             </ion-item-sliding>

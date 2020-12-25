@@ -79,9 +79,14 @@
     "memberSince": "Gebruiker sinds",
     "emptyGroups": "Je hebt nog geen groepen.",
     "createGroup": {
-      "header": "Nieuwe groep",
+      "title": "Nieuwe groep",
       "groupName": "Groepsnaam",
-      "invalidGroupName": "Groepsnaam te kort"
+      "errors": {
+        "name-length": "Groepsnaam te kort",
+        "name-required": "Vul een groepsnaam in"
+      },
+      "shareInvite": "Groepslink delen",
+      "navigateSettings": "Naar groepsinstellingen"
     },
     "toggleDarkMode": "Donkere modus",
     "manualGroupJoin": "Toetreden via groepscode",
@@ -129,6 +134,10 @@
       "emptySharedAccounts": "Er zijn nog geen gedeelde potjes",
       "products": "Producten",
       "emptyProducts": "Er zijn nog geen producten",
+      "account": {
+        "preferences": "Voorkeuren",
+        "enablePush": "Push Notificaties"
+      },
       "addAccount": {
         "header": "Deelnemers toevoegen",
         "message": "Deel de onderstaande code met toekomstige deelnemers zodat ze deze groep kunnen deelnemen!",

@@ -24,7 +24,7 @@ export class UserAccount extends Account {
     constructor(id: string, userId: string, createdAt: Timestamp, name: string, balance: number, roles: string[], photoUrl: string) {
         super(id, createdAt, name, balance, 'user');
         this.userId = userId;
-        this.roles = roles;
+        this.roles = roles || [];
         this.photoUrl = photoUrl;
     }
 }
@@ -61,7 +61,8 @@ export const userAccountConverter = {
             createdAt: account.createdAt,
             name: account.name,
             balance: account.balance,
-            roles: account.roles
+            roles: account.roles,
+            photoUrl: account.photoUrl
         };
     },
     newAccount(data: { [key: string]: any }): UserAccount {

@@ -1,12 +1,12 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {GroupService} from '../../services/group.service';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {Group, Product} from '../../models';
 import {ActivatedRoute, Params} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AlertController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {Capacitor, Plugins} from '@capacitor/core';
+import {Plugins} from '@capacitor/core';
 import {ProductService} from '../../services/product.service';
 import {AccountService} from 'src/app/services/account.service';
 
@@ -17,13 +17,14 @@ const {Clipboard, Share} = Plugins;
     templateUrl: './group-settings.page.html',
     styleUrls: ['./group-settings.page.scss'],
 })
-export class GroupSettingsPage {
+export class GroupSettingsPage implements OnDestroy {
 
     groupId: string;
     isAdmin: boolean;
     inviteLink: string;
     group$: Observable<Group>;
     private group: Group;
+    private groupSub: Subscription;
 
     constructor(private groupService: GroupService,
                 private authService: AuthService,
@@ -39,7 +40,7 @@ export class GroupSettingsPage {
 
             this.authService.currentUser
                 .then(user => {
-                    this.group$
+                    this.groupSub = this.group$
                         .subscribe(group => {
                             this.group = group;
                             this.inviteLink = group.inviteLink;
@@ -47,6 +48,10 @@ export class GroupSettingsPage {
                         });
                 });
         });
+    }
+
+    ngOnDestroy(): void {
+        this.groupSub.unsubscribe();
     }
 
     async inviteAccounts() {

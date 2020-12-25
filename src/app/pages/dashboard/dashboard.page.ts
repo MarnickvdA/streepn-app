@@ -77,12 +77,16 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 });
         });
 
-        this.eventsService.subscribe('app:resume', this.checkForGroupInvite);
+        this.eventsService.subscribe('app:resume', () => {
+            this.checkForGroupInvite();
+        });
     }
 
     ngOnDestroy() {
         this.unsubscribeFn();
-        this.eventsService.unsubscribe('app:resume', this.checkForGroupInvite);
+        this.eventsService.unsubscribe('app:resume', () => {
+            this.checkForGroupInvite();
+        });
     }
 
     ngAfterViewInit() {
@@ -109,39 +113,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 modal.present();
             });
         });
-    }
-
-    async addGroup() {
-        const alert = await this.alertController.create({
-            header: this.translate.instant('dashboard.createGroup.header'),
-            inputs: [
-                {
-                    name: 'groupName',
-                    type: 'text',
-                    placeholder: this.translate.instant('dashboard.createGroup.groupName')
-                }
-            ],
-            buttons: [
-                {
-                    text: this.translate.instant('actions.cancel'),
-                    role: 'cancel',
-                }, {
-                    text: this.translate.instant('actions.create'),
-                    handler: (result: { groupName: string }) => {
-                        if (result.groupName.length > 3) {
-                            this.groupService.createGroup(result.groupName);
-                        } else {
-                            this.uiService.showError(
-                                this.translate.instant('errors.error'),
-                                this.translate.instant('dashboard.createGroup.invalidGroupName')
-                            );
-                        }
-                    }
-                }
-            ]
-        });
-
-        await alert.present();
     }
 
     private checkForGroupInvite() {
@@ -197,7 +168,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             this.eventsService.unsubscribe('group:joined');
         });
 
-        this.groupService.joinGroup(groupId, this.user.displayName);
+        this.groupService.joinGroup(groupId, this.user);
     }
 
     private async showLoading() {

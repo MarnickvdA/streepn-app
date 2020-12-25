@@ -72,6 +72,10 @@ export class PushService {
     }
 
     subscribeTopic(topic: PushTopic, id: string) {
+        if (!Capacitor.isPluginAvailable('PushNotifications')) {
+            return Promise.reject('PushNotifications not supported');
+        }
+
         this.requestPushRegister()
             .then(() => {
                 let subTopic;
@@ -89,6 +93,10 @@ export class PushService {
     }
 
     unsubscribeTopic(topic: PushTopic, id: string) {
+        if (!Capacitor.isPluginAvailable('PushNotifications')) {
+            return Promise.reject('PushNotifications not supported');
+        }
+
         this.requestPushRegister()
             .then(() => {
                 let subTopic;

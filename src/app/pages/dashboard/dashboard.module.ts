@@ -9,6 +9,7 @@ import {DashboardPageRoutingModule} from './dashboard-routing.module';
 import {DashboardPage} from './dashboard.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {OnboardingComponent} from './onboarding/onboarding.component';
+import {NewGroupComponent} from './new-group/new-group.component';
 
 @NgModule({
     imports: [
@@ -19,7 +20,7 @@ import {OnboardingComponent} from './onboarding/onboarding.component';
         TranslateModule,
         ReactiveFormsModule
     ],
-    declarations: [DashboardPage, OnboardingComponent]
+    declarations: [DashboardPage, OnboardingComponent, NewGroupComponent]
 })
 export class DashboardPageModule {
 }

@@ -36,6 +36,10 @@ export class UserAccountItemComponent implements OnInit {
             relativeTo: this.route
         });
 
-        this.navController.navigateForward(relativeRoute);
+        this.navController.navigateForward(relativeRoute, {
+            state: {
+                account: this.account
+            }
+        });
     }
 }

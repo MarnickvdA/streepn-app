@@ -17,6 +17,8 @@ exports.joinGroup = functions
             throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
         }
 
+        const user: admin.auth.UserInfo = data.user;
+
         const groupRef = db.collection('groups').doc(data.groupId);
         const now = admin.firestore.Timestamp.now();
 
@@ -29,7 +31,8 @@ exports.joinGroup = functions
         groupRef.update(
             'accounts', admin.firestore.FieldValue.arrayUnion({
                 id: uuidv4(),
-                name: data.displayName,
+                name: user.displayName,
+                photoUrl: user.photoURL,
                 roles: [],
                 userId,
                 balance: 0,
@@ -135,12 +138,12 @@ exports.addTransaction = functions
             })
             .then(() => {
                 try {
-                    const topic = `'group_${data.groupId}_all' in topics || 'group_${data.groupId}_transactions' in topics'`;
+                    const topic = `group_${data.groupId}_all`;
 
                     const message = {
                         notification: {
                             title: `Nieuwe transactie in ${group.name}`,
-                            body: `${currentAccount.name} heeft ${transactions.length} transactie${transactions.length > 1 ? 's' : ''} gedaan!`
+                            body: `${currentAccount.name} heeft ${transactions.length} transactie${transactions.length > 1 ? 's' : ''} gedaan!`,
                         },
                         data: {
                             groupId: data.groupId as string,
