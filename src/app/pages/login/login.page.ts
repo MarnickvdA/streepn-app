@@ -6,6 +6,7 @@ import {EventsService} from '../../services/events.service';
 import {Capacitor} from '@capacitor/core';
 import {TranslateService} from '@ngx-translate/core';
 import {UIService} from '../../services/ui.service';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
     selector: 'app-login',
@@ -24,7 +25,8 @@ export class LoginPage implements OnInit, OnDestroy {
                 private eventsService: EventsService,
                 private translate: TranslateService,
                 private loadingController: LoadingController,
-                private uiService: UIService) {
+                private uiService: UIService,
+                private storage: StorageService) {
         this.loginForm = this.formBuilder.group({
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required]]
@@ -40,6 +42,9 @@ export class LoginPage implements OnInit, OnDestroy {
 
         this.eventsService
             .subscribe('auth:login', this.loginHandler);
+
+        this.storage.delete('hasOnboarded');
+        this.storage.delete('pushToken');
     }
 
     ngOnDestroy(): void {

@@ -8,6 +8,7 @@ import {EMPTY} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {UserService} from '../../../services/user.service';
 import {AnalyticsService} from '../../../services/analytics.service';
+import {AuthService} from '../../../services/auth.service';
 
 const {Haptics} = Plugins;
 
@@ -34,7 +35,8 @@ export class AddTransactionComponent implements OnInit {
                 private loadingController: LoadingController,
                 private translate: TranslateService,
                 private userService: UserService,
-                private analyticsService: AnalyticsService) {
+                private analyticsService: AnalyticsService,
+                private authService: AuthService) {
     }
 
     ngOnInit() {
@@ -82,7 +84,7 @@ export class AddTransactionComponent implements OnInit {
         });
 
         const transactionList: Transaction[] = [];
-        const currentUserAccount = this.group.accounts.find(acc => acc.userId === this.userService.user.uid);
+        const currentUserAccount = this.group.accounts.find(acc => acc.userId === this.authService.currentUser.uid);
 
         Object.keys(this.transactions).forEach(accountId => {
             const account = accountDictionary[accountId];
@@ -118,7 +120,7 @@ export class AddTransactionComponent implements OnInit {
             )
             .subscribe((value) => {
                 if (value?.length > 0) {
-                    this.analyticsService.logTransaction(this.userService.user.uid, this.group.id, value[0].id);
+                    this.analyticsService.logTransaction(this.authService.currentUser.uid, this.group.id, value[0].id);
                 }
 
                 loading.dismiss();

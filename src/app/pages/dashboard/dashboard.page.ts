@@ -12,6 +12,7 @@ import {take} from 'rxjs/operators';
 import {OnboardingComponent} from './onboarding/onboarding.component';
 import {StorageService} from '../../services/storage.service';
 import {UIService} from '../../services/ui.service';
+import {PushService} from '../../services/push.service';
 import User = firebase.User;
 
 @Component({
@@ -49,33 +50,36 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             this.user = user;
         });
 
-        this.user$.pipe(take(1)).subscribe(user => {
-            this.unsubscribeFn = this.groupService.observeGroups(user.uid)
-                .onSnapshot(snapshot => {
-                    let groups = [];
+        this.user$.pipe(take(1))
+            .subscribe(user => {
+                if (user) {
+                    this.unsubscribeFn = this.groupService.observeGroups(user.uid)
+                        .onSnapshot(snapshot => {
+                            let groups = [];
 
-                    snapshot.docs.forEach((doc) => {
-                        groups.push(doc.data());
-                    });
+                            snapshot.docs.forEach((doc) => {
+                                groups.push(doc.data());
+                            });
 
-                    groups = groups.sort((g1: Group, g2: Group) => {
-                        const d1 = g1.createdAt.toDate().getTime();
-                        const d2 = g2.createdAt.toDate().getTime();
+                            groups = groups.sort((g1: Group, g2: Group) => {
+                                const d1 = g1.createdAt.toDate().getTime();
+                                const d2 = g2.createdAt.toDate().getTime();
 
-                        if (d1 === d2) {
-                            return 0;
-                        }
-                        if (d1 > d2) {
-                            return 1;
-                        }
-                        if (d1 < d2) {
-                            return -1;
-                        }
-                    });
+                                if (d1 === d2) {
+                                    return 0;
+                                }
+                                if (d1 > d2) {
+                                    return 1;
+                                }
+                                if (d1 < d2) {
+                                    return -1;
+                                }
+                            });
 
-                    this.groups$.next(groups);
-                });
-        });
+                            this.groups$.next(groups);
+                        });
+                }
+            });
 
         this.eventsService.subscribe('app:resume', () => {
             this.checkForGroupInvite();
@@ -128,8 +132,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         // Fuck this item, don't want it more than once.
         this.storage.delete('groupInvite');
 
-        console.log('prompt for group: ' + groupInvite);
-
         this.groupService.getGroupByInviteLink(groupInvite)
             .then(group => {
                 this.zone.run(() => {
@@ -161,9 +163,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         this.showLoading();
 
         this.eventsService.subscribe('group:joined', () => {
-            if (this.loadingGroupJoin) {
-                this.loadingGroupJoin.dismiss();
-            }
+            this.loadingGroupJoin?.dismiss();
 
             this.eventsService.unsubscribe('group:joined');
         });

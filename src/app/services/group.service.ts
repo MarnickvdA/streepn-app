@@ -10,9 +10,12 @@ import {catchError, map} from 'rxjs/operators';
 import {createGroup} from '../models/group';
 import {v4 as uuidv4} from 'uuid';
 import {AnalyticsService} from './analytics.service';
-import {UserService} from './user.service';
+import {PermissionType, Plugins} from '@capacitor/core';
+import {PushService, PushTopic} from './push.service';
 import Timestamp = firebase.firestore.Timestamp;
 import User = firebase.User;
+
+const {Permissions} = Plugins;
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +27,7 @@ export class GroupService {
                 private authService: AuthService,
                 private eventsService: EventsService,
                 private analyticsService: AnalyticsService,
-                private userService: UserService) {
+                private pushService: PushService) {
     }
 
     observeGroups(userId: string): firebase.firestore.Query<Group> {
@@ -82,56 +85,68 @@ export class GroupService {
      * @return newly created group's uid
      */
     createGroup(name: string): Promise<string> {
-        return this.authService.currentUser
-            .then(user => {
-                const now = Timestamp.now();
-                const date = new Date();
-                date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
-                const nextWeek = Timestamp.fromDate(date);
-                const randomLink = uuidv4().substring(0, 8).toUpperCase();
+        const user = this.authService.currentUser;
+        const now = Timestamp.now();
+        const date = new Date();
+        date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+        const nextWeek = Timestamp.fromDate(date);
+        const randomLink = uuidv4().substring(0, 8).toUpperCase();
 
-                const group = {
-                    name,
-                    accounts: [{
-                        id: uuidv4(),
-                        name: user.displayName,
-                        photoUrl: user.photoURL,
-                        roles: ['ADMIN'],
-                        userId: user.uid,
-                        balance: 0,
-                        createdAt: now,
-                    } as UserAccount],
-                    members: [user.uid],
-                    valuta: 'EUR',
-                    createdAt: now,
-                    inviteLink: randomLink,
-                    inviteLinkExpiry: nextWeek,
-                } as Group;
+        const group = {
+            name,
+            accounts: [{
+                id: uuidv4(),
+                name: user.displayName,
+                photoUrl: user.photoURL,
+                roles: ['ADMIN'],
+                userId: user.uid,
+                balance: 0,
+                createdAt: now,
+            } as UserAccount],
+            members: [user.uid],
+            valuta: 'EUR',
+            createdAt: now,
+            inviteLink: randomLink,
+            inviteLinkExpiry: nextWeek,
+        } as Group;
 
-                return this.fs.collection('groups')
-                    .add(groupConverter.toFirestore(group))
-                    .then(docRef => {
+        return this.fs.collection('groups')
+            .add(groupConverter.toFirestore(group))
+            .then(docRef => {
 
-                        this.analyticsService.logCreateGroup(this.userService.user.uid, docRef.id);
+                this.analyticsService.logCreateGroup(this.authService.currentUser.uid, docRef.id);
 
-                        return docRef.id;
-                    })
-                    .catch(err => {
-                        this.eventsService.publish('http:error', err);
-                        return Promise.reject(err);
-                    });
+                return docRef.id;
+            })
+            .catch(err => {
+                this.eventsService.publish('http:error', err);
+                return Promise.reject(err);
             });
     }
 
     joinGroup(groupId: string, user: User) {
         const callable = this.functions.httpsCallable('joinGroup');
-        callable({groupId, user})
+        callable({
+            groupId, user: {
+                displayName: user.displayName,
+                photoURL: user.photoURL
+            }
+        })
             .pipe(catchError((err) => {
-                console.error(err);
+                this.eventsService.publish('group:joined');
                 return EMPTY;
             }))
-            .subscribe(data => {
+            .subscribe(account => {
                 this.analyticsService.logJoinGroup(user.uid, groupId);
+
+                // Enable push messages for this user.
+                Permissions.query({
+                    name: PermissionType.Notifications
+                }).then((result) => {
+                    if (result.state === 'granted') {
+                        this.pushService.subscribeTopic(PushTopic.GROUP_ALL, {groupId, accountId: account.id});
+                    }
+                });
 
                 this.eventsService.publish('group:joined');
             });

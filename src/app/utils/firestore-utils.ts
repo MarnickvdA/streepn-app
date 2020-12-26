@@ -10,5 +10,9 @@ export function toTimestamp(d: Date): Timestamp {
 }
 
 export function getMoneyString(money: number): string {
-    return `${(money / 100).toLocaleString('nl-NL', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    return Intl.NumberFormat('nl-NL', {
+        style: 'currency',
+        currency: 'EUR',
+        currencyDisplay: undefined,
+    }).format(money / 100);
 }

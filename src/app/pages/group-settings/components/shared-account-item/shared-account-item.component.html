@@ -1,0 +1,6 @@
+<ion-item>
+  <div class="content">
+    <ion-label>{{account.name}}</ion-label>
+    <ion-label [color]="account.balance >= 0 ? 'dark' : 'danger'">{{balanceString}}</ion-label>
+  </div>
+</ion-item>

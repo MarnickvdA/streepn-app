@@ -71,9 +71,9 @@ export class PushService {
         });
     }
 
-    subscribeTopic(topic: PushTopic, id: string) {
+    subscribeTopic(topic: PushTopic, data: { [key: string]: string }) {
         if (!Capacitor.isPluginAvailable('PushNotifications')) {
-            return Promise.reject('PushNotifications not supported');
+            return Promise.resolve();
         }
 
         this.requestPushRegister()
@@ -81,20 +81,27 @@ export class PushService {
                 let subTopic;
                 switch (topic) {
                     case PushTopic.GROUP_ALL:
-                        subTopic = 'groups_' + id + '_all';
+                        subTopic = 'groups_' + data.groupId + '_all';
                 }
 
                 if (subTopic) {
                     fcm.subscribeTo({
                         topic: subTopic
+                    }).then(() => {
+                        switch (topic) {
+                            case PushTopic.GROUP_ALL:
+                                this.storage.set(`${data.accountId}_enablePush`, true);
+                        }
+                    }).catch(err => {
+                        console.error(err);
                     });
                 }
             });
     }
 
-    unsubscribeTopic(topic: PushTopic, id: string) {
+    unsubscribeTopic(topic: PushTopic, data: { [key: string]: string }) {
         if (!Capacitor.isPluginAvailable('PushNotifications')) {
-            return Promise.reject('PushNotifications not supported');
+            return Promise.resolve();
         }
 
         this.requestPushRegister()
@@ -102,14 +109,27 @@ export class PushService {
                 let subTopic;
                 switch (topic) {
                     case PushTopic.GROUP_ALL:
-                        subTopic = 'groups_' + id + '_all';
+                        subTopic = 'groups_' + data.groupId + '_all';
                 }
 
                 if (subTopic) {
                     fcm.unsubscribeFrom({
                         topic: subTopic
+                    }).then(() => {
+                        switch (topic) {
+                            case PushTopic.GROUP_ALL:
+                                this.storage.set(`${data.accountId}_enablePush`, false);
+                        }
                     });
                 }
             });
+    }
+
+    removeNotifications() {
+        if (!Capacitor.isPluginAvailable('PushNotifications')) {
+            return Promise.resolve();
+        }
+
+        PushNotifications.removeAllDeliveredNotifications();
     }
 }

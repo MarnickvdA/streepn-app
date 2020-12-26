@@ -38,14 +38,11 @@ export class GroupSettingsPage implements OnDestroy {
 
             this.group$ = this.groupService.observeGroup(params.id);
 
-            this.authService.currentUser
-                .then(user => {
-                    this.groupSub = this.group$
-                        .subscribe(group => {
-                            this.group = group;
-                            this.inviteLink = group.inviteLink;
-                            this.isAdmin = group.accounts.find(account => account.userId === user.uid)?.roles.includes('ADMIN') || false;
-                        });
+            this.groupSub = this.group$
+                .subscribe(group => {
+                    this.group = group;
+                    this.inviteLink = group.inviteLink;
+                    this.isAdmin = group.accounts.find(account => account.userId === this.authService.currentUser.uid)?.roles.includes('ADMIN') || false;
                 });
         });
     }
@@ -83,71 +80,6 @@ export class GroupSettingsPage implements OnDestroy {
 
             await alert.present();
         }
-    }
-
-    async addSharedAccount() {
-        const alert = await this.alertController.create({
-            header: this.translate.instant('group.settings.addSharedAccount.header'),
-            inputs: [
-                {
-                    name: 'accountName',
-                    type: 'text',
-                    placeholder: this.translate.instant('group.settings.addSharedAccount.accountName')
-                }
-            ],
-            buttons: [
-                {
-                    text: this.translate.instant('actions.cancel'),
-                    role: 'cancel',
-                }, {
-                    text: this.translate.instant('actions.create'),
-                    handler: (result: { accountName: string }) => {
-                        if (result.accountName.length > 0) {
-                            this.accountService.addSharedAccount(this.group, result.accountName);
-                        } else {
-                            // TODO Error message
-                        }
-                    }
-                }
-            ]
-        });
-
-        await alert.present();
-    }
-
-    async addProduct() {
-        const alert = await this.alertController.create({
-            header: this.translate.instant('group.settings.addProduct.header'),
-            inputs: [
-                {
-                    name: 'groupName',
-                    type: 'text',
-                    placeholder: this.translate.instant('group.settings.addProduct.productName')
-                },
-                {
-                    name: 'price',
-                    type: 'number',
-                    placeholder: this.translate.instant('group.settings.addProduct.productPrice')
-                }
-            ],
-            buttons: [
-                {
-                    text: this.translate.instant('actions.cancel'),
-                    role: 'cancel',
-                }, {
-                    text: this.translate.instant('actions.create'),
-                    handler: (result: { groupName: string, price: number }) => {
-                        if (result.groupName.length > 3 && result.price > 0) {
-                            this.productService.addProduct(this.group, result.groupName, result.price);
-                        } else {
-                            // TODO Error message
-                        }
-                    }
-                }
-            ]
-        });
-
-        await alert.present();
     }
 
     removeProduct(product: Product) {

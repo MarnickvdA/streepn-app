@@ -8,6 +8,12 @@ import {StorageService} from '../../../services/storage.service';
 import {GroupService} from '../../../services/group.service';
 import {EventsService} from '../../../services/events.service';
 import {Group} from '../../../models';
+import {AuthService} from '../../../services/auth.service';
+import {environment} from '../../../../environments/environment';
+import {Plugins} from '@capacitor/core';
+import {UIService} from '../../../services/ui.service';
+
+const {Browser} = Plugins;
 
 @Component({
     selector: 'app-onboarding',
@@ -26,25 +32,28 @@ export class OnboardingComponent implements OnInit {
     nameForm: FormGroup;
     isSubmitted: boolean;
     group: Group;
+    hasAcceptedLegals = false;
 
     constructor(private modalController: ModalController,
                 private pushService: PushService,
                 private userService: UserService,
+                public authService: AuthService,
                 public translate: TranslateService,
                 private formBuilder: FormBuilder,
                 private loadingController: LoadingController,
                 private storage: StorageService,
                 private groupService: GroupService,
-                private events: EventsService) {
+                private events: EventsService,
+                private uiService: UIService) {
         this.nameForm = this.formBuilder.group({
             name: ['', [Validators.required]],
         });
     }
 
     ngOnInit() {
-        const n = this.userService.user.displayName;
+        const n = this.authService.currentUser.displayName;
         if (n && n.length > 1) {
-            this.name = ' ' + this.userService.user.displayName;
+            this.name = ' ' + this.authService.currentUser.displayName;
         }
 
         this.storage.get('groupInvite')
@@ -53,6 +62,10 @@ export class OnboardingComponent implements OnInit {
             })
             .catch(() => {
             });
+
+        this.authService.hasAcceptedLegals.subscribe(accepted => {
+            this.hasAcceptedLegals = accepted;
+        });
     }
 
     initPushNotifications() {
@@ -90,7 +103,7 @@ export class OnboardingComponent implements OnInit {
 
         await loading.present();
 
-        this.userService.setName(this.nameForm.controls.name.value)
+        this.authService.setName(this.nameForm.controls.name.value)
             .then(() => {
                 this.slideNext();
             })
@@ -99,13 +112,42 @@ export class OnboardingComponent implements OnInit {
             });
     }
 
+    async acceptTerms() {
+        const loading = await this.loadingController.create({
+            backdropDismiss: false,
+            message: this.translate.instant('actions.saving')
+        });
+
+        await loading.present();
+
+        const terms = (accepted) => {
+            console.log('legal:result => ' + accepted);
+            if (accepted) {
+                this.slideNext();
+            } else {
+                this.uiService.showError(
+                    this.translate.instant('errors.error'),
+                    this.translate.instant('onboarding.legal.error')
+                );
+            }
+
+            loading.dismiss();
+
+            this.events.unsubscribe('legal:result', terms);
+        };
+
+        this.events.subscribe('legal:result', terms);
+
+        this.authService.acceptTerms();
+    }
+
     private checkGroupInvite(groupInvite: string) {
         // Fuck this item, don't want it more than once.
         this.storage.delete('groupInvite');
 
         this.groupService.getGroupByInviteLink(groupInvite)
             .then(group => {
-                if (!group.members.find(uid => uid === this.userService.user.uid)) {
+                if (!group.members.find(uid => uid === this.authService.currentUser.uid)) {
                     this.group = group;
                 }
             });
@@ -120,7 +162,7 @@ export class OnboardingComponent implements OnInit {
 
         await loading.present();
 
-        this.groupService.joinGroup(groupId, this.userService.user);
+        this.groupService.joinGroup(groupId, this.authService.currentUser);
 
         const joinedGroupFn = () => {
             loading.dismiss();
@@ -128,5 +170,11 @@ export class OnboardingComponent implements OnInit {
         };
 
         this.events.subscribe('group:joined', joinedGroupFn);
+    }
+
+    openLegalPage() {
+        Browser.open({
+            url: environment.legalUrl
+        });
     }
 }

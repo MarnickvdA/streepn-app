@@ -1,7 +1,21 @@
 .form-content {
-  padding: 2rem;
+  padding: 1rem 2rem 2rem;
 
-  ion-badge {
-    margin-top: 1rem;
+  h5 {
+
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    font-size: 0.9rem;
+  }
+
+  #name-button.button-disabled {
+    opacity: 1;
+
+    ion-icon {
+      font-size: 1.5rem;
+      --ionicon-stroke-width: 3rem;
+    }
   }
 }

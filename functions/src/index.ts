@@ -7,6 +7,42 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
+exports.createUserObject = functions
+    .region('europe-west1')
+    .auth
+    .user().onCreate((user) => {
+        return admin.auth().setCustomUserClaims(user.uid, {
+            acceptedTermsAndPrivacy: false,
+            termsAndPrivacyVersion: '1',
+        }).catch((err) => {
+            console.error(err);
+        });
+    });
+
+exports.acceptTerms = functions
+    .region('europe-west1')
+    .https
+    .onCall((data, context) => {
+        const userId = context.auth?.uid;
+        if (!userId) {
+            throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
+        }
+
+        console.log('setting user claims: ' + userId);
+
+        return admin.auth().setCustomUserClaims(userId, {
+                acceptedTermsAndPrivacy: true,
+                termsAndPrivacyVersion: data.version,
+            })
+            .then(() => {
+                return true;
+            })
+            .catch((err) => {
+                console.error(err);
+                return Promise.reject('An error occurred');
+            });
+    });
+
 exports.joinGroup = functions
     .region('europe-west1')
     .https
@@ -17,7 +53,7 @@ exports.joinGroup = functions
             throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
         }
 
-        const user: admin.auth.UserInfo = data.user;
+        const user: any = data.user;
 
         const groupRef = db.collection('groups').doc(data.groupId);
         const now = admin.firestore.Timestamp.now();
@@ -26,22 +62,29 @@ exports.joinGroup = functions
             'members', admin.firestore.FieldValue.arrayUnion(userId)
         ).catch(err => {
             console.error(err);
+            throw new functions.https.HttpsError('unknown', 'Error occurred while writing document', err);
         });
 
-        groupRef.update(
-            'accounts', admin.firestore.FieldValue.arrayUnion({
-                id: uuidv4(),
-                name: user.displayName,
-                photoUrl: user.photoURL,
-                roles: [],
-                userId,
-                balance: 0,
-                createdAt: now,
+        const account = {
+            id: uuidv4(),
+            name: user.displayName,
+            photoUrl: user.photoURL,
+            roles: [],
+            userId,
+            balance: 0,
+            createdAt: now,
+        };
+
+        return groupRef.update(
+            'accounts', admin.firestore.FieldValue.arrayUnion(account)
+            )
+            .then(() => {
+                return account;
             })
-        ).catch(err => {
-            console.error(err);
-        });
-
+            .catch(err => {
+                console.error(err);
+                throw new functions.https.HttpsError('unknown', 'Error occurred while writing document', err);
+            });
     });
 
 exports.addTransaction = functions

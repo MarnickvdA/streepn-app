@@ -1,8 +1,8 @@
 {
   "name": "streepn",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Strype B.V.",
+  "homepage": "https://streepn.nl",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

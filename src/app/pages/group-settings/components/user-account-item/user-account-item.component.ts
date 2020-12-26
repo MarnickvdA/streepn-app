@@ -1,10 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {UserAccount} from '../../../models';
-import {getMoneyString} from '../../../utils/firestore-utils';
+import {UserAccount} from '../../../../models';
+import {getMoneyString} from '../../../../utils/firestore-utils';
 import {TranslateService} from '@ngx-translate/core';
-import {UserService} from '../../../services/user.service';
 import {NavController} from '@ionic/angular';
 import {ActivatedRoute, Router} from '@angular/router';
+import {AuthService} from '../../../../services/auth.service';
 
 @Component({
     selector: 'app-user-account-item',
@@ -17,18 +17,18 @@ export class UserAccountItemComponent implements OnInit {
     @Input() account: UserAccount;
 
     constructor(private translate: TranslateService,
-                private userService: UserService,
+                private authService: AuthService,
                 private navController: NavController,
                 private router: Router,
                 private route: ActivatedRoute) {
     }
 
     ngOnInit() {
-        this.ownsAccount = this.userService.user.uid === this.account.userId;
+        this.ownsAccount = this.authService.currentUser.uid === this.account.userId;
     }
 
     get balanceString(): string {
-        return `€ ${getMoneyString(this.account.balance)}`;
+        return getMoneyString(this.account.balance);
     }
 
     openAccount() {

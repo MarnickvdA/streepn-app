@@ -1,13 +1,37 @@
 apply plugin: 'com.android.application'
 
+// On top of your file import a JSON parser
+import groovy.json.JsonSlurper
+
+ext.getAppVersion = { ->
+    //  Read and parse package.json file from project root
+    def inputFile = new File("$rootDir/../package.json")
+    def packageJson = new JsonSlurper().parseText(inputFile.text)
+
+    // Return the version, you can get any value this way
+    return packageJson["version"]
+}
+
+/*
+ * Gets the version code from the count of commits
+ */
+ext.getGitVersionCode = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-list', '--count', '--first-parent', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim().toInteger()
+}
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "nl.strype.streepn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode getGitVersionCode()
+        versionName getAppVersion()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -32,12 +56,6 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
-
-    implementation platform('com.google.firebase:firebase-bom:26.1.1')
-
-    implementation 'com.google.firebase:firebase-anaytics'
-    implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-firestore'
 }
 
 apply from: 'capacitor.build.gradle'

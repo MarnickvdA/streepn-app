@@ -8,6 +8,7 @@ import {AppState, Plugins} from '@capacitor/core';
 import {AdsService} from './services/ads.service';
 import {StorageService} from './services/storage.service';
 import {EventsService} from './services/events.service';
+import {PushService} from './services/push.service';
 
 const {App} = Plugins;
 
@@ -25,7 +26,8 @@ export class AppComponent {
         private zone: NgZone,
         private adsService: AdsService,
         private storage: StorageService,
-        private events: EventsService
+        private events: EventsService,
+        private pushService: PushService
     ) {
         this.initializeApp();
     }
@@ -37,8 +39,6 @@ export class AppComponent {
 
                 if (slug.startsWith('/group-invite/')) {
                     const groupCode = slug.split('/group-invite/').pop();
-
-                    console.log('Setting groupCode in storage: ' + groupCode);
 
                     this.storage.set('groupInvite', groupCode);
                 }
@@ -55,7 +55,7 @@ export class AppComponent {
             prefersDark.addEventListener('change', (mediaQuery: MediaQueryListEvent) => this.toggleDarkTheme(mediaQuery.matches));
             this.storage.get('darkMode')
                 .then((darkMode: boolean) => {
-                    this.toggleDarkTheme(darkMode || prefersDark.matches);
+                    this.toggleDarkTheme(darkMode);
                 })
                 .catch(() => {
                     this.toggleDarkTheme(prefersDark.matches);
@@ -69,6 +69,8 @@ export class AppComponent {
                     this.events.publish('app:pause');
                 }
             });
+
+            this.pushService.removeNotifications();
 
             this.adsService.initialize();
 

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/auth';
 import firebase from 'firebase/app';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
 import {EventsService} from './events.service';
 import {ResponseSignInWithApplePlugin} from '@capacitor-community/apple-sign-in';
 import {Plugins} from '@capacitor/core';
@@ -9,6 +9,8 @@ import {StorageService} from './storage.service';
 import {GooglePlus} from '@ionic-native/google-plus/ngx';
 import {environment} from '../../environments/environment';
 import {AnalyticsService} from './analytics.service';
+import {catchError} from 'rxjs/operators';
+import {AngularFireFunctions} from '@angular/fire/functions';
 import User = firebase.User;
 
 const {SignInWithApple} = Plugins;
@@ -18,20 +20,37 @@ const {SignInWithApple} = Plugins;
 })
 export class AuthService {
 
-    private authUser?: User;
+    currentUser?: User;
+    hasAcceptedLegals: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    legalVersion: string;
 
     constructor(private auth: AngularFireAuth,
                 private eventsService: EventsService,
                 private storage: StorageService,
                 private googlePlus: GooglePlus,
-                private analytics: AnalyticsService) {
+                private analytics: AnalyticsService,
+                private functions: AngularFireFunctions) {
         this.eventsService.subscribe('auth:login', (userId) => {
             this.analytics.setUser(userId);
         });
 
-        this.user
+        this.auth.user
             .subscribe(user => {
-                this.authUser = user;
+                this.currentUser = user;
+
+                if (user) {
+                    user.getIdToken(true)
+                        .then(token => {
+                            if (token) {
+                                const payload = JSON.parse(atob(token.split('.')[1]));
+
+                                this.hasAcceptedLegals.next(payload.acceptedTermsAndPrivacy);
+                                this.legalVersion = payload.termsAndPrivacyVersion;
+                            } else {
+                                console.error('Could not retrieve token');
+                            }
+                        }).catch(err => console.error(err));
+                }
             });
     }
 
@@ -119,7 +138,7 @@ export class AuthService {
     }
 
     logout() {
-        this.analytics.logUserLogout(this.authUser.uid);
+        this.analytics.logUserLogout(this.currentUser.uid);
         this.analytics.setUser(undefined);
         this.storage.nuke();
         return this.auth.signOut();
@@ -129,12 +148,28 @@ export class AuthService {
         return this.auth.user;
     }
 
-    get currentUser(): Promise<User> {
-        return this.auth.currentUser
+    setName(newName: string): Promise<void> {
+        return this.currentUser.updateProfile({
+                displayName: newName
+            })
             .catch(err => {
-                this.eventsService.publish('login:error', err);
+                // TODO Error handling
+            });
+    }
 
-                return Promise.reject(err);
+    acceptTerms() {
+        const callable = this.functions.httpsCallable('acceptTerms');
+        callable({version: environment.legalVersion})
+            .pipe(catchError((err) => {
+                console.error(err);
+                return EMPTY;
+            }))
+            .subscribe(data => {
+                if (data) {
+                    this.eventsService.publish('legal:result', true);
+                } else {
+                    this.eventsService.publish('legal:result', false);
+                }
             });
     }
 

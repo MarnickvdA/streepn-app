@@ -1,15 +1,19 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule, CurrencyPipe} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { GroupSettingsPageRoutingModule } from './group-settings-routing.module';
+import {GroupSettingsPageRoutingModule} from './group-settings-routing.module';
 
-import { GroupSettingsPage } from './group-settings.page';
+import {GroupSettingsPage} from './group-settings.page';
 import {TranslateModule} from '@ngx-translate/core';
-import {ProductItemComponent} from './product-item/product-item.component';
-import {UserAccountItemComponent} from './user-account-item/user-account-item.component';
+import {ProductItemComponent} from './components/product-item/product-item.component';
+import {UserAccountItemComponent} from './components/user-account-item/user-account-item.component';
+import {NewProductComponent} from './new-product/new-product.component';
+import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
+import {SharedAccountItemComponent} from './components/shared-account-item/shared-account-item.component';
+import {MoneyInputComponent} from './components/money-input/money-input.component';
 
 @NgModule({
     imports: [
@@ -17,8 +21,21 @@ import {UserAccountItemComponent} from './user-account-item/user-account-item.co
         FormsModule,
         IonicModule,
         GroupSettingsPageRoutingModule,
-        TranslateModule
+        TranslateModule,
+        ReactiveFormsModule,
     ],
-    declarations: [GroupSettingsPage, ProductItemComponent, UserAccountItemComponent]
+    providers: [
+        CurrencyPipe
+    ],
+    declarations: [
+        GroupSettingsPage,
+        ProductItemComponent,
+        UserAccountItemComponent,
+        SharedAccountItemComponent,
+        NewProductComponent,
+        NewSharedAccountComponent,
+        MoneyInputComponent,
+    ]
 })
-export class GroupSettingsPageModule {}
+export class GroupSettingsPageModule {
+}

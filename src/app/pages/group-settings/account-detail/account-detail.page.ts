@@ -6,6 +6,12 @@ import {getMoneyString} from '../../../utils/firestore-utils';
 import {PushService, PushTopic} from '../../../services/push.service';
 import {Subscription} from 'rxjs';
 import {StorageService} from '../../../services/storage.service';
+import {Plugins} from '@capacitor/core';
+import {AccountService} from '../../../services/account.service';
+import {LoadingController} from '@ionic/angular';
+import {TranslateService} from '@ngx-translate/core';
+
+const {Storage} = Plugins;
 
 @Component({
     selector: 'app-account-detail',
@@ -19,14 +25,19 @@ export class AccountDetailPage implements OnInit, OnDestroy {
     enablePush: boolean;
     private group: Group;
     private groupSub: Subscription;
+    newName: string;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 private groupService: GroupService,
                 private pushService: PushService,
-                private storage: StorageService) {
+                private storage: StorageService,
+                private accountService: AccountService,
+                private loadingController: LoadingController,
+                private translate: TranslateService) {
 
         this.account = this.router.getCurrentNavigation().extras.state?.account;
+        this.newName = this.account.name;
 
         this.route.params.subscribe((params: Params) => {
             this.groupId = params.id;
@@ -36,7 +47,9 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                     this.group = group;
                 });
         });
+    }
 
+    ngOnInit() {
         this.storage.get(`${this.account.id}_enablePush`)
             .then((enabled: boolean) => {
                 this.enablePush = enabled;
@@ -44,9 +57,6 @@ export class AccountDetailPage implements OnInit, OnDestroy {
             .catch(() => {
                 this.enablePush = false;
             });
-    }
-
-    ngOnInit() {
     }
 
     ngOnDestroy() {
@@ -59,11 +69,33 @@ export class AccountDetailPage implements OnInit, OnDestroy {
 
     togglePush() {
         if (this.enablePush) {
-            this.storage.set(`${this.account.id}_enablePush`, false);
-            this.pushService.subscribeTopic(PushTopic.GROUP_ALL, this.groupId);
+            this.pushService.subscribeTopic(PushTopic.GROUP_ALL, {groupId: this.groupId, accountId: this.account.id});
         } else {
-            this.storage.set(`${this.account.id}_enablePush`, true);
-            this.pushService.unsubscribeTopic(PushTopic.GROUP_ALL, this.groupId);
+            this.pushService.unsubscribeTopic(PushTopic.GROUP_ALL, {groupId: this.groupId, accountId: this.account.id});
         }
+    }
+
+    async setName() {
+        const account = Object.create(this.account);
+        account.name = this.newName;
+
+        const loading = await this.loadingController.create({
+            message: this.translate.instant('actions.saving'),
+            translucent: true,
+            backdropDismiss: false
+        });
+
+        await loading.present();
+
+        this.accountService.updateUserAccount(this.group, account)
+            .then(() => {
+                this.account = account;
+            })
+            .catch(err => {
+                console.error(err);
+            })
+            .finally(() => {
+                loading.dismiss();
+            });
     }
 }

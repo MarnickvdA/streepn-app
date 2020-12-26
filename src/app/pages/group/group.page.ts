@@ -19,6 +19,7 @@ export class GroupPage implements OnInit, OnDestroy {
 
     @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
+    private groupId: string;
     group?: Group;
     transactions: Transaction[];
 
@@ -33,21 +34,22 @@ export class GroupPage implements OnInit, OnDestroy {
                 private fs: AngularFirestore,
                 private modalController: ModalController) {
         this.routeSub = this.route.params.subscribe((params: Params) => {
-            groupService.getGroup(params.id)
-                .then(group => {
-                    this.group = group;
-                });
-
-            if (!this.transactions) {
-                this.loadTransactions(params.id)
-                    .then(transactions => {
-                        this.transactions = transactions;
-                    });
-            }
+            this.groupId = params.id;
         });
     }
 
     ngOnInit(): void {
+        this.groupService.getGroup(this.groupId)
+            .then(group => {
+                this.group = group;
+
+                if (!this.transactions) {
+                    this.loadTransactions(this.group.id)
+                        .then(transactions => {
+                            this.transactions = transactions;
+                        });
+                }
+            });
     }
 
     ngOnDestroy(): void {
@@ -60,6 +62,11 @@ export class GroupPage implements OnInit, OnDestroy {
 
         this.loadTransactions(this.group.id)
             .then(transactions => {
+                // console.log('reset()');
+                // console.log('Loaded:');
+                // console.log(transactions);
+                // console.log('Replacing it for transactions:');
+                // console.log(this.transactions);
                 this.transactions = transactions;
             })
             .finally(() => {
@@ -72,11 +79,17 @@ export class GroupPage implements OnInit, OnDestroy {
     loadNext() {
         this.loadTransactions(this.group.id)
             .then((transactions) => {
+                // console.log('loadNext()');
+                // console.log('Loaded:');
+                // console.log(transactions);
+                // console.log('Adding it to all transactions:');
+                // console.log(this.transactions);
                 this.transactions.push(...transactions);
             });
     }
 
     loadTransactions(groupId: string): Promise<Transaction[]> {
+        // console.log('Loading transactions with transactions list of size: ' + this.transactions?.length);
         if (this.doneLoading) {
             return;
         }

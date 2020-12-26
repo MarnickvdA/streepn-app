@@ -16,7 +16,8 @@
     </ion-header>
 
     <div class="form-content">
-        <ion-badge color="dark">Stap 1: Groepsnaam invullen</ion-badge>
+        <h5>{{'dashboard.createGroup.step1.title' | translate}}</h5>
+        <p>{{'dashboard.createGroup.step1.description' | translate}}</p>
         <form [formGroup]="groupForm" (ngSubmit)="setName()">
             <ion-item lines="none" class="form-input">
                 <ion-icon name="people-outline"></ion-icon>
@@ -31,21 +32,30 @@
                 {{'dashboard.createGroup.errors.name-length' | translate}}
             </span>
 
-            <ion-button expand="block" type="submit">
-                <ion-label>{{'actions.submit' | translate}}</ion-label>
+            <ion-button id="name-button" class="ion-margin-top" [attr.disabled]="groupCreated" [color]="groupCreated && !loading ? 'success' : 'primary'" expand="block"
+                        type="submit">
+                <ion-label *ngIf="!groupCreated">{{'actions.submit' | translate}}</ion-label>
+                <ion-spinner *ngIf="groupCreated && loading"></ion-spinner>
+                <ion-icon *ngIf="groupCreated && !loading" name="checkmark-outline"></ion-icon>
             </ion-button>
         </form>
 
-        <div *ngIf="group">
-            <ion-badge color="dark">Stap 2</ion-badge>
-            <ion-button expand="block" (click)="shareGroup()">
+        <hr>
+
+        <div>
+            <h5>{{'dashboard.createGroup.step2.title' | translate}}</h5>
+            <p>{{'dashboard.createGroup.step2.description' | translate}}</p>
+            <ion-button [attr.disabled]="!group" expand="block" (click)="shareGroup()">
                 <ion-label>{{'dashboard.createGroup.shareInvite' | translate}}</ion-label>
             </ion-button>
         </div>
 
-        <div *ngIf="group && sharedGroup">
-            <ion-badge color="dark">Stap 3</ion-badge>
-            <ion-button expand="block" (click)="navigateSettings()">
+        <hr>
+
+        <div>
+            <h5>{{'dashboard.createGroup.step3.title' | translate}}</h5>
+            <p>{{'dashboard.createGroup.step3.description' | translate}}</p>
+            <ion-button [attr.disabled]="!(group && sharedGroup)" expand="block" (click)="navigateSettings()">
                 <ion-label>{{'dashboard.createGroup.navigateSettings' | translate}}</ion-label>
             </ion-button>
         </div>

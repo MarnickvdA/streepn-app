@@ -81,6 +81,18 @@
     "createGroup": {
       "title": "Nieuwe groep",
       "groupName": "Groepsnaam",
+      "step1": {
+        "title": "Stap 1: Groepsnaam bedenken",
+        "description": "Bedenk een toepasselijke groepsnaam voor de groep die je wil aanmaken. Deze naam moet minimaal 3 letters bevatten."
+      },
+      "step2": {
+        "title": "Stap 2: Deelnemers uitnodigen",
+        "description": "Zonder deelnemers is het natuurlijk een beetje eenzaam in je groep. Deel nu snel de groepslink met degenen die je wil dat je groep deel gaan nemen."
+      },
+      "step3": {
+        "title": "Stap 3: Groep instellen",
+        "description": "Voeg nu producten toe aan je groep en gedeelde potjes. Daarna kun je beginnen met Streepn!"
+      },
       "errors": {
         "name-length": "Groepsnaam te kort",
         "name-required": "Vul een groepsnaam in"
@@ -93,7 +105,7 @@
     "groupInvite": {
       "header": "Uitnodiging",
       "question": "Wil je toetreden tot ",
-      "manualHeader": "Handmatige code invoer",
+      "manualHeader": "Code invoeren",
       "code": "Groepscode",
       "invalidCode": "Ongeldige groepscode"
     }
@@ -103,16 +115,23 @@
       "title": "Welkom",
       "description": "Welkom bij <b>Streepn</b>! De digitale streeplijst die jou de komende tijd gaat helpen bij het bijhouden van allerlei dingetjes!"
     },
+    "legal": {
+      "title": "Algemene voorwaarden & Privacyverklaring",
+      "description1": "Om gebruik te maken van onze diensten moet je de ",
+      "description2": "algemene voorwaarden & privacyverklaring",
+      "description3": " accepteren. Daarna kunnen we aan de slag!",
+      "error": "Het is niet gelukt om je voorkeur op te slaan. Probeer het nogmaals."
+    },
     "push": {
       "title": "Push Notificaties",
       "description": "Haal het maximale uit de Streepn app! Als je push meldingen inschakelt kunnen we je altijd op de hoogte stellen van de laatste updates die voor jou relevant is!",
       "enable": "Push Notificaties inschakelen"
     },
-    "setName":{
+    "setName": {
       "title": "Naam instellen",
       "description": "Je hebt nog geen gebruikersnaam voor de app, laten we dit nu eventjes instellen. Vul hieronder je naam in!"
     },
-    "joinGroup":{
+    "joinGroup": {
       "title": "Je bent uitgenodigd voor",
       "description": "Je bent hier gekomen door op een invite link te klikken. Wil je aan de groep deelnemen?"
     },
@@ -130,8 +149,8 @@
       "title": "Groepsoverzicht",
       "accounts": "Deelnemers",
       "admin": "Beheerder",
-      "sharedAccounts": "Gedeelde potjes",
-      "emptySharedAccounts": "Er zijn nog geen gedeelde potjes",
+      "sharedAccounts": "Potjes",
+      "emptySharedAccounts": "Er zijn nog geen potjes",
       "products": "Producten",
       "emptyProducts": "Er zijn nog geen producten",
       "account": {
@@ -149,13 +168,26 @@
         "dialogTitle": "Deel deze link met je vrienden!"
       },
       "addSharedAccount": {
-        "header": "Gedeeld potje toevoegen",
-        "accountName": "Naam van potje"
+        "title": "Nieuw potje",
+        "accountName": "Naam van potje",
+        "errors": {
+          "name-required": "Vul een productnaam in",
+          "name-length": "Vul minimaal 3 letters in",
+          "name-conflict": "Potje met deze naam bestaat al"
+        }
       },
       "addProduct": {
-        "header": "Product toevoegen",
+        "title": "Nieuw product",
         "productName": "Productnaam",
-        "productPrice": "Prijs"
+        "productPrice": "Prijs",
+        "errors": {
+          "name-required": "Vul een productnaam in",
+          "name-length": "Vul minimaal 3 letters in",
+          "name-conflict": "Product met deze naam bestaat al",
+          "price-required": "Vul een prijs in",
+          "price-min": "De prijs mag niet negatief zijn",
+          "price-max": "De prijs mag niet hoger zijn dan €1000,-"
+        }
       }
     }
   }

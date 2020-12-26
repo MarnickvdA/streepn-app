@@ -5,10 +5,11 @@ import {UserService} from '../../../services/user.service';
 import {UIService} from '../../../services/ui.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Group} from '../../../models';
-import {Plugins} from '@capacitor/core';
+import {PermissionType, Plugins} from '@capacitor/core';
 import {AlertController, NavController} from '@ionic/angular';
+import {PushService, PushTopic} from '../../../services/push.service';
 
-const {Clipboard, Share} = Plugins;
+const {Clipboard, Share, Permissions} = Plugins;
 
 @Component({
     selector: 'app-new-group',
@@ -19,6 +20,7 @@ export class NewGroupComponent implements OnInit {
     groupForm: FormGroup;
     isSubmitted: boolean;
     groupCreated: boolean;
+    loading: boolean;
 
     name: string;
     group: Group;
@@ -30,6 +32,7 @@ export class NewGroupComponent implements OnInit {
                 private uiService: UIService,
                 private translate: TranslateService,
                 private alertController: AlertController,
+                private pushService: PushService,
                 private navController: NavController) {
         this.groupForm = this.formBuilder.group({
             name: ['', [Validators.required]],
@@ -53,6 +56,7 @@ export class NewGroupComponent implements OnInit {
 
         if (this.name.length >= 3) {
             this.groupCreated = true;
+            this.loading = true;
             this.groupService.createGroup(this.name)
                 .then((groupId) => {
                     return this.groupService.getGroup(groupId);
@@ -61,10 +65,23 @@ export class NewGroupComponent implements OnInit {
                     if (group) {
                         this.group = group;
 
-                        console.log(group);
+                        Permissions.query({
+                            name: PermissionType.Notifications
+                        }).then((result) => {
+                            if (result.state === 'granted') {
+                                this.pushService.subscribeTopic(PushTopic.GROUP_ALL, {groupId: group.id, accountId: group.accounts[0].id});
+                            }
+                        });
                     } else {
                         // FIXME
                     }
+                })
+                .catch((err) => {
+                    console.error(err);
+                    this.groupCreated = false;
+                })
+                .finally(() => {
+                    this.loading = false;
                 });
         } else {
             this.groupForm.controls.name.setErrors({

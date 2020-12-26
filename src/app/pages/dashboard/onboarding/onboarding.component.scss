@@ -41,6 +41,12 @@ ion-slides {
   }
 }
 
+span.link {
+  cursor:pointer;
+  color: var(--ion-color-primary);
+  text-decoration:underline;
+}
+
 ion-toolbar {
   --border-style: none;
 }

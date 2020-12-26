@@ -11,10 +11,25 @@ ion-item.form-input {
   --border-style: solid;
   --border-width: 1px;
 
+  .form-input-prefix {
+    color: rgba(var(--ion-color-medium-rgb), 0.75);
+    font-size: 1.25rem;
+    margin-right: 1rem;
+    min-width: 20px;
+  }
+
+  .form-input-grey {
+    color: var(--ion-color-medium);
+  }
+
   &:focus-within {
     --border-color: rgba(var(--ion-color-primary-rgb), 0.5);
 
     > ion-icon {
+      color: rgba(var(--ion-color-primary-rgb), 0.75);
+    }
+
+    > .form-input-prefix {
       color: rgba(var(--ion-color-primary-rgb), 0.75);
     }
   }

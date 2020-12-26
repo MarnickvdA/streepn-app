@@ -10,6 +10,20 @@
                 {{'actions.next' | translate}}
             </ion-button>
         </ion-slide>
+        <ion-slide *ngIf="!hasAcceptedLegals">
+            <ion-icon class="image" name="document-text"></ion-icon>
+            <div class="text-area">
+                <h1>{{'onboarding.legal.title' | translate}}</h1>
+                <p>
+                    {{'onboarding.legal.description1' | translate}}
+                    <span class="link" (click)="openLegalPage()">{{'onboarding.legal.description2' | translate}}</span>
+                    {{'onboarding.legal.description3' | translate}}
+                </p>
+            </div>
+            <ion-button expand="block" (click)="acceptTerms()">
+                {{'actions.accept' | translate}}
+            </ion-button>
+        </ion-slide>
         <ion-slide>
             <ion-icon class="image" name="notifications-circle"></ion-icon>
             <div class="text-area">

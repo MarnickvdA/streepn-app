@@ -8,5 +8,7 @@ export const environment = {
     messagingSenderId: '378314194804',
     appId: '1:378314194804:web:2f9501eb73ef5ceb1d7621',
     measurementId: 'G-3HNCNE1EFD'
-  }
+  },
+  legalVersion: '1',
+  legalUrl: 'https://streepn.nl/legal?version=1',
 };
