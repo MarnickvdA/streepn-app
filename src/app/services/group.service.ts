@@ -12,6 +12,8 @@ import {v4 as uuidv4} from 'uuid';
 import {AnalyticsService} from './analytics.service';
 import {PermissionType, Plugins} from '@capacitor/core';
 import {PushService, PushTopic} from './push.service';
+import {TranslateService} from '@ngx-translate/core';
+import {LoggerService} from './logger.service';
 import Timestamp = firebase.firestore.Timestamp;
 import User = firebase.User;
 
@@ -21,13 +23,15 @@ const {Permissions} = Plugins;
     providedIn: 'root'
 })
 export class GroupService {
+    private readonly logger = LoggerService.getLogger(EventsService.name);
 
     constructor(private fs: AngularFirestore,
                 private functions: AngularFireFunctions,
                 private authService: AuthService,
                 private eventsService: EventsService,
                 private analyticsService: AnalyticsService,
-                private pushService: PushService) {
+                private pushService: PushService,
+                private translate: TranslateService) {
     }
 
     observeGroups(userId: string): firebase.firestore.Query<Group> {
@@ -44,27 +48,36 @@ export class GroupService {
             .withConverter(groupConverter)
             .get()
             .then(querySnapshot => {
-                return querySnapshot.data();
+                if (querySnapshot.exists) {
+                    return querySnapshot.data();
+                } else {
+                    return Promise.reject(this.translate.instant('errors.group-creation-error'));
+                }
+            })
+            .catch(err => {
+                this.logger.error({message: 'getGroup', data: {groupId: id}, error: err});
+                return Promise.reject(this.translate.instant('errors.group-not-retrieved'));
             });
     }
 
     getGroupByInviteLink(link: string): Promise<Group | undefined> {
         return this.fs.collection('groups')
             .ref
-            .where('inviteLinkExpiry', '>', Timestamp.now())
             .where('inviteLink', '==', link)
             .withConverter(groupConverter)
             .get()
             .then(querySnapshot => {
                 if (querySnapshot.empty) {
-                    return Promise.reject('No group not found');
+                    return Promise.reject(this.translate.instant('errors.group-not-found'));
                 }
 
-                return querySnapshot.docs.pop().data();
-            })
-            .catch(err => {
-                console.error(err);
-                return Promise.reject();
+                const group = querySnapshot.docs.pop().data();
+
+                if (group.inviteLinkExpiry.toMillis() < new Date().getMilliseconds()) {
+                    return Promise.reject(this.translate.instant('errors.group-invite-expired'));
+                }
+
+                return group;
             });
     }
 
@@ -119,8 +132,9 @@ export class GroupService {
                 return docRef.id;
             })
             .catch(err => {
-                this.eventsService.publish('http:error', err);
-                return Promise.reject(err);
+                this.logger.error({message: 'createGroup', error: err});
+
+                return Promise.reject(this.translate.instant('errors.group-creation-error'));
             });
     }
 
@@ -133,22 +147,25 @@ export class GroupService {
             }
         })
             .pipe(catchError((err) => {
+                this.logger.error({message: 'joinGroup', error: err});
                 this.eventsService.publish('group:joined');
                 return EMPTY;
             }))
-            .subscribe(account => {
-                this.analyticsService.logJoinGroup(user.uid, groupId);
+            .subscribe((account) => {
+                if (account) {
+                    this.analyticsService.logJoinGroup(user.uid, groupId);
 
-                // Enable push messages for this user.
-                Permissions.query({
-                    name: PermissionType.Notifications
-                }).then((result) => {
-                    if (result.state === 'granted') {
-                        this.pushService.subscribeTopic(PushTopic.GROUP_ALL, {groupId, accountId: account.id});
-                    }
-                });
+                    // Enable push messages for this user.
+                    Permissions.query({
+                        name: PermissionType.Notifications
+                    }).then((result) => {
+                        if (result.state === 'granted') {
+                            this.pushService.subscribeTopic(PushTopic.GROUP_ALL, {groupId, accountId: account.id});
+                        }
+                    });
 
-                this.eventsService.publish('group:joined');
+                    this.eventsService.publish('group:joined');
+                }
             });
     }
 }

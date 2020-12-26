@@ -12,7 +12,7 @@ import {take} from 'rxjs/operators';
 import {OnboardingComponent} from './onboarding/onboarding.component';
 import {StorageService} from '../../services/storage.service';
 import {UIService} from '../../services/ui.service';
-import {PushService} from '../../services/push.service';
+import {LoggerService} from '../../services/logger.service';
 import User = firebase.User;
 
 @Component({
@@ -21,6 +21,7 @@ import User = firebase.User;
     styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
+    private readonly logger = LoggerService.getLogger(DashboardPage.name);
 
     user$: Observable<User>;
     groups$: BehaviorSubject<Group[]> = new BehaviorSubject<Group[]>([]);
@@ -28,6 +29,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     private user: User;
     private loadingGroupJoin?: HTMLIonLoadingElement;
     private unsubscribeFn;
+    private showingOnboarding: boolean;
 
     constructor(private authService: AuthService,
                 private navController: NavController,
@@ -122,7 +124,12 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     private checkForGroupInvite() {
         this.storage.get('groupInvite')
             .then((invite: string) => {
-                this.promptGroupInvite(invite);
+                return this.storage.get('hasOnboarded')
+                    .then((hasOnboarded: boolean) => {
+                        if (hasOnboarded) {
+                            this.promptGroupInvite(invite);
+                        }
+                    });
             })
             .catch(() => {
             });
@@ -135,7 +142,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         this.groupService.getGroupByInviteLink(groupInvite)
             .then(group => {
                 this.zone.run(() => {
-
                     if (!group.members.find(uid => uid === this.user.uid)) {
                         this.alertController.create({
                             header: this.translate.instant('dashboard.groupInvite.header'),
@@ -156,6 +162,12 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                         });
                     }
                 });
+            })
+            .catch((err) => {
+                this.logger.error({
+                    message: err
+                });
+                this.uiService.showError(this.translate.instant('errors.error'), err);
             });
     }
 

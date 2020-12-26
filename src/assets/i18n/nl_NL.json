@@ -41,7 +41,11 @@
   },
   "errors": {
     "error": "Foutmelding",
-    "warning": "Waarschuwing"
+    "warning": "Waarschuwing",
+    "group-not-found": "Groep niet gevonden",
+    "group-not-retrieved": "Groep kon niet worden opgehaald",
+    "group-invite-expired": "Groepslink verlopen",
+    "group-creation-error": "Er is een fout opgetreden bij het aanmaken van de groep. Probeer het opnieuw."
   },
   "login": {
     "name": "Naam",

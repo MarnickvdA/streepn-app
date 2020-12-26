@@ -6,12 +6,10 @@ import {getMoneyString} from '../../../utils/firestore-utils';
 import {PushService, PushTopic} from '../../../services/push.service';
 import {Subscription} from 'rxjs';
 import {StorageService} from '../../../services/storage.service';
-import {Plugins} from '@capacitor/core';
 import {AccountService} from '../../../services/account.service';
 import {LoadingController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-
-const {Storage} = Plugins;
+import {LoggerService} from '../../../services/logger.service';
 
 @Component({
     selector: 'app-account-detail',
@@ -19,6 +17,7 @@ const {Storage} = Plugins;
     styleUrls: ['./account-detail.page.scss'],
 })
 export class AccountDetailPage implements OnInit, OnDestroy {
+    private readonly logger = LoggerService.getLogger(AccountDetailPage.name);
 
     groupId: string;
     account: UserAccount;
@@ -92,7 +91,7 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                 this.account = account;
             })
             .catch(err => {
-                console.error(err);
+                this.logger.error({message: err});
             })
             .finally(() => {
                 loading.dismiss();

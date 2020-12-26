@@ -11,6 +11,7 @@ import {environment} from '../../environments/environment';
 import {AnalyticsService} from './analytics.service';
 import {catchError} from 'rxjs/operators';
 import {AngularFireFunctions} from '@angular/fire/functions';
+import {LoggerService} from './logger.service';
 import User = firebase.User;
 
 const {SignInWithApple} = Plugins;
@@ -19,6 +20,7 @@ const {SignInWithApple} = Plugins;
     providedIn: 'root'
 })
 export class AuthService {
+    private readonly logger = LoggerService.getLogger(AuthService.name);
 
     currentUser?: User;
     hasAcceptedLegals: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -47,9 +49,12 @@ export class AuthService {
                                 this.hasAcceptedLegals.next(payload.acceptedTermsAndPrivacy);
                                 this.legalVersion = payload.termsAndPrivacyVersion;
                             } else {
-                                console.error('Could not retrieve token');
+                                this.logger.error({message: 'Could not retrieve token'});
                             }
-                        }).catch(err => console.error(err));
+                        })
+                        .catch(err => {
+                            this.logger.error({message: 'getIdToken error', error: err});
+                        });
                 }
             });
     }
@@ -68,6 +73,11 @@ export class AuthService {
                 const errorCode = error.code;
                 const errorMessage = error.message;
 
+                this.logger.error({
+                    message: errorMessage,
+                    error
+                });
+
                 return Promise.reject(errorCode);
             });
     }
@@ -81,6 +91,11 @@ export class AuthService {
             .catch(error => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+
+                this.logger.error({
+                    message: errorMessage,
+                    error
+                });
 
                 return Promise.reject(errorCode);
             });
@@ -161,7 +176,7 @@ export class AuthService {
         const callable = this.functions.httpsCallable('acceptTerms');
         callable({version: environment.legalVersion})
             .pipe(catchError((err) => {
-                console.error(err);
+                this.logger.error({message: 'acceptTerms', error: err});
                 return EMPTY;
             }))
             .subscribe(data => {

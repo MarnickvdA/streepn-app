@@ -9,6 +9,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {UserService} from '../../../services/user.service';
 import {AnalyticsService} from '../../../services/analytics.service';
 import {AuthService} from '../../../services/auth.service';
+import {LoggerService} from '../../../services/logger.service';
 
 const {Haptics} = Plugins;
 
@@ -18,6 +19,7 @@ const {Haptics} = Plugins;
     styleUrls: ['./add-transaction.component.scss'],
 })
 export class AddTransactionComponent implements OnInit {
+    private readonly logger = LoggerService.getLogger(AddTransactionComponent.name);
 
     @Input() group: Group;
     transactions: {
@@ -113,7 +115,7 @@ export class AddTransactionComponent implements OnInit {
         this.transactionService.addTransaction(this.group.id, transactionList)
             .pipe(
                 catchError(err => {
-                    console.error(err);
+                    this.logger.error({message: err});
                     loading.dismiss(); // TODO Check if this is necessary.
                     return EMPTY;
                 })

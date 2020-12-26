@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {LoggerService} from './logger.service';
 
 export type EventHandler = (...args: any[]) => any;
 
@@ -6,6 +7,8 @@ export type EventHandler = (...args: any[]) => any;
     providedIn: 'root',
 })
 export class EventsService {
+    private readonly logger = LoggerService.getLogger(EventsService.name);
+
     private eventMap = new Map<string, EventHandler[]>();
 
     /**
@@ -70,7 +73,7 @@ export class EventsService {
             try {
                 return handler(...eventData);
             } catch (e) {
-                console.error(e);
+                this.logger.error({message: 'publish error', error: e});
                 return null;
             }
         });

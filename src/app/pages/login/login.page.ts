@@ -7,6 +7,7 @@ import {Capacitor} from '@capacitor/core';
 import {TranslateService} from '@ngx-translate/core';
 import {UIService} from '../../services/ui.service';
 import {StorageService} from '../../services/storage.service';
+import {LoggerService} from '../../services/logger.service';
 
 @Component({
     selector: 'app-login',
@@ -14,6 +15,8 @@ import {StorageService} from '../../services/storage.service';
     styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit, OnDestroy {
+    private readonly logger = LoggerService.getLogger(LoginPage.name);
+
     loginForm: FormGroup;
     private readonly loginHandler;
     isIos: boolean;
@@ -110,7 +113,7 @@ export class LoginPage implements OnInit, OnDestroy {
 
         this.authService.loginWithApple()
             .catch(err => {
-                console.error(err);
+                this.logger.error({message: err});
 
                 this.uiService.showError(this.translate.instant('errors.error'), this.translate.instant('login.errors.unknown-login'));
             })
@@ -129,7 +132,7 @@ export class LoginPage implements OnInit, OnDestroy {
 
         this.authService.loginWithGoogle()
             .catch(err => {
-                console.error(err);
+                this.logger.error({message: err});
 
                 this.uiService.showError(this.translate.instant('errors.error'), this.translate.instant('login.errors.unknown-login'));
             })

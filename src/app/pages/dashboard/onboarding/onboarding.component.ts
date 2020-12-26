@@ -121,7 +121,6 @@ export class OnboardingComponent implements OnInit {
         await loading.present();
 
         const terms = (accepted) => {
-            console.log('legal:result => ' + accepted);
             if (accepted) {
                 this.slideNext();
             } else {
@@ -150,6 +149,9 @@ export class OnboardingComponent implements OnInit {
                 if (!group.members.find(uid => uid === this.authService.currentUser.uid)) {
                     this.group = group;
                 }
+            })
+            .catch(err => {
+                this.uiService.showError(this.translate.instant('errors.error'), err);
             });
     }
 
@@ -162,14 +164,14 @@ export class OnboardingComponent implements OnInit {
 
         await loading.present();
 
-        this.groupService.joinGroup(groupId, this.authService.currentUser);
-
         const joinedGroupFn = () => {
             loading.dismiss();
             this.slideNext();
         };
 
         this.events.subscribe('group:joined', joinedGroupFn);
+
+        this.groupService.joinGroup(groupId, this.authService.currentUser);
     }
 
     openLegalPage() {

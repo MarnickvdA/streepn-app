@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Plugins} from '@capacitor/core';
+import {LoggerService} from './logger.service';
+import {EventsService} from './events.service';
 
 const {Storage} = Plugins;
 
@@ -7,6 +9,7 @@ const {Storage} = Plugins;
     providedIn: 'root'
 })
 export class StorageService {
+    private readonly logger = LoggerService.getLogger(EventsService.name);
 
     constructor() {
     }
@@ -17,8 +20,8 @@ export class StorageService {
                 if (data?.value) {
                     return JSON.parse(data.value);
                 } else {
-                    console.warn( 'StorageService: key \'' + key + '\' not found in storage');
-                    return Promise.reject('#IGNORE' + key + ' not found in storage');
+                    this.logger.warn({message: 'key ' + key + ' not found in storage'});
+                    return Promise.reject( key + ' not found in storage');
                 }
             });
     }

@@ -3,6 +3,7 @@ import {Capacitor, Plugins, PushNotification, PushNotificationActionPerformed, P
 import {EventsService} from './events.service';
 import {StorageService} from './storage.service';
 import {FCM} from '@capacitor-community/fcm';
+import {LoggerService} from './logger.service';
 
 const {PushNotifications} = Plugins;
 const fcm = new FCM();
@@ -15,6 +16,7 @@ export enum PushTopic {
     providedIn: 'root'
 })
 export class PushService {
+    private readonly logger = LoggerService.getLogger(EventsService.name);
 
     constructor(private events: EventsService,
                 private storage: StorageService) {
@@ -93,7 +95,7 @@ export class PushService {
                                 this.storage.set(`${data.accountId}_enablePush`, true);
                         }
                     }).catch(err => {
-                        console.error(err);
+                        this.logger.error({message: 'subscribeToTopic', error: err});
                     });
                 }
             });
@@ -120,6 +122,8 @@ export class PushService {
                             case PushTopic.GROUP_ALL:
                                 this.storage.set(`${data.accountId}_enablePush`, false);
                         }
+                    }).catch((err) => {
+                        this.logger.error({message: 'unsubscribeFromTopic', error: err});
                     });
                 }
             });

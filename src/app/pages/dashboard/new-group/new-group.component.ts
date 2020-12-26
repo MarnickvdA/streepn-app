@@ -8,6 +8,7 @@ import {Group} from '../../../models';
 import {PermissionType, Plugins} from '@capacitor/core';
 import {AlertController, NavController} from '@ionic/angular';
 import {PushService, PushTopic} from '../../../services/push.service';
+import {LoggerService} from '../../../services/logger.service';
 
 const {Clipboard, Share, Permissions} = Plugins;
 
@@ -17,6 +18,8 @@ const {Clipboard, Share, Permissions} = Plugins;
     styleUrls: ['./new-group.component.scss'],
 })
 export class NewGroupComponent implements OnInit {
+    private readonly logger = LoggerService.getLogger(NewGroupComponent.name);
+
     groupForm: FormGroup;
     isSubmitted: boolean;
     groupCreated: boolean;
@@ -77,7 +80,8 @@ export class NewGroupComponent implements OnInit {
                     }
                 })
                 .catch((err) => {
-                    console.error(err);
+                    this.logger.error({message: err});
+                    this.uiService.showError(this.translate.instant('errors.error'), err);
                     this.groupCreated = false;
                 })
                 .finally(() => {

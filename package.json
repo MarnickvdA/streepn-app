@@ -1,6 +1,6 @@
 {
   "name": "streepn",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Strype B.V.",
   "homepage": "https://streepn.nl",
   "scripts": {
@@ -10,6 +10,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "prod": "npm install && ng build --prod --source-map && npx cap sync",
     "emulator": "firebase emulators:start --import ./data --export-on-exit=./data",
     "postinstall": "npx jetifier && ngcc",
     "resources": "cordova-res ios && cordova-res android && node scripts/resources.js"
@@ -37,6 +38,7 @@
     "@ionic/angular": "^5.0.0",
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
+    "@sentry/browser": "5.29.2",
     "cordova-plugin-googleplus": "^8.5.1",
     "firebase": "^7.0 || ^8.0",
     "rxjs": "~6.6.3",
@@ -75,5 +77,8 @@
     "tslint": "~6.1.0",
     "typescript": "~4.0.5"
   },
-  "description": "An Ionic project"
+  "description": "Dé digitale streeplijst",
+  "config": {
+    "ionic_generate_source_map": "true"
+  }
 }

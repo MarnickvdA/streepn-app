@@ -29,6 +29,29 @@ import {AdsService} from './services/ads.service';
 import {StorageService} from './services/storage.service';
 import {UIService} from './services/ui.service';
 import {GooglePlus} from '@ionic-native/google-plus/ngx';
+import * as Sentry from '@sentry/browser';
+import {LoggerService} from './services/logger.service';
+
+Sentry.init({
+    dsn: 'https://898ea0c4100341d581f3a5d645db3c12@o352784.ingest.sentry.io/5178411',
+    debug: !environment.production,
+    enabled: environment.production,
+    release: environment.version,
+    environment: environment.production ? 'prod' : 'debug',
+    tracesSampleRate: 1.0,
+});
+
+@Injectable({
+    providedIn: 'root'
+})
+export class SentryErrorHandler implements ErrorHandler {
+    constructor() {
+    }
+
+    handleError(error) {
+        LoggerService.handleError(error);
+    }
+}
 
 const SERVICES = [
     AuthService,
@@ -43,21 +66,6 @@ const SERVICES = [
     StorageService,
     UIService
 ];
-
-@Injectable({
-    providedIn: 'root'
-})
-export class AppErrorHandler implements ErrorHandler {
-    constructor() {
-    }
-
-    handleError(error) {
-        if (error.message.includes('#IGNORE')) {
-            return;
-        }
-        console.error(error);
-    }
-}
 
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -92,11 +100,11 @@ export function createTranslateLoader(http: HttpClient) {
         StatusBar,
         SplashScreen,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-        {provide: ErrorHandler, useClass: AppErrorHandler},
         {provide: REGION, useValue: 'europe-west1'},
         {provide: USE_AUTH_EMULATOR, useValue: !environment.production ? ['localhost', 9099] : undefined},
         {provide: USE_FIRESTORE_EMULATOR, useValue: !environment.production ? ['localhost', 8080] : undefined},
         {provide: USE_FUNCTIONS_EMULATOR, useValue: !environment.production ? ['localhost', 5001] : undefined},
+        {provide: ErrorHandler, useClass: SentryErrorHandler},
         ...SERVICES,
         GooglePlus,
     ],

@@ -11,4 +11,5 @@ export const environment = {
   },
   legalVersion: '1',
   legalUrl: 'https://streepn.nl/legal?version=1',
+  version: require('../../package.json').version,
 };
