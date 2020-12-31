@@ -7,6 +7,7 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
+
 exports.createUserObject = functions
     .region('europe-west1')
     .auth
@@ -100,8 +101,6 @@ exports.addTransaction = functions
         let group: any;
         const groupRef = db.collection('groups').doc(data.groupId);
 
-        const transactions: any[] = [];
-
         return db.runTransaction(transaction => {
                 return transaction.get(groupRef)
                     .then(groupDoc => {
@@ -117,12 +116,17 @@ exports.addTransaction = functions
                             throw new functions.https.HttpsError('permission-denied', 'User not member of group');
                         }
 
+                        if (!data.transaction) {
+                            throw new functions.https.HttpsError('not-found', 'No transaction to be computed!');
+                        }
+
                         currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
 
-                        // Timestamp must be the same for every transaction so they can be grouped.
-                        const now = admin.firestore.FieldValue.serverTimestamp();
+                        console.error(JSON.stringify(data.transaction));
+                        console.error(JSON.stringify(data));
 
-                        data.transactions.forEach((t: any) => {
+                        // Update the balance of the accounts
+                        data.transaction.items.forEach((t: { amount: number, account: any, product: any }) => {
                             let acc: any;
                             let index: number;
                             switch (t.account.type) {
@@ -131,7 +135,7 @@ exports.addTransaction = functions
                                     index = group.accounts.indexOf(acc);
 
                                     // Update balance of the account
-                                    acc.balance -= t.totalPrice;
+                                    acc.balance -= (t.product.price * t.amount);
                                     group.accounts[index] = acc;
                                     break;
                                 case 'shared':
@@ -139,54 +143,46 @@ exports.addTransaction = functions
                                     index = group.sharedAccounts.indexOf(acc);
 
                                     // Update balance of the account
-                                    acc.balance -= t.totalPrice;
+                                    acc.balance -= (t.product.price * t.amount);
                                     group.sharedAccounts[index] = acc;
                                     break;
                             }
 
                             // TODO Implement edge case where account is not found, thus transactions are not saved correctly.
-
-                            // tslint:disable-next-line:no-shadowed-variable
-                            const uid = uuidv4();
-
-                            const newTransaction = {
-                                createdAt: now,
-                                createdBy: t.createdBy,
-                                createdById: t.createdById,
-                                amount: t.amount,
-                                totalPrice: t.totalPrice,
-                                account: t.account,
-                                product: t.product,
-                            };
-
-                            // Add the transaction to firestore
-                            transaction.set(groupRef.collection('transactions').doc(uid), newTransaction);
-
-                            // @ts-ignore
-                            newTransaction.id = uid;
-                            // @ts-ignore
-                            newTransaction.createdAt = admin.firestore.Timestamp.now().toMillis();
-
-                            transactions.push(newTransaction);
                         });
+
+                        const uid = uuidv4();
+                        const newTransaction = {
+                            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                            createdBy: data.transaction.createdBy,
+                            totalPrice: data.transaction.totalPrice,
+                            itemCount: data.transaction.itemCount,
+                            items: data.transaction.items,
+                        };
+
+                        // Add the transaction to firestore
+                        transaction.set(groupRef.collection('transactions').doc(uid), newTransaction);
+
                         transaction.update(groupRef, {
                             accounts: group.accounts,
                             sharedAccounts: group.sharedAccounts,
                         });
+
+                        return newTransaction;
                     })
                     .catch(err => {
                         console.error(err);
                         throw new functions.https.HttpsError('unknown', 'Error occurred while getting document', err);
                     });
             })
-            .then(() => {
+            .then((transaction) => {
                 try {
                     const topic = `group_${data.groupId}_all`;
 
                     const message = {
                         notification: {
                             title: `Nieuwe transactie in ${group.name}`,
-                            body: `${currentAccount.name} heeft ${transactions.length} transactie${transactions.length > 1 ? 's' : ''} gedaan!`,
+                            body: `${currentAccount.name} heeft ${transaction.itemCount} transactie${transaction.itemCount > 1 ? 's' : ''} gedaan!`,
                         },
                         data: {
                             groupId: data.groupId as string,
@@ -201,7 +197,8 @@ exports.addTransaction = functions
                 } catch (e) {
                     console.error(e);
                 }
-                return transactions;
+
+                return transaction;
             })
             .catch(err => {
                 console.error(err);

@@ -62,11 +62,6 @@ export class GroupPage implements OnInit, OnDestroy {
 
         this.loadTransactions(this.group.id)
             .then(transactions => {
-                // console.log('reset()');
-                // console.log('Loaded:');
-                // console.log(transactions);
-                // console.log('Replacing it for transactions:');
-                // console.log(this.transactions);
                 this.transactions = transactions;
             })
             .finally(() => {
@@ -79,11 +74,6 @@ export class GroupPage implements OnInit, OnDestroy {
     loadNext() {
         this.loadTransactions(this.group.id)
             .then((transactions) => {
-                // console.log('loadNext()');
-                // console.log('Loaded:');
-                // console.log(transactions);
-                // console.log('Adding it to all transactions:');
-                // console.log(this.transactions);
                 this.transactions.push(...transactions);
             });
     }
