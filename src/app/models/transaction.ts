@@ -1,45 +1,45 @@
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {Product, productConverter} from './product';
-import {Account, accountConverter} from './account';
+import {Account, accountConverter, sharedAccountConverter, UserAccount, userAccountConverter} from './account';
+
+export interface TransactionItem {
+    amount: number;
+    account: Account;
+    product: Product;
+}
 
 export class Transaction {
     readonly id: string;
     createdAt: Timestamp;
-    amount: number;
+    createdBy: UserAccount;
     totalPrice: number;
-    createdBy: string;
-    createdById: string;
-    account: Account;
-    product: Product;
+    itemCount: number;
+    items: TransactionItem[];
 
-
-    constructor(id: string, createdAt: Timestamp, amount: number, totalPrice: number, createdBy: string,
-                createdById: string, account: Account, product: Product) {
+    constructor(id: string, createdAt: Timestamp, createdBy: UserAccount, totalPrice: number, itemCount: number, items: TransactionItem[]) {
         this.id = id;
         this.createdAt = createdAt;
-        this.amount = amount;
-        this.totalPrice = totalPrice;
         this.createdBy = createdBy;
-        this.createdById = createdById;
-        this.account = account;
-        this.product = product;
+        this.totalPrice = totalPrice;
+        this.itemCount = itemCount;
+        this.items = [...items];
     }
 }
 
 export const transactionConverter: FirestoreDataConverter<Transaction> = {
     toFirestore(transaction: Transaction) {
-        if (transaction.account) {
-            return {
-                createdAt: transaction.createdAt,
-                amount: transaction.amount,
-                totalPrice: transaction.totalPrice,
-                createdBy: transaction.createdBy,
-                createdById: transaction.createdById,
-                account: accountConverter.toFirestore(transaction.account),
-                product: productConverter.toFirestore(transaction.product)
-            };
-        }
+        return {
+            createdAt: transaction.createdAt,
+            createdBy: userAccountConverter.toFirestore(transaction.createdBy),
+            totalPrice: transaction.totalPrice,
+            itemCount: transaction.items.length,
+            items: transaction.items.map(ti => {
+                ti.account = accountConverter.toFirestore(ti.account);
+                ti.product = productConverter.toFirestore(ti.product);
+                return ti;
+            }),
+        };
     },
     fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Transaction {
         const data = snapshot.data(options);
@@ -49,6 +49,22 @@ export const transactionConverter: FirestoreDataConverter<Transaction> = {
 };
 
 export function newTransaction(id: string, data: { [key: string]: any }): Transaction {
-    return new Transaction(id, data.createdAt as Timestamp, data.amount, data.totalPrice, data.createdBy,
-        data.createdById, data.account, productConverter.newProduct(data.product));
+    return new Transaction(id, data.createdAt as Timestamp, userAccountConverter.newAccount(data.createdBy), data.totalPrice,
+        data.itemCount, data.items.map(item => {
+
+            switch (item.account.type) {
+                case 'user':
+                    item.account = userAccountConverter.newAccount(item.account);
+                    break;
+                case 'shared':
+                    item.account = sharedAccountConverter.newSharedAccount(item.account);
+                    break;
+            }
+
+            return {
+                amount: item.amount,
+                account: item.account,
+                product: productConverter.newProduct(item.product),
+            };
+        }));
 }

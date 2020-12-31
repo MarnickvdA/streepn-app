@@ -49,20 +49,22 @@ export const accountConverter = {
             createdAt: account.createdAt,
             name: account.name,
             balance: account.balance,
+            type: account.type,
         };
     }
 };
 
 export const userAccountConverter = {
-    toFirestore(account: UserAccount) {
+    toFirestore(userAccount: UserAccount) {
         return {
-            id: account.id,
-            userId: account.userId,
-            createdAt: account.createdAt,
-            name: account.name,
-            balance: account.balance,
-            roles: account.roles,
-            photoUrl: account.photoUrl
+            id: userAccount.id,
+            userId: userAccount.userId,
+            createdAt: userAccount.createdAt,
+            name: userAccount.name,
+            balance: userAccount.balance,
+            type: 'user',
+            roles: userAccount.roles,
+            photoUrl: userAccount.photoUrl
         };
     },
     newAccount(data: { [key: string]: any }): UserAccount {
@@ -77,6 +79,7 @@ export const sharedAccountConverter = {
             createdAt: sharedAccount.createdAt,
             name: sharedAccount.name,
             balance: sharedAccount.balance,
+            type: 'shared',
             accounts: sharedAccount.accounts
         };
     },

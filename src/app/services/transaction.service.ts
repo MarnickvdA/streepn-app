@@ -13,16 +13,14 @@ export class TransactionService {
     constructor(private functions: AngularFireFunctions) {
     }
 
-    addTransaction(groupId: string, transactions: Transaction[]): Observable<Transaction[]> {
+    addTransaction(groupId: string, transaction: Transaction): Observable<Transaction> {
         const callable = this.functions.httpsCallable('addTransaction');
         return callable({
             groupId,
-            transactions
+            transaction
         }).pipe(
-            map(result => result.map(value => {
-                // There were some issues with getting the date nicely from the function, so we did a little ugly conversion.
-                return newTransaction(value.id, value);
-            }))
-        );
+            map(result => {
+                return newTransaction(result.id, result);
+            }));
     }
 }

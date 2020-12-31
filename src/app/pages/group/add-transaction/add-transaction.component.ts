@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Account, Group, Product, Transaction} from '../../../models';
+import {Account, Group, Product, Transaction, UserAccount} from '../../../models';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {Capacitor, HapticsImpactStyle, Plugins} from '@capacitor/core';
 import {TransactionService} from '../../../services/transaction.service';
@@ -10,6 +10,7 @@ import {UserService} from '../../../services/user.service';
 import {AnalyticsService} from '../../../services/analytics.service';
 import {AuthService} from '../../../services/auth.service';
 import {LoggerService} from '../../../services/logger.service';
+import {TransactionItem} from '../../../models/transaction';
 
 const {Haptics} = Plugins;
 
@@ -72,6 +73,14 @@ export class AddTransactionComponent implements OnInit {
     }
 
     async checkout() {
+        const loading = await this.loadingController.create({
+            message: this.translate.instant('actions.streeping'),
+            translucent: true,
+            backdropDismiss: false
+        });
+
+        await loading.present();
+
         const productDictionary: { [productId: string]: Product } = {};
         this.group.products.forEach(p => {
             productDictionary[p.id] = p;
@@ -85,8 +94,9 @@ export class AddTransactionComponent implements OnInit {
             accountDictionary[a.id] = a;
         });
 
-        const transactionList: Transaction[] = [];
-        const currentUserAccount = this.group.accounts.find(acc => acc.userId === this.authService.currentUser.uid);
+        const currentUserAccount = this.group.accounts.find(acc => acc.userId === this.authService.currentUser.uid) as UserAccount;
+        const transactionItems: TransactionItem[] = [];
+        let totalPrice = 0;
 
         Object.keys(this.transactions).forEach(accountId => {
             const account = accountDictionary[accountId];
@@ -96,23 +106,20 @@ export class AddTransactionComponent implements OnInit {
                 const amount = this.transactions[accountId][productId].amount;
 
                 if (amount > 0) {
-                    const transaction = new Transaction(undefined, undefined, amount, amount * product.price,
-                        currentUserAccount.name, currentUserAccount.id, account, product);
-
-                    transactionList.push(transaction);
+                    totalPrice += product.price * amount;
+                    transactionItems.push({
+                        amount,
+                        account,
+                        product,
+                    } as TransactionItem);
                 }
             });
         });
 
-        const loading = await this.loadingController.create({
-            message: this.translate.instant('actions.streeping'),
-            translucent: true,
-            backdropDismiss: false
-        });
+        const transaction = new Transaction(undefined, undefined, currentUserAccount,
+            totalPrice, transactionItems.length, transactionItems);
 
-        await loading.present();
-
-        this.transactionService.addTransaction(this.group.id, transactionList)
+        this.transactionService.addTransaction(this.group.id, transaction)
             .pipe(
                 catchError(err => {
                     this.logger.error({message: err});
@@ -120,17 +127,17 @@ export class AddTransactionComponent implements OnInit {
                     return EMPTY;
                 })
             )
-            .subscribe((value) => {
-                if (value?.length > 0) {
-                    this.analyticsService.logTransaction(this.authService.currentUser.uid, this.group.id, value[0].id);
+            .subscribe((t) => {
+                if (t) {
+                    this.analyticsService.logTransaction(this.authService.currentUser.uid, this.group.id, t.id);
                 }
 
                 loading.dismiss();
-                this.dismiss(value);
+                this.dismiss(t);
             });
     }
 
-    dismiss(data?: Transaction[]) {
+    dismiss(data?: Transaction) {
         this.modalController.dismiss(data);
     }
 
