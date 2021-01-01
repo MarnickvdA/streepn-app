@@ -1,10 +1,20 @@
 import {ModuleWithProviders, NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, CurrencyPipe} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+import {MoneyInputComponent} from './components/money-input/money-input.component';
+import {IonicModule} from '@ionic/angular';
+import {ProductItemComponent} from './components/product-item/product-item.component';
+import {UserAccountItemComponent} from './components/user-account-item/user-account-item.component';
+import {SharedAccountItemComponent} from './components/shared-account-item/shared-account-item.component';
 
-export const components = [];
+export const components = [
+    MoneyInputComponent,
+    ProductItemComponent,
+    UserAccountItemComponent,
+    SharedAccountItemComponent,
+];
 
 @NgModule({
     declarations: [
@@ -16,6 +26,10 @@ export const components = [];
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
+        IonicModule,
+    ],
+    providers: [
+        CurrencyPipe
     ],
     exports: [
         CommonModule,

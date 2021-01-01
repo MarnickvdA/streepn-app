@@ -18,16 +18,14 @@ const {Clipboard, Share, Permissions} = Plugins;
     styleUrls: ['./new-group.component.scss'],
 })
 export class NewGroupComponent implements OnInit {
-    private readonly logger = LoggerService.getLogger(NewGroupComponent.name);
-
     groupForm: FormGroup;
     isSubmitted: boolean;
     groupCreated: boolean;
     loading: boolean;
-
     name: string;
     group: Group;
     sharedGroup: boolean;
+    private readonly logger = LoggerService.getLogger(NewGroupComponent.name);
 
     constructor(private formBuilder: FormBuilder,
                 private groupService: GroupService,
@@ -42,11 +40,11 @@ export class NewGroupComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
-    }
-
     get form() {
         return this.groupForm.controls;
+    }
+
+    ngOnInit() {
     }
 
     setName() {
@@ -97,21 +95,21 @@ export class NewGroupComponent implements OnInit {
     async shareGroup() {
         try {
             await Share.share({
-                title: this.translate.instant('group.settings.inviteAccount.title', {group: this.group.name}),
-                text: this.translate.instant('group.settings.inviteAccount.description', {group: this.group.name}),
+                title: this.translate.instant('group.overview.inviteAccount.title', {group: this.group.name}),
+                text: this.translate.instant('group.overview.inviteAccount.description', {group: this.group.name}),
                 url: 'https://streepn.nl/group-invite/' + this.group.inviteLink,
-                dialogTitle: this.translate.instant('group.settings.inviteAccount.dialogTitle')
+                dialogTitle: this.translate.instant('group.overview.inviteAccount.dialogTitle')
             });
         } catch (e) {
             const alert = await this.alertController.create({
-                header: this.translate.instant('group.settings.addAccount.header'),
-                message: this.translate.instant('group.settings.addAccount.message') + '<br><br><b>' + this.group.inviteLink + '</b>',
+                header: this.translate.instant('group.overview.addAccount.header'),
+                message: this.translate.instant('group.overview.addAccount.message') + '<br><br><b>' + this.group.inviteLink + '</b>',
                 buttons: [
                     {
                         text: this.translate.instant('actions.cancel'),
                         role: 'cancel'
                     }, {
-                        text: this.translate.instant('actions.copy') + ' ' + this.translate.instant('group.settings.addAccount.code'),
+                        text: this.translate.instant('actions.copy') + ' ' + this.translate.instant('group.overview.addAccount.code'),
                         handler: () => {
                             Clipboard.write({
                                 string: this.group.inviteLink
@@ -127,8 +125,8 @@ export class NewGroupComponent implements OnInit {
         this.sharedGroup = true;
     }
 
-    navigateSettings() {
-        this.navController.navigateRoot(['group', this.group.id, 'settings'], {
+    navigateGroupOverview() {
+        this.navController.navigateRoot(['group', this.group.id, 'overview'], {
             animationDirection: 'forward'
         });
     }

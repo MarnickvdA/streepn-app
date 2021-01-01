@@ -18,7 +18,7 @@ ion-slides {
 
     font-size: .85rem;
 
-    ion-img.logo::part(image){
+    ion-img.logo::part(image) {
       border-radius: 50%;
     }
 
@@ -42,9 +42,9 @@ ion-slides {
 }
 
 span.link {
-  cursor:pointer;
+  cursor: pointer;
   color: var(--ion-color-primary);
-  text-decoration:underline;
+  text-decoration: underline;
 }
 
 ion-toolbar {

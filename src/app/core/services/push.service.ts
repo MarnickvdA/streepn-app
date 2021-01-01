@@ -60,19 +60,6 @@ export class PushService {
             .catch(() => false);
     }
 
-    private requestPushRegister(): Promise<void> {
-        return PushNotifications.requestPermission().then(result => {
-            if (result.granted) {
-                // Register with Apple / Google to receive push via APNS/FCM
-                return PushNotifications.register();
-
-            } else {
-                // Show some error
-                Promise.reject('No permission');
-            }
-        });
-    }
-
     subscribeTopic(topic: PushTopic, data: { [key: string]: string }) {
         if (!Capacitor.isPluginAvailable('PushNotifications')) {
             return Promise.resolve();
@@ -135,5 +122,18 @@ export class PushService {
         }
 
         PushNotifications.removeAllDeliveredNotifications();
+    }
+
+    private requestPushRegister(): Promise<void> {
+        return PushNotifications.requestPermission().then(result => {
+            if (result.granted) {
+                // Register with Apple / Google to receive push via APNS/FCM
+                return PushNotifications.register();
+
+            } else {
+                // Show some error
+                Promise.reject('No permission');
+            }
+        });
     }
 }

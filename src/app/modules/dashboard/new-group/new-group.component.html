@@ -18,21 +18,22 @@
     <div class="form-content">
         <h5>{{'dashboard.createGroup.step1.title' | translate}}</h5>
         <p>{{'dashboard.createGroup.step1.description' | translate}}</p>
-        <form [formGroup]="groupForm" (ngSubmit)="setName()">
-            <ion-item lines="none" class="form-input">
+        <form (ngSubmit)="setName()" [formGroup]="groupForm">
+            <ion-item class="form-input" lines="none">
                 <ion-icon name="people-outline"></ion-icon>
-                <ion-input placeholder="{{'dashboard.createGroup.groupName' | translate}}" autocapitalize="words"
-                           formControlName="name" [attr.disabled]="groupCreated"
-                           clearInput type="text" enterkeyhint="next" inputmode="text"></ion-input>
+                <ion-input [attr.disabled]="groupCreated" autocapitalize="words"
+                           clearInput enterkeyhint="next"
+                           formControlName="name" inputmode="text" placeholder="{{'dashboard.createGroup.groupName' | translate}}" type="text"></ion-input>
             </ion-item>
-            <span class="form-input-error" *ngIf="isSubmitted && form.name.errors?.required">
+            <span *ngIf="isSubmitted && form.name.errors?.required" class="form-input-error">
                 {{'dashboard.createGroup.errors.name-required' | translate}}
             </span>
-            <span class="form-input-error" *ngIf="isSubmitted && form.name.errors?.length">
+            <span *ngIf="isSubmitted && form.name.errors?.length" class="form-input-error">
                 {{'dashboard.createGroup.errors.name-length' | translate}}
             </span>
 
-            <ion-button id="name-button" class="ion-margin-top" [attr.disabled]="groupCreated" [color]="groupCreated && !loading ? 'success' : 'primary'" expand="block"
+            <ion-button [attr.disabled]="groupCreated" [color]="groupCreated && !loading ? 'success' : 'primary'" class="ion-margin-top"
+                        expand="block" id="name-button"
                         type="submit">
                 <ion-label *ngIf="!groupCreated">{{'actions.submit' | translate}}</ion-label>
                 <ion-spinner *ngIf="groupCreated && loading"></ion-spinner>
@@ -45,7 +46,7 @@
         <div>
             <h5>{{'dashboard.createGroup.step2.title' | translate}}</h5>
             <p>{{'dashboard.createGroup.step2.description' | translate}}</p>
-            <ion-button [attr.disabled]="!group" expand="block" (click)="shareGroup()">
+            <ion-button (click)="shareGroup()" [attr.disabled]="!group" expand="block">
                 <ion-label>{{'dashboard.createGroup.shareInvite' | translate}}</ion-label>
             </ion-button>
         </div>
@@ -55,8 +56,8 @@
         <div>
             <h5>{{'dashboard.createGroup.step3.title' | translate}}</h5>
             <p>{{'dashboard.createGroup.step3.description' | translate}}</p>
-            <ion-button [attr.disabled]="!(group && sharedGroup)" expand="block" (click)="navigateSettings()">
-                <ion-label>{{'dashboard.createGroup.navigateSettings' | translate}}</ion-label>
+            <ion-button (click)="navigateGroupOverview()" [attr.disabled]="!(group && sharedGroup)" expand="block">
+                <ion-label>{{'dashboard.createGroup.navigateGroupOverview' | translate}}</ion-label>
             </ion-button>
         </div>
     </div>

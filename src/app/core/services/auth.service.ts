@@ -20,11 +20,10 @@ const {SignInWithApple} = Plugins;
     providedIn: 'root'
 })
 export class AuthService {
-    private readonly logger = LoggerService.getLogger(AuthService.name);
-
     currentUser?: User;
     hasAcceptedLegals: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     legalVersion: string;
+    private readonly logger = LoggerService.getLogger(AuthService.name);
 
     constructor(private auth: AngularFireAuth,
                 private eventsService: EventsService,
@@ -60,6 +59,10 @@ export class AuthService {
                         });
                 }
             });
+    }
+
+    get user(): Observable<User | null> {
+        return this.auth.user;
     }
 
     register(displayName: string, email: string, password: string) {
@@ -160,10 +163,6 @@ export class AuthService {
         this.analytics.setUser(undefined);
         this.storage.nuke();
         return this.auth.signOut();
-    }
-
-    get user(): Observable<User | null> {
-        return this.auth.user;
     }
 
     setName(newName: string): Promise<void> {

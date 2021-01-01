@@ -14,8 +14,8 @@ const routes: Routes = [
                 component: GroupPage,
             },
             {
-                path: 'settings',
-                loadChildren: () => import('../group-settings/group-settings.module').then(m => m.GroupSettingsPageModule)
+                path: 'overview',
+                loadChildren: () => import('../group-overview/group-overview.module').then(m => m.GroupOverviewPageModule)
             },
             {
                 path: 'transactions/:transactionId',

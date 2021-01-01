@@ -22,11 +22,9 @@ import User = firebase.User;
     styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
-    private readonly logger = LoggerService.getLogger(DashboardPage.name);
-
     user$: Observable<User>;
     groups$: BehaviorSubject<Group[]> = new BehaviorSubject<Group[]>([]);
-
+    private readonly logger = LoggerService.getLogger(DashboardPage.name);
     private user: User;
     private loadingGroupJoin?: HTMLIonLoadingElement;
     private unsubscribeFn;
@@ -110,12 +108,45 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             });
     }
 
-    ionViewWillEnter() {
+    ionViewDidEnter() {
         this.ads.showBanner();
     }
 
     ionViewWillLeave() {
         this.ads.hideBanner();
+    }
+
+    async promptManualGroupJoin() {
+        const alert = await this.alertController.create({
+            header: this.translate.instant('dashboard.groupInvite.manualHeader'),
+            inputs: [
+                {
+                    name: 'groupCode',
+                    type: 'text',
+                    placeholder: this.translate.instant('dashboard.groupInvite.code')
+                }
+            ],
+            buttons: [
+                {
+                    text: this.translate.instant('actions.cancel'),
+                    role: 'cancel',
+                }, {
+                    text: this.translate.instant('actions.submit'),
+                    handler: (result: { groupCode: string }) => {
+                        if (result.groupCode.length === 8) {
+                            this.promptGroupInvite(result.groupCode);
+                        } else {
+                            this.uiService.showError(
+                                this.translate.instant('errors.error'),
+                                this.translate.instant('dashboard.groupInvite.invalidCode')
+                            );
+                        }
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
     }
 
     private launchOnBoarding() {
@@ -205,38 +236,5 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.loadingGroupJoin = undefined;
             });
-    }
-
-    async promptManualGroupJoin() {
-        const alert = await this.alertController.create({
-            header: this.translate.instant('dashboard.groupInvite.manualHeader'),
-            inputs: [
-                {
-                    name: 'groupCode',
-                    type: 'text',
-                    placeholder: this.translate.instant('dashboard.groupInvite.code')
-                }
-            ],
-            buttons: [
-                {
-                    text: this.translate.instant('actions.cancel'),
-                    role: 'cancel',
-                }, {
-                    text: this.translate.instant('actions.submit'),
-                    handler: (result: { groupCode: string }) => {
-                        if (result.groupCode.length === 8) {
-                            this.promptGroupInvite(result.groupCode);
-                        } else {
-                            this.uiService.showError(
-                                this.translate.instant('errors.error'),
-                                this.translate.instant('dashboard.groupInvite.invalidCode')
-                            );
-                        }
-                    }
-                }
-            ]
-        });
-
-        await alert.present();
     }
 }

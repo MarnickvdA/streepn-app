@@ -1,7 +1,7 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button  defaultHref="/dashboard"></ion-back-button>
+            <ion-back-button defaultHref="/dashboard"></ion-back-button>
         </ion-buttons>
         <ion-title>{{'dashboard.profile' | translate}}</ion-title>
     </ion-toolbar>
@@ -16,22 +16,26 @@
 
     <ion-list *ngIf="user$ | async; let user">
         <ion-item>
+            <ion-icon name="person-outline" slot="start"></ion-icon>
             <ion-label>{{user.displayName}}</ion-label>
         </ion-item>
         <ion-item>
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
             <ion-label>{{user.email}}</ion-label>
             <ion-chip *ngIf="user.emailVerified" color="success">
                 {{'dashboard.emailVerified' | translate}}
             </ion-chip>
         </ion-item>
         <ion-item>
-            <ion-label>{{'dashboard.memberSince' | translate}} {{user.metadata.creationTime}}</ion-label>
+            <ion-icon name="body-outline" slot="start"></ion-icon>
+            <ion-label>{{'dashboard.memberSince' | translate}} {{getReadableTime(user.metadata.creationTime)}}</ion-label>
         </ion-item>
         <ion-item lines="none">
+            <ion-icon name="contrast-outline" slot="start"></ion-icon>
             <ion-label>{{'dashboard.toggleDarkMode' | translate}}</ion-label>
-            <ion-toggle checked="{{isDarkMode}}" (ionChange)="onClick($event)" slot="end"></ion-toggle>
+            <ion-toggle (ionChange)="onClick($event)" checked="{{isDarkMode}}" slot="end"></ion-toggle>
         </ion-item>
-        <ion-button class="ion-margin" expand="block" color="danger" (click)="logout()">
+        <ion-button (click)="logout()" class="ion-margin" color="danger" expand="block">
             {{'actions.logout' | translate}}
         </ion-button>
     </ion-list>

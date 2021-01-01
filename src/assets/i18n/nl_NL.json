@@ -27,10 +27,12 @@
     "next": "Volgende",
     "previous": "Vorige",
     "seeAll": "Zie alles",
+    "refresh": "Vernieuwen",
     "copy": "Kopiëer",
     "import": "Importeren",
     "export": "Exporteren",
     "invite": "Uitnodigen",
+    "admin": "Beheren",
     "submit": "Invoeren",
     "loadMore": "Meer laden...",
     "saving": "Opslaan...",
@@ -104,7 +106,7 @@
         "name-required": "Vul een groepsnaam in"
       },
       "shareInvite": "Groepslink delen",
-      "navigateSettings": "Naar groepsinstellingen"
+      "navigateGroupOverview": "Naar groepsoverzicht"
     },
     "toggleDarkMode": "Donkere modus",
     "manualGroupJoin": "Toetreden via groepscode",
@@ -155,17 +157,39 @@
     "transaction": {
       "title": "Transactie"
     },
-    "settings": {
+    "overview": {
       "title": "Groepsoverzicht",
-      "accounts": "Deelnemers",
       "admin": "Beheerder",
       "sharedAccounts": "Potjes",
       "emptySharedAccounts": "Er zijn nog geen potjes",
       "products": "Producten",
       "emptyProducts": "Er zijn nog geen producten",
+      "refreshLink": {
+        "header": "Groepslink vernieuwen",
+        "message": "Je oude groepslink is verlopen... Wil je deze vernieuwen? De nieuwe link is dan 1 week geldig."
+      },
+      "preferences" : {
+        "title": "Voorkeuren voor {{name}}"
+      },
       "account": {
         "preferences": "Voorkeuren",
-        "enablePush": "Push Notificaties"
+        "enablePush": "Push Notificaties",
+        "enableAdmin": "Beheerders rechten",
+        "disableAdmin": {
+          "header": "Waarschuwing!",
+          "message": "Weet je zeker dat je jezelf van beheerders rechten wilt ontnemen?"
+        },
+        "deletePrecondition": "{{name}} moet een saldo van € 0,00 hebben om de groep te kunnen verlaten",
+        "deleteAccount": "{{name}} verwijderen",
+        "leaveGroup": "{{groupName}} verlaten",
+        "you": "Je"
+      },
+      "accounts": {
+        "title": "Deelnemers",
+        "adminTitle": "Deelnemers beheren",
+        "inviteLink": "Deel groepsuitnodiging",
+        "validThrough": "Geldig t/m",
+        "expired": "Verlopen op"
       },
       "addAccount": {
         "header": "Deelnemers toevoegen",

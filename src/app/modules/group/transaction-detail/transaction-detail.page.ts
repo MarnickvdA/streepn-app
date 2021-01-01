@@ -18,7 +18,6 @@ import {EventsService} from '../../../core/services/events.service';
 })
 export class TransactionDetailPage implements OnInit {
 
-    private routeSub: Subscription;
     editing: boolean;
     groupId: string;
     transactionId: string;
@@ -26,6 +25,7 @@ export class TransactionDetailPage implements OnInit {
     transaction: Transaction;
     itemsAmount: number[] = [];
     interactionCount = 0;
+    private routeSub: Subscription;
 
     constructor(private route: ActivatedRoute,
                 private router: Router,

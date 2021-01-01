@@ -1,0 +1,88 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button [defaultHref]="'/group/' + groupId"></ion-back-button>
+        </ion-buttons>
+        <ion-title>{{'group.overview.title' | translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{'group.overview.title' | translate}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <ng-container *ngIf="group$ | async; let group">
+        <ion-list>
+<!--            <ion-item *ngIf="isAdmin" button class="large-item" detail="true" routerDirection="forward"-->
+<!--                      routerLink="preferences">-->
+<!--                <ion-icon name="color-palette-outline" slot="start"></ion-icon>-->
+<!--                <ion-label>-->
+<!--                    {{'group.overview.preferences.title' | translate:{name: group.name} }}-->
+<!--                </ion-label>-->
+<!--            </ion-item>-->
+            <ion-item (click)="shareGroup()" *ngIf="isAdmin" button class="large-item" detail="false">
+                <ion-icon name="share-social-outline" slot="start"></ion-icon>
+                <ion-label>
+                    {{'group.overview.accounts.inviteLink' | translate}}
+                    <p>
+                        {{'group.overview.accounts.' + (inviteLinkExpired ? 'expired' : 'validThrough') | translate}} {{group.inviteLinkExpiry.toDate().toLocaleString()}}
+                    </p>
+                </ion-label>
+            </ion-item>
+            <ion-list-header lines="full">
+                <ion-label>{{'group.overview.accounts.title' | translate}}</ion-label>
+            </ion-list-header>
+
+            <app-user-account-item *ngFor="let account of group?.accounts" [account]="account"
+                                   [canEditAccount]="isAdmin || isAccountOwner(account)"
+                                   navLink="group/{{group.id}}/overview/accounts/{{account.id}}"></app-user-account-item>
+
+        </ion-list>
+
+        <ion-list>
+            <ion-list-header lines="full">
+                <ion-label>{{'group.overview.sharedAccounts' | translate}}</ion-label>
+                <ion-button *ngIf="isAdmin" routerDirection="forward"
+                            routerLink="new-shared-account">{{'actions.new' | translate}}</ion-button>
+            </ion-list-header>
+
+            <ion-item *ngIf="group.sharedAccounts.length === 0" lines="none">
+                <ion-label>
+                    <p>
+                        {{'group.overview.emptySharedAccounts' | translate}}
+                    </p>
+                </ion-label>
+            </ion-item>
+
+            <app-shared-account-item *ngFor="let sharedAccount of group.sharedAccounts"
+                                     [account]="sharedAccount"></app-shared-account-item>
+        </ion-list>
+
+        <ion-list>
+            <ion-list-header lines="full">
+                <ion-label>{{'group.overview.products' | translate}}</ion-label>
+                <ion-button *ngIf="isAdmin" routerDirection="forward"
+                            routerLink="new-product">{{'actions.new' | translate}}</ion-button>
+            </ion-list-header>
+
+            <ion-item *ngIf="group.products.length === 0" lines="none">
+                <ion-label>
+                    <p>
+                        {{'group.overview.emptyProducts' | translate}}
+                    </p>
+                </ion-label>
+            </ion-item>
+
+            <ion-item-sliding *ngFor="let product of group.products">
+                <app-product-item [product]="product"></app-product-item>
+                <ion-item-options *ngIf="isAdmin" side="end">
+                    <ion-item-option (click)="removeProduct(product)" color="danger"
+                                     expandable>{{'actions.delete' | translate}}</ion-item-option>
+                </ion-item-options>
+            </ion-item-sliding>
+        </ion-list>
+    </ng-container>
+</ion-content>

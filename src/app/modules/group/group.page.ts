@@ -16,18 +16,15 @@ import {EventsService} from '../../core/services/events.service';
     styleUrls: ['./group.page.scss'],
 })
 export class GroupPage implements OnInit, OnDestroy {
-    private LIMIT = 15;
-
-    private groupId: string;
     group?: Group;
     transactions: Transaction[];
-
+    doneLoading = false;
+    isLoadingMore = false;
+    private LIMIT = 15;
+    private groupId: string;
     private lastSnapshot: QueryDocumentSnapshot<Transaction>;
     private routeSub: Subscription;
     private groupSub: Subscription;
-    doneLoading = false;
-    isLoadingMore = false;
-
     private readonly refreshSub;
 
     constructor(private route: ActivatedRoute,

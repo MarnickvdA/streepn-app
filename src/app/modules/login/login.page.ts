@@ -15,12 +15,11 @@ import {LoggerService} from '../../core/services/logger.service';
     styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit, OnDestroy {
-    private readonly logger = LoggerService.getLogger(LoginPage.name);
-
     loginForm: FormGroup;
-    private readonly loginHandler;
     isIos: boolean;
     isSubmitted: boolean;
+    private readonly logger = LoggerService.getLogger(LoginPage.name);
+    private readonly loginHandler;
 
     constructor(private authService: AuthService,
                 private navController: NavController,
@@ -40,6 +39,10 @@ export class LoginPage implements OnInit, OnDestroy {
         };
     }
 
+    get form() {
+        return this.loginForm.controls;
+    }
+
     ngOnInit() {
         this.isIos = Capacitor.getPlatform() === 'ios';
 
@@ -52,10 +55,6 @@ export class LoginPage implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.eventsService.unsubscribe('auth:login', this.loginHandler);
-    }
-
-    get form() {
-        return this.loginForm.controls;
     }
 
     async login() {

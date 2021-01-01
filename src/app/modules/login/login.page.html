@@ -11,34 +11,34 @@
         </ion-toolbar>
     </ion-header>
     <div class="login-content">
-        <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <form (ngSubmit)="login()" [formGroup]="loginForm">
             <ion-item class="form-input" lines="none">
                 <ion-icon name="mail-outline"></ion-icon>
-                <ion-input placeholder="{{'login.email' | translate}}" formControlName="email" clearInput type="email"
-                           autocomplete="email" enterkeyhint="next" inputmode="email"></ion-input>
+                <ion-input autocomplete="email" clearInput enterkeyhint="next" formControlName="email"
+                           inputmode="email" placeholder="{{'login.email' | translate}}" type="email"></ion-input>
             </ion-item>
-            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.required">
+            <span *ngIf="isSubmitted && form.email.errors?.required" class="form-input-error">
                 {{'login.errors.email-required' | translate}}
             </span>
-            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.invalid">
+            <span *ngIf="isSubmitted && form.email.errors?.invalid" class="form-input-error">
                 {{'login.errors.invalid-email' | translate}}
             </span>
-            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.unknown">
+            <span *ngIf="isSubmitted && form.email.errors?.unknown" class="form-input-error">
                 {{'login.errors.user-not-found' | translate}}
             </span>
-            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.blocked">
+            <span *ngIf="isSubmitted && form.email.errors?.blocked" class="form-input-error">
                 {{'login.errors.user-disabled' | translate}}
             </span>
 
             <ion-item class="form-input ion-margin-top" lines="none">
                 <ion-icon name="key-outline"></ion-icon>
-                <ion-input placeholder="{{'login.password' | translate}}" formControlName="password" clearInput
-                           type="password" autocomplete="current-password" enterkeyhint="go"></ion-input>
+                <ion-input autocomplete="current-password" clearInput enterkeyhint="go"
+                           formControlName="password" placeholder="{{'login.password' | translate}}" type="password"></ion-input>
             </ion-item>
-            <span class="form-input-error" *ngIf="isSubmitted && form.password.errors?.required">
+            <span *ngIf="isSubmitted && form.password.errors?.required" class="form-input-error">
                 {{'login.errors.password-required' | translate}}
             </span>
-            <span class="form-input-error" *ngIf="isSubmitted && form.password.errors?.wrong">
+            <span *ngIf="isSubmitted && form.password.errors?.wrong" class="form-input-error">
                 {{'login.errors.wrong-password' | translate}}
             </span>
 
@@ -48,15 +48,17 @@
         </form>
 
         <div class="horizontal-or">
-            <hr> <span>{{'login.or' | translate}}</span> <hr>
+            <hr>
+            <span>{{'login.or' | translate}}</span>
+            <hr>
         </div>
 
-        <ion-button class="google-login" expand="block" fill="outline" (click)="loginWithGoogle()" color="dark">
-            <ion-icon src="assets/svg/google-logo.svg" slot="start"></ion-icon>
+        <ion-button (click)="loginWithGoogle()" class="google-login" color="dark" expand="block" fill="outline">
+            <ion-icon slot="start" src="assets/svg/google-logo.svg"></ion-icon>
             {{'login.loginWithGoogle' | translate}}
         </ion-button>
 
-        <ion-button class="apple-login" expand="block" *ngIf="isIos" (click)="loginWithApple()" color="dark">
+        <ion-button (click)="loginWithApple()" *ngIf="isIos" class="apple-login" color="dark" expand="block">
             <ion-icon name="logo-apple" slot="start"></ion-icon>
             {{'login.loginWithApple' | translate}}
         </ion-button>

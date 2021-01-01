@@ -1,12 +1,12 @@
 <ion-content>
-    <ion-slides id="slides" pager="true" [options]="slideOpts">
+    <ion-slides [options]="slideOpts" id="slides" pager="true">
         <ion-slide>
             <ion-icon class="image" name="happy"></ion-icon>
             <div class="text-area">
                 <h1>{{'onboarding.welcome.title' | translate}} {{name}}!</h1>
                 <p [innerHTML]='this.translate.instant("onboarding.welcome.description")'></p>
             </div>
-            <ion-button expand="block" (click)="slideNext()">
+            <ion-button (click)="slideNext()" expand="block">
                 {{'actions.next' | translate}}
             </ion-button>
         </ion-slide>
@@ -16,11 +16,11 @@
                 <h1>{{'onboarding.legal.title' | translate}}</h1>
                 <p>
                     {{'onboarding.legal.description1' | translate}}
-                    <span class="link" (click)="openLegalPage()">{{'onboarding.legal.description2' | translate}}</span>
+                    <span (click)="openLegalPage()" class="link">{{'onboarding.legal.description2' | translate}}</span>
                     {{'onboarding.legal.description3' | translate}}
                 </p>
             </div>
-            <ion-button expand="block" (click)="acceptTerms()">
+            <ion-button (click)="acceptTerms()" expand="block">
                 {{'actions.accept' | translate}}
             </ion-button>
         </ion-slide>
@@ -30,10 +30,10 @@
                 <h1>{{'onboarding.push.title' | translate}}</h1>
                 <p>{{'onboarding.push.description' | translate}}</p>
             </div>
-            <ion-button expand="block" (click)="initPushNotifications()">
+            <ion-button (click)="initPushNotifications()" expand="block">
                 {{'onboarding.push.enable' | translate}}
             </ion-button>
-            <ion-button fill="none" expand="block" (click)="slideNext()">
+            <ion-button (click)="slideNext()" expand="block" fill="none">
                 {{'actions.skip' | translate}}
             </ion-button>
         </ion-slide>
@@ -43,16 +43,16 @@
                 <h1>{{'onboarding.setName.title' | translate}}</h1>
                 <p>{{'onboarding.setName.description' | translate}}</p>
             </div>
-            <form class="ion-margin-top" [formGroup]="nameForm" (ngSubmit)="submitName()">
+            <form (ngSubmit)="submitName()" [formGroup]="nameForm" class="ion-margin-top">
 
                 <ion-item class="form-input" lines="none">
                     <ion-icon name="person-outline"></ion-icon>
-                    <ion-input placeholder="{{'login.name' | translate}}" autocapitalize="words" formControlName="name"
-                               clearInput type="text"
-                               autocomplete="given-name" enterkeyhint="next" inputmode="text"></ion-input>
+                    <ion-input autocapitalize="words" autocomplete="given-name" clearInput
+                               enterkeyhint="next" formControlName="name"
+                               inputmode="text" placeholder="{{'login.name' | translate}}" type="text"></ion-input>
                 </ion-item>
 
-                <span class="form-input-error" *ngIf="isSubmitted && nameForm.controls.name.errors?.required">
+                <span *ngIf="isSubmitted && nameForm.controls.name.errors?.required" class="form-input-error">
                     {{'login.errors.name-required' | translate}}
                 </span>
 
@@ -67,10 +67,10 @@
                 <h1>{{'onboarding.joinGroup.title' | translate}} {{group.name}}</h1>
                 <p>{{'onboarding.joinGroup.description' | translate}}</p>
             </div>
-            <ion-button expand="block" (click)="joinGroup(group.id)">
+            <ion-button (click)="joinGroup(group.id)" expand="block">
                 {{'actions.join' | translate}}
             </ion-button>
-            <ion-button color="danger" fill="outline" expand="block" (click)="slideNext()">
+            <ion-button (click)="slideNext()" color="danger" expand="block" fill="outline">
                 {{'actions.deny' | translate}}
             </ion-button>
         </ion-slide>
@@ -80,9 +80,9 @@
                 <h1>{{'onboarding.start.title' | translate}}</h1>
                 <p>{{'onboarding.start.description' | translate}}</p>
             </div>
-            <ion-button fill="outline" expand="block" (click)="dismiss()">
+            <ion-button (click)="dismiss()" expand="block" fill="outline">
                 {{'actions.start' | translate}}
-                <ion-icon slot="end" name="arrow-forward"></ion-icon>
+                <ion-icon name="arrow-forward" slot="end"></ion-icon>
             </ion-button>
         </ion-slide>
     </ion-slides>
