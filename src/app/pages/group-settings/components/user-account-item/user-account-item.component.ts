@@ -32,14 +32,16 @@ export class UserAccountItemComponent implements OnInit {
     }
 
     openAccount() {
-        const relativeRoute = this.router.createUrlTree(['accounts', this.account.id], {
-            relativeTo: this.route
-        });
+        if (this.ownsAccount) {
+            const relativeRoute = this.router.createUrlTree(['accounts', this.account.id], {
+                relativeTo: this.route
+            });
 
-        this.navController.navigateForward(relativeRoute, {
-            state: {
-                account: this.account
-            }
-        });
+            this.navController.navigateForward(relativeRoute, {
+                state: {
+                    account: this.account
+                }
+            });
+        }
     }
 }

@@ -1,7 +1,9 @@
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
-import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
+import {FirestoreDataConverter} from '@firebase/firestore-types';
 import {Product, productConverter} from './product';
 import {Account, accountConverter, sharedAccountConverter, UserAccount, userAccountConverter} from './account';
+import firebase from 'firebase/app';
+import Timestamp = firebase.firestore.Timestamp;
 
 export interface TransactionItem {
     amount: number;
@@ -16,14 +18,21 @@ export class Transaction {
     totalPrice: number;
     itemCount: number;
     items: TransactionItem[];
+    removed: boolean;
 
-    constructor(id: string, createdAt: Timestamp, createdBy: UserAccount, totalPrice: number, itemCount: number, items: TransactionItem[]) {
+    constructor(id: string, createdAt: Timestamp, createdBy: UserAccount, totalPrice: number, itemCount: number,
+                items: TransactionItem[], removed: boolean) {
         this.id = id;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
         this.totalPrice = totalPrice;
         this.itemCount = itemCount;
         this.items = [...items];
+        this.removed = removed || false;
+    }
+
+    get createdAtDate(): Date {
+        return new Timestamp(this.createdAt.seconds, this.createdAt.nanoseconds).toDate();
     }
 }
 
@@ -39,6 +48,7 @@ export const transactionConverter: FirestoreDataConverter<Transaction> = {
                 ti.product = productConverter.toFirestore(ti.product);
                 return ti;
             }),
+            removed: transaction.removed,
         };
     },
     fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Transaction {
@@ -66,5 +76,5 @@ export function newTransaction(id: string, data: { [key: string]: any }): Transa
                 account: item.account,
                 product: productConverter.newProduct(item.product),
             };
-        }));
+        }), data.removed);
 }

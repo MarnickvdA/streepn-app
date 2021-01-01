@@ -1,13 +1,14 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '../../services/user.service';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Group, Transaction, transactionConverter} from '../../models';
-import {IonInfiniteScroll, ModalController} from '@ionic/angular';
+import {ModalController, NavController} from '@ionic/angular';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {GroupService} from '../../services/group.service';
 import {TransactionService} from '../../services/transaction.service';
 import {AddTransactionComponent} from './add-transaction/add-transaction.component';
 import {Subscription} from 'rxjs';
+import {EventsService} from '../../services/events.service';
 
 @Component({
     selector: 'app-group',
@@ -15,55 +16,63 @@ import {Subscription} from 'rxjs';
     styleUrls: ['./group.page.scss'],
 })
 export class GroupPage implements OnInit, OnDestroy {
-    private LIMIT = 20;
-
-    @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+    private LIMIT = 15;
 
     private groupId: string;
     group?: Group;
-    transactions: Transaction[];
+    transactions: Transaction[] = [];
 
     private lastSnapshot: QueryDocumentSnapshot<Transaction>;
     private routeSub: Subscription;
+    private groupSub: Subscription;
     doneLoading = false;
+    isLoadingMore = false;
+
+    private readonly refreshSub;
 
     constructor(private route: ActivatedRoute,
                 private userService: UserService,
                 private groupService: GroupService,
                 private transactionService: TransactionService,
                 private fs: AngularFirestore,
-                private modalController: ModalController) {
+                private modalController: ModalController,
+                private events: EventsService,
+                private router: Router,
+                private navController: NavController) {
         this.routeSub = this.route.params.subscribe((params: Params) => {
             this.groupId = params.id;
         });
+
+        this.refreshSub = () => {
+            this.reset();
+        };
     }
 
     ngOnInit(): void {
-        this.groupService.getGroup(this.groupId)
-            .then(group => {
+        this.groupSub = this.groupService.observeGroup(this.groupId)
+            .subscribe((group) => {
                 this.group = group;
 
-                if (!this.transactions) {
-                    this.loadTransactions(this.group.id)
-                        .then(transactions => {
-                            this.transactions = transactions;
-                        });
+                if (this.transactions.length === 0) {
+                    this.loadTransactions(this.group.id);
                 }
             });
+
+        this.events.subscribe('transaction:edit', this.refreshSub);
     }
 
     ngOnDestroy(): void {
         this.routeSub.unsubscribe();
+        this.groupSub.unsubscribe();
+        this.events.unsubscribe('transaction:edit', this.refreshSub);
     }
 
     reset(event?) {
         this.doneLoading = false;
         this.lastSnapshot = undefined;
 
+        this.transactions = [];
         this.loadTransactions(this.group.id)
-            .then(transactions => {
-                this.transactions = transactions;
-            })
             .finally(() => {
                 if (event) {
                     event.target.complete();
@@ -72,14 +81,14 @@ export class GroupPage implements OnInit, OnDestroy {
     }
 
     loadNext() {
+        this.isLoadingMore = true;
         this.loadTransactions(this.group.id)
-            .then((transactions) => {
-                this.transactions.push(...transactions);
+            .finally(() => {
+                this.isLoadingMore = false;
             });
     }
 
-    loadTransactions(groupId: string): Promise<Transaction[]> {
-        // console.log('Loading transactions with transactions list of size: ' + this.transactions?.length);
+    loadTransactions(groupId: string): Promise<void> {
         if (this.doneLoading) {
             return;
         }
@@ -102,18 +111,30 @@ export class GroupPage implements OnInit, OnDestroy {
                     this.doneLoading = true;
                 }
 
-                const transactions: Transaction[] = [];
-
                 if (result.docs.length > 0) {
                     this.lastSnapshot = result.docs[result.docs.length - 1];
 
                     result.docs.forEach((doc) => {
-                        transactions.push(doc.data());
+                        this.transactions.push(doc.data());
                     });
                 }
-
-                return transactions;
             });
+    }
+
+    openTransaction(transaction: Transaction) {
+        if (transaction.removed) {
+            return;
+        }
+        const relativeRoute = this.router.createUrlTree(['transactions', transaction.id], {
+            relativeTo: this.route
+        });
+
+        this.navController.navigateForward(relativeRoute, {
+            state: {
+                group: this.group,
+                transaction
+            }
+        });
     }
 
     addTransaction() {
@@ -127,7 +148,9 @@ export class GroupPage implements OnInit, OnDestroy {
             modal.present();
             modal.onWillDismiss()
                 .then((callback) => {
-                    this.reset();
+                    if (callback.data) {
+                        this.reset();
+                    }
                 });
         });
     }

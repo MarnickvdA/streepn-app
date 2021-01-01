@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
 import {GroupPage} from './group.page';
+import {TransactionDetailPage} from './transaction-detail/transaction-detail.page';
 
 const routes: Routes = [
     {
@@ -15,6 +16,10 @@ const routes: Routes = [
             {
                 path: 'settings',
                 loadChildren: () => import('../group-settings/group-settings.module').then(m => m.GroupSettingsPageModule)
+            },
+            {
+                path: 'transactions/:transactionId',
+                component: TransactionDetailPage
             }
         ]
     },
