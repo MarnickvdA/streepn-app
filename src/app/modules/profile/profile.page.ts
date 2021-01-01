@@ -4,7 +4,10 @@ import {Observable} from 'rxjs';
 import firebase from 'firebase/app';
 import {NavController} from '@ionic/angular';
 import {StorageService} from '../../core/services/storage.service';
+import {Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
 import User = firebase.User;
+
+const {StatusBar} = Plugins;
 
 @Component({
     selector: 'app-profile',
@@ -39,6 +42,18 @@ export class ProfilePage implements OnInit {
     onClick(event) {
         document.body.classList.toggle('dark', event.detail.checked);
         this.storage.set('darkMode', event.detail.checked);
+
+        if (Capacitor.isPluginAvailable('StatusBar')) {
+            StatusBar.setStyle({
+                style: event.detail.checked ? StatusBarStyle.Dark : StatusBarStyle.Light
+            });
+
+            if (event.detail.checked) {
+                StatusBar.setBackgroundColor({color: '#000000'});
+            } else {
+                StatusBar.setBackgroundColor({color: '#FFFFFF'});
+            }
+        }
     }
 
 }
