@@ -13,27 +13,27 @@ const routes: Routes = [
     },
     {
         path: 'login',
-        loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule),
+        loadChildren: () => import('./modules/login/login.module').then(m => m.LoginPageModule),
         ...canActivate(redirectLoggedInToDashboard)
     },
     {
         path: 'register',
-        loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterPageModule),
+        loadChildren: () => import('./modules/register/register.module').then(m => m.RegisterPageModule),
         ...canActivate(redirectLoggedInToDashboard)
     },
     {
         path: 'group',
-        loadChildren: () => import('./pages/group/group.module').then(m => m.GroupPageModule),
+        loadChildren: () => import('./modules/group/group.module').then(m => m.GroupPageModule),
         ...canActivate(redirectUnauthorizedToLogin)
     },
     {
         path: 'dashboard',
-        loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardPageModule),
+        loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardPageModule),
         ...canActivate(redirectUnauthorizedToLogin)
     },
     {
         path: 'profile',
-        loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule),
+        loadChildren: () => import('./modules/profile/profile.module').then(m => m.ProfilePageModule),
         ...canActivate(redirectUnauthorizedToLogin)
     },
     {

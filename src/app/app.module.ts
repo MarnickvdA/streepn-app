@@ -1,81 +1,29 @@
-import {ErrorHandler, Injectable, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {RouteReuseStrategy} from '@angular/router';
 
-import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
-import {SplashScreen} from '@ionic-native/splash-screen/ngx';
-import {StatusBar} from '@ionic-native/status-bar/ngx';
+import {IonicModule} from '@ionic/angular';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {AngularFireModule} from '@angular/fire';
-
-import {environment} from '../environments/environment';
-import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/auth';
-import {AngularFireFunctionsModule, REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR} from '@angular/fire/functions';
-import {USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/firestore';
-import {AuthService} from './services/auth.service';
-import {EventsService} from './services/events.service';
-import {GroupService} from './services/group.service';
-import {TransactionService} from './services/transaction.service';
-import {UserService} from './services/user.service';
-import {ProductService} from './services/product.service';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {CoreModule} from './core/core.module';
+import {SharedModule} from './shared/shared.module';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {PushService} from './services/push.service';
-import {AnalyticsService} from './services/analytics.service';
-import {AdsService} from './services/ads.service';
-import {StorageService} from './services/storage.service';
-import {UIService} from './services/ui.service';
-import {GooglePlus} from '@ionic-native/google-plus/ngx';
-import * as Sentry from '@sentry/browser';
-import {LoggerService} from './services/logger.service';
-
-Sentry.init({
-    dsn: 'https://898ea0c4100341d581f3a5d645db3c12@o352784.ingest.sentry.io/5178411',
-    debug: !environment.production,
-    enabled: environment.production,
-    release: environment.version,
-    environment: environment.production ? 'prod' : 'debug',
-    tracesSampleRate: 1.0,
-});
-
-@Injectable({
-    providedIn: 'root'
-})
-export class SentryErrorHandler implements ErrorHandler {
-    constructor() {
-    }
-
-    handleError(error) {
-        LoggerService.handleError(error);
-    }
-}
-
-const SERVICES = [
-    AuthService,
-    EventsService,
-    GroupService,
-    TransactionService,
-    UserService,
-    ProductService,
-    PushService,
-    AnalyticsService,
-    AdsService,
-    StorageService,
-    UIService
-];
 
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
 }
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [
+        AppComponent,
+    ],
     entryComponents: [],
     imports: [
         BrowserModule,
+        CoreModule,
+        SharedModule.forRoot(),
         IonicModule.forRoot({
             backButtonIcon: 'arrow-back-outline',
             backButtonText: ''
@@ -87,27 +35,12 @@ export function createTranslateLoader(http: HttpClient) {
                 deps: [HttpClient]
             }
         }),
-        HttpClientModule,
-        AngularFireModule.initializeApp(environment.firebaseConfig),
-        AngularFireAuthModule,
-        AngularFireFunctionsModule,
         AppRoutingModule
     ],
     exports: [
         TranslateModule
     ],
-    providers: [
-        StatusBar,
-        SplashScreen,
-        {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-        {provide: REGION, useValue: 'europe-west1'},
-        {provide: USE_AUTH_EMULATOR, useValue: !environment.production ? ['localhost', 9099] : undefined},
-        {provide: USE_FIRESTORE_EMULATOR, useValue: !environment.production ? ['localhost', 8080] : undefined},
-        {provide: USE_FUNCTIONS_EMULATOR, useValue: !environment.production ? ['localhost', 5001] : undefined},
-        {provide: ErrorHandler, useClass: SentryErrorHandler},
-        ...SERVICES,
-        GooglePlus,
-    ],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {
