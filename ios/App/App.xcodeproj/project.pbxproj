@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C01E492C5312426991A28DB /* Pods_Streepn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A469098B13C185DD4B51D43A /* Pods_Streepn.framework */; };
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
 		50379B232058CBB4000EE86E /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 50379B222058CBB4000EE86E /* capacitor.config.json */; };
 		504EC3081FED79650016851F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EC3071FED79650016851F /* AppDelegate.swift */; };
@@ -16,11 +17,11 @@
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
 		638E0C0F2590CC3800A4A50E /* set-build-number.sh in Resources */ = {isa = PBXBuildFile; fileRef = 638E0C0E2590CC3800A4A50E /* set-build-number.sh */; };
 		63D7CCF72594CD6500419CC5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 63D7CCF62594CD6200419CC5 /* GoogleService-Info.plist */; };
-		A084ECDBA7D38E1E42DFC39D /* Pods_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF277DCFFFF123FFC6DF26C7 /* Pods_App.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
+		3C7CD4BA88FA8AD69AE246C4 /* Pods-Streepn.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streepn.release.xcconfig"; path = "Pods/Target Support Files/Pods-Streepn/Pods-Streepn.release.xcconfig"; sourceTree = "<group>"; };
 		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		504EC3041FED79650016851F /* Streepn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Streepn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		504EC3071FED79650016851F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -32,7 +33,8 @@
 		638E0C0E2590CC3800A4A50E /* set-build-number.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "set-build-number.sh"; sourceTree = "<group>"; };
 		638E0C7E2590E22D00A4A50E /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
 		63D7CCF62594CD6200419CC5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		AF277DCFFFF123FFC6DF26C7 /* Pods_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		64914B22A4AF8700726F7254 /* Pods-Streepn.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streepn.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Streepn/Pods-Streepn.debug.xcconfig"; sourceTree = "<group>"; };
+		A469098B13C185DD4B51D43A /* Pods_Streepn.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Streepn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF51FD2D460BCFE21FA515B2 /* Pods-App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.release.xcconfig"; path = "Pods/Target Support Files/Pods-App/Pods-App.release.xcconfig"; sourceTree = "<group>"; };
 		FC68EB0AF532CFC21C3344DD /* Pods-App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-App/Pods-App.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -42,7 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A084ECDBA7D38E1E42DFC39D /* Pods_App.framework in Frameworks */,
+				0C01E492C5312426991A28DB /* Pods_Streepn.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,7 +54,7 @@
 		27E2DDA53C4D2A4D1A88CE4A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AF277DCFFFF123FFC6DF26C7 /* Pods_App.framework */,
+				A469098B13C185DD4B51D43A /* Pods_Streepn.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -98,6 +100,8 @@
 			children = (
 				FC68EB0AF532CFC21C3344DD /* Pods-App.debug.xcconfig */,
 				AF51FD2D460BCFE21FA515B2 /* Pods-App.release.xcconfig */,
+				64914B22A4AF8700726F7254 /* Pods-Streepn.debug.xcconfig */,
+				3C7CD4BA88FA8AD69AE246C4 /* Pods-Streepn.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -207,7 +211,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-App-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Streepn-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -226,7 +230,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-App/Pods-App-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Streepn/Pods-Streepn-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EF51DD299987535FE714FC00 /* [CP] Copy Pods Resources */ = {
@@ -241,7 +245,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-App/Pods-App-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Streepn/Pods-Streepn-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -386,7 +390,7 @@
 		};
 		504EC3171FED79650016851F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FC68EB0AF532CFC21C3344DD /* Pods-App.debug.xcconfig */;
+			baseConfigurationReference = 64914B22A4AF8700726F7254 /* Pods-Streepn.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
@@ -406,7 +410,7 @@
 		};
 		504EC3181FED79650016851F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AF51FD2D460BCFE21FA515B2 /* Pods-App.release.xcconfig */;
+			baseConfigurationReference = 3C7CD4BA88FA8AD69AE246C4 /* Pods-Streepn.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;

@@ -72,6 +72,12 @@ export class AddTransactionComponent implements OnInit {
         this.transactionCount++;
     }
 
+    addOneForAll() {
+        this.group.accounts.forEach(acc => {
+            this.addItem(acc);
+        });
+    }
+
     async checkout() {
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.streeping'),
@@ -117,7 +123,7 @@ export class AddTransactionComponent implements OnInit {
         });
 
         const transaction = new Transaction(undefined, undefined, currentUserAccount,
-            totalPrice, transactionItems.length, transactionItems);
+            totalPrice, transactionItems.length, transactionItems, false);
 
         this.transactionService.addTransaction(this.group.id, transaction)
             .pipe(
@@ -142,7 +148,13 @@ export class AddTransactionComponent implements OnInit {
     }
 
     removeItem(account: Account) {
-        this.transactions[account.id][this.currentProduct.id].amount -= 2;
-        this.transactionCount -= 2;
+        if (Capacitor.isNative) {
+            Haptics.impact({
+                style: HapticsImpactStyle.Medium
+            });
+        }
+
+        this.transactions[account.id][this.currentProduct.id].amount -= 1;
+        this.transactionCount -= 1;
     }
 }

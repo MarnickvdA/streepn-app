@@ -22,19 +22,26 @@
     <ion-list>
         <ion-list-header lines="full">
             <ion-label>{{'group.settings.accounts' | translate}}</ion-label>
+            <ion-button (click)="addOneForAll()">{{'group.transactions.allPlusOne' | translate}}</ion-button>
         </ion-list-header>
 
-        <ion-item *ngFor="let account of group.accounts" (click)="addItem(account)">
+        <ion-item *ngFor="let account of group.accounts">
             <ion-avatar slot="start">
                 <img *ngIf="account.photoUrl" src="{{account.photoUrl}}" alt="">
                 <img *ngIf="!account.photoUrl" src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg" alt="">
             </ion-avatar>
             <ion-label>{{account.name}}</ion-label>
-            <ion-chip (click)="removeItem(account)"
-                      *ngIf="transactions[account.id] && transactions[account.id][currentProduct.id] && transactions[account.id][currentProduct.id].amount > 0"
-                      outline="true" color="success">
+            <ion-chip
+                    *ngIf="transactions[account.id] && transactions[account.id][currentProduct.id] && transactions[account.id][currentProduct.id].amount > 0">
                 <ion-label>{{transactions[account.id][currentProduct.id].amount}}</ion-label>
             </ion-chip>
+            <ion-fab-button (click)="removeItem(account)" [attr.disabled]="!transactions[account.id] || !transactions[account.id][currentProduct.id]
+            || transactions[account.id][currentProduct.id].amount === 0" color="danger" size="small">
+                <ion-icon name="remove-outline"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button color="success" size="small" (click)="addItem(account)">
+                <ion-icon name="add-outline"></ion-icon>
+            </ion-fab-button>
         </ion-item>
 
         <ng-container *ngIf="group.sharedAccounts.length > 0">
@@ -42,13 +49,19 @@
                 <ion-label>{{'group.settings.sharedAccounts' | translate}}</ion-label>
             </ion-list-header>
 
-            <ion-item *ngFor="let account of group.sharedAccounts" (click)="addItem(account)">
+            <ion-item *ngFor="let account of group.sharedAccounts">
                 <ion-label>{{account.name}}</ion-label>
-                <ion-chip (click)="removeItem(account)"
-                          *ngIf="transactions[account.id] && transactions[account.id][currentProduct.id] && transactions[account.id][currentProduct.id].amount > 0"
-                          outline="true" color="success">
+                <ion-chip
+                        *ngIf="transactions[account.id] && transactions[account.id][currentProduct.id] && transactions[account.id][currentProduct.id].amount > 0">
                     <ion-label>{{transactions[account.id][currentProduct.id].amount}}</ion-label>
                 </ion-chip>
+                <ion-fab-button (click)="removeItem(account)" [attr.disabled]="!transactions[account.id] || !transactions[account.id][currentProduct.id]
+            || transactions[account.id][currentProduct.id].amount === 0" color="danger" size="small">
+                    <ion-icon name="remove-outline"></ion-icon>
+                </ion-fab-button>
+                <ion-fab-button color="success" size="small" (click)="addItem(account)">
+                    <ion-icon name="add-outline"></ion-icon>
+                </ion-fab-button>
             </ion-item>
         </ng-container>
     </ion-list>

@@ -32,12 +32,14 @@
     "export": "Exporteren",
     "invite": "Uitnodigen",
     "submit": "Invoeren",
+    "loadMore": "Meer laden...",
     "saving": "Opslaan...",
     "loading": "Aan het laden...",
     "deleting": "Aan het verwijderen...",
     "adding": "Aan het toevoegen...",
     "streeping": "Aan het strepen...",
-    "joining": "Aan het deelnemen..."
+    "joining": "Aan het deelnemen...",
+    "updating": "Aan het bijwerken..."
   },
   "errors": {
     "error": "Foutmelding",
@@ -147,7 +149,11 @@
   "group": {
     "transactions": {
       "empty": "Er is nog niks gestreept",
-      "currentProduct": "Geselecteerd product"
+      "currentProduct": "Geselecteerd product",
+      "allPlusOne": "Allemaal +1"
+    },
+    "transaction": {
+      "title": "Transactie"
     },
     "settings": {
       "title": "Groepsoverzicht",

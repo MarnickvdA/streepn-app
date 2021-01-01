@@ -248,3 +248,7 @@ ion-fab {
   padding-bottom: constant(safe-area-inset-top); /* Status bar height on iOS 11.0 */
   padding-bottom: env(safe-area-inset-top); /* Status bar height on iOS 11+ */
 }
+
+ion-content {
+  --padding-bottom: 4.5rem;
+}

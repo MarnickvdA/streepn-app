@@ -40,6 +40,9 @@ export class AuthService {
             .subscribe(user => {
                 this.currentUser = user;
 
+                this.analytics.setUser(user?.uid);
+                LoggerService.setUserId(user?.uid);
+
                 if (user) {
                     user.getIdToken(true)
                         .then(token => {

@@ -88,6 +88,99 @@ exports.joinGroup = functions
             });
     });
 
+exports.editTransaction = functions
+    .region('europe-west1')
+    .https
+    .onCall((data, context) => {
+
+        if (!context.auth?.uid) {
+            throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
+        }
+
+        let currentAccount: any;
+        let group: any;
+        const groupRef = db.collection('groups').doc(data.groupId);
+
+        return db.runTransaction(fireTrans => {
+                return fireTrans.get(groupRef)
+                    .then(groupDoc => {
+                        group = groupDoc?.data();
+
+                        // Check if the group exists
+                        if (!groupDoc.exists || !group) {
+                            throw new functions.https.HttpsError('not-found', 'No such group document!');
+                        }
+
+                        // Check if the user is part of this group
+                        if (!group.members.includes(context.auth?.uid)) {
+                            throw new functions.https.HttpsError('permission-denied', 'User not member of group');
+                        }
+
+                        if (!data.paymentTransaction) {
+                            throw new functions.https.HttpsError('not-found', 'No transaction to be computed!');
+                        }
+
+                        currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
+
+                        // Update the balance of the accounts
+                        updateTransactionAccounts(group, data.paymentTransaction);
+
+                        fireTrans.update(groupRef, {
+                            accounts: group.accounts,
+                            sharedAccounts: group.sharedAccounts,
+                        });
+
+                        // Update old transaction and add new transaction to firestore
+                        if (data.updatedTransaction.itemCount === 0) {
+                            fireTrans.update(groupRef.collection('transactions').doc(data.updatedTransaction.id), {
+                                removed: true,
+                            });
+                        } else {
+                            fireTrans.update(groupRef.collection('transactions').doc(data.updatedTransaction.id), {
+                                items: data.updatedTransaction.items,
+                                itemCount: data.updatedTransaction.itemCount,
+                                totalPrice: data.updatedTransaction.totalPrice,
+                            });
+                        }
+
+                        return data.updatedTransaction;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        throw new functions.https.HttpsError('unknown', 'Error occurred while getting document', err);
+                    });
+            })
+            .then((transaction) => {
+                try {
+                    const topic = `group_${data.groupId}_all`;
+
+                    const message = {
+                        notification: {
+                            title: `Transactie in ${group.name} ${transaction.itemCount === 0 ? 'verwijderd' : 'aangepast'}`,
+                            body: `${currentAccount.name} heeft een transactie ${transaction.itemCount === 0 ? 'verwijderd' : 'aangepast'}`,
+                        },
+                        data: {
+                            groupId: data.groupId as string,
+                        },
+                        topic,
+                    };
+
+                    admin.messaging().send(message)
+                        .catch((error) => {
+                            console.error('Error sending message:', error);
+                        });
+                } catch (e) {
+                    console.error(e);
+                }
+
+                return transaction;
+            })
+            .catch(err => {
+                console.error(err);
+                throw new functions.https.HttpsError('unknown', 'Firebase transaction error occurred', err);
+            });
+    });
+
 exports.addTransaction = functions
     .region('europe-west1')
     .https
@@ -122,39 +215,13 @@ exports.addTransaction = functions
 
                         currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
 
-                        console.error(JSON.stringify(data.transaction));
-                        console.error(JSON.stringify(data));
-
                         // Update the balance of the accounts
-                        data.transaction.items.forEach((t: { amount: number, account: any, product: any }) => {
-                            let acc: any;
-                            let index: number;
-                            switch (t.account.type) {
-                                case 'user':
-                                    acc = group.accounts.find((account: any) => account.id === t.account.id);
-                                    index = group.accounts.indexOf(acc);
-
-                                    // Update balance of the account
-                                    acc.balance -= (t.product.price * t.amount);
-                                    group.accounts[index] = acc;
-                                    break;
-                                case 'shared':
-                                    acc = group.sharedAccounts.find((account: any) => account.id === t.account.id);
-                                    index = group.sharedAccounts.indexOf(acc);
-
-                                    // Update balance of the account
-                                    acc.balance -= (t.product.price * t.amount);
-                                    group.sharedAccounts[index] = acc;
-                                    break;
-                            }
-
-                            // TODO Implement edge case where account is not found, thus transactions are not saved correctly.
-                        });
+                        updateTransactionAccounts(group, data.transaction);
 
                         const uid = uuidv4();
                         const newTransaction = {
                             createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                            createdBy: data.transaction.createdBy,
+                            createdBy: currentAccount,
                             totalPrice: data.transaction.totalPrice,
                             itemCount: data.transaction.itemCount,
                             items: data.transaction.items,
@@ -206,3 +273,36 @@ exports.addTransaction = functions
             });
     });
 
+export function updateTransactionAccounts(group: any, transaction: any) {
+    transaction.items.forEach((t: { amount: number, account: any, product: any }) => {
+        let acc: any;
+        let index: number;
+        switch (t.account.type) {
+            case 'user':
+                acc = group.accounts.find((account: any) => account.id === t.account.id);
+
+                if (acc) {
+                    index = group.accounts.indexOf(acc);
+                    // Update balance of the account
+                    acc.balance -= (t.product.price * t.amount);
+                    group.accounts[index] = acc;
+                } else {
+                    throw new functions.https.HttpsError('not-found', 'User Account not found!');
+                }
+
+                break;
+            case 'shared':
+                acc = group.sharedAccounts.find((account: any) => account.id === t.account.id);
+                if (acc) {
+                    index = group.sharedAccounts.indexOf(acc);
+
+                    // Update balance of the account
+                    acc.balance -= (t.product.price * t.amount);
+                    group.sharedAccounts[index] = acc;
+                } else {
+                    throw new functions.https.HttpsError('not-found', 'Shared Account not found!');
+                }
+                break;
+        }
+    });
+}

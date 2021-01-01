@@ -9,7 +9,8 @@ import {GroupPageRoutingModule} from './group-routing.module';
 import {GroupPage} from './group.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {AddTransactionComponent} from './add-transaction/add-transaction.component';
-import {TransactionItemComponent} from './transaction-item/transaction-item.component';
+import {TransactionDetailPage} from './transaction-detail/transaction-detail.page';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 
 @NgModule({
     imports: [
@@ -17,12 +18,13 @@ import {TransactionItemComponent} from './transaction-item/transaction-item.comp
         FormsModule,
         IonicModule,
         GroupPageRoutingModule,
-        TranslateModule
+        TranslateModule,
+        InfiniteScrollModule
     ],
     declarations: [
         GroupPage,
         AddTransactionComponent,
-        TransactionItemComponent
+        TransactionDetailPage
     ]
 })
 export class GroupPageModule {

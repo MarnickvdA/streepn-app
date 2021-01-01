@@ -63,11 +63,11 @@ export const groupConverter: FirestoreDataConverter<Group> = {
     fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Group {
         const data = snapshot.data(options);
 
-        return createGroup(snapshot.id, data);
+        return newGroup(snapshot.id, data);
     }
 };
 
-export function createGroup(id: string, data: { [key: string]: any }): Group {
+export function newGroup(id: string, data: { [key: string]: any }): Group {
     const accounts = [];
     const products = [];
     const sharedAccounts = [];

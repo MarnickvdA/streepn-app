@@ -36,6 +36,11 @@ const routes: Routes = [
         loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule),
         ...canActivate(redirectUnauthorizedToLogin)
     },
+    {
+        path: '**',
+        redirectTo: 'login',
+        pathMatch: 'full'
+    }
 ];
 
 @NgModule({

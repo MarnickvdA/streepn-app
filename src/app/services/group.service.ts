@@ -7,7 +7,7 @@ import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {EMPTY, Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {createGroup} from '../models/group';
+import {newGroup} from '../models/group';
 import {v4 as uuidv4} from 'uuid';
 import {AnalyticsService} from './analytics.service';
 import {PermissionType, Plugins} from '@capacitor/core';
@@ -87,7 +87,7 @@ export class GroupService {
             .snapshotChanges()
             .pipe(
                 map(action => {
-                    return createGroup(action.payload.id, action.payload.data());
+                    return newGroup(action.payload.id, action.payload.data());
                 })
             );
     }
