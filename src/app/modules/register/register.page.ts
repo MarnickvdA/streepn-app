@@ -12,8 +12,8 @@ import {TranslateService} from '@ngx-translate/core';
 })
 export class RegisterPage implements OnInit, OnDestroy {
     registerForm: FormGroup;
-    private registerHandler;
     isSubmitted: boolean;
+    private registerHandler;
 
     constructor(private authService: AuthService,
                 private navController: NavController,
@@ -32,6 +32,10 @@ export class RegisterPage implements OnInit, OnDestroy {
         };
     }
 
+    get form() {
+        return this.registerForm.controls;
+    }
+
     ngOnInit() {
         this.eventsService
             .subscribe('auth:login', this.registerHandler);
@@ -40,11 +44,6 @@ export class RegisterPage implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.eventsService.unsubscribe('auth:login', this.registerHandler);
     }
-
-    get form() {
-        return this.registerForm.controls;
-    }
-
 
     async register() {
         this.isSubmitted = true;

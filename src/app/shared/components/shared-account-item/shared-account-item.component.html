@@ -1,0 +1,7 @@
+<ion-item>
+    <div class="content">
+        <ion-label>{{account.name}}</ion-label>
+        <ion-label color="medium">Saldo: <span
+                [ngClass]="account.balance >= 0 ? '' : 'negative-amount'">{{balanceString}}</span></ion-label>
+    </div>
+</ion-item>

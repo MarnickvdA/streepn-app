@@ -21,7 +21,7 @@ export class StorageService {
                     return JSON.parse(data.value);
                 } else {
                     this.logger.warn({message: 'key ' + key + ' not found in storage'});
-                    return Promise.reject( key + ' not found in storage');
+                    return Promise.reject(key + ' not found in storage');
                 }
             });
     }

@@ -32,6 +32,10 @@ export class ProfilePage implements OnInit {
     ngOnInit() {
     }
 
+    getReadableTime(time: string) {
+        return new Date(Date.parse(time)).toLocaleDateString();
+    }
+
     logout() {
         this.authService.logout()
             .then(() => {

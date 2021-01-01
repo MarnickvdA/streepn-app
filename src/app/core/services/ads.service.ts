@@ -29,9 +29,9 @@ export class AdsService {
         console.log('Initializing AdMob');
 
         AdMob.initialize({
-            requestTrackingAuthorization: false,
+            requestTrackingAuthorization: true,
             testingDevices: ['b785a039328b15576b4382d39429f0bb'],
-            initializeForTesting: !environment.production,
+            initializeForTesting: true,
         } as AdMobInitializationOptions);
     }
 

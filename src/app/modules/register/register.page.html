@@ -14,42 +14,42 @@
         </ion-toolbar>
     </ion-header>
     <div class="register-content">
-        <form [formGroup]="registerForm" (ngSubmit)="register()">
+        <form (ngSubmit)="register()" [formGroup]="registerForm">
 
             <ion-item class="form-input" lines="none">
                 <ion-icon name="person-outline"></ion-icon>
-                <ion-input placeholder="{{'login.name' | translate}}" autocapitalize="words" formControlName="name"
-                           clearInput type="text"
-                           autocomplete="given-name" enterkeyhint="next" inputmode="text"></ion-input>
+                <ion-input autocapitalize="words" autocomplete="given-name" clearInput
+                           enterkeyhint="next" formControlName="name"
+                           inputmode="text" placeholder="{{'login.name' | translate}}" type="text"></ion-input>
             </ion-item>
-            <span class="form-input-error" *ngIf="isSubmitted && form.name.errors?.required">
+            <span *ngIf="isSubmitted && form.name.errors?.required" class="form-input-error">
                 {{'login.errors.name-required' | translate}}
             </span>
 
             <ion-item class="form-input ion-margin-top" lines="none">
                 <ion-icon name="mail-outline"></ion-icon>
-                <ion-input placeholder="{{'login.email' | translate}}" formControlName="email" clearInput type="email"
-                           autocomplete="email" enterkeyhint="next" inputmode="email"></ion-input>
+                <ion-input autocomplete="email" clearInput enterkeyhint="next" formControlName="email"
+                           inputmode="email" placeholder="{{'login.email' | translate}}" type="email"></ion-input>
             </ion-item>
-            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.required">
+            <span *ngIf="isSubmitted && form.email.errors?.required" class="form-input-error">
                 {{'login.errors.email-required' | translate}}
             </span>
-            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.invalid">
+            <span *ngIf="isSubmitted && form.email.errors?.invalid" class="form-input-error">
                 {{'login.errors.invalid-email' | translate}}
             </span>
-            <span class="form-input-error" *ngIf="isSubmitted && form.email.errors?.inUse">
+            <span *ngIf="isSubmitted && form.email.errors?.inUse" class="form-input-error">
                 {{'login.errors.email-already-in-use' | translate}}
             </span>
 
             <ion-item class="form-input ion-margin-top" lines="none">
                 <ion-icon name="key-outline"></ion-icon>
-                <ion-input placeholder="{{'login.password' | translate}}" formControlName="password" clearInput
-                           type="password" autocomplete="current-password" enterkeyhint="go"></ion-input>
+                <ion-input autocomplete="current-password" clearInput enterkeyhint="go"
+                           formControlName="password" placeholder="{{'login.password' | translate}}" type="password"></ion-input>
             </ion-item>
-            <span class="form-input-error" *ngIf="isSubmitted && form.password.errors?.required">
+            <span *ngIf="isSubmitted && form.password.errors?.required" class="form-input-error">
                 {{'login.errors.password-required' | translate}}
             </span>
-            <span class="form-input-error" *ngIf="isSubmitted && form.password.errors?.weak">
+            <span *ngIf="isSubmitted && form.password.errors?.weak" class="form-input-error">
                 {{'login.errors.weak-password' | translate}}
             </span>
 

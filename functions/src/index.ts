@@ -88,6 +88,54 @@ exports.joinGroup = functions
             });
     });
 
+exports.leaveGroup = functions
+    .region('europe-west1')
+    .https
+    .onCall((data, context) => {
+
+        const userId = context.auth?.uid;
+
+        if (!userId) {
+            throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
+        }
+
+        const groupRef = db.collection('groups').doc(data.groupId);
+
+        return db.runTransaction(fireTrans => {
+            return fireTrans.get(groupRef)
+                .then(groupDoc => {
+                    const group = groupDoc?.data();
+
+                    // Check if the group exists
+                    if (!groupDoc.exists || !group) {
+                        throw new functions.https.HttpsError('not-found', 'No such group document!');
+                    }
+
+                    // Check if the user is part of this group
+                    if (!group.members.includes(context.auth?.uid)) {
+                        throw new functions.https.HttpsError('permission-denied', 'User not member of group');
+                    }
+
+                    if (group.members.length > 1) {
+                        const account = group.accounts.find((acc: any) => acc.userId === context.auth?.uid);
+
+                        if (account.balance !== 0) {
+                            throw new functions.https.HttpsError('permission-denied', 'User account balance not 0');
+                        }
+
+                        fireTrans.update(groupRef, {
+                            members: admin.firestore.FieldValue.arrayRemove(userId),
+                            accounts: admin.firestore.FieldValue.arrayRemove(account),
+                        });
+                    } else {
+                        fireTrans.delete(groupRef);
+                    }
+
+                    return group.accounts.find((acc: any) => acc.userId === context.auth?.uid);
+                });
+        });
+    });
+
 exports.editTransaction = functions
     .region('europe-west1')
     .https

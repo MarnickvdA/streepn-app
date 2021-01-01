@@ -252,3 +252,7 @@ ion-fab {
 ion-content {
   --padding-bottom: 4.5rem;
 }
+
+ion-label span.negative-amount {
+  color: var(--ion-color-danger);
+}

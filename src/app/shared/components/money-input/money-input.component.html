@@ -1,0 +1,8 @@
+<ion-item (click)="openInput()" class="form-input" lines="none">
+    <ion-icon name="pricetag-outline" slot="start"></ion-icon>
+    <span [ngClass]="amount === '0' ? 'form-input-grey' : ''">
+    {{ amountString }}
+  </span>
+    <ion-input #dummyFacade (ionInput)="handleInput($event)" (keyup)="handleKeyUp($event)" id="dummyFacade" inputmode="numeric"
+               name="dummyFacade" type="number"></ion-input>
+</ion-item>

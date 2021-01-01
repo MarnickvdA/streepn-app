@@ -3,7 +3,7 @@
         <ion-title>{{group.name}}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="dismiss()">
-                <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+                <ion-icon name="close-outline" slot="icon-only"></ion-icon>
             </ion-button>
         </ion-buttons>
     </ion-toolbar>
@@ -12,7 +12,7 @@
 <ion-content>
     <ion-item lines="full">
         <ion-label>{{'group.transactions.currentProduct' | translate}}</ion-label>
-        <ion-select interface="popover" value="{{group.products[0].id}}" (ionChange)="selectProduct($event)">
+        <ion-select (ionChange)="selectProduct($event)" interface="popover" value="{{group.products[0].id}}">
             <ion-select-option *ngFor="let product of group.products" value="{{product.id}}">
                 {{product.name}}
             </ion-select-option>
@@ -21,14 +21,14 @@
 
     <ion-list>
         <ion-list-header lines="full">
-            <ion-label>{{'group.settings.accounts' | translate}}</ion-label>
+            <ion-label>{{'group.overview.accounts.title' | translate}}</ion-label>
             <ion-button (click)="addOneForAll()">{{'group.transactions.allPlusOne' | translate}}</ion-button>
         </ion-list-header>
 
         <ion-item *ngFor="let account of group.accounts">
             <ion-avatar slot="start">
-                <img *ngIf="account.photoUrl" src="{{account.photoUrl}}" alt="">
-                <img *ngIf="!account.photoUrl" src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg" alt="">
+                <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
+                <img *ngIf="!account.photoUrl" alt="" src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg">
             </ion-avatar>
             <ion-label>{{account.name}}</ion-label>
             <ion-chip
@@ -39,14 +39,14 @@
             || transactions[account.id][currentProduct.id].amount === 0" color="danger" size="small">
                 <ion-icon name="remove-outline"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button color="success" size="small" (click)="addItem(account)">
+            <ion-fab-button (click)="addItem(account)" color="success" size="small">
                 <ion-icon name="add-outline"></ion-icon>
             </ion-fab-button>
         </ion-item>
 
         <ng-container *ngIf="group.sharedAccounts.length > 0">
             <ion-list-header lines="full">
-                <ion-label>{{'group.settings.sharedAccounts' | translate}}</ion-label>
+                <ion-label>{{'group.overview.sharedAccounts' | translate}}</ion-label>
             </ion-list-header>
 
             <ion-item *ngFor="let account of group.sharedAccounts">
@@ -59,15 +59,15 @@
             || transactions[account.id][currentProduct.id].amount === 0" color="danger" size="small">
                     <ion-icon name="remove-outline"></ion-icon>
                 </ion-fab-button>
-                <ion-fab-button color="success" size="small" (click)="addItem(account)">
+                <ion-fab-button (click)="addItem(account)" color="success" size="small">
                     <ion-icon name="add-outline"></ion-icon>
                 </ion-fab-button>
             </ion-item>
         </ng-container>
     </ion-list>
 
-    <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-        <ion-fab-button color="success" disabled="{{transactionCount === 0}}" (click)="checkout()">
+    <ion-fab horizontal="center" slot="fixed" vertical="bottom">
+        <ion-fab-button (click)="checkout()" color="success" disabled="{{transactionCount === 0}}">
             <ion-icon name="cart-outline"></ion-icon>
         </ion-fab-button>
     </ion-fab>

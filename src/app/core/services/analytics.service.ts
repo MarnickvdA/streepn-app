@@ -21,15 +21,6 @@ export class AnalyticsService {
         }
     }
 
-    private logEvent(event: string, data: { [key: string]: any }) {
-        if (Capacitor.isNative) {
-            FirebaseAnalytics.logEvent({
-                name: event,
-                params: data,
-            });
-        }
-    }
-
     logUserRegister(uid: string) {
         this.logEvent('user_registered', {
             userId: uid
@@ -62,11 +53,27 @@ export class AnalyticsService {
         });
     }
 
+    logLeaveGroup(userId: string, groupId: string) {
+        this.logEvent('group_left', {
+            userId,
+            groupId
+        });
+    }
+
     logTransaction(uid: string, groupId: string, transactionId: string) {
         this.logEvent('transaction_created', {
             userId: uid,
             groupId,
             transactionId
         });
+    }
+
+    private logEvent(event: string, data: { [key: string]: any }) {
+        if (Capacitor.isNative) {
+            FirebaseAnalytics.logEvent({
+                name: event,
+                params: data,
+            });
+        }
     }
 }

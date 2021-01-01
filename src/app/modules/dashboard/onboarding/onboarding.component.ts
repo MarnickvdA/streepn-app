@@ -140,21 +140,6 @@ export class OnboardingComponent implements OnInit {
         this.authService.acceptTerms();
     }
 
-    private checkGroupInvite(groupInvite: string) {
-        // Fuck this item, don't want it more than once.
-        this.storage.delete('groupInvite');
-
-        this.groupService.getGroupByInviteLink(groupInvite)
-            .then(group => {
-                if (!group.members.find(uid => uid === this.authService.currentUser.uid)) {
-                    this.group = group;
-                }
-            })
-            .catch(err => {
-                this.uiService.showError(this.translate.instant('errors.error'), err);
-            });
-    }
-
     async joinGroup(groupId: string) {
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.joining'),
@@ -178,5 +163,20 @@ export class OnboardingComponent implements OnInit {
         Browser.open({
             url: environment.legalUrl
         });
+    }
+
+    private checkGroupInvite(groupInvite: string) {
+        // Fuck this item, don't want it more than once.
+        this.storage.delete('groupInvite');
+
+        this.groupService.getGroupByInviteLink(groupInvite)
+            .then(group => {
+                if (!group.members.find(uid => uid === this.authService.currentUser.uid)) {
+                    this.group = group;
+                }
+            })
+            .catch(err => {
+                this.uiService.showError(this.translate.instant('errors.error'), err);
+            });
     }
 }

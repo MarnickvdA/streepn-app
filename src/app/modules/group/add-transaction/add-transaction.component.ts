@@ -21,8 +21,6 @@ const {Haptics} = Plugins;
     styleUrls: ['./add-transaction.component.scss'],
 })
 export class AddTransactionComponent implements OnInit {
-    private readonly logger = LoggerService.getLogger(AddTransactionComponent.name);
-
     @Input() group: Group;
     transactions: {
         [accountId: string]: {
@@ -33,6 +31,7 @@ export class AddTransactionComponent implements OnInit {
     } = {};
     currentProduct: Product;
     transactionCount = 0;
+    private readonly logger = LoggerService.getLogger(AddTransactionComponent.name);
 
     constructor(private modalController: ModalController,
                 private transactionService: TransactionService,

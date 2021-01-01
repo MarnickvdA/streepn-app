@@ -87,7 +87,11 @@ export class GroupService {
             .snapshotChanges()
             .pipe(
                 map(action => {
-                    return newGroup(action.payload.id, action.payload.data());
+                    if (action.payload.exists) {
+                        return newGroup(action.payload.id, action.payload.data());
+                    } else {
+                        return undefined;
+                    }
                 })
             );
     }
@@ -166,6 +170,51 @@ export class GroupService {
 
                     this.eventsService.publish('group:joined');
                 }
+            });
+    }
+
+    leaveGroup(groupId: string, userId: string) {
+        const callable = this.functions.httpsCallable('leaveGroup');
+        callable({
+            groupId
+        })
+            .pipe(catchError((err) => {
+                this.logger.error({message: 'leaveGroup', error: err});
+                this.eventsService.publish('group:left', false);
+                return EMPTY;
+            }))
+            .subscribe((account) => {
+                if (account) {
+                    this.analyticsService.logLeaveGroup(userId, groupId);
+
+                    this.eventsService.publish('group:left', true);
+
+                    // Enable push messages for this user.
+                    Permissions.query({
+                        name: PermissionType.Notifications
+                    }).then((result) => {
+                        if (result.state === 'granted') {
+                            this.pushService.unsubscribeTopic(PushTopic.GROUP_ALL, {groupId, accountId: account.id});
+                        }
+                    });
+                }
+            });
+    }
+
+    renewInviteLink(groupId: string): Promise<string> {
+        const date = new Date();
+        date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+        const nextWeek = Timestamp.fromDate(date);
+        const randomLink = uuidv4().substring(0, 8).toUpperCase();
+
+        return this.fs.collection('groups')
+            .doc(groupId)
+            .update({
+                inviteLink: randomLink,
+                inviteLinkExpiry: nextWeek
+            })
+            .then(() => {
+                return randomLink;
             });
     }
 }
