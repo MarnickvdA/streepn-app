@@ -5,10 +5,10 @@ import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {TranslateService} from '@ngx-translate/core';
 import {AppState, Plugins} from '@capacitor/core';
-import {AdsService} from './services/ads.service';
-import {StorageService} from './services/storage.service';
-import {EventsService} from './services/events.service';
-import {PushService} from './services/push.service';
+import {AdsService} from './core/services/ads.service';
+import {StorageService} from './core/services/storage.service';
+import {EventsService} from './core/services/events.service';
+import {PushService} from './core/services/push.service';
 
 const {App} = Plugins;
 

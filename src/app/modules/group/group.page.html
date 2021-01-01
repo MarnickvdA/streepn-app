@@ -1,0 +1,54 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/dashboard"></ion-back-button>
+        </ion-buttons>
+
+        <ion-title (click)="content.scrollToTop(500)" *ngIf="group">{{group.name}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button routerLink="settings" routerDirection="forward">
+                <ion-icon slot="icon-only" name="cog-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content #content [fullscreen]="true">
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large" *ngIf="group">{{group.name}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <ion-refresher slot="fixed" (ionRefresh)="reset($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list>
+        <ion-item *ngIf="transactions?.length === 0" lines="none">
+            <ion-label>
+                <p>{{'group.transactions.empty' | translate}}</p>
+            </ion-label>
+        </ion-item>
+        <ion-item [disabled]="transaction.removed" *ngFor="let transaction of transactions" (click)="openTransaction(transaction)" button="{{!transaction.removed}}">
+            <ion-label [ngStyle]="transaction.removed ? {'text-decoration': 'line-through'} : {}">
+                <h2 *ngFor="let item of transaction.items">
+                    {{item.amount}} {{item.product.name}} voor {{item.account.name}}
+                </h2>
+                <p>
+                    Op {{transaction.createdAt.toDate().toLocaleString()}} door {{transaction.createdBy.name}}
+                </p>
+            </ion-label>
+        </ion-item>
+        <ion-button (click)="loadNext()" fill="none" *ngIf="!doneLoading" [disabled]="isLoadingMore">
+            <ion-label color="primary" *ngIf="!isLoadingMore">{{'actions.loadMore' | translate}}</ion-label>
+            <ion-progress-bar *ngIf="isLoadingMore"></ion-progress-bar>
+        </ion-button>
+    </ion-list>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button disabled="{{group?.products?.length === 0}}" (click)="addTransaction()">
+            <ion-icon name="add-outline"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-content>

@@ -6,6 +6,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "ios": "ionic capacitor run ios -l --external",
+    "android": "ionic capacitor run android -l --external",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
