@@ -1,16 +1,14 @@
 import {Component, NgZone} from '@angular/core';
 
 import {Platform} from '@ionic/angular';
-import {SplashScreen} from '@ionic-native/splash-screen/ngx';
-import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {TranslateService} from '@ngx-translate/core';
-import {AppState, Plugins} from '@capacitor/core';
+import {AppState, Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
 import {AdsService} from './core/services/ads.service';
 import {StorageService} from './core/services/storage.service';
 import {EventsService} from './core/services/events.service';
 import {PushService} from './core/services/push.service';
 
-const {App} = Plugins;
+const {App, StatusBar, SplashScreen} = Plugins;
 
 @Component({
     selector: 'app-root',
@@ -20,8 +18,6 @@ const {App} = Plugins;
 export class AppComponent {
     constructor(
         private platform: Platform,
-        private splashScreen: SplashScreen,
-        private statusBar: StatusBar,
         private translate: TranslateService,
         private zone: NgZone,
         private adsService: AdsService,
@@ -74,13 +70,24 @@ export class AppComponent {
 
             this.adsService.initialize();
 
-            this.statusBar.styleDefault();
-            this.splashScreen.hide();
+            SplashScreen.hide();
         });
     }
 
     private toggleDarkTheme(isDarkMode: boolean) {
         this.storage.set('darkMode', isDarkMode);
         document.body.classList.toggle('dark', isDarkMode);
+
+        if (Capacitor.isPluginAvailable('StatusBar')) {
+            StatusBar.setStyle({
+                style: isDarkMode ? StatusBarStyle.Dark : StatusBarStyle.Light
+            });
+
+            if (isDarkMode) {
+                StatusBar.setBackgroundColor({color: '#000000'});
+            } else {
+                StatusBar.setBackgroundColor({color: '#FFFFFF'});
+            }
+        }
     }
 }

@@ -30,6 +30,7 @@ export class AdsService {
 
         AdMob.initialize({
             requestTrackingAuthorization: false,
+            testingDevices: ['b785a039328b15576b4382d39429f0bb'],
             initializeForTesting: !environment.production,
         } as AdMobInitializationOptions);
     }
@@ -68,6 +69,10 @@ export class AdsService {
     }
 
     async hideBanner() {
+        if (!this.enabled) {
+            return;
+        }
+
         const result = await AdMob.hideBanner()
             .catch(e => console.log(e));
         if (result === undefined) {
@@ -76,6 +81,10 @@ export class AdsService {
     }
 
     async removeBanner() {
+        if (!this.enabled) {
+            return;
+        }
+
         const result = await AdMob.removeBanner()
             .catch(e => console.log(e));
         if (result === undefined) {
@@ -84,6 +93,10 @@ export class AdsService {
     }
 
     async preloadInterstitial() {
+        if (!this.enabled) {
+            return;
+        }
+
         const options: AdOptions = {
             adId: this.platformAdId.interstitial,
             adSize: AdSize.LEADERBOARD,
@@ -103,6 +116,10 @@ export class AdsService {
     }
 
     async showInterstitial() {
+        if (!this.enabled) {
+            return;
+        }
+
         const result = await AdMob.showInterstitial()
             .catch(e => console.log(e));
         if (result === undefined) {

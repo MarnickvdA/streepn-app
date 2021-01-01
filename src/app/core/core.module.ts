@@ -14,8 +14,6 @@ import {AnalyticsService} from './services/analytics.service';
 import {AdsService} from './services/ads.service';
 import {StorageService} from './services/storage.service';
 import {UIService} from './services/ui.service';
-import {StatusBar} from '@ionic-native/status-bar/ngx';
-import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {IonicRouteStrategy} from '@ionic/angular';
 import {AngularFireFunctionsModule, REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR} from '@angular/fire/functions';
 import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/auth';
@@ -80,8 +78,6 @@ export const services = [
         {provide: ErrorHandler, useClass: SentryErrorHandler},
 
         // Cordova plugins
-        StatusBar,
-        SplashScreen,
         GooglePlus,
 
         // Core services

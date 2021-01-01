@@ -20,7 +20,7 @@ export class GroupPage implements OnInit, OnDestroy {
 
     private groupId: string;
     group?: Group;
-    transactions: Transaction[] = [];
+    transactions: Transaction[];
 
     private lastSnapshot: QueryDocumentSnapshot<Transaction>;
     private routeSub: Subscription;
@@ -53,8 +53,8 @@ export class GroupPage implements OnInit, OnDestroy {
             .subscribe((group) => {
                 this.group = group;
 
-                if (this.transactions.length === 0) {
-                    this.loadTransactions(this.group.id);
+                if (!this.transactions) {
+                    this.reset();
                 }
             });
 
