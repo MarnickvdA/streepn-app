@@ -21,13 +21,12 @@ npm install -g @ionic/cli native-run cordova-res firebase-tools
 
 ### Start the Firebase emulator
 ```
-firebase emulators:start --import ./data --export-on-exit=./data
+npm run emulator
 ```
 
 ### Local native development
 ```
-ng build -c local
-ionic capacitor run ios|android --livereload-url=http://localhost:4200
+npm run ios|android
 # Run in XCode or in Android Studio
 
 # OR NATIVE 

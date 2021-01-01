@@ -27,6 +27,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     private readonly logger = LoggerService.getLogger(DashboardPage.name);
     private user: User;
     private loadingGroupJoin?: HTMLIonLoadingElement;
+    private onboarding: boolean;
     private unsubscribeFn;
 
     constructor(private authService: AuthService,
@@ -109,7 +110,9 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ionViewDidEnter() {
-        this.ads.showBanner();
+        if (!this.onboarding) {
+            this.ads.showBanner();
+        }
     }
 
     ionViewWillLeave() {
@@ -150,12 +153,19 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private launchOnBoarding() {
+        this.onboarding = true;
+        this.ads.hideBanner();
         this.modalController.create({
             // swipeToClose: false,
             // backdropDismiss: false,
             component: OnboardingComponent
         }).then((modal) => {
             this.zone.run(() => {
+                modal.onDidDismiss()
+                    .then(() => {
+                        this.onboarding = false;
+                        this.ads.showBanner();
+                    });
                 modal.present();
             });
         });
