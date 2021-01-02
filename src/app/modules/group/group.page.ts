@@ -122,11 +122,8 @@ export class GroupPage implements OnInit, OnDestroy {
         if (transaction.removed) {
             return;
         }
-        const relativeRoute = this.router.createUrlTree(['transactions', transaction.id], {
-            relativeTo: this.route
-        });
-
-        this.navController.navigateForward(relativeRoute, {
+        this.navController.navigateForward(['transactions', transaction.id], {
+            relativeTo: this.route,
             state: {
                 group: this.group,
                 transaction
