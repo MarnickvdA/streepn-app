@@ -26,7 +26,7 @@
                         [attr.disabled]="newName === account.name || newName?.length < 2">{{'actions.edit' | translate}}</ion-button>
         </ion-item>
         <ion-item *ngIf="isSelf">
-            <ion-icon color="medium" icon="notifications-outline" slot="start"></ion-icon>
+            <ion-icon icon="notifications-outline" slot="start"></ion-icon>
             <ion-label>
                 {{'group.overview.account.enablePush' | translate}}
             </ion-label>

@@ -87,9 +87,9 @@ export class AccountDetailPage implements OnInit, OnDestroy {
 
     togglePush() {
         if (this.enablePush) {
-            this.pushService.subscribeTopic(PushTopic.GROUP_ALL, {groupId: this.groupId, accountId: this.account.id});
-        } else {
             this.pushService.unsubscribeTopic(PushTopic.GROUP_ALL, {groupId: this.groupId, accountId: this.account.id});
+        } else {
+            this.pushService.subscribeTopic(PushTopic.GROUP_ALL, {groupId: this.groupId, accountId: this.account.id});
         }
     }
 
