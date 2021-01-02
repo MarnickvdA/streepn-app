@@ -16,6 +16,14 @@ const routes: Routes = [
         loadChildren: () => import('./account-detail/account-detail.module').then(m => m.AccountDetailPageModule)
     },
     {
+        path: 'shared-accounts',
+        loadChildren: () => import('./shared-account-detail/shared-account-detail.module').then(m => m.SharedAccountDetailPageModule)
+    },
+    {
+        path: 'products',
+        loadChildren: () => import('./product-detail/product-detail.module').then(m => m.ProductDetailPageModule)
+    },
+    {
         path: 'new-shared-account',
         component: NewSharedAccountComponent
     },

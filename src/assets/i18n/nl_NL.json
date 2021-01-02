@@ -222,6 +222,22 @@
           "price-min": "De prijs mag niet negatief zijn",
           "price-max": "De prijs mag niet hoger zijn dan €1000,-"
         }
+      },
+      "editProduct": {
+        "productName": "Productnaam",
+        "productPrice": "Prijs",
+        "errors": {
+          "name-required": "Vul een productnaam in",
+          "name-length": "Vul minimaal 3 letters in",
+          "name-conflict": "Product met deze naam bestaat al",
+          "price-required": "Vul een prijs in",
+          "price-min": "De prijs mag niet negatief zijn",
+          "price-max": "De prijs mag niet hoger zijn dan €1000,-"
+        },
+        "deleteWarning": {
+          "header": "Waarschuwing",
+          "message": "Weet je zeker dat je het product {{name}} wilt verwijderen?"
+        }
       }
     }
   }

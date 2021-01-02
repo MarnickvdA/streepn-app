@@ -8,6 +8,7 @@ import {IonicModule} from '@ionic/angular';
 import {ProductItemComponent} from './components/product-item/product-item.component';
 import {UserAccountItemComponent} from './components/user-account-item/user-account-item.component';
 import {SharedAccountItemComponent} from './components/shared-account-item/shared-account-item.component';
+import {RouterModule} from '@angular/router';
 
 export const components = [
     MoneyInputComponent,
@@ -27,6 +28,7 @@ export const components = [
         ReactiveFormsModule,
         HttpClientModule,
         IonicModule,
+        RouterModule,
     ],
     providers: [
         CurrencyPipe
