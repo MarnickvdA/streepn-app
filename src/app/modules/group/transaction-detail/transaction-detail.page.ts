@@ -56,7 +56,7 @@ export class TransactionDetailPage implements OnInit {
         transaction?.items.forEach((item, index) => {
             this.itemsAmount.push(item.amount);
         });
-        this.transaction = transaction;
+        this.transaction = newTransaction(transaction.id, transaction);
     }
 
     getPriceString(price: number): string {
@@ -91,34 +91,7 @@ export class TransactionDetailPage implements OnInit {
 
         await loading.present();
 
-
-        const updatedTransaction = newTransaction(this.transaction.id, this.transaction);
-        updatedTransaction.totalPrice = 0;
-        updatedTransaction.items = updatedTransaction.items.filter((item, index) => {
-            if (item.amount > 0) {
-                updatedTransaction.totalPrice += item.amount * item.product.price;
-                return true;
-            } else {
-                return false;
-            }
-        });
-
-        updatedTransaction.itemCount = updatedTransaction.items.length;
-
-        let totalPrice = 0;
-        const paybackTransaction = newTransaction(this.transaction.id, this.transaction);
-        paybackTransaction.items = paybackTransaction.items.filter((item, index) => {
-            if (item.amount !== this.itemsAmount[index]) {
-                item.amount = -(this.itemsAmount[index] - item.amount);
-                totalPrice += item.amount * item.product.price;
-                return true;
-            } else {
-                return false;
-            }
-        });
-
-        paybackTransaction.itemCount = paybackTransaction.items.length;
-        this.transactionService.editTransaction(this.groupId, paybackTransaction, updatedTransaction)
+        this.transactionService.editTransaction(this.groupId, this.transaction, this.itemsAmount)
             .pipe(
                 catchError((err) => {
                     loading.dismiss();

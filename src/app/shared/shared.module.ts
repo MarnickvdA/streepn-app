@@ -9,12 +9,14 @@ import {ProductItemComponent} from './components/product-item/product-item.compo
 import {UserAccountItemComponent} from './components/user-account-item/user-account-item.component';
 import {SharedAccountItemComponent} from './components/shared-account-item/shared-account-item.component';
 import {RouterModule} from '@angular/router';
+import {ProductStockItemComponent} from './components/product-stock-item/product-stock-item.component';
 
 export const components = [
     MoneyInputComponent,
     ProductItemComponent,
     UserAccountItemComponent,
     SharedAccountItemComponent,
+    ProductStockItemComponent
 ];
 
 @NgModule({
@@ -39,7 +41,7 @@ export const components = [
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
-        ...components
+        ...components,
     ]
 })
 export class SharedModule {

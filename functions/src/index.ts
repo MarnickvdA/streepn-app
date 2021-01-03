@@ -136,6 +136,81 @@ exports.leaveGroup = functions
         });
     });
 
+exports.addStock = functions
+    .region('europe-west1')
+    .https
+    .onCall((data, context) => {
+
+        if (!context.auth?.uid) {
+            throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
+        }
+
+        let group: any;
+        const groupRef = db.collection('groups').doc(data.groupId);
+
+        return db.runTransaction(fireTrans => {
+            return fireTrans.get(groupRef)
+                .then(groupDoc => {
+                    group = groupDoc?.data();
+
+                    // Check if the group exists
+                    if (!groupDoc.exists || !group) {
+                        throw new functions.https.HttpsError('not-found', 'No such group document!');
+                    }
+
+                    // Check if the user is part of this group
+                    if (!group.members.includes(context.auth?.uid)) {
+                        throw new functions.https.HttpsError('permission-denied', 'User not member of group');
+                    }
+
+                    if (!data.stock) {
+                        throw new functions.https.HttpsError('not-found', 'No stock to be computed!');
+                    }
+
+                    const currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
+                    const currentProduct = group.products.find((product: any) => product.id === data.stock.product.id);
+
+                    if (!currentProduct) {
+                        throw new functions.https.HttpsError('not-found', 'Product not found!');
+                    }
+
+                    const uid = uuidv4();
+                    const newStock = {
+                        id: uid,
+                        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                        createdBy: currentAccount,
+                        product: currentProduct,
+                        cost: data.stock.cost,
+                        amount: data.stock.amount,
+                    };
+
+                    // Add the transaction to firestore
+                    fireTrans.set(groupRef.collection('stock').doc(uid), newStock);
+
+                    fireTrans.update(groupRef, {
+                        accounts: group.accounts.map((acc: any) => {
+                            if (acc.id === currentAccount.id) {
+                                acc.balance += newStock.cost;
+                            }
+                            return acc;
+                        }),
+                        products: group.products.map((p: any) => {
+                            if (p.id === data.stock.product.id) {
+                                if (!p.stock || isNaN(p.stock)) {
+                                    p.stock = newStock.amount;
+                                } else {
+                                    p.stock += newStock.amount;
+                                }
+                            }
+                            return p;
+                        }),
+                    });
+
+                    return newStock;
+                });
+        });
+    });
+
 exports.editTransaction = functions
     .region('europe-west1')
     .https
@@ -164,18 +239,19 @@ exports.editTransaction = functions
                             throw new functions.https.HttpsError('permission-denied', 'User not member of group');
                         }
 
-                        if (!data.paymentTransaction) {
+                        if (!data.deltaTransaction) {
                             throw new functions.https.HttpsError('not-found', 'No transaction to be computed!');
                         }
 
                         currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
 
                         // Update the balance of the accounts
-                        updateTransactionAccounts(group, data.paymentTransaction);
+                        updateTransactionAccounts(group, data.deltaTransaction);
 
                         fireTrans.update(groupRef, {
                             accounts: group.accounts,
                             sharedAccounts: group.sharedAccounts,
+                            products: group.products,
                         });
 
                         // Update old transaction and add new transaction to firestore
@@ -242,8 +318,8 @@ exports.addTransaction = functions
         let group: any;
         const groupRef = db.collection('groups').doc(data.groupId);
 
-        return db.runTransaction(transaction => {
-                return transaction.get(groupRef)
+        return db.runTransaction(fireTrans => {
+                return fireTrans.get(groupRef)
                     .then(groupDoc => {
                         group = groupDoc?.data();
 
@@ -276,11 +352,12 @@ exports.addTransaction = functions
                         };
 
                         // Add the transaction to firestore
-                        transaction.set(groupRef.collection('transactions').doc(uid), newTransaction);
+                        fireTrans.set(groupRef.collection('transactions').doc(uid), newTransaction);
 
-                        transaction.update(groupRef, {
+                        fireTrans.update(groupRef, {
                             accounts: group.accounts,
                             sharedAccounts: group.sharedAccounts,
+                            products: group.products,
                         });
 
                         return newTransaction;
@@ -352,5 +429,16 @@ export function updateTransactionAccounts(group: any, transaction: any) {
                 }
                 break;
         }
+
+        group.products = group.products.map((pr: any) => {
+            if (pr.id === t.product.id) {
+                if (!pr.stock || isNaN(pr.stock)) {
+                    pr.stock = 0;
+                }
+
+                pr.stock -= t.amount;
+            }
+            return pr;
+        });
     });
 }

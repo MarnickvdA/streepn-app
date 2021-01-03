@@ -1,0 +1,16 @@
+div.content {
+  padding: 0.75rem 2rem;
+
+  p {
+    color: var(--ion-color-medium);
+    font-size: 0.9rem;
+  }
+
+  div.input-field {
+    margin-top: 0.75rem;
+
+    ion-label {
+      color: var(--ion-color-medium);
+    }
+  }
+}

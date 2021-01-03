@@ -32,6 +32,9 @@
                     </p>
                 </ion-label>
             </ion-item>
+
+
+            <!-- START ACCOUNTS SECTION -->
             <ion-list-header lines="full">
                 <ion-label>{{'group.overview.accounts.title' | translate}}</ion-label>
             </ion-list-header>
@@ -40,9 +43,6 @@
                                    [canEditAccount]="isAdmin || isAccountOwner(account)"
                                    navLink="group/{{group.id}}/overview/accounts/{{account.id}}"></app-user-account-item>
 
-        </ion-list>
-
-        <ion-list>
             <ion-list-header lines="full">
                 <ion-label>{{'group.overview.sharedAccounts' | translate}}</ion-label>
                 <ion-button *ngIf="isAdmin" routerDirection="forward"
@@ -59,9 +59,10 @@
 
             <app-shared-account-item *ngFor="let sharedAccount of group.sharedAccounts"
                                      [account]="sharedAccount"></app-shared-account-item>
-        </ion-list>
+            <!-- END ACCOUNTS SECTION -->
 
-        <ion-list>
+
+            <!-- START PRODUCTS SECTION -->
             <ion-list-header lines="full">
                 <ion-label>{{'group.overview.products' | translate}}</ion-label>
                 <ion-button *ngIf="isAdmin" routerDirection="forward"
@@ -78,6 +79,32 @@
 
             <app-product-item [canEdit]="isAdmin" *ngFor="let product of group.products"
                               [product]="product"></app-product-item>
+            <!-- END PRODUCTS SECTION -->
+
+
+            <!-- START SUPPLY SECTION -->
+            <ion-list-header lines="full">
+                <ion-label>{{'group.overview.stock' | translate}}</ion-label>
+                <ion-button [disabled]="group.products.length === 0"
+                            (click)="addStock()">{{'actions.add' | translate}}</ion-button>
+            </ion-list-header>
+
+            <ion-item *ngIf="supplyProducts.length === 0 || group.products.length === 0" lines="none">
+                <ion-label>
+                    <p *ngIf="supplyProducts.length === 0 && group.products.length > 0">
+                        {{'group.overview.emptyStock' | translate}}
+                    </p>
+                    <p class="ion-text-wrap" *ngIf="group.products.length === 0">
+                        {{'group.overview.disabledStock' | translate}}
+                    </p>
+                </ion-label>
+            </ion-item>
+
+            <app-product-stock-item [canEdit]="false" *ngFor="let product of supplyProducts"
+                                    [product]="product"></app-product-stock-item>
+            <!-- END SUPPLY SECTION -->
+
+            <div class="padding"></div>
 
         </ion-list>
     </ng-container>

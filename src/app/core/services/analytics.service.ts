@@ -68,6 +68,15 @@ export class AnalyticsService {
         });
     }
 
+    logAddStock(uid: string, groupId: string, stockId: string) {
+        this.logEvent('stock_created', {
+            userId: uid,
+            groupId,
+            stockId
+        });
+    }
+
+
     private logEvent(event: string, data: { [key: string]: any }) {
         if (Capacitor.isNative) {
             FirebaseAnalytics.logEvent({

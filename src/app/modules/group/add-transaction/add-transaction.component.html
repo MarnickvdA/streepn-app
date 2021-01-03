@@ -1,6 +1,6 @@
 <ion-header>
     <ion-toolbar>
-        <ion-title>{{group.name}}</ion-title>
+        <ion-title>{{group?.name}}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="dismiss()">
                 <ion-icon name="close-outline" slot="icon-only"></ion-icon>
@@ -9,7 +9,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="group">
     <ion-item lines="full">
         <ion-label>{{'group.transactions.currentProduct' | translate}}</ion-label>
         <ion-select (ionChange)="selectProduct($event)" interface="popover" value="{{group.products[0].id}}">

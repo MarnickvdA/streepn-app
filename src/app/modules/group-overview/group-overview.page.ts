@@ -4,10 +4,11 @@ import {Observable, Subscription} from 'rxjs';
 import {Group, Product, UserAccount} from '../../core/models';
 import {ActivatedRoute, Params} from '@angular/router';
 import {AuthService} from '../../core/services/auth.service';
-import {AlertController, LoadingController} from '@ionic/angular';
+import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ProductService} from '../../core/services/product.service';
 import {Plugins} from '@capacitor/core';
+import {AddStockComponent} from './add-stock/add-stock.component';
 
 const {Clipboard, Share} = Plugins;
 
@@ -25,6 +26,7 @@ export class GroupOverviewPage implements OnDestroy {
     group$: Observable<Group>;
     private group: Group;
     private groupSub: Subscription;
+    supplyProducts: Product[];
 
     constructor(private groupService: GroupService,
                 private authService: AuthService,
@@ -32,7 +34,8 @@ export class GroupOverviewPage implements OnDestroy {
                 private alertController: AlertController,
                 private loadingController: LoadingController,
                 private translate: TranslateService,
-                private productService: ProductService) {
+                private productService: ProductService,
+                private modalController: ModalController) {
         this.route.params.subscribe((params: Params) => {
             this.groupId = params.id;
 
@@ -46,6 +49,7 @@ export class GroupOverviewPage implements OnDestroy {
                         this.inviteLink = group.inviteLink;
                         this.inviteLinkExpired = group.inviteLinkExpiry.toDate() < new Date();
                         this.isAdmin = group.accounts.find(account => account.userId === this.authService.currentUser.uid)?.roles.includes('ADMIN') || false;
+                        this.supplyProducts = group.products.filter(p => !isNaN(p.stock));
                     }
                 });
         });
@@ -61,6 +65,18 @@ export class GroupOverviewPage implements OnDestroy {
 
     removeProduct(product: Product) {
         this.productService.removeProduct(this.group, product);
+    }
+
+    addStock() {
+        this.modalController.create({
+            component: AddStockComponent,
+            componentProps: {
+                group$: this.group$
+            },
+            swipeToClose: true
+        }).then((modal) => {
+            modal.present();
+        });
     }
 
     async shareGroup() {

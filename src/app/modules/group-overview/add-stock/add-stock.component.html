@@ -1,0 +1,72 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{'group.overview.addStock.title' | translate}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="dismiss()">
+                <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="group">
+    <div class="content">
+        <p class="ion-text-center">{{'group.overview.addStock.description' | translate}}</p>
+        <form (ngSubmit)="addStock()" [formGroup]="stockForm">
+            <div class="input-field">
+                <ion-item class="form-input" lines="none">
+                    <ion-icon name="bag-handle-outline"></ion-icon>
+                    <ion-select formControlName="product" interface="popover"
+                                placeholder="{{'group.overview.addStock.selectProduct' | translate}}">
+                        <ion-select-option *ngFor="let product of group.products" value="{{product.id}}">
+                            {{product.name}}
+                        </ion-select-option>
+                    </ion-select>
+                </ion-item>
+            </div>
+            <span *ngIf="isSubmitted && form.product.errors?.required" class="form-input-error">
+                {{'group.overview.addStock.errors.product-required' | translate}}
+            </span>
+
+            <div class="input-field">
+                <ion-label position="stacked">{{'group.overview.addStock.amount' | translate}}</ion-label>
+                <ion-item class="form-input" lines="none">
+                    <ion-icon name="add-circle-outline"></ion-icon>
+                    <ion-input clearInput enterkeyhint="next" [tabIndex]="1"
+                               formControlName="amount" inputmode="numeric"
+                               placeholder="0" type="number"></ion-input>
+                </ion-item>
+            </div>
+            <span *ngIf="isSubmitted && form.amount.errors?.required" class="form-input-error">
+                {{'group.overview.addStock.errors.amount-required' | translate}}
+            </span>
+            <span *ngIf="isSubmitted && form.amount.errors?.min" class="form-input-error">
+                {{'group.overview.addStock.errors.amount-min' | translate}}
+            </span>
+            <span *ngIf="isSubmitted && form.amount.errors?.min" class="form-input-error">
+                {{'group.overview.addStock.errors.amount-max' | translate}}
+            </span>
+
+            <div class="input-field">
+                <ion-label position="stacked">{{'group.overview.addStock.cost' | translate}}</ion-label>
+                <app-money-input icon="cash-outline" (amountEntered)="amountChanged($event)" [amount]="''"
+                                 [precision]="2" tabIndex="2"></app-money-input>
+            </div>
+
+            <span *ngIf="isSubmitted && form.cost.errors?.required" class="form-input-error">
+                {{'group.overview.addStock.errors.cost-required' | translate}}
+            </span>
+            <span *ngIf="isSubmitted && form.cost.errors?.min" class="form-input-error">
+                {{'group.overview.addStock.errors.cost-min' | translate}}
+            </span>
+            <span *ngIf="isSubmitted && form.cost.errors?.max" class="form-input-error">
+                {{'group.overview.addStock.errors.cost-max' | translate}}
+            </span>
+
+            <ion-button class="ion-margin-top" expand="block" id="name-button" type="submit">
+                <ion-label>{{'actions.add' | translate}}</ion-label>
+            </ion-button>
+        </form>
+    </div>
+
+</ion-content>

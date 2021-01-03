@@ -11,6 +11,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {NewProductComponent} from './new-product/new-product.component';
 import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
 import {SharedModule} from '../../shared/shared.module';
+import {AddStockComponent} from './add-stock/add-stock.component';
 
 @NgModule({
     imports: [
@@ -24,6 +25,7 @@ import {SharedModule} from '../../shared/shared.module';
     ],
     declarations: [
         GroupOverviewPage,
+        AddStockComponent,
         NewProductComponent,
         NewSharedAccountComponent,
     ]

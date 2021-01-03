@@ -1,0 +1,4 @@
+<ion-item (click)="editProductStockItem()" [detail]="canEdit" [button]="canEdit">
+    <ion-note slot="start" [color]="product.stock > 0 ? 'dark' : 'danger'">{{product.stock}}</ion-note>
+    <ion-label>{{product.name}}</ion-label>
+</ion-item>

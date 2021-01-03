@@ -14,6 +14,7 @@ def capacitor_pods
   pod 'CapacitorCommunityAppleSignIn', :path => '../../node_modules/@capacitor-community/apple-sign-in'
   pod 'CapacitorCommunityFcm', :path => '../../node_modules/@capacitor-community/fcm'
   pod 'CapacitorCommunityFirebaseAnalytics', :path => '../../node_modules/@capacitor-community/firebase-analytics'
+  pod 'CapacitorCommunityFirebaseRemoteConfig', :path => '../../node_modules/@capacitor-community/firebase-remote-config'
   pod 'CordovaPluginsStatic', :path => '../capacitor-cordova-ios-plugins'
   # Do not delete
 end

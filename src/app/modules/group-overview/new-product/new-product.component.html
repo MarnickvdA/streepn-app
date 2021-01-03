@@ -37,6 +37,7 @@
                 <app-money-input (amountEntered)="amountChanged($event)" [amount]="''"
                                  [precision]="2"></app-money-input>
             </div>
+
             <span *ngIf="isSubmitted && form.price.errors?.required" class="form-input-error">
                 {{'group.overview.addProduct.errors.price-required' | translate}}
             </span>

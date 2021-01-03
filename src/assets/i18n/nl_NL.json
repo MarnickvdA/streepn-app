@@ -164,6 +164,9 @@
       "emptySharedAccounts": "Er zijn nog geen potjes",
       "products": "Producten",
       "emptyProducts": "Er zijn nog geen producten",
+      "stock": "Voorraad",
+      "emptyStock": "Er is nog geen voorraad toegevoegd",
+      "disabledStock": "Je kan pas voorraad toevoegen als je minstens één product hebt",
       "refreshLink": {
         "header": "Groepslink vernieuwen",
         "message": "Je oude groepslink is verlopen... Wil je deze vernieuwen? De nieuwe link is dan 1 week geldig."
@@ -237,6 +240,22 @@
         "deleteWarning": {
           "header": "Waarschuwing",
           "message": "Weet je zeker dat je het product {{name}} wilt verwijderen?"
+        }
+      },
+      "addStock": {
+        "title": "Voorraad aanvullen",
+        "description": "Vul jouw krediet aan door voorraad toe te voegen!",
+        "selectProduct": "Product selecteren...",
+        "amount": "Hoeveelheid",
+        "cost": "Totale waarde",
+        "errors": {
+          "product-required": "Selecteer een product",
+          "amount-required": "Vul een hoeveelheid in",
+          "amount-min": "De hoeveelheid moet minimaal 1 zijn",
+          "amount-max": "De hoeveelheid moet maximaal 10000 zijn",
+          "cost-required": "Vul de waarde van de voorraad in",
+          "cost-min": "De waarde moet niet negatief zijn",
+          "cost-max": "De waarde moet niet hoger zijn dan €10000,-"
         }
       }
     }
