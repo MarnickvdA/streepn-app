@@ -15,11 +15,38 @@ export class TransactionService {
                 private fs: AngularFirestore) {
     }
 
-    editTransaction(groupId: string, paymentTransaction: Transaction, updatedTransaction: Transaction): Observable<Transaction> {
+    editTransaction(groupId: string, transaction: Transaction, itemsAmount: number[]): Observable<Transaction> {
+        let totalPrice = 0;
+        const deltaTransaction = newTransaction(transaction.id, transaction);
+        deltaTransaction.items = deltaTransaction.items.filter((item, index) => {
+            if (item.amount !== itemsAmount[index]) {
+                item.amount = -(itemsAmount[index] - item.amount);
+                totalPrice += item.amount * item.product.price;
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        deltaTransaction.itemCount = deltaTransaction.items.length;
+
+        const updatedTransaction = newTransaction(transaction.id, transaction);
+        updatedTransaction.totalPrice = 0;
+        updatedTransaction.items = updatedTransaction.items.filter((item, index) => {
+            if (item.amount > 0) {
+                updatedTransaction.totalPrice += item.amount * item.product.price;
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        updatedTransaction.itemCount = updatedTransaction.items.length;
+
         const callable = this.functions.httpsCallable('editTransaction');
         return callable({
             groupId,
-            paymentTransaction,
+            deltaTransaction,
             updatedTransaction
         });
     }

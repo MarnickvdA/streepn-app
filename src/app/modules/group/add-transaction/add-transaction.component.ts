@@ -4,7 +4,7 @@ import {LoadingController, ModalController} from '@ionic/angular';
 import {Capacitor, HapticsImpactStyle, Plugins} from '@capacitor/core';
 import {TransactionService} from '../../../core/services/transaction.service';
 import {catchError} from 'rxjs/operators';
-import {EMPTY} from 'rxjs';
+import {EMPTY, Observable, Subscription} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {UserService} from '../../../core/services/user.service';
 import {AnalyticsService} from '../../../core/services/analytics.service';
@@ -21,7 +21,7 @@ const {Haptics} = Plugins;
     styleUrls: ['./add-transaction.component.scss'],
 })
 export class AddTransactionComponent implements OnInit {
-    @Input() group: Group;
+    @Input() group$: Observable<Group>;
     transactions: {
         [accountId: string]: {
             [productId: string]: {
@@ -29,8 +29,10 @@ export class AddTransactionComponent implements OnInit {
             }
         }
     } = {};
+    group: Group;
     currentProduct: Product;
     transactionCount = 0;
+    private groupSub: Subscription;
     private readonly logger = LoggerService.getLogger(AddTransactionComponent.name);
 
     constructor(private modalController: ModalController,
@@ -44,7 +46,13 @@ export class AddTransactionComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.currentProduct = this.group.products[0];
+        this.groupSub = this.group$.subscribe((group) => {
+            this.group = group;
+
+            if (group) {
+                this.currentProduct = group.products[0];
+            }
+        });
         this.ads.preloadInterstitial();
     }
 

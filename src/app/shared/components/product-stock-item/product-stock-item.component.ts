@@ -5,11 +5,11 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NavController} from '@ionic/angular';
 
 @Component({
-    selector: 'app-product-item',
-    templateUrl: './product-item.component.html',
-    styleUrls: ['./product-item.component.scss'],
+    selector: 'app-product-stock-item',
+    templateUrl: './product-stock-item.component.html',
+    styleUrls: ['./product-stock-item.component.scss'],
 })
-export class ProductItemComponent implements OnInit {
+export class ProductStockItemComponent implements OnInit {
 
     @Input() product: Product;
     @Input() canEdit = false;
@@ -23,7 +23,9 @@ export class ProductItemComponent implements OnInit {
     ngOnInit() {
     }
 
-    editProduct() {
-        this.navController.navigateForward(['products', this.product.id], {relativeTo: this.route});
+    editProductStockItem() {
+        if (this.canEdit) {
+            // this.navController.navigateForward(['supplies', this.product.id], {relativeTo: this.route});
+        }
     }
 }

@@ -3,7 +3,7 @@ import {Capacitor, Plugins} from '@capacitor/core';
 import {AdMobInitializationOptions, AdOptions, AdPosition, AdSize} from '@capacitor-community/admob';
 import {environment} from '../../../environments/environment';
 
-const {AdMob} = Plugins;
+const {AdMob, FirebaseRemoteConfig} = Plugins;
 
 @Injectable({
     providedIn: 'root'
@@ -24,6 +24,18 @@ export class AdsService {
         if (!this.enabled) {
             console.warn('Initialization for AdMob aborted: Plugin not available');
             return;
+        }
+
+        if (Capacitor.isPluginAvailable('FirebaseRemoteConfig')) {
+            FirebaseRemoteConfig.fetch().then(() => {
+                FirebaseRemoteConfig.getBoolean(
+                    {
+                        key: 'ads_enabled'
+                    }
+                ).then((fetchedData) => {
+                    this.enabled = fetchedData.value;
+                });
+            });
         }
 
         console.log('Initializing AdMob');

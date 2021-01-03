@@ -23,6 +23,7 @@ import {GooglePlus} from '@ionic-native/google-plus/ngx';
 import {AngularFireModule} from '@angular/fire';
 import * as Sentry from '@sentry/browser';
 import {LoggerService} from './services/logger.service';
+import {StockService} from './services/stock.service';
 
 Sentry.init({
     dsn: 'https://898ea0c4100341d581f3a5d645db3c12@o352784.ingest.sentry.io/5178411',
@@ -49,15 +50,18 @@ export class SentryErrorHandler implements ErrorHandler {
 export const services = [
     AuthService,
     EventsService,
-    GroupService,
-    TransactionService,
-    UserService,
-    ProductService,
     PushService,
     AnalyticsService,
     AdsService,
     StorageService,
-    UIService
+    UIService,
+
+    // Model services
+    GroupService,
+    TransactionService,
+    UserService,
+    ProductService,
+    StockService,
 ];
 
 @NgModule({

@@ -13,6 +13,8 @@ export class MoneyInputComponent implements OnInit {
     private static BACKSPACE_INPUT_TYPE = 'deleteContentBackward';
     @Input() precision: number;
     @Input() amount: string;
+    @Input() icon = 'pricetag-outline';
+    @Input() tabIndex = -1;
     @Output() amountEntered = new EventEmitter<number>();
     amountString: string;
     @ViewChild('dummyFacade', {static: false}) private dummyFacade: IonInput;

@@ -1,14 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '../../core/services/user.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Group, Transaction, transactionConverter} from '../../core/models';
+import {Group, Transaction, transactionConverter, UserAccount} from '../../core/models';
 import {ModalController, NavController} from '@ionic/angular';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {GroupService} from '../../core/services/group.service';
 import {TransactionService} from '../../core/services/transaction.service';
 import {AddTransactionComponent} from './add-transaction/add-transaction.component';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {EventsService} from '../../core/services/events.service';
+import {AuthService} from '../../core/services/auth.service';
+import {getMoneyString} from '../../core/utils/firestore-utils';
 
 @Component({
     selector: 'app-group',
@@ -17,6 +19,7 @@ import {EventsService} from '../../core/services/events.service';
 })
 export class GroupPage implements OnInit, OnDestroy {
     group?: Group;
+    currentAccount?: UserAccount;
     transactions: Transaction[];
     doneLoading = false;
     isLoadingMore = false;
@@ -25,11 +28,13 @@ export class GroupPage implements OnInit, OnDestroy {
     private lastSnapshot: QueryDocumentSnapshot<Transaction>;
     private routeSub: Subscription;
     private groupSub: Subscription;
+    private group$: Observable<Group>;
     private readonly refreshSub;
 
     constructor(private route: ActivatedRoute,
                 private userService: UserService,
                 private groupService: GroupService,
+                private authService: AuthService,
                 private transactionService: TransactionService,
                 private fs: AngularFirestore,
                 private modalController: ModalController,
@@ -46,12 +51,17 @@ export class GroupPage implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.groupSub = this.groupService.observeGroup(this.groupId)
+        this.group$ = this.groupService.observeGroup(this.groupId);
+        this.groupSub = this.group$
             .subscribe((group) => {
                 this.group = group;
 
-                if (!this.transactions) {
-                    this.reset();
+                if (group) {
+                    this.currentAccount = group.accounts.find(acc => acc.userId === this.authService.currentUser.uid);
+
+                    if (!this.transactions) {
+                        this.reset();
+                    }
                 }
             });
 
@@ -135,7 +145,7 @@ export class GroupPage implements OnInit, OnDestroy {
         this.modalController.create({
             component: AddTransactionComponent,
             componentProps: {
-                group: this.group
+                group$: this.group$
             },
             swipeToClose: true
         }).then((modal) => {
@@ -147,5 +157,9 @@ export class GroupPage implements OnInit, OnDestroy {
                     }
                 });
         });
+    }
+
+    get accountBalanceString(): string {
+        return getMoneyString(this.currentAccount.balance);
     }
 }

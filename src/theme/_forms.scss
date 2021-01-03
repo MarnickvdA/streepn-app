@@ -67,6 +67,15 @@ ion-item.form-input {
     border-bottom: none;
     box-shadow: none;
   }
+
+  ion-select {
+    width: 100%;
+  }
+
+  ion-select::part(placeholder) {
+    color: var(--ion-color-medium);
+    opacity: 1;
+  }
 }
 
 .form-input-error {

@@ -8,7 +8,7 @@ import {StorageService} from './core/services/storage.service';
 import {EventsService} from './core/services/events.service';
 import {PushService} from './core/services/push.service';
 
-const {App, StatusBar, SplashScreen} = Plugins;
+const {App, StatusBar, SplashScreen, FirebaseRemoteConfig} = Plugins;
 
 @Component({
     selector: 'app-root',
@@ -67,6 +67,13 @@ export class AppComponent {
             });
 
             this.pushService.removeNotifications();
+
+            if (Capacitor.isPluginAvailable('FirebaseRemoteConfig')) {
+                FirebaseRemoteConfig.initialize({
+                    minimumFetchIntervalInSeconds: (60 * 12),
+                });
+                FirebaseRemoteConfig.fetchAndActivate();
+            }
 
             this.adsService.initialize();
 
