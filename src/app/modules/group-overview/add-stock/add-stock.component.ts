@@ -1,8 +1,8 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Group} from '../../../core/models';
+import {Account, Group} from '../../../core/models';
 import {ProductService} from '../../../core/services/product.service';
-import {LoadingController, ModalController} from '@ionic/angular';
+import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
@@ -13,6 +13,7 @@ import {StockService} from '../../../core/services/stock.service';
 import {AuthService} from '../../../core/services/auth.service';
 import {LoggerService} from '../../../core/services/logger.service';
 import {AnalyticsService} from '../../../core/services/analytics.service';
+import {calculatePayout} from '../../../core/utils/firestore-utils';
 
 @Component({
     selector: 'app-add-stock',
@@ -24,12 +25,16 @@ export class AddStockComponent implements OnInit, OnDestroy {
 
     stockForm: FormGroup;
     isSubmitted: boolean;
+    paidByTitle: string;
 
     @Input() group$: Observable<Group>;
 
     group: Group;
+    allAccounts: Account[];
+    payout: number[];
     private groupSub: Subscription;
     private moneyInputInitialized = false;
+    selectedNames: string;
 
     constructor(private formBuilder: FormBuilder,
                 private productService: ProductService,
@@ -38,6 +43,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute,
                 private location: Location,
                 private groupService: GroupService,
+                private alertController: AlertController,
                 private modalController: ModalController,
                 private authService: AuthService,
                 private analytics: AnalyticsService,
@@ -45,7 +51,8 @@ export class AddStockComponent implements OnInit, OnDestroy {
         this.stockForm = this.formBuilder.group({
             product: ['', [Validators.required]],
             cost: ['', [Validators.required, Validators.min(0), Validators.max(10000_00)]],
-            amount: ['', [Validators.required, Validators.min(1), Validators.max(10000)]]
+            amount: ['', [Validators.required, Validators.min(1), Validators.max(10000)]],
+            paidBy: ['', [Validators.required, Validators.minLength(1)]],
         });
     }
 
@@ -56,6 +63,10 @@ export class AddStockComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.groupSub = this.group$.subscribe((group => {
             this.group = group;
+
+            if (group) {
+                this.allAccounts = [...group.accounts, ...group.sharedAccounts];
+            }
         }));
     }
 
@@ -73,6 +84,15 @@ export class AddStockComponent implements OnInit, OnDestroy {
 
     dismiss() {
         this.modalController.dismiss();
+    }
+
+    get selectedAccounts(): Account[] {
+        const selectedAccounts = this.form.paidBy.value;
+        if (selectedAccounts?.length > 0) {
+            return this.allAccounts.filter(acc => selectedAccounts.includes(acc.id)) || [];
+        } else {
+            return [];
+        }
     }
 
     async addStock() {
@@ -102,11 +122,8 @@ export class AddStockComponent implements OnInit, OnDestroy {
 
         await loading.present();
 
-        setTimeout(() => {
-            loading.dismiss();
-        }, 1000);
-
-        this.stockService.addStockItem(this.group, this.form.product.value, +this.form.cost.value, +this.form.amount.value)
+        this.stockService.addStockItem(this.group, this.form.product.value, +this.form.cost.value,
+            +this.form.amount.value, this.selectedAccounts, this.payout)
             .pipe(
                 catchError(err => {
                     this.logger.error({message: err});
@@ -122,5 +139,17 @@ export class AddStockComponent implements OnInit, OnDestroy {
                 loading.dismiss();
                 this.dismiss();
             });
+    }
+
+    updatePayout() {
+        const selected = this.selectedAccounts;
+
+        this.selectedNames = selected?.map(acc => acc.name.trim()).join(', ');
+
+        if (selected?.length > 0) {
+            this.payout = calculatePayout(this.form.cost.value, selected.length);
+        } else {
+            this.payout = [];
+        }
     }
 }

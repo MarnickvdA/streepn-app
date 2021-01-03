@@ -1,12 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Group} from '../../../core/models';
-import {Subscription} from 'rxjs';
-import {LoadingController} from '@ionic/angular';
+import {Observable, Subscription} from 'rxjs';
+import {LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {ActivatedRoute, Params} from '@angular/router';
-import {Location} from '@angular/common';
-import {GroupService} from '../../../core/services/group.service';
 import {AccountService} from '../../../core/services/account.service';
 
 @Component({
@@ -18,27 +15,17 @@ export class NewSharedAccountComponent implements OnInit, OnDestroy {
     accountForm: FormGroup;
     isSubmitted: boolean;
 
-    groupId: string;
+    @Input() group$: Observable<Group>;
     private group: Group;
     private groupSub: Subscription;
 
     constructor(private formBuilder: FormBuilder,
                 private accountService: AccountService,
                 private loadingController: LoadingController,
-                private translate: TranslateService,
-                private route: ActivatedRoute,
-                private location: Location,
-                private groupService: GroupService) {
+                private modalController: ModalController,
+                private translate: TranslateService) {
         this.accountForm = this.formBuilder.group({
             name: ['', [Validators.required]],
-        });
-
-        this.route.params.subscribe((params: Params) => {
-            this.groupId = params.id;
-            this.groupSub = this.groupService.observeGroup(params.id)
-                .subscribe(group => {
-                    this.group = group;
-                });
         });
     }
 
@@ -47,6 +34,9 @@ export class NewSharedAccountComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.groupSub = this.group$.subscribe((group => {
+            this.group = group;
+        }));
     }
 
     ngOnDestroy(): void {
@@ -90,8 +80,12 @@ export class NewSharedAccountComponent implements OnInit, OnDestroy {
                 loading.dismiss();
 
                 if (isSuccessful) {
-                    this.location.back();
+                    this.dismiss();
                 }
             });
+    }
+
+    dismiss() {
+        this.modalController.dismiss();
     }
 }

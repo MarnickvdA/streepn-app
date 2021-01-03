@@ -1,13 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProductService} from '../../../core/services/product.service';
-import {LoadingController} from '@ionic/angular';
+import {LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {ActivatedRoute, Params} from '@angular/router';
-import {GroupService} from '../../../core/services/group.service';
 import {Group} from '../../../core/models';
-import {Subscription} from 'rxjs';
-import {Location} from '@angular/common';
+import {Observable, Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-new-product',
@@ -19,28 +16,19 @@ export class NewProductComponent implements OnInit, OnDestroy {
     isSubmitted: boolean;
     groupCreated: boolean;
 
-    groupId: string;
+    @Input() group$: Observable<Group>;
+
     private group: Group;
     private groupSub: Subscription;
 
     constructor(private formBuilder: FormBuilder,
                 private productService: ProductService,
                 private loadingController: LoadingController,
-                private translate: TranslateService,
-                private route: ActivatedRoute,
-                private location: Location,
-                private groupService: GroupService) {
+                private modalController: ModalController,
+                private translate: TranslateService) {
         this.productForm = this.formBuilder.group({
             name: ['', [Validators.required]],
             price: ['', [Validators.required, Validators.min(0), Validators.max(100000)]]
-        });
-
-        this.route.params.subscribe((params: Params) => {
-            this.groupId = params.id;
-            this.groupSub = this.groupService.observeGroup(params.id)
-                .subscribe(group => {
-                    this.group = group;
-                });
         });
     }
 
@@ -49,6 +37,9 @@ export class NewProductComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.groupSub = this.group$.subscribe(group => {
+            this.group = group;
+        });
     }
 
     ngOnDestroy(): void {
@@ -96,8 +87,12 @@ export class NewProductComponent implements OnInit, OnDestroy {
                 loading.dismiss();
 
                 if (isSuccessful) {
-                    this.location.back();
+                    this.dismiss();
                 }
             });
+    }
+
+    dismiss() {
+        this.modalController.dismiss();
     }
 }

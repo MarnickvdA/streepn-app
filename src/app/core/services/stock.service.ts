@@ -3,7 +3,7 @@ import {AngularFireFunctions} from '@angular/fire/functions';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {Group, Stock, stockConverter} from '../models';
+import {Account, Group, Stock, stockConverter} from '../models';
 import {newStock} from '../models/stock';
 import {AuthService} from './auth.service';
 
@@ -17,18 +17,19 @@ export class StockService {
                 private authService: AuthService) {
     }
 
-    addStockItem(group: Group, productId: string, cost: number, amount: number): Observable<Stock> {
+    addStockItem(group: Group, productId: string, cost: number, amount: number, paidBy: Account[], payout: number[]): Observable<Stock> {
         const currentAccount = group.accounts.find(acc => this.authService.currentUser.uid === acc.userId);
         const currentProduct = group.products.find(p => p.id === productId);
         if (isNaN(currentProduct.stock)) {
             currentProduct.stock = 0;
         }
-        const stock = new Stock('', undefined, currentAccount, currentProduct, cost, amount, false);
+        const stock = new Stock('', undefined, currentAccount, paidBy, currentProduct, cost, amount, false);
 
         const callable = this.functions.httpsCallable('addStock');
         return callable({
             groupId: group.id,
-            stock
+            stock,
+            payout,
         }).pipe(
             map(result => {
                 return newStock(result.id, result);

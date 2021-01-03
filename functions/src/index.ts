@@ -179,6 +179,7 @@ exports.addStock = functions
                         id: uid,
                         createdAt: admin.firestore.FieldValue.serverTimestamp(),
                         createdBy: currentAccount,
+                        paidBy: data.stock.paidBy,
                         product: currentProduct,
                         cost: data.stock.cost,
                         amount: data.stock.amount,
@@ -187,10 +188,20 @@ exports.addStock = functions
                     // Add the transaction to firestore
                     fireTrans.set(groupRef.collection('stock').doc(uid), newStock);
 
+                    const paidByIds: string[] = data.stock.paidBy.map((pb: any) => pb.id);
+
                     fireTrans.update(groupRef, {
                         accounts: group.accounts.map((acc: any) => {
-                            if (acc.id === currentAccount.id) {
-                                acc.balance += newStock.cost;
+                            const index = paidByIds.indexOf(acc.id);
+                            if (index >= 0) {
+                                acc.balance += data.payout[index];
+                            }
+                            return acc;
+                        }),
+                        sharedAccounts: group.sharedAccounts.map((acc: any) => {
+                            const index = paidByIds.indexOf(acc.id);
+                            if (index >= 0) {
+                                acc.balance += data.payout[index];
                             }
                             return acc;
                         }),

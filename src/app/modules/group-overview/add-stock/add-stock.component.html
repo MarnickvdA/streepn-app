@@ -9,8 +9,14 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="group">
-    <div class="content">
+<ion-content>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{'group.overview.addStock.title' | translate}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <div class="content" *ngIf="group">
         <p class="ion-text-center">{{'group.overview.addStock.description' | translate}}</p>
         <form (ngSubmit)="addStock()" [formGroup]="stockForm">
             <div class="input-field">
@@ -32,7 +38,7 @@
                 <ion-label position="stacked">{{'group.overview.addStock.amount' | translate}}</ion-label>
                 <ion-item class="form-input" lines="none">
                     <ion-icon name="add-circle-outline"></ion-icon>
-                    <ion-input clearInput enterkeyhint="next" [tabIndex]="1"
+                    <ion-input enterkeyhint="next" [tabIndex]="1"
                                formControlName="amount" inputmode="numeric"
                                placeholder="0" type="number"></ion-input>
                 </ion-item>
@@ -61,6 +67,32 @@
             </span>
             <span *ngIf="isSubmitted && form.cost.errors?.max" class="form-input-error">
                 {{'group.overview.addStock.errors.cost-max' | translate}}
+            </span>
+
+            <div class="input-field">
+                <ion-label position="stacked">{{'group.overview.addStock.paidByTitle' | translate}}</ion-label>
+                <ion-item disabled="{{!(form.product.valid && form.amount.valid && form.cost.valid)}}"
+                          class="form-input" lines="none">
+                    <ion-icon name="people-outline"></ion-icon>
+                    <ion-select formControlName="paidBy" multiple="true" okText="{{'actions.ok' | translate}}"
+                                selectedText="{{selectedNames}}"
+                                cancelText="{{'actions.cancel' | translate}}"
+                                (ionChange)="updatePayout()"
+                                [interfaceOptions]="{header: paidByTitle}"
+                                placeholder="{{'group.overview.addStock.paidBy' | translate}}">
+                        <ion-select-option *ngFor="let account of allAccounts"
+                                           value="{{account.id}}">
+                            {{account.name}}
+                        </ion-select-option>
+                    </ion-select>
+                </ion-item>
+            </div>
+            <span *ngIf="isSubmitted && form.paidBy.errors?.required" class="form-input-error">
+                {{'group.overview.addStock.errors.paidBy-required' | translate}}
+            </span>
+
+            <span *ngIf="isSubmitted && form.paidBy.errors?.minLength" class="form-input-error">
+                {{'group.overview.addStock.errors.paidBy-required' | translate}}
             </span>
 
             <ion-button class="ion-margin-top" expand="block" id="name-button" type="submit">

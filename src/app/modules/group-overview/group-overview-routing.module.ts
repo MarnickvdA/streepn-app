@@ -2,8 +2,6 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
 import {GroupOverviewPage} from './group-overview.page';
-import {NewProductComponent} from './new-product/new-product.component';
-import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
 
 const routes: Routes = [
     {
@@ -22,14 +20,6 @@ const routes: Routes = [
     {
         path: 'products',
         loadChildren: () => import('./product-detail/product-detail.module').then(m => m.ProductDetailPageModule)
-    },
-    {
-        path: 'new-shared-account',
-        component: NewSharedAccountComponent
-    },
-    {
-        path: 'new-product',
-        component: NewProductComponent
     },
     {
         path: 'preferences',

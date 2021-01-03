@@ -244,18 +244,21 @@
       },
       "addStock": {
         "title": "Voorraad aanvullen",
-        "description": "Vul jouw krediet aan door voorraad toe te voegen!",
-        "selectProduct": "Product selecteren...",
+        "description": "Vul jouw krediet aan door voorraad toe te voegen! Je kunt de betalers pas invoeren als je alle velden hebt gevuld.",
+        "selectProduct": "Product selecteren",
+        "paidByTitle": "Betaler(s)",
+        "paidBy": "Betaler(s) selecteren",
         "amount": "Hoeveelheid",
         "cost": "Totale waarde",
         "errors": {
           "product-required": "Selecteer een product",
           "amount-required": "Vul een hoeveelheid in",
           "amount-min": "De hoeveelheid moet minimaal 1 zijn",
-          "amount-max": "De hoeveelheid moet maximaal 10000 zijn",
+          "amount-max": "De hoeveelheid moet niet hoger dan 10000 zijn",
           "cost-required": "Vul de waarde van de voorraad in",
           "cost-min": "De waarde moet niet negatief zijn",
-          "cost-max": "De waarde moet niet hoger zijn dan €10000,-"
+          "cost-max": "De waarde moet niet hoger zijn dan €10000,-",
+          "paidBy-required": "Selecteer minimaal 1 betaler"
         }
       }
     }
