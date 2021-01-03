@@ -9,6 +9,8 @@ import {TranslateService} from '@ngx-translate/core';
 import {ProductService} from '../../core/services/product.service';
 import {Plugins} from '@capacitor/core';
 import {AddStockComponent} from './add-stock/add-stock.component';
+import {NewProductComponent} from './new-product/new-product.component';
+import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
 
 const {Clipboard, Share} = Plugins;
 
@@ -63,8 +65,28 @@ export class GroupOverviewPage implements OnDestroy {
         return account.userId === this.authService.currentUser?.uid;
     }
 
-    removeProduct(product: Product) {
-        this.productService.removeProduct(this.group, product);
+    addSharedAccount() {
+        this.modalController.create({
+            component: NewSharedAccountComponent,
+            componentProps: {
+                group$: this.group$
+            },
+            swipeToClose: true
+        }).then((modal) => {
+            modal.present();
+        });
+    }
+
+    addProduct() {
+        this.modalController.create({
+            component: NewProductComponent,
+            componentProps: {
+                group$: this.group$
+            },
+            swipeToClose: true
+        }).then((modal) => {
+            modal.present();
+        });
     }
 
     addStock() {
