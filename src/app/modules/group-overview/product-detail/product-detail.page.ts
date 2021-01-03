@@ -1,14 +1,13 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Group, Product} from '../../../core/models';
+import {Group, Product} from '@core/models';
 import {Subscription} from 'rxjs';
-import {ProductService} from '../../../core/services/product.service';
 import {AlertController, LoadingController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Location} from '@angular/common';
-import {GroupService} from '../../../core/services/group.service';
-import {MoneyInputComponent} from '../../../shared/components/money-input/money-input.component';
+import {MoneyInputComponent} from '@shared/components/money-input/money-input.component';
+import {GroupService, ProductService} from '@core/services';
 
 @Component({
     selector: 'app-product-detail',

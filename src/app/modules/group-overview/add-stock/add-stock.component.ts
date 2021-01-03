@@ -1,19 +1,14 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Account, Group} from '../../../core/models';
-import {ProductService} from '../../../core/services/product.service';
+import {Account, Group} from '@core/models';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
-import {GroupService} from '../../../core/services/group.service';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {StockService} from '../../../core/services/stock.service';
-import {AuthService} from '../../../core/services/auth.service';
-import {LoggerService} from '../../../core/services/logger.service';
-import {AnalyticsService} from '../../../core/services/analytics.service';
-import {calculatePayout} from '../../../core/utils/firestore-utils';
+import {calculatePayout} from '@core/utils/firestore-utils';
+import {AnalyticsService, AuthService, GroupService, LoggerService, ProductService, StockService} from '@core/services';
 
 @Component({
     selector: 'app-add-stock',
@@ -21,20 +16,17 @@ import {calculatePayout} from '../../../core/utils/firestore-utils';
     styleUrls: ['./add-stock.component.scss'],
 })
 export class AddStockComponent implements OnInit, OnDestroy {
-    private readonly logger = LoggerService.getLogger(AddStockComponent.name);
-
     stockForm: FormGroup;
     isSubmitted: boolean;
     paidByTitle: string;
-
     @Input() group$: Observable<Group>;
-
     group: Group;
     allAccounts: Account[];
     payout: number[];
+    selectedNames: string;
+    private readonly logger = LoggerService.getLogger(AddStockComponent.name);
     private groupSub: Subscription;
     private moneyInputInitialized = false;
-    selectedNames: string;
 
     constructor(private formBuilder: FormBuilder,
                 private productService: ProductService,
@@ -58,6 +50,15 @@ export class AddStockComponent implements OnInit, OnDestroy {
 
     get form() {
         return this.stockForm.controls;
+    }
+
+    get selectedAccounts(): Account[] {
+        const selectedAccounts = this.form.paidBy.value;
+        if (selectedAccounts?.length > 0) {
+            return this.allAccounts.filter(acc => selectedAccounts.includes(acc.id)) || [];
+        } else {
+            return [];
+        }
     }
 
     ngOnInit() {
@@ -84,15 +85,6 @@ export class AddStockComponent implements OnInit, OnDestroy {
 
     dismiss() {
         this.modalController.dismiss();
-    }
-
-    get selectedAccounts(): Account[] {
-        const selectedAccounts = this.form.paidBy.value;
-        if (selectedAccounts?.length > 0) {
-            return this.allAccounts.filter(acc => selectedAccounts.includes(acc.id)) || [];
-        } else {
-            return [];
-        }
     }
 
     async addStock() {

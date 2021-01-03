@@ -1,10 +1,10 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ProductService} from '../../../core/services/product.service';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {Group} from '../../../core/models';
+import {Group} from '@core/models';
 import {Observable, Subscription} from 'rxjs';
+import {ProductService} from '@core/services';
 
 @Component({
     selector: 'app-new-product',

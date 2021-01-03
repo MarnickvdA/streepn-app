@@ -1,14 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {GroupService} from '../../../core/services/group.service';
-import {UserService} from '../../../core/services/user.service';
-import {UIService} from '../../../core/services/ui.service';
-import {TranslateService} from '@ngx-translate/core';
-import {Group} from '../../../core/models';
+import {Group} from '@core/models';
 import {PermissionType, Plugins} from '@capacitor/core';
 import {AlertController, NavController} from '@ionic/angular';
-import {PushService, PushTopic} from '../../../core/services/push.service';
-import {LoggerService} from '../../../core/services/logger.service';
+import {GroupService, LoggerService, PushService, PushTopic, UIService, UserService} from '@core/services';
+import {TranslateService} from '@ngx-translate/core';
 
 const {Clipboard, Share, Permissions} = Plugins;
 

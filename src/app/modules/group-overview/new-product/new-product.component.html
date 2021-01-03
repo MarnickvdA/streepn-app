@@ -22,7 +22,9 @@
                 <ion-icon name="bag-handle-outline"></ion-icon>
                 <ion-input autocapitalize="words" clearInput
                            enterkeyhint="next"
-                           formControlName="name" inputmode="text" placeholder="{{'group.overview.addProduct.productName' | translate}}" type="text"></ion-input>
+                           formControlName="name" inputmode="text"
+                           placeholder="{{'group.overview.addProduct.productName' | translate}}"
+                           type="text"></ion-input>
             </ion-item>
             <span *ngIf="isSubmitted && form.name.errors?.required" class="form-input-error">
                 {{'group.overview.addProduct.errors.name-required' | translate}}

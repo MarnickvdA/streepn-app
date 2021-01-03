@@ -1,17 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonSlides, LoadingController, ModalController} from '@ionic/angular';
-import {PushService} from '../../../core/services/push.service';
-import {UserService} from '../../../core/services/user.service';
-import {TranslateService} from '@ngx-translate/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {StorageService} from '../../../core/services/storage.service';
-import {GroupService} from '../../../core/services/group.service';
-import {EventsService} from '../../../core/services/events.service';
-import {Group} from '../../../core/models';
-import {AuthService} from '../../../core/services/auth.service';
-import {environment} from '../../../../environments/environment';
+import {Group} from '@core/models';
+import {environment} from '@env/environment';
 import {Plugins} from '@capacitor/core';
-import {UIService} from '../../../core/services/ui.service';
+import {AuthService, EventsService, GroupService, PushService, StorageService, UIService, UserService} from '@core/services';
+import {TranslateService} from '@ngx-translate/core';
 
 const {Browser} = Plugins;
 

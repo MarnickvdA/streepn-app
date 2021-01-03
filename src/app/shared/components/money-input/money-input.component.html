@@ -3,6 +3,7 @@
     <span [ngClass]="amount === '0' ? 'form-input-grey' : ''">
     {{ amountString }}
   </span>
-    <ion-input tabindex="{{tabIndex}}" #dummyFacade (ionInput)="handleInput($event)" (keyup)="handleKeyUp($event)" id="dummyFacade" inputmode="numeric"
-               name="dummyFacade" type="number"></ion-input>
+    <ion-input #dummyFacade (ionInput)="handleInput($event)" (keyup)="handleKeyUp($event)" id="dummyFacade"
+               inputmode="numeric" name="dummyFacade"
+               tabindex="{{tabIndex}}" type="number"></ion-input>
 </ion-item>

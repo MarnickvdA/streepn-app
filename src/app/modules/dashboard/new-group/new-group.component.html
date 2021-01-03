@@ -23,7 +23,8 @@
                 <ion-icon name="people-outline"></ion-icon>
                 <ion-input [attr.disabled]="groupCreated" autocapitalize="words"
                            clearInput enterkeyhint="next"
-                           formControlName="name" inputmode="text" placeholder="{{'dashboard.createGroup.groupName' | translate}}" type="text"></ion-input>
+                           formControlName="name" inputmode="text"
+                           placeholder="{{'dashboard.createGroup.groupName' | translate}}" type="text"></ion-input>
             </ion-item>
             <span *ngIf="isSubmitted && form.name.errors?.required" class="form-input-error">
                 {{'dashboard.createGroup.errors.name-required' | translate}}
@@ -32,7 +33,8 @@
                 {{'dashboard.createGroup.errors.name-length' | translate}}
             </span>
 
-            <ion-button [attr.disabled]="groupCreated" [color]="groupCreated && !loading ? 'success' : 'primary'" class="ion-margin-top"
+            <ion-button [attr.disabled]="groupCreated" [color]="groupCreated && !loading ? 'success' : 'primary'"
+                        class="ion-margin-top"
                         expand="block" id="name-button"
                         type="submit">
                 <ion-label *ngIf="!groupCreated">{{'actions.submit' | translate}}</ion-label>

@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/browser';
 import {Severity} from '@sentry/browser';
-import {environment} from '../../../environments/environment';
+import {environment} from '@env/environment';
 
 export interface LogItem {
     message: string;

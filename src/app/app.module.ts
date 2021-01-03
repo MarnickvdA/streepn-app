@@ -7,8 +7,8 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HttpClient} from '@angular/common/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {CoreModule} from './core/core.module';
-import {SharedModule} from './shared/shared.module';
+import {CoreModule} from '@core/core.module';
+import {SharedModule} from '@shared/shared.module';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 export function createTranslateLoader(http: HttpClient) {

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Capacitor, Plugins} from '@capacitor/core';
 import {AdMobInitializationOptions, AdOptions, AdPosition, AdSize} from '@capacitor-community/admob';
-import {environment} from '../../../environments/environment';
+import {environment} from '@env/environment';
 
 const {AdMob, FirebaseRemoteConfig} = Plugins;
 

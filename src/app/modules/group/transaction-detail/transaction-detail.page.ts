@@ -1,15 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {EMPTY, Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Group, Transaction} from '../../../core/models';
-import {TransactionService} from '../../../core/services/transaction.service';
-import {newTransaction, TransactionItem} from '../../../core/models/transaction';
-import {getMoneyString} from '../../../core/utils/firestore-utils';
+import {Group, Transaction} from '@core/models';
+import {newTransaction, TransactionItem} from '@core/models/transaction';
+import {getMoneyString} from '@core/utils/firestore-utils';
+import {catchError} from 'rxjs/operators';
+import {newGroup} from '@core/models/group';
+import {EventsService, TransactionService} from '@core/services';
 import {LoadingController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {catchError} from 'rxjs/operators';
-import {newGroup} from '../../../core/models/group';
-import {EventsService} from '../../../core/services/events.service';
 
 @Component({
     selector: 'app-transaction-detail',

@@ -1,17 +1,20 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Group, UserAccount} from '../../../core/models';
-import {GroupService} from '../../../core/services/group.service';
-import {getMoneyString} from '../../../core/utils/firestore-utils';
-import {PushService, PushTopic} from '../../../core/services/push.service';
+import {Group, UserAccount} from '@core/models';
+import {getMoneyString} from '@core/utils/firestore-utils';
 import {Subscription} from 'rxjs';
-import {StorageService} from '../../../core/services/storage.service';
-import {AccountService} from '../../../core/services/account.service';
 import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {LoggerService} from '../../../core/services/logger.service';
-import {AuthService} from '../../../core/services/auth.service';
-import {EventsService} from '../../../core/services/events.service';
+import {
+    AccountService,
+    AuthService,
+    EventsService,
+    GroupService,
+    LoggerService,
+    PushService,
+    PushTopic,
+    StorageService
+} from '@core/services';
 
 @Component({
     selector: 'app-account-detail',
@@ -27,9 +30,9 @@ export class AccountDetailPage implements OnInit, OnDestroy {
     canDisableAdmin: boolean;
     group: Group;
     newName: string;
+    isAdmin: boolean;
     private readonly logger = LoggerService.getLogger(AccountDetailPage.name);
     private groupSub: Subscription;
-    isAdmin: boolean;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,

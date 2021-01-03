@@ -10,7 +10,7 @@ import {DashboardPage} from './dashboard.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {OnboardingComponent} from './onboarding/onboarding.component';
 import {NewGroupComponent} from './new-group/new-group.component';
-import {SharedModule} from '../../shared/shared.module';
+import {SharedModule} from '@shared/shared.module';
 
 @NgModule({
     imports: [

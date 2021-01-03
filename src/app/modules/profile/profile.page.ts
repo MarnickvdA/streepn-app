@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../core/services/auth.service';
 import {Observable} from 'rxjs';
 import firebase from 'firebase/app';
 import {NavController} from '@ionic/angular';
-import {StorageService} from '../../core/services/storage.service';
 import {Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
+import {AuthService, StorageService} from '@core/services';
 import User = firebase.User;
 
 const {StatusBar} = Plugins;

@@ -1,13 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AuthService} from '../../core/services/auth.service';
 import {LoadingController, NavController} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EventsService} from '../../core/services/events.service';
 import {Capacitor} from '@capacitor/core';
 import {TranslateService} from '@ngx-translate/core';
-import {UIService} from '../../core/services/ui.service';
-import {StorageService} from '../../core/services/storage.service';
-import {LoggerService} from '../../core/services/logger.service';
+import {AuthService, EventsService, LoggerService, StorageService, UIService} from '@core/services';
 
 @Component({
     selector: 'app-login',

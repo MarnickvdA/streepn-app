@@ -1,10 +1,10 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Group} from '../../../core/models';
+import {Group} from '@core/models';
 import {Observable, Subscription} from 'rxjs';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {AccountService} from '../../../core/services/account.service';
+import {AccountService} from '@core/services';
 
 @Component({
     selector: 'app-new-shared-account',

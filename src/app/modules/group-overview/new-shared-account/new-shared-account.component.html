@@ -23,7 +23,9 @@
                 <ion-input autocapitalize="words"
                            clearInput
                            enterkeyhint="next"
-                           formControlName="name" inputmode="text" placeholder="{{'group.overview.addSharedAccount.accountName' | translate}}" type="text"></ion-input>
+                           formControlName="name" inputmode="text"
+                           placeholder="{{'group.overview.addSharedAccount.accountName' | translate}}"
+                           type="text"></ion-input>
             </ion-item>
             <span *ngIf="isSubmitted && form.name.errors?.required" class="form-input-error">
                 {{'group.overview.addSharedAccount.errors.name-required' | translate}}

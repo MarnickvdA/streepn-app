@@ -40,7 +40,8 @@
                             color="danger" size="small">
                 <ion-icon name="remove-outline"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button (click)="addItem(item)" *ngIf="editing" [attr.disabled]="item.amount >= itemsAmount[i]" color="success"
+            <ion-fab-button (click)="addItem(item)" *ngIf="editing" [attr.disabled]="item.amount >= itemsAmount[i]"
+                            color="success"
                             size="small">
                 <ion-icon name="add-outline"></ion-icon>
             </ion-fab-button>

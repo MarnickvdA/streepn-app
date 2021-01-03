@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {IonInput} from '@ionic/angular';
-import {getMoneyString} from '../../../core/utils/firestore-utils';
+import {getMoneyString} from '@core/utils/firestore-utils';
 
 @Component({
     selector: 'app-money-input',

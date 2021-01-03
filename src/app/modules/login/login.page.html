@@ -14,7 +14,7 @@
         <form (ngSubmit)="login()" [formGroup]="loginForm">
             <ion-item class="form-input" lines="none">
                 <ion-icon name="mail-outline"></ion-icon>
-                <ion-input autocomplete="email" clearInput enterkeyhint="next" formControlName="email" [tabIndex]="0"
+                <ion-input [tabIndex]="0" autocomplete="email" clearInput enterkeyhint="next" formControlName="email"
                            inputmode="email" placeholder="{{'login.email' | translate}}" type="email"></ion-input>
             </ion-item>
             <span *ngIf="isSubmitted && form.email.errors?.required" class="form-input-error">
@@ -32,8 +32,9 @@
 
             <ion-item class="form-input ion-margin-top" lines="none">
                 <ion-icon name="key-outline"></ion-icon>
-                <ion-input autocomplete="current-password" clearInput enterkeyhint="go" [tabIndex]="1"
-                           formControlName="password" placeholder="{{'login.password' | translate}}" type="password"></ion-input>
+                <ion-input [tabIndex]="1" autocomplete="current-password" clearInput enterkeyhint="go"
+                           formControlName="password" placeholder="{{'login.password' | translate}}"
+                           type="password"></ion-input>
             </ion-item>
             <span *ngIf="isSubmitted && form.password.errors?.required" class="form-input-error">
                 {{'login.errors.password-required' | translate}}
@@ -42,7 +43,7 @@
                 {{'login.errors.wrong-password' | translate}}
             </span>
 
-            <ion-button expand="block" type="submit" [tabIndex]="2">
+            <ion-button [tabIndex]="2" expand="block" type="submit">
                 <ion-label>{{'actions.login' | translate}}</ion-label>
             </ion-button>
         </form>

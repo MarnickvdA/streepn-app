@@ -38,7 +38,7 @@
             <ion-label>
                 {{'group.overview.account.enableAdmin' | translate}}
             </ion-label>
-            <ion-toggle [disabled]="!canDisableAdmin" (ngModelChange)="toggleAdmin()" [(ngModel)]="enableAdmin"
+            <ion-toggle (ngModelChange)="toggleAdmin()" [(ngModel)]="enableAdmin" [disabled]="!canDisableAdmin"
                         slot="end"></ion-toggle>
         </ion-item>
     </ion-list>

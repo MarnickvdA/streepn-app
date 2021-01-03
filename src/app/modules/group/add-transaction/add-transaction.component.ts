@@ -1,17 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Account, Group, Product, Transaction, UserAccount} from '../../../core/models';
+import {Account, Group, Product, Transaction, UserAccount} from '@core/models';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {Capacitor, HapticsImpactStyle, Plugins} from '@capacitor/core';
-import {TransactionService} from '../../../core/services/transaction.service';
 import {catchError} from 'rxjs/operators';
 import {EMPTY, Observable, Subscription} from 'rxjs';
+import {AdsService, AnalyticsService, AuthService, LoggerService, TransactionService, UserService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-import {UserService} from '../../../core/services/user.service';
-import {AnalyticsService} from '../../../core/services/analytics.service';
-import {AuthService} from '../../../core/services/auth.service';
-import {LoggerService} from '../../../core/services/logger.service';
-import {TransactionItem} from '../../../core/models/transaction';
-import {AdsService} from '../../../core/services/ads.service';
+import {TransactionItem} from '@core/models/transaction';
 
 const {Haptics} = Plugins;
 

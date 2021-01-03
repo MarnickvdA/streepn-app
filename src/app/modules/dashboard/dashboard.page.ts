@@ -1,19 +1,12 @@
 import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core';
-import {AuthService} from '../../core/services/auth.service';
 import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {BehaviorSubject, Observable} from 'rxjs';
 import firebase from 'firebase/app';
-import {GroupService} from '../../core/services/group.service';
-import {UserService} from '../../core/services/user.service';
-import {Group} from '../../core/models';
+import {Group} from '@core/models';
+import {AdsService, AuthService, EventsService, GroupService, LoggerService, StorageService, UIService, UserService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-import {EventsService} from '../../core/services/events.service';
 import {take} from 'rxjs/operators';
-import {OnboardingComponent} from './onboarding/onboarding.component';
-import {StorageService} from '../../core/services/storage.service';
-import {UIService} from '../../core/services/ui.service';
-import {LoggerService} from '../../core/services/logger.service';
-import {AdsService} from '../../core/services/ads.service';
+import {OnboardingComponent} from '@modules/dashboard/onboarding/onboarding.component';
 import User = firebase.User;
 
 @Component({

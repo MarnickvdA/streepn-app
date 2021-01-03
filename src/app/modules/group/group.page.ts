@@ -1,16 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UserService} from '../../core/services/user.service';
+import {UserService} from '@core/services/user.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Group, Transaction, transactionConverter, UserAccount} from '../../core/models';
+import {Group, Transaction, transactionConverter, UserAccount} from '@core/models';
 import {ModalController, NavController} from '@ionic/angular';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
-import {GroupService} from '../../core/services/group.service';
-import {TransactionService} from '../../core/services/transaction.service';
 import {AddTransactionComponent} from './add-transaction/add-transaction.component';
 import {Observable, Subscription} from 'rxjs';
-import {EventsService} from '../../core/services/events.service';
-import {AuthService} from '../../core/services/auth.service';
-import {getMoneyString} from '../../core/utils/firestore-utils';
+import {getMoneyString} from '@core/utils/firestore-utils';
+import {AuthService, EventsService, GroupService, TransactionService} from '@core/services';
 
 @Component({
     selector: 'app-group',
@@ -48,6 +45,10 @@ export class GroupPage implements OnInit, OnDestroy {
         this.refreshSub = () => {
             this.reset();
         };
+    }
+
+    get accountBalanceString(): string {
+        return getMoneyString(this.currentAccount.balance);
     }
 
     ngOnInit(): void {
@@ -157,9 +158,5 @@ export class GroupPage implements OnInit, OnDestroy {
                     }
                 });
         });
-    }
-
-    get accountBalanceString(): string {
-        return getMoneyString(this.currentAccount.balance);
     }
 }

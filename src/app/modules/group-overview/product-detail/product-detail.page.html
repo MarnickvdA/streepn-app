@@ -1,58 +1,60 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/group/{{groupId}}/overview"></ion-back-button>
-    </ion-buttons>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/group/{{groupId}}/overview"></ion-back-button>
+        </ion-buttons>
 
-    <ion-title>{{product?.name}}</ion-title>
-  </ion-toolbar>
+        <ion-title>{{product?.name}}</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">{{product?.name}}</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{product?.name}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
 
-  <div class="form-content">
-    <form (ngSubmit)="editProduct()" [formGroup]="productForm">
-      <ion-item class="form-input" lines="none">
-        <ion-icon name="bag-handle-outline"></ion-icon>
-        <ion-input autocapitalize="words" clearInput
-                   enterkeyhint="next"
-                   formControlName="name" inputmode="text" placeholder="{{'group.overview.editProduct.productName' | translate}}" type="text"></ion-input>
-      </ion-item>
-      <span *ngIf="isSubmitted && form.name.errors?.required" class="form-input-error">
+    <div class="form-content">
+        <form (ngSubmit)="editProduct()" [formGroup]="productForm">
+            <ion-item class="form-input" lines="none">
+                <ion-icon name="bag-handle-outline"></ion-icon>
+                <ion-input autocapitalize="words" clearInput
+                           enterkeyhint="next"
+                           formControlName="name" inputmode="text"
+                           placeholder="{{'group.overview.editProduct.productName' | translate}}"
+                           type="text"></ion-input>
+            </ion-item>
+            <span *ngIf="isSubmitted && form.name.errors?.required" class="form-input-error">
                 {{'group.overview.editProduct.errors.name-required' | translate}}
             </span>
-      <span *ngIf="isSubmitted && form.name.errors?.length" class="form-input-error">
+            <span *ngIf="isSubmitted && form.name.errors?.length" class="form-input-error">
                 {{'group.overview.editProduct.errors.name-length' | translate}}
             </span>
-      <span *ngIf="isSubmitted && form.name.errors?.conflict" class="form-input-error">
+            <span *ngIf="isSubmitted && form.name.errors?.conflict" class="form-input-error">
                 {{'group.overview.editProduct.errors.name-conflict' | translate}}
             </span>
 
-      <div class="m-t">
-        <app-money-input (amountEntered)="amountChanged($event)" [amount]="''"
-                         [precision]="2"></app-money-input>
-      </div>
-      <span *ngIf="isSubmitted && form.price.errors?.required" class="form-input-error">
+            <div class="m-t">
+                <app-money-input (amountEntered)="amountChanged($event)" [amount]="''"
+                                 [precision]="2"></app-money-input>
+            </div>
+            <span *ngIf="isSubmitted && form.price.errors?.required" class="form-input-error">
                 {{'group.overview.editProduct.errors.price-required' | translate}}
             </span>
-      <span *ngIf="isSubmitted && form.price.errors?.min" class="form-input-error">
+            <span *ngIf="isSubmitted && form.price.errors?.min" class="form-input-error">
                 {{'group.overview.editProduct.errors.price-min' | translate}}
             </span>
-      <span *ngIf="isSubmitted && form.price.errors?.max" class="form-input-error">
+            <span *ngIf="isSubmitted && form.price.errors?.max" class="form-input-error">
                 {{'group.overview.editProduct.errors.price-max' | translate}}
             </span>
 
-      <ion-button class="ion-margin-top" expand="block" type="submit">
-        <ion-label>{{'actions.edit' | translate}}</ion-label>
-      </ion-button>
-    </form>
-      <ion-button class="ion-margin-top" expand="block" color="danger" (click)="removeProduct()">
-          <ion-label>{{product?.name}} {{'actions.delete' | translate}}</ion-label>
-      </ion-button>
-  </div>
+            <ion-button class="ion-margin-top" expand="block" type="submit">
+                <ion-label>{{'actions.edit' | translate}}</ion-label>
+            </ion-button>
+        </form>
+        <ion-button (click)="removeProduct()" class="ion-margin-top" color="danger" expand="block">
+            <ion-label>{{product?.name}} {{'actions.delete' | translate}}</ion-label>
+        </ion-button>
+    </div>
 </ion-content>

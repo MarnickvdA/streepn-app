@@ -1,16 +1,14 @@
 import {Component, OnDestroy} from '@angular/core';
-import {GroupService} from '../../core/services/group.service';
 import {Observable, Subscription} from 'rxjs';
-import {Group, Product, UserAccount} from '../../core/models';
+import {Group, Product, UserAccount} from '@core/models';
 import {ActivatedRoute, Params} from '@angular/router';
-import {AuthService} from '../../core/services/auth.service';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {ProductService} from '../../core/services/product.service';
 import {Plugins} from '@capacitor/core';
 import {AddStockComponent} from './add-stock/add-stock.component';
 import {NewProductComponent} from './new-product/new-product.component';
 import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
+import {AuthService, GroupService, ProductService} from '@core/services';
 
 const {Clipboard, Share} = Plugins;
 
@@ -26,9 +24,9 @@ export class GroupOverviewPage implements OnDestroy {
     inviteLink: string;
     inviteLinkExpired: boolean;
     group$: Observable<Group>;
+    stockProducts: Product[];
     private group: Group;
     private groupSub: Subscription;
-    supplyProducts: Product[];
 
     constructor(private groupService: GroupService,
                 private authService: AuthService,
@@ -51,7 +49,7 @@ export class GroupOverviewPage implements OnDestroy {
                         this.inviteLink = group.inviteLink;
                         this.inviteLinkExpired = group.inviteLinkExpiry.toDate() < new Date();
                         this.isAdmin = group.accounts.find(account => account.userId === this.authService.currentUser.uid)?.roles.includes('ADMIN') || false;
-                        this.supplyProducts = group.products.filter(p => !isNaN(p.stock));
+                        this.stockProducts = group.products.filter(p => !isNaN(p.stock));
                     }
                 });
         });

@@ -3,10 +3,10 @@ import {Component, NgZone} from '@angular/core';
 import {Platform} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {AppState, Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
-import {AdsService} from './core/services/ads.service';
-import {StorageService} from './core/services/storage.service';
-import {EventsService} from './core/services/events.service';
-import {PushService} from './core/services/push.service';
+import {AdsService} from '@core/services/ads.service';
+import {StorageService} from '@core/services/storage.service';
+import {EventsService} from '@core/services/events.service';
+import {PushService} from '@core/services/push.service';
 
 const {App, StatusBar, SplashScreen, FirebaseRemoteConfig} = Plugins;
 

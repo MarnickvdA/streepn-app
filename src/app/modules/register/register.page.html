@@ -18,7 +18,7 @@
 
             <ion-item class="form-input" lines="none">
                 <ion-icon name="person-outline"></ion-icon>
-                <ion-input autocapitalize="words" autocomplete="given-name" clearInput [tabIndex]="0"
+                <ion-input [tabIndex]="0" autocapitalize="words" autocomplete="given-name" clearInput
                            enterkeyhint="next" formControlName="name"
                            inputmode="text" placeholder="{{'login.name' | translate}}" type="text"></ion-input>
             </ion-item>
@@ -28,7 +28,7 @@
 
             <ion-item class="form-input ion-margin-top" lines="none">
                 <ion-icon name="mail-outline"></ion-icon>
-                <ion-input autocomplete="email" clearInput enterkeyhint="next" formControlName="email" [tabIndex]="1"
+                <ion-input [tabIndex]="1" autocomplete="email" clearInput enterkeyhint="next" formControlName="email"
                            inputmode="email" placeholder="{{'login.email' | translate}}" type="email"></ion-input>
             </ion-item>
             <span *ngIf="isSubmitted && form.email.errors?.required" class="form-input-error">
@@ -43,7 +43,7 @@
 
             <ion-item class="form-input ion-margin-top" lines="none">
                 <ion-icon name="key-outline"></ion-icon>
-                <ion-input autocomplete="current-password" clearInput enterkeyhint="go" [tabIndex]="2"
+                <ion-input [tabIndex]="2" autocomplete="current-password" clearInput enterkeyhint="go"
                            formControlName="password" placeholder="{{'login.password' | translate}}"
                            type="password"></ion-input>
             </ion-item>
@@ -54,7 +54,7 @@
                 {{'login.errors.weak-password' | translate}}
             </span>
 
-            <ion-button expand="block" type="submit" [tabIndex]="3">
+            <ion-button [tabIndex]="3" expand="block" type="submit">
                 <ion-label>{{'actions.register' | translate}}</ion-label>
             </ion-button>
         </form>

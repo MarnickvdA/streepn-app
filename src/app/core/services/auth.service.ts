@@ -7,7 +7,7 @@ import {ResponseSignInWithApplePlugin} from '@capacitor-community/apple-sign-in'
 import {Plugins} from '@capacitor/core';
 import {StorageService} from './storage.service';
 import {GooglePlus} from '@ionic-native/google-plus/ngx';
-import {environment} from '../../../environments/environment';
+import {environment} from '@env/environment';
 import {AnalyticsService} from './analytics.service';
 import {catchError} from 'rxjs/operators';
 import {AngularFireFunctions} from '@angular/fire/functions';

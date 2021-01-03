@@ -1,9 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../../core/services/auth.service';
 import {LoadingController, NavController} from '@ionic/angular';
-import {EventsService} from '../../core/services/events.service';
 import {TranslateService} from '@ngx-translate/core';
+import {AuthService, EventsService} from '@core/services';
 
 @Component({
     selector: 'app-register',
