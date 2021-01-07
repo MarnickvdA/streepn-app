@@ -15,6 +15,7 @@ import {
     PushTopic,
     StorageService
 } from '@core/services';
+import {take} from 'rxjs/operators';
 
 @Component({
     selector: 'app-account-detail',
@@ -50,7 +51,7 @@ export class AccountDetailPage implements OnInit, OnDestroy {
         this.account = this.router.getCurrentNavigation().extras.state?.account;
         this.newName = this.account.name;
 
-        this.route.params.subscribe((params: Params) => {
+        this.route.params.pipe(take(1)).subscribe((params: Params) => {
             this.groupId = params.id;
 
             this.groupSub = this.groupService.observeGroup(params.id)
@@ -60,8 +61,8 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                     if (group) {
                         this.isAdmin = this.group.accounts
                             .find(acc => acc.userId === authService.currentUser?.uid)?.roles.includes('ADMIN');
-                        this.canDisableAdmin = this.group.accounts.filter(acc => acc.id === this.account.id)?.length > 1;
                         this.account = this.group.accounts.find(acc => acc.id === this.account.id);
+                        this.canDisableAdmin = this.group.accounts.filter(acc => acc.roles.includes('ADMIN'))?.length > 1 || !this.isSelf;
                         this.enableAdmin = this.account.roles.includes('ADMIN');
                     }
                 });
@@ -146,7 +147,9 @@ export class AccountDetailPage implements OnInit, OnDestroy {
         if (this.enableAdmin) {
             const alert = await this.alertController.create({
                 header: this.translate.instant('group.overview.account.disableAdmin.header'),
-                message: this.translate.instant('group.overview.account.disableAdmin.message'),
+                message: this.translate.instant('group.overview.account.disableAdmin.message', {
+                    name: this.isSelf ? this.translate.instant('group.overview.account.disableAdmin.you') : this.account.name
+                }),
                 buttons: [
                     {
                         text: this.translate.instant('actions.cancel'),
