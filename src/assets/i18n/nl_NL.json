@@ -180,7 +180,8 @@
         "enableAdmin": "Beheerders rechten",
         "disableAdmin": {
           "header": "Waarschuwing!",
-          "message": "Weet je zeker dat je jezelf van beheerders rechten wilt ontnemen?"
+          "message": "Weet je zeker dat je de beheerdersrechten van {{name}} wilt ontnemen?",
+          "you": "jezelf"
         },
         "deletePrecondition": "{{name}} moet een saldo van € 0,00 hebben om de groep te kunnen verlaten",
         "deleteAccount": "{{name}} verwijderen",
