@@ -1,7 +1,7 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {Group, Product, UserAccount} from '@core/models';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Plugins} from '@capacitor/core';
@@ -14,10 +14,10 @@ const {Clipboard, Share} = Plugins;
 
 @Component({
     selector: 'app-group-overview',
-    templateUrl: './group-overview.page.html',
-    styleUrls: ['./group-overview.page.scss'],
+    templateUrl: './overview.page.html',
+    styleUrls: ['./overview.page.scss'],
 })
-export class GroupOverviewPage implements OnDestroy {
+export class OverviewPage implements OnInit, OnDestroy {
 
     groupId: string;
     isAdmin: boolean;
@@ -25,7 +25,7 @@ export class GroupOverviewPage implements OnDestroy {
     inviteLinkExpired: boolean;
     group$: Observable<Group>;
     stockProducts: Product[];
-    private group: Group;
+    group: Group;
     private groupSub: Subscription;
 
     constructor(private groupService: GroupService,
@@ -36,23 +36,22 @@ export class GroupOverviewPage implements OnDestroy {
                 private translate: TranslateService,
                 private productService: ProductService,
                 private modalController: ModalController) {
-        this.route.params.subscribe((params: Params) => {
-            this.groupId = params.id;
+    }
 
-            this.group$ = this.groupService.observeGroup(params.id);
+    ngOnInit() {
+        this.group$ = this.groupService.observeGroup(this.groupService.currentGroupId);
 
-            this.groupSub = this.group$
-                .subscribe(group => {
-                    this.group = group;
+        this.groupSub = this.group$
+            .subscribe(group => {
+                this.group = group;
 
-                    if (group) {
-                        this.inviteLink = group.inviteLink;
-                        this.inviteLinkExpired = group.inviteLinkExpiry.toDate() < new Date();
-                        this.isAdmin = group.accounts.find(account => account.userId === this.authService.currentUser.uid)?.roles.includes('ADMIN') || false;
-                        this.stockProducts = group.products.filter(p => !isNaN(p.stock));
-                    }
-                });
-        });
+                if (group) {
+                    this.inviteLink = group.inviteLink;
+                    this.inviteLinkExpired = group.inviteLinkExpiry.toDate() < new Date();
+                    this.isAdmin = group.accounts.find(account => account.userId === this.authService.currentUser.uid)?.roles.includes('ADMIN') || false;
+                    this.stockProducts = group.products.filter(p => !isNaN(p.stock));
+                }
+            });
     }
 
     ngOnDestroy(): void {

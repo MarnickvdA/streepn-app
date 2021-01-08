@@ -1,7 +1,9 @@
-div.account-toolbar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding-bottom: 0.5rem;
+ion-tabs{
+  ion-fab {
+    margin-bottom: env(safe-area-inset-bottom); /* fix notch ios*/
+    .fab-button-disabled {
+      opacity: 1;
+      --background: var(--ion-color-primary-tint);
+    }
+  }
 }

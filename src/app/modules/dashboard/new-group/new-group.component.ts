@@ -122,7 +122,7 @@ export class NewGroupComponent implements OnInit {
     }
 
     navigateGroupOverview() {
-        this.navController.navigateRoot(['group', this.group.id, 'overview'], {
+        this.navController.navigateRoot(['group', this.group.id, 'preferences'], {
             animationDirection: 'forward'
         });
     }

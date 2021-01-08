@@ -1,11 +1,13 @@
 <ion-header>
     <ion-toolbar>
-        <ion-title>{{'dashboard.title' | translate}}</ion-title>
-        <ion-buttons slot="end">
-            <ion-button routerDirection="forward" routerLink="/profile">
-                <ion-icon name="person-circle-outline" slot="icon-only"></ion-icon>
-            </ion-button>
+        <ion-buttons slot="start">
+            <ion-menu-toggle>
+                <ion-button>
+                    <ion-icon slot="icon-only" name="menu"></ion-icon>
+                </ion-button>
+            </ion-menu-toggle>
         </ion-buttons>
+        <ion-title>{{'dashboard.title' | translate}}</ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -16,7 +18,7 @@
         </ion-toolbar>
     </ion-header>
 
-    <ion-list *ngIf="groups$.asObservable() | async; let groups">
+    <ion-list *ngIf="groups$ | async; let groups">
         <ion-list-header lines="full">
             <ion-label>{{'dashboard.groups' | translate}}</ion-label>
             <ion-button routerDirection="forward" routerLink="new-group">{{'actions.new' | translate}}</ion-button>
@@ -30,7 +32,7 @@
             </ion-label>
         </ion-item>
 
-        <ion-item *ngFor="let group of groups" detail="true" routerDirection="forward" routerLink="/group/{{group.id}}">
+        <ion-item *ngFor="let group of groups" button (click)="openGroup(group)">
             <ion-label>{{group.name}}</ion-label>
         </ion-item>
 

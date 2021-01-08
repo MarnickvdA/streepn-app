@@ -1,13 +1,12 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-
-import {GroupOverviewPage} from './group-overview.page';
+import {OverviewPage} from '@modules/group/overview/overview.page';
 
 const routes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        component: GroupOverviewPage,
+        component: OverviewPage,
     },
     {
         path: 'accounts',
@@ -21,15 +20,11 @@ const routes: Routes = [
         path: 'products',
         loadChildren: () => import('./product-detail/product-detail.module').then(m => m.ProductDetailPageModule)
     },
-    {
-        path: 'preferences',
-        loadChildren: () => import('./preferences/preferences.module').then(m => m.PreferencesPageModule)
-    },
 ];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class GroupOverviewPageRoutingModule {
+export class OverviewPageRoutingModule {
 }

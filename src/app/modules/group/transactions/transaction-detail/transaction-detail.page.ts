@@ -6,7 +6,7 @@ import {newTransaction, TransactionItem} from '@core/models/transaction';
 import {getMoneyString} from '@core/utils/firestore-utils';
 import {catchError} from 'rxjs/operators';
 import {newGroup} from '@core/models/group';
-import {EventsService, TransactionService} from '@core/services';
+import {EventsService, GroupService, TransactionService} from '@core/services';
 import {LoadingController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 
@@ -32,9 +32,10 @@ export class TransactionDetailPage implements OnInit {
                 private loadingController: LoadingController,
                 private translate: TranslateService,
                 private navController: NavController,
+                private groupService: GroupService,
                 private events: EventsService) {
         this.routeSub = this.route.params.subscribe((params: Params) => {
-            this.groupId = params.id;
+            this.groupId = this.groupService.currentGroupId;
             this.transactionId = params.transactionId;
         });
     }
@@ -101,7 +102,7 @@ export class TransactionDetailPage implements OnInit {
             .subscribe((transaction) => {
                 loading.dismiss();
                 this.navController.pop();
-                this.events.publish('transaction:edit', transaction);
+                this.events.publish('transactions:update', transaction);
             });
     }
 

@@ -1,12 +1,13 @@
 import {Component, NgZone} from '@angular/core';
 
-import {Platform} from '@ionic/angular';
+import {MenuController, Platform} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {AppState, Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
 import {AdsService} from '@core/services/ads.service';
 import {StorageService} from '@core/services/storage.service';
 import {EventsService} from '@core/services/events.service';
 import {PushService} from '@core/services/push.service';
+import {NavigationEnd, Router} from '@angular/router';
 
 const {App, StatusBar, SplashScreen, FirebaseRemoteConfig} = Plugins;
 
@@ -16,6 +17,8 @@ const {App, StatusBar, SplashScreen, FirebaseRemoteConfig} = Plugins;
     styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+    showSideMenu: boolean;
+
     constructor(
         private platform: Platform,
         private translate: TranslateService,
@@ -23,9 +26,17 @@ export class AppComponent {
         private adsService: AdsService,
         private storage: StorageService,
         private events: EventsService,
-        private pushService: PushService
+        private pushService: PushService,
+        private router: Router,
+        public menuCtrl: MenuController
     ) {
         this.initializeApp();
+
+        this.router.events.subscribe((val) => {
+            if (val instanceof NavigationEnd) {
+                this.showSideMenu = !val.url.startsWith('/login') && !val.url.startsWith('/register');
+            }
+        });
     }
 
     initializeApp() {

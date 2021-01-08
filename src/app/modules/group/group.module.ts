@@ -3,13 +3,10 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
 import {IonicModule} from '@ionic/angular';
-
-import {GroupPageRoutingModule} from './group-routing.module';
-
-import {GroupPage} from './group.page';
+import {GroupPage} from '@modules/group/group.page';
+import {GroupPageRoutingModule} from '@modules/group/group-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
-import {AddTransactionComponent} from './add-transaction/add-transaction.component';
-import {TransactionDetailPage} from './transaction-detail/transaction-detail.page';
+import {AddTransactionComponent} from '@modules/group/add-transaction/add-transaction.component';
 
 @NgModule({
     imports: [
@@ -21,8 +18,7 @@ import {TransactionDetailPage} from './transaction-detail/transaction-detail.pag
     ],
     declarations: [
         GroupPage,
-        AddTransactionComponent,
-        TransactionDetailPage
+        AddTransactionComponent
     ]
 })
 export class GroupPageModule {

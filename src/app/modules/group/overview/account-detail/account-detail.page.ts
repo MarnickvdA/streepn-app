@@ -51,22 +51,20 @@ export class AccountDetailPage implements OnInit, OnDestroy {
         this.account = this.router.getCurrentNavigation().extras.state?.account;
         this.newName = this.account.name;
 
-        this.route.params.pipe(take(1)).subscribe((params: Params) => {
-            this.groupId = params.id;
+        this.groupId = this.groupService.currentGroupId;
 
-            this.groupSub = this.groupService.observeGroup(params.id)
-                .subscribe(group => {
-                    this.group = group;
+        this.groupSub = this.groupService.observeGroup(this.groupId)
+            .subscribe(group => {
+                this.group = group;
 
-                    if (group) {
-                        this.isAdmin = this.group.accounts
-                            .find(acc => acc.userId === authService.currentUser?.uid)?.roles.includes('ADMIN');
-                        this.account = this.group.accounts.find(acc => acc.id === this.account.id);
-                        this.canDisableAdmin = this.group.accounts.filter(acc => acc.roles.includes('ADMIN'))?.length > 1 || !this.isSelf;
-                        this.enableAdmin = this.account.roles.includes('ADMIN');
-                    }
-                });
-        });
+                if (group) {
+                    this.isAdmin = this.group.accounts
+                        .find(acc => acc.userId === authService.currentUser?.uid)?.roles.includes('ADMIN');
+                    this.account = this.group.accounts.find(acc => acc.id === this.account.id);
+                    this.canDisableAdmin = this.group.accounts.filter(acc => acc.roles.includes('ADMIN'))?.length > 1 || !this.isSelf;
+                    this.enableAdmin = this.account.roles.includes('ADMIN');
+                }
+            });
     }
 
     ngOnInit() {

@@ -79,6 +79,9 @@
     "registerQuestion": "Heb je nog geen account?",
     "registerNow": "Registreer je nu"
   },
+  "side-menu": {
+
+  },
   "dashboard": {
     "title": "Dashboard",
     "groups": "Groepen",
@@ -149,7 +152,14 @@
     }
   },
   "group": {
+    "tabs": {
+      "more": "Meer"
+    },
+    "home": {
+      "title": "Huis"
+    },
     "transactions": {
+      "title": "Transacties",
       "empty": "Er is nog niks gestreept",
       "currentProduct": "Geselecteerd product",
       "allPlusOne": "Allemaal +1"
@@ -157,12 +167,16 @@
     "transaction": {
       "title": "Transactie"
     },
+    "stock": {
+      "title": "Voorraad"
+    },
     "overview": {
-      "title": "Groepsoverzicht",
+      "title": "Overzicht",
       "admin": "Beheerder",
       "sharedAccounts": "Potjes",
       "emptySharedAccounts": "Er zijn nog geen potjes",
       "products": "Producten",
+      "free": "Gratis",
       "emptyProducts": "Er zijn nog geen producten",
       "stock": "Voorraad",
       "emptyStock": "Er is nog geen voorraad toegevoegd",

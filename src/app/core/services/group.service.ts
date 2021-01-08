@@ -5,7 +5,7 @@ import {EventsService} from './events.service';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
-import {EMPTY, Observable} from 'rxjs';
+import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {newGroup} from '../models/group';
 import {v4 as uuidv4} from 'uuid';
@@ -24,6 +24,11 @@ const {Permissions} = Plugins;
 })
 export class GroupService {
     private readonly logger = LoggerService.getLogger(EventsService.name);
+    currentGroupId: string;
+    private currentUserId: string;
+    private groupsSubject: BehaviorSubject<Group[]> = new BehaviorSubject<Group[]>([]);
+    private groups$: Observable<Group[]>;
+    private groupsSub;
 
     constructor(private fs: AngularFirestore,
                 private functions: AngularFireFunctions,
@@ -34,11 +39,49 @@ export class GroupService {
                 private translate: TranslateService) {
     }
 
-    observeGroups(userId: string): firebase.firestore.Query<Group> {
-        return this.fs.collection('groups')
+    getGroupsObservable(userId: string): Observable<Group[]> {
+        if (this.currentUserId !== userId) {
+            if (this.groupsSub) {
+                this.groupsSub();
+            }
+
+            this.currentUserId = userId;
+
+            this.initializeGroupObserver(userId);
+
+            this.groups$ = this.groupsSubject.asObservable();
+        }
+
+        return this.groups$;
+    }
+
+    private initializeGroupObserver(userId: string) {
+        this.groupsSub = this.fs.collection('groups')
             .ref
             .where('members', 'array-contains', userId)
-            .withConverter(groupConverter);
+            .withConverter(groupConverter)
+            .onSnapshot(snapshot => {
+                if (snapshot.empty) {
+                    this.groupsSubject.next([]);
+                } else {
+                    this.groupsSubject.next(snapshot.docs
+                        .map((doc) => doc.data())
+                        .sort((g1: Group, g2: Group) => {
+                            const d1 = g1.createdAt.toDate().getTime();
+                            const d2 = g2.createdAt.toDate().getTime();
+
+                            if (d1 === d2) {
+                                return 0;
+                            }
+                            if (d1 > d2) {
+                                return 1;
+                            }
+                            if (d1 < d2) {
+                                return -1;
+                            }
+                        }));
+                }
+            });
     }
 
     getGroup(id: string): Promise<Group | undefined> {

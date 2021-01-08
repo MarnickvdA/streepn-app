@@ -42,25 +42,7 @@ export class ProductDetailPage implements OnInit, OnDestroy {
         });
 
         this.route.params.subscribe((params: Params) => {
-            this.groupId = params.id;
             this.productId = params.productId;
-            this.groupSub = this.groupService.observeGroup(params.id)
-                .subscribe(group => {
-                    this.group = group;
-
-                    if (group) {
-                        const product = group.products.find(p => p.id === this.productId);
-                        if (product) {
-                            this.product = product;
-                            this.productForm.controls.name.setValue(product.name);
-                            this.moneyInput.handleInput(new CustomEvent('', {
-                                detail: {
-                                    data: product.price + ''
-                                }
-                            }));
-                        }
-                    }
-                });
         });
     }
 
@@ -69,6 +51,24 @@ export class ProductDetailPage implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.groupId = this.groupService.currentGroupId;
+        this.groupSub = this.groupService.observeGroup(this.groupId)
+            .subscribe(group => {
+                this.group = group;
+
+                if (group) {
+                    const product = group.products.find(p => p.id === this.productId);
+                    if (product) {
+                        this.product = product;
+                        this.productForm.controls.name.setValue(product.name);
+                        this.moneyInput.handleInput(new CustomEvent('', {
+                            detail: {
+                                data: product.price + ''
+                            }
+                        }));
+                    }
+                }
+            });
     }
 
     ngOnDestroy(): void {

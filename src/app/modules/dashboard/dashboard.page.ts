@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import firebase from 'firebase/app';
 import {Group} from '@core/models';
 import {AdsService, AuthService, EventsService, GroupService, LoggerService, StorageService, UIService, UserService} from '@core/services';
@@ -16,12 +16,12 @@ import User = firebase.User;
 })
 export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     user$: Observable<User>;
-    groups$: BehaviorSubject<Group[]> = new BehaviorSubject<Group[]>([]);
+    groups$: Observable<Group[]>;
+    private userSub: Subscription;
     private readonly logger = LoggerService.getLogger(DashboardPage.name);
     private user: User;
     private loadingGroupJoin?: HTMLIonLoadingElement;
     private onboarding: boolean;
-    private unsubscribeFn;
 
     constructor(private authService: AuthService,
                 private navController: NavController,
@@ -41,38 +41,14 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit() {
         this.user$ = this.authService.user;
 
-        this.user$.subscribe(user => {
+        this.userSub = this.user$.subscribe(user => {
             this.user = user;
         });
 
         this.user$.pipe(take(1))
             .subscribe(user => {
                 if (user) {
-                    this.unsubscribeFn = this.groupService.observeGroups(user.uid)
-                        .onSnapshot(snapshot => {
-                            let groups = [];
-
-                            snapshot.docs.forEach((doc) => {
-                                groups.push(doc.data());
-                            });
-
-                            groups = groups.sort((g1: Group, g2: Group) => {
-                                const d1 = g1.createdAt.toDate().getTime();
-                                const d2 = g2.createdAt.toDate().getTime();
-
-                                if (d1 === d2) {
-                                    return 0;
-                                }
-                                if (d1 > d2) {
-                                    return 1;
-                                }
-                                if (d1 < d2) {
-                                    return -1;
-                                }
-                            });
-
-                            this.groups$.next(groups);
-                        });
+                    this.groups$ = this.groupService.getGroupsObservable(user.uid);
                 }
             });
 
@@ -82,7 +58,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy() {
-        this.unsubscribeFn();
+        this.userSub.unsubscribe();
         this.eventsService.unsubscribe('app:resume', () => {
             this.checkForGroupInvite();
         });
@@ -239,5 +215,11 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.loadingGroupJoin = undefined;
             });
+    }
+
+    openGroup(group: Group) {
+        this.navController.navigateRoot(['group', group.id, 'home'], {
+            animationDirection: 'forward',
+        });
     }
 }

@@ -1,0 +1,39 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{'appName' | translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list class="ion-margin-top">
+        <ion-menu-toggle [autoHide]="false">
+            <ion-item routerLink="dashboard" routerDirection="root">
+                <ion-icon color="primary" slot="start" name='speedometer-outline'></ion-icon>
+                <ion-label>
+                    {{'dashboard.title' | translate}}
+                </ion-label>
+            </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle [autoHide]="false">
+            <ion-item routerLink="profile" routerDirection="root">
+                <ion-icon color="primary" slot="start" name='person-circle-outline'></ion-icon>
+                <ion-label>
+                    {{'dashboard.profile' | translate}}
+                </ion-label>
+            </ion-item>
+        </ion-menu-toggle>
+
+        <ng-container *ngIf="(groups$ | async); let groups">
+            <ion-list-header class="ion-margin-top" *ngIf="groups.length > 0">
+                {{'dashboard.groups' | translate}}
+            </ion-list-header>
+
+            <ion-menu-toggle [autoHide]="false">
+                <ion-item *ngFor="let group of groups" button routerDirection="root" routerLink="/group/{{group.id}}/home">
+                    <ion-label>{{group.name}}</ion-label>
+                </ion-item>
+            </ion-menu-toggle>
+        </ng-container>
+
+    </ion-list>
+</ion-content>

@@ -4,31 +4,30 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {IonicModule} from '@ionic/angular';
 
-import {GroupOverviewPageRoutingModule} from './group-overview-routing.module';
-
-import {GroupOverviewPage} from './group-overview.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {NewProductComponent} from './new-product/new-product.component';
 import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
 import {SharedModule} from '@shared/shared.module';
 import {AddStockComponent} from './add-stock/add-stock.component';
+import {OverviewPage} from '@modules/group/overview/overview.page';
+import {OverviewPageRoutingModule} from '@modules/group/overview/overview-routing.module';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         IonicModule,
-        GroupOverviewPageRoutingModule,
+        OverviewPageRoutingModule,
         TranslateModule,
         ReactiveFormsModule,
         SharedModule,
     ],
     declarations: [
-        GroupOverviewPage,
+        OverviewPage,
         AddStockComponent,
         NewProductComponent,
         NewSharedAccountComponent,
     ]
 })
-export class GroupOverviewPageModule {
+export class OverviewPageModule {
 }

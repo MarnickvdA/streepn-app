@@ -1,7 +1,11 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button defaultHref="/dashboard"></ion-back-button>
+            <ion-menu-toggle>
+                <ion-button>
+                    <ion-icon slot="icon-only" name="menu"></ion-icon>
+                </ion-button>
+            </ion-menu-toggle>
         </ion-buttons>
         <ion-title>{{'dashboard.profile' | translate}}</ion-title>
     </ion-toolbar>
