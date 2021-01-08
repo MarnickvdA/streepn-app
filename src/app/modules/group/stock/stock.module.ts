@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
 import {StockPageRoutingModule} from '@modules/group/stock/stock-routing.module';
 import {StockPage} from '@modules/group/stock/stock.page';
+import {SharedModule} from '@shared/shared.module';
 
 @NgModule({
     imports: [
@@ -14,7 +15,8 @@ import {StockPage} from '@modules/group/stock/stock.page';
         FormsModule,
         IonicModule,
         StockPageRoutingModule,
-        TranslateModule
+        TranslateModule,
+        SharedModule
     ],
   declarations: [StockPage]
 })

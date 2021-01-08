@@ -5,7 +5,6 @@ import {ActivatedRoute} from '@angular/router';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Plugins} from '@capacitor/core';
-import {AddStockComponent} from './add-stock/add-stock.component';
 import {NewProductComponent} from './new-product/new-product.component';
 import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
 import {AuthService, GroupService, ProductService} from '@core/services';
@@ -24,7 +23,6 @@ export class OverviewPage implements OnInit, OnDestroy {
     inviteLink: string;
     inviteLinkExpired: boolean;
     group$: Observable<Group>;
-    stockProducts: Product[];
     group: Group;
     private groupSub: Subscription;
 
@@ -49,7 +47,6 @@ export class OverviewPage implements OnInit, OnDestroy {
                     this.inviteLink = group.inviteLink;
                     this.inviteLinkExpired = group.inviteLinkExpiry.toDate() < new Date();
                     this.isAdmin = group.accounts.find(account => account.userId === this.authService.currentUser.uid)?.roles.includes('ADMIN') || false;
-                    this.stockProducts = group.products.filter(p => !isNaN(p.stock));
                 }
             });
     }
@@ -77,18 +74,6 @@ export class OverviewPage implements OnInit, OnDestroy {
     addProduct() {
         this.modalController.create({
             component: NewProductComponent,
-            componentProps: {
-                group$: this.group$
-            },
-            swipeToClose: true
-        }).then((modal) => {
-            modal.present();
-        });
-    }
-
-    addStock() {
-        this.modalController.create({
-            component: AddStockComponent,
             componentProps: {
                 group$: this.group$
             },

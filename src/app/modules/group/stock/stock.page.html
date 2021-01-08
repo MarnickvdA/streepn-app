@@ -1,21 +1,71 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-toggle>
-        <ion-button>
-          <ion-icon slot="icon-only" name="menu"></ion-icon>
-        </ion-button>
-      </ion-menu-toggle>
-    </ion-buttons>
-    <ion-title>{{'group.stock.title' | translate}}</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-toggle>
+                <ion-button>
+                    <ion-icon slot="icon-only" name="menu"></ion-icon>
+                </ion-button>
+            </ion-menu-toggle>
+        </ion-buttons>
+        <ion-title>{{'group.stock.title' | translate}}</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">{{'group.stock.title' | translate}}</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{'group.stock.title' | translate}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <!-- START SUPPLY SECTION -->
+    <ion-list-header class="ion-margin-top" lines="full">
+        <ion-label>{{'group.stock.current' | translate}}</ion-label>
+        <ion-button (click)="addStock()"
+                    [disabled]="group?.products.length === 0">{{'actions.add' | translate}}</ion-button>
+    </ion-list-header>
+
+    <ion-item *ngIf="stockProducts?.length === 0 || group?.products.length === 0" lines="none">
+        <ion-label>
+            <p *ngIf="stockProducts?.length === 0 && group?.products.length > 0">
+                {{'group.overview.emptyStock' | translate}}
+            </p>
+            <p *ngIf="group?.products.length === 0" class="ion-text-wrap">
+                {{'group.overview.disabledStock' | translate}}
+            </p>
+        </ion-label>
+    </ion-item>
+
+    <app-product-stock-item *ngFor="let product of stockProducts" [canEdit]="false"
+                            [product]="product"></app-product-stock-item>
+    <!-- END SUPPLY SECTION -->
+
+    <ion-list-header class="ion-margin-top" lines="full">
+        <ion-label>{{'group.stock.log' | translate}}</ion-label>
+        <ion-button (click)="reset()">{{'actions.refresh' | translate}}</ion-button>
+    </ion-list-header>
+
+    <ion-list>
+        <ion-item *ngIf="stockTransactions?.length === 0" lines="none">
+            <ion-label>
+                <p>{{'group.stock.empty' | translate}}</p>
+            </ion-label>
+        </ion-item>
+        <ion-item (click)="openStockItem(transaction)" *ngFor="let transaction of stockTransactions"
+                  [disabled]="transaction.removed" button="{{!transaction.removed}}">
+            <ion-label [ngStyle]="transaction.removed ? {'text-decoration': 'line-through'} : {}">
+                <h2>
+                    {{transaction.amount}}x {{transaction.product.name}} voor {{getBalanceString(transaction.cost)}}
+                </h2>
+                <p>
+                    Betaald door <span *ngFor="let account of transaction.paidBy">{{account.name}}</span>
+                </p>
+            </ion-label>
+        </ion-item>
+        <ion-button (click)="loadNext()" *ngIf="!doneLoading" [disabled]="isLoadingMore" fill="none">
+            <ion-label *ngIf="!isLoadingMore" color="primary">{{'actions.loadMore' | translate}}</ion-label>
+            <ion-progress-bar *ngIf="isLoadingMore"></ion-progress-bar>
+        </ion-button>
+    </ion-list>
 
 </ion-content>

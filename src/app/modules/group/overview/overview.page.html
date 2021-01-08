@@ -82,29 +82,6 @@
                           [product]="product"></app-product-item>
         <!-- END PRODUCTS SECTION -->
 
-
-        <!-- START SUPPLY SECTION -->
-        <ion-list-header class="ion-margin-top" lines="full">
-            <ion-label>{{'group.overview.stock' | translate}}</ion-label>
-            <ion-button (click)="addStock()"
-                        [disabled]="group?.products.length === 0">{{'actions.add' | translate}}</ion-button>
-        </ion-list-header>
-
-        <ion-item *ngIf="stockProducts?.length === 0 || group?.products.length === 0" lines="none">
-            <ion-label>
-                <p *ngIf="stockProducts?.length === 0 && group?.products.length > 0">
-                    {{'group.overview.emptyStock' | translate}}
-                </p>
-                <p *ngIf="group?.products.length === 0" class="ion-text-wrap">
-                    {{'group.overview.disabledStock' | translate}}
-                </p>
-            </ion-label>
-        </ion-item>
-
-        <app-product-stock-item *ngFor="let product of stockProducts" [canEdit]="false"
-                                [product]="product"></app-product-stock-item>
-        <!-- END SUPPLY SECTION -->
-
         <div class="padding"></div>
 
     </ion-list>

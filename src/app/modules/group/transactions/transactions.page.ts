@@ -1,10 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '@core/services/user.service';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {Group, Transaction, transactionConverter, UserAccount} from '@core/models';
 import {ModalController, NavController} from '@ionic/angular';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
-import {AddTransactionComponent} from '../add-transaction/add-transaction.component';
 import {Observable, Subscription} from 'rxjs';
 import {getMoneyString} from '@core/utils/firestore-utils';
 import {AuthService, EventsService, GroupService, TransactionService} from '@core/services';

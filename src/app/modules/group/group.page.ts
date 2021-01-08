@@ -38,7 +38,7 @@ export class GroupPage implements OnInit {
             componentProps: {
                 group$: this.group$
             },
-            swipeToClose: true
+            swipeToClose: true,
         }).then((modal) => {
             modal.present();
             modal.onWillDismiss()

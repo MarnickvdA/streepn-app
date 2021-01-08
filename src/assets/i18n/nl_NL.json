@@ -156,7 +156,7 @@
       "more": "Meer"
     },
     "home": {
-      "title": "Huis"
+      "title": "Groep"
     },
     "transactions": {
       "title": "Transacties",
@@ -168,7 +168,11 @@
       "title": "Transactie"
     },
     "stock": {
-      "title": "Voorraad"
+      "tab": "Voorraad",
+      "title": "Voorraadbeheer",
+      "current": "Huidige voorraad",
+      "empty": "Er is nog geen voorraad toegevoegd om in het logboek te tonen",
+      "log": "Logboek"
     },
     "overview": {
       "title": "Overzicht",
