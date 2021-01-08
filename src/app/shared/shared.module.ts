@@ -10,13 +10,15 @@ import {UserAccountItemComponent} from './components/user-account-item/user-acco
 import {SharedAccountItemComponent} from './components/shared-account-item/shared-account-item.component';
 import {RouterModule} from '@angular/router';
 import {ProductStockItemComponent} from './components/product-stock-item/product-stock-item.component';
+import {SideMenuComponent} from '@shared/components/side-menu/side-menu.component';
 
 export const components = [
     MoneyInputComponent,
     ProductItemComponent,
     UserAccountItemComponent,
     SharedAccountItemComponent,
-    ProductStockItemComponent
+    ProductStockItemComponent,
+    SideMenuComponent
 ];
 
 @NgModule({

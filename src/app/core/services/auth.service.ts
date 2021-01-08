@@ -20,6 +20,7 @@ const {SignInWithApple} = Plugins;
     providedIn: 'root'
 })
 export class AuthService {
+    user: Observable<User | null>;
     currentUser?: User;
     hasAcceptedLegals: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     legalVersion: string;
@@ -35,34 +36,30 @@ export class AuthService {
             this.analytics.setUser(userId);
         });
 
-        this.auth.user
-            .subscribe(user => {
-                this.currentUser = user;
+        this.user = this.auth.authState;
+        this.user.subscribe(user => {
+            this.currentUser = user;
 
-                this.analytics.setUser(user?.uid);
-                LoggerService.setUserId(user?.uid);
+            this.analytics.setUser(user?.uid);
+            LoggerService.setUserId(user?.uid);
 
-                if (user) {
-                    user.getIdToken(true)
-                        .then(token => {
-                            if (token) {
-                                const payload = JSON.parse(atob(token.split('.')[1]));
+            if (user) {
+                user.getIdToken(true)
+                    .then(token => {
+                        if (token) {
+                            const payload = JSON.parse(atob(token.split('.')[1]));
 
-                                this.hasAcceptedLegals.next(payload.acceptedTermsAndPrivacy);
-                                this.legalVersion = payload.termsAndPrivacyVersion;
-                            } else {
-                                this.logger.error({message: 'Could not retrieve token'});
-                            }
-                        })
-                        .catch(err => {
-                            this.logger.error({message: 'getIdToken error', error: err});
-                        });
-                }
-            });
-    }
-
-    get user(): Observable<User | null> {
-        return this.auth.user;
+                            this.hasAcceptedLegals.next(payload.acceptedTermsAndPrivacy);
+                            this.legalVersion = payload.termsAndPrivacyVersion;
+                        } else {
+                            this.logger.error({message: 'Could not retrieve token'});
+                        }
+                    })
+                    .catch(err => {
+                        this.logger.error({message: 'getIdToken error', error: err});
+                    });
+            }
+        });
     }
 
     register(displayName: string, email: string, password: string) {

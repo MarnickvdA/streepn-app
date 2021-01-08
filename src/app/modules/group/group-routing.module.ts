@@ -10,39 +10,19 @@ const routes: Routes = [
         children: [
             {
                 path: 'home',
-                children: [
-                    {
-                        path: '',
-                        loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
-                    }
-                ]
+                loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
             },
             {
                 path: 'transactions',
-                children: [
-                    {
-                        path: '',
-                        loadChildren: () => import('./transactions/transactions.module').then(m => m.TransactionsPageModule)
-                    }
-                ]
+                loadChildren: () => import('./transactions/transactions.module').then(m => m.TransactionsPageModule)
             },
             {
                 path: 'stock',
-                children: [
-                    {
-                        path: '',
-                        loadChildren: () => import('./stock/stock.module').then(m => m.StockPageModule)
-                    }
-                ]
+                loadChildren: () => import('./stock/stock.module').then(m => m.StockPageModule)
             },
             {
                 path: 'preferences',
-                children: [
-                    {
-                        path: '',
-                        loadChildren: () => import('./overview/overview.module').then(m => m.OverviewPageModule)
-                    }
-                ]
+                loadChildren: () => import('./overview/overview.module').then(m => m.OverviewPageModule)
             },
             {
                 path: '',

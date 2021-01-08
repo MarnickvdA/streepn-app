@@ -45,7 +45,7 @@ export class LoginPage implements OnInit, OnDestroy {
         this.eventsService
             .subscribe('auth:login', this.loginHandler);
 
-        this.storage.delete('hasOnboarded');
+        // this.storage.delete('hasOnboarded');
         this.storage.delete('pushToken');
     }
 
