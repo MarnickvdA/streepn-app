@@ -57,8 +57,10 @@ export class StockPage implements OnInit {
             modal.present();
 
             modal.onDidDismiss()
-                .then(() => {
-                    this.reset();
+                .then((data) => {
+                    if (data) {
+                        this.reset();
+                    }
                 });
         });
     }
@@ -74,8 +76,10 @@ export class StockPage implements OnInit {
             modal.present();
 
             modal.onDidDismiss()
-                .then(() => {
-                    this.reset();
+                .then((data) => {
+                    if (data) {
+                        this.reset();
+                    }
                 });
         });
     }

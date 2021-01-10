@@ -46,6 +46,8 @@ export class AddStockComponent implements OnInit, OnDestroy {
             amount: ['', [Validators.required, Validators.min(1), Validators.max(10000)]],
             paidBy: ['', [Validators.required, Validators.minLength(1)]],
         });
+
+        this.paidByTitle = this.translate.instant('group.overview.addStock.paidByTitle');
     }
 
     get form() {
@@ -83,8 +85,8 @@ export class AddStockComponent implements OnInit, OnDestroy {
         }
     }
 
-    dismiss() {
-        this.modalController.dismiss();
+    dismiss(updated?: boolean) {
+        this.modalController.dismiss(updated);
     }
 
     async addStock() {
@@ -129,7 +131,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
                 }
 
                 loading.dismiss();
-                this.dismiss();
+                this.dismiss(true);
             });
     }
 

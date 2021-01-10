@@ -24,7 +24,7 @@
         </ion-menu-toggle>
 
         <ng-container *ngIf="(groups$ | async); let groups">
-            <ion-list-header class="ion-margin-top" *ngIf="groups.length > 0">
+            <ion-list-header class="ion-margin-top" *ngIf="groups.length > 0" lines="full">
                 {{'dashboard.groups' | translate}}
             </ion-list-header>
 

@@ -266,7 +266,7 @@ exports.removeStock = functions
                         createdBy: currentAccount.id,
                         productId: data.stock.productId,
                         amount: -data.stock.amount,
-                        removed: true
+                        removed: true,
                     };
 
                     // Add the transaction to firestore

@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import '@capacitor-community/firebase-analytics';
 
 import {Capacitor, Plugins} from '@capacitor/core';
+import {environment} from '@env/environment';
 
 const {FirebaseAnalytics} = Plugins;
 
@@ -14,7 +15,7 @@ export class AnalyticsService {
     }
 
     setUser(uid: string) {
-        if (Capacitor.isNative) {
+        if (Capacitor.isNative && environment.production) {
             FirebaseAnalytics.setUserId({
                 userId: uid,
             });
@@ -92,9 +93,8 @@ export class AnalyticsService {
         });
     }
 
-
-    private logEvent(event: string, data: { [key: string]: any }) {
-        if (Capacitor.isNative) {
+    logEvent(event: string, data: { [key: string]: any }) {
+        if (Capacitor.isNative && environment.production) {
             FirebaseAnalytics.logEvent({
                 name: event,
                 params: data,

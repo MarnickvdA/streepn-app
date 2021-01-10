@@ -5,7 +5,9 @@ import {EventsService, GroupService} from '@core/services';
 import {Group} from '@core/models';
 import {AddTransactionComponent} from '@modules/group/add-transaction/add-transaction.component';
 import {ModalController} from '@ionic/angular';
-import {Capacitor} from '@capacitor/core';
+import {Capacitor, KeyboardInfo, Plugins} from '@capacitor/core';
+
+const {Keyboard} = Plugins;
 
 @Component({
     selector: 'app-group',
@@ -18,6 +20,7 @@ export class GroupPage implements OnInit {
     private routeSub: Subscription;
     private groupSub: Subscription;
     iOS: boolean;
+    fabVisible = true;
 
     constructor(private route: ActivatedRoute,
                 private groupService: GroupService,
@@ -33,6 +36,14 @@ export class GroupPage implements OnInit {
             this.groupSub = this.group$.subscribe(group => {
                 this.groupService.currentGroup = group;
             });
+        });
+
+        Keyboard.addListener('keyboardWillShow', (info: KeyboardInfo) => {
+            this.fabVisible = false;
+        });
+
+        Keyboard.addListener('keyboardWillHide', () => {
+            this.fabVisible = true;
         });
     }
 

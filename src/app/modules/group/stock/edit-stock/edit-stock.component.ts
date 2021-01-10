@@ -54,8 +54,8 @@ export class EditStockComponent implements OnInit, OnDestroy {
         this.groupSub.unsubscribe();
     }
 
-    dismiss() {
-        this.modalController.dismiss();
+    dismiss(removed?: boolean) {
+        this.modalController.dismiss(removed);
     }
 
     async removeStock() {
@@ -87,7 +87,7 @@ export class EditStockComponent implements OnInit, OnDestroy {
                 }
 
                 loading.dismiss();
-                this.dismiss();
+                this.dismiss(true);
             });
     }
 }
