@@ -36,6 +36,25 @@ export class StockService {
             }));
     }
 
+    removeStockItem(group: Group, productId: string, amount: number) {
+        const currentAccount = group.accounts.find(acc => this.authService.currentUser.uid === acc.userId);
+        const currentProduct = group.products.find(p => p.id === productId);
+
+        if (isNaN(currentProduct.stock)) {
+            currentProduct.stock = 0;
+        }
+        const stock = new Stock('', undefined, currentAccount, undefined, currentProduct, undefined, amount, true);
+
+        const callable = this.functions.httpsCallable('removeStock');
+        return callable({
+            groupId: group.id,
+            stock,
+        }).pipe(
+            map(result => {
+                return newStock(result.id, result);
+            }));
+    }
+
     editStockItem(groupId: string, deltaStock: Stock, updatedStock: Stock): Observable<Stock> {
         const callable = this.functions.httpsCallable('editStock');
         return callable({

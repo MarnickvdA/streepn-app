@@ -173,7 +173,19 @@
       "title": "Voorraadbeheer",
       "current": "Huidige voorraad",
       "empty": "Er is nog geen voorraad toegevoegd om in het logboek te tonen",
-      "log": "Logboek"
+      "log": "Logboek",
+      "remove": {
+        "title": "Voorraad afboeken",
+        "description": "Als je voorraad in het echt verschilt van de app kun je hier de voorraad weer bijstellen",
+        "titleWithName": "{{name}} afboeken",
+        "selectProduct": "Selecteer product",
+        "amount": "Af te boeken hoeveelheid",
+        "errors": {
+          "product-required": "Selecteer een product",
+          "amount-required": "Vul een hoeveelheid in om af te boeken",
+          "amount-min": "De hoeveelheid moet minimaal 1 zijn"
+        }
+      }
     },
     "overview": {
       "title": "Overzicht",

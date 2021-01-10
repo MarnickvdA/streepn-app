@@ -7,7 +7,6 @@
   "plugins": {
     "SplashScreen": {
       "launchAutoHide": false,
-      "showSpinner": true
     },
     "PushNotifications": {
       "presentationOptions": [
