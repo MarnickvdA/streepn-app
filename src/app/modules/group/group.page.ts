@@ -16,6 +16,7 @@ export class GroupPage implements OnInit {
 
     group$: Observable<Group>;
     private routeSub: Subscription;
+    private groupSub: Subscription;
     iOS: boolean;
 
     constructor(private route: ActivatedRoute,
@@ -29,6 +30,9 @@ export class GroupPage implements OnInit {
         this.routeSub = this.route.params.subscribe((params: Params) => {
             this.groupService.currentGroupId = params.id;
             this.group$ = this.groupService.observeGroup(params.id);
+            this.groupSub = this.group$.subscribe(group => {
+                this.groupService.currentGroup = group;
+            });
         });
     }
 

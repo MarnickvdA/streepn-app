@@ -22,7 +22,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
     @Input() group$: Observable<Group>;
     group: Group;
     allAccounts: Account[];
-    payout: number[];
+    paidAmount: number[];
     selectedNames: string;
     private readonly logger = LoggerService.getLogger(AddStockComponent.name);
     private groupSub: Subscription;
@@ -115,7 +115,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
         await loading.present();
 
         this.stockService.addStockItem(this.group, this.form.product.value, +this.form.cost.value,
-            +this.form.amount.value, this.selectedAccounts, this.payout)
+            +this.form.amount.value, this.selectedAccounts.map(acc => acc.id), this.paidAmount)
             .pipe(
                 catchError(err => {
                     this.logger.error({message: err});
@@ -139,9 +139,9 @@ export class AddStockComponent implements OnInit, OnDestroy {
         this.selectedNames = selected?.map(acc => acc.name.trim()).join(', ');
 
         if (selected?.length > 0) {
-            this.payout = calculatePayout(this.form.cost.value, selected.length);
+            this.paidAmount = calculatePayout(this.form.cost.value, selected.length);
         } else {
-            this.payout = [];
+            this.paidAmount = [];
         }
     }
 }

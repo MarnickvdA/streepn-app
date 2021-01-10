@@ -3,7 +3,7 @@ import {AngularFireFunctions} from '@angular/fire/functions';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {Account, Group, Stock, stockConverter} from '../models';
+import {Group, Stock, stockConverter} from '../models';
 import {newStock} from '../models/stock';
 import {AuthService} from './auth.service';
 
@@ -17,19 +17,14 @@ export class StockService {
                 private authService: AuthService) {
     }
 
-    addStockItem(group: Group, productId: string, cost: number, amount: number, paidBy: Account[], payout: number[]): Observable<Stock> {
+    addStockItem(group: Group, productId: string, cost: number, amount: number, paidBy: string[], paidAmount: number[]): Observable<Stock> {
         const currentAccount = group.accounts.find(acc => this.authService.currentUser.uid === acc.userId);
-        const currentProduct = group.products.find(p => p.id === productId);
-        if (isNaN(currentProduct.stock)) {
-            currentProduct.stock = 0;
-        }
-        const stock = new Stock('', undefined, currentAccount, paidBy, currentProduct, cost, amount, false);
+        const stock = new Stock('', undefined, currentAccount.id, paidBy, paidAmount, productId, cost, amount, false);
 
         const callable = this.functions.httpsCallable('addStock');
         return callable({
             groupId: group.id,
-            stock,
-            payout,
+            stock
         }).pipe(
             map(result => {
                 return newStock(result.id, result);
@@ -43,7 +38,8 @@ export class StockService {
         if (isNaN(currentProduct.stock)) {
             currentProduct.stock = 0;
         }
-        const stock = new Stock('', undefined, currentAccount, undefined, currentProduct, undefined, amount, true);
+        const stock = new Stock('', undefined, currentAccount.id, undefined, undefined, productId,
+            undefined, amount, true);
 
         const callable = this.functions.httpsCallable('removeStock');
         return callable({

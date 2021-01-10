@@ -22,7 +22,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
         this.userSub = this.authService.user
             .subscribe((user) => {
                 if (user) {
-                    this.groups$ = this.groupService.getGroupsObservable(user.uid);
+                    this.groups$ = this.groupService.observeGroups(user.uid);
                 }
             });
     }

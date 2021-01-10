@@ -48,7 +48,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         this.user$.pipe(take(1))
             .subscribe(user => {
                 if (user) {
-                    this.groups$ = this.groupService.getGroupsObservable(user.uid);
+                    this.groups$ = this.groupService.observeGroups(user.uid);
                 }
             });
 

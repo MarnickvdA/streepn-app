@@ -168,7 +168,7 @@ exports.addStock = functions
                     }
 
                     const currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
-                    const currentProduct = group.products.find((product: any) => product.id === data.stock.product.id);
+                    const currentProduct = group.products.find((product: any) => product.id === data.stock.productId);
 
                     if (!currentProduct) {
                         throw new functions.https.HttpsError('not-found', 'Product not found!');
@@ -180,7 +180,8 @@ exports.addStock = functions
                         createdAt: admin.firestore.FieldValue.serverTimestamp(),
                         createdBy: currentAccount,
                         paidBy: data.stock.paidBy,
-                        product: currentProduct,
+                        paidAmount: data.stock.paidAmount,
+                        productId: data.stock.productId,
                         cost: data.stock.cost,
                         amount: data.stock.amount,
                     };
@@ -188,25 +189,23 @@ exports.addStock = functions
                     // Add the transaction to firestore
                     fireTrans.set(groupRef.collection('stock').doc(uid), newStock);
 
-                    const paidByIds: string[] = data.stock.paidBy.map((pb: any) => pb.id);
-
                     fireTrans.update(groupRef, {
                         accounts: group.accounts.map((acc: any) => {
-                            const index = paidByIds.indexOf(acc.id);
+                            const index = data.stock.paidBy.indexOf(acc.id);
                             if (index >= 0) {
-                                acc.balance += data.payout[index];
+                                acc.balance += data.stock.paidAmount[index];
                             }
                             return acc;
                         }),
                         sharedAccounts: group.sharedAccounts.map((acc: any) => {
-                            const index = paidByIds.indexOf(acc.id);
+                            const index = data.stock.paidBy.indexOf(acc.id);
                             if (index >= 0) {
-                                acc.balance += data.payout[index];
+                                acc.balance += data.stock.paidAmount[index];
                             }
                             return acc;
                         }),
                         products: group.products.map((p: any) => {
-                            if (p.id === data.stock.product.id) {
+                            if (p.id === data.stock.productId) {
                                 if (!p.stock || isNaN(p.stock)) {
                                     p.stock = newStock.amount;
                                 } else {
@@ -254,7 +253,7 @@ exports.removeStock = functions
                     }
 
                     const currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
-                    const currentProduct = group.products.find((product: any) => product.id === data.stock.product.id);
+                    const currentProduct = group.products.find((product: any) => product.id === data.stock.productId);
 
                     if (!currentProduct) {
                         throw new functions.https.HttpsError('not-found', 'Product not found!');
@@ -264,8 +263,8 @@ exports.removeStock = functions
                     const removedStock = {
                         id: uid,
                         createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                        createdBy: currentAccount,
-                        product: currentProduct,
+                        createdBy: currentAccount.id,
+                        productId: data.stock.productId,
                         amount: -data.stock.amount,
                         removed: true
                     };
@@ -275,11 +274,11 @@ exports.removeStock = functions
 
                     fireTrans.update(groupRef, {
                         products: group.products.map((p: any) => {
-                            if (p.id === data.stock.product.id) {
+                            if (p.id === data.stock.productId) {
                                 if (!p.stock || isNaN(p.stock)) {
-                                    p.stock = -removedStock.amount;
+                                    p.stock = removedStock.amount;
                                 } else {
-                                    p.stock -= removedStock.amount;
+                                    p.stock += removedStock.amount;
                                 }
                             }
                             return p;
@@ -425,7 +424,7 @@ exports.addTransaction = functions
                         const uid = uuidv4();
                         const newTransaction = {
                             createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                            createdBy: currentAccount,
+                            createdBy: currentAccount.id,
                             totalPrice: data.transaction.totalPrice,
                             itemCount: data.transaction.itemCount,
                             items: data.transaction.items,
@@ -479,39 +478,39 @@ exports.addTransaction = functions
     });
 
 export function updateTransactionAccounts(group: any, transaction: any) {
-    transaction.items.forEach((t: { amount: number, account: any, product: any }) => {
-        let acc: any;
-        let index: number;
-        switch (t.account.type) {
-            case 'user':
-                acc = group.accounts.find((account: any) => account.id === t.account.id);
+    transaction.items.forEach((t: { amount: number, accountId: any, productId: any, productPrice: number }) => {
+        let acc: any = group.accounts.find((account: any) => account.id === t.accountId);
 
-                if (acc) {
-                    index = group.accounts.indexOf(acc);
-                    // Update balance of the account
-                    acc.balance -= (t.product.price * t.amount);
-                    group.accounts[index] = acc;
-                } else {
-                    throw new functions.https.HttpsError('not-found', 'User Account not found!');
-                }
+        if (!acc) {
+            acc = group.sharedAccounts.find((account: any) => account.id === t.accountId);
+        }
+
+        if (!acc) {
+            throw new functions.https.HttpsError('not-found', 'Shared Account not found!');
+        }
+
+        let index: number;
+        switch (acc.type) {
+            case 'user':
+
+                index = group.accounts.indexOf(acc);
+                // Update balance of the account
+                acc.balance -= (t.productPrice * t.amount);
+                group.accounts[index] = acc;
 
                 break;
             case 'shared':
-                acc = group.sharedAccounts.find((account: any) => account.id === t.account.id);
-                if (acc) {
-                    index = group.sharedAccounts.indexOf(acc);
+                index = group.sharedAccounts.indexOf(acc);
 
-                    // Update balance of the account
-                    acc.balance -= (t.product.price * t.amount);
-                    group.sharedAccounts[index] = acc;
-                } else {
-                    throw new functions.https.HttpsError('not-found', 'Shared Account not found!');
-                }
+                // Update balance of the account
+                acc.balance -= (t.productPrice * t.amount);
+                group.sharedAccounts[index] = acc;
+
                 break;
         }
 
         group.products = group.products.map((pr: any) => {
-            if (pr.id === t.product.id) {
+            if (pr.id === t.productId) {
                 if (!pr.stock || isNaN(pr.stock)) {
                     pr.stock = 0;
                 }

@@ -1,24 +1,23 @@
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
-import {Product, productConverter} from './product';
-import {Account, accountConverter, sharedAccountConverter, UserAccount, userAccountConverter} from './account';
 
 export interface TransactionItem {
     amount: number;
-    account: Account;
-    product: Product;
+    accountId: string;
+    productId: string;
+    productPrice: number;
 }
 
 export class Transaction {
     readonly id: string;
     createdAt: Timestamp;
-    createdBy: UserAccount;
+    createdBy: string;
     totalPrice: number;
     itemCount: number;
     items: TransactionItem[];
     removed: boolean;
 
-    constructor(id: string, createdAt: Timestamp, createdBy: UserAccount, totalPrice: number, itemCount: number,
+    constructor(id: string, createdAt: Timestamp, createdBy: string, totalPrice: number, itemCount: number,
                 items: TransactionItem[], removed: boolean) {
         this.id = id;
         this.createdAt = createdAt;
@@ -34,14 +33,10 @@ export const transactionConverter: FirestoreDataConverter<Transaction> = {
     toFirestore(transaction: Transaction) {
         return {
             createdAt: transaction.createdAt,
-            createdBy: userAccountConverter.toFirestore(transaction.createdBy),
+            createdBy: transaction.createdBy,
             totalPrice: transaction.totalPrice,
             itemCount: transaction.items.length,
-            items: transaction.items.map(ti => {
-                ti.account = accountConverter.toFirestore(ti.account);
-                ti.product = productConverter.toFirestore(ti.product);
-                return ti;
-            }),
+            items: transaction.items,
             removed: transaction.removed,
         };
     },
@@ -53,22 +48,6 @@ export const transactionConverter: FirestoreDataConverter<Transaction> = {
 };
 
 export function newTransaction(id: string, data: { [key: string]: any }): Transaction {
-    return new Transaction(id, data.createdAt as Timestamp, userAccountConverter.newAccount(data.createdBy), data.totalPrice,
-        data.itemCount, data.items.map(item => {
-
-            switch (item.account.type) {
-                case 'user':
-                    item.account = userAccountConverter.newAccount(item.account);
-                    break;
-                case 'shared':
-                    item.account = sharedAccountConverter.newSharedAccount(item.account);
-                    break;
-            }
-
-            return {
-                amount: item.amount,
-                account: item.account,
-                product: productConverter.newProduct(item.product),
-            };
-        }), data.removed);
+    return new Transaction(id, data.createdAt as Timestamp, data.createdBy, data.totalPrice,
+        data.itemCount, data.items, data.removed);
 }

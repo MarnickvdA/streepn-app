@@ -18,7 +18,7 @@
 </ion-header>
 
 <ion-content>
-    <div *ngIf="transaction?.createdBy as account" class="createdBy">
+    <div *ngIf="group.getUserAccountById(transaction?.createdBy) as account" class="createdBy">
         <ion-avatar>
             <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
             <img *ngIf="!account.photoUrl" alt="" src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg">
@@ -31,9 +31,10 @@
     <ion-list *ngIf="transaction?.items">
         <ion-item *ngFor="let item of transaction.items; index as i">
             <ion-label>
-                <h2>{{item.amount}} {{item.product.name}} voor {{getPriceString(item.product.price * item.amount)}}</h2>
+                <h2>{{item.amount}} {{group.getProductById(item.productId)?.name}}
+                    voor {{getPriceString(item.productPrice * item.amount)}}</h2>
                 <p>
-                    Gestreept op {{item.account.name}}
+                    Gestreept op {{group.getAccountById(item.accountId)?.name}}
                 </p>
             </ion-label>
             <ion-fab-button (click)="removeItem(item)" *ngIf="editing" [attr.disabled]="item.amount === 0"

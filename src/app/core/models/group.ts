@@ -1,7 +1,7 @@
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {Product, productConverter} from './product';
-import {SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from './account';
+import {Account, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from './account';
 
 export class Group {
     readonly id: string;
@@ -11,9 +11,21 @@ export class Group {
     inviteLink: string;
     inviteLinkExpiry: Timestamp;
     members: string[];
-    accounts: UserAccount[];
-    products: Product[];
-    sharedAccounts: SharedAccount[];
+    private mAccounts: UserAccount[];
+    private mSharedAccounts: SharedAccount[];
+    private mProducts: Product[];
+
+    groupDictionary: {
+        accounts: {
+            [id: string]: UserAccount
+        },
+        sharedAccounts: {
+            [id: string]: SharedAccount
+        },
+        products: {
+            [id: string]: Product
+        }
+    };
 
     constructor(id: string,
                 createdAt: Timestamp,
@@ -32,9 +44,119 @@ export class Group {
         this.inviteLink = inviteLink;
         this.inviteLinkExpiry = inviteLinkExpiry;
         this.members = members;
-        this.accounts = accounts;
-        this.products = products;
-        this.sharedAccounts = sharedAccounts;
+        this.mAccounts = accounts;
+        this.mProducts = products;
+        this.mSharedAccounts = sharedAccounts;
+
+        this.setDictionary();
+
+        console.log('Creating group: ' + name);
+    }
+
+
+    get accounts(): UserAccount[] {
+        return this.mAccounts;
+    }
+
+    set accounts(value: UserAccount[]) {
+        this.mAccounts = value;
+        this.setUserAccounts();
+    }
+
+    get sharedAccounts(): SharedAccount[] {
+        return this.mSharedAccounts;
+    }
+
+    set sharedAccounts(value: SharedAccount[]) {
+        this.mSharedAccounts = value;
+        this.setSharedAccounts();
+    }
+
+    get products(): Product[] {
+        return this.mProducts;
+    }
+
+    set products(value: Product[]) {
+        this.mProducts = value;
+        this.setProducts();
+    }
+
+    getAccountById(accountId: string): Account | undefined {
+        const userAccount = this.getUserAccountById(accountId);
+        if (userAccount) {
+            return userAccount;
+        } else {
+            return this.getSharedAccountById(accountId);
+        }
+    }
+
+    getUserAccountById(accountId: string): UserAccount | undefined {
+        return this.groupDictionary.accounts[accountId];
+    }
+
+    getSharedAccountById(accountId: string): SharedAccount | undefined {
+        return this.groupDictionary.sharedAccounts[accountId];
+    }
+
+    getProductById(productId: string): Product | undefined {
+        return this.groupDictionary.products[productId];
+    }
+
+    private setDictionary() {
+        const newDict = {
+            accounts: {},
+            sharedAccounts: {},
+            products: {},
+        };
+
+        newDict.accounts = this.setUserAccounts(false);
+        newDict.sharedAccounts = this.setSharedAccounts(false);
+        newDict.products = this.setProducts(false);
+
+        this.groupDictionary = newDict;
+    }
+
+
+    private setUserAccounts(persist: boolean = true) {
+        const newDict = {};
+
+        this.mAccounts.forEach(acc => {
+            newDict[acc.id] = acc;
+        });
+
+        if (persist) {
+            this.groupDictionary.accounts = newDict;
+        } else {
+            return newDict;
+        }
+    }
+
+    private setSharedAccounts(persist: boolean = true) {
+        const newDict = {};
+
+        this.mSharedAccounts.forEach(acc => {
+            newDict[acc.id] = acc;
+        });
+
+        if (persist) {
+            this.groupDictionary.sharedAccounts = newDict;
+        } else {
+            return newDict;
+        }
+    }
+
+    private setProducts(persist: boolean = true) {
+        const newDict = {};
+
+        this.mProducts.forEach(pr => {
+            newDict[pr.id] = pr;
+        });
+
+        if (persist) {
+            this.groupDictionary.products = newDict;
+        } else {
+            return newDict;
+        }
     }
 }
 

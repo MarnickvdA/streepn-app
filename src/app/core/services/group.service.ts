@@ -7,7 +7,6 @@ import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {newGroup} from '../models/group';
 import {v4 as uuidv4} from 'uuid';
 import {AnalyticsService} from './analytics.service';
 import {PermissionType, Plugins} from '@capacitor/core';
@@ -23,8 +22,9 @@ const {Permissions} = Plugins;
     providedIn: 'root'
 })
 export class GroupService {
-    private readonly logger = LoggerService.getLogger(EventsService.name);
+    private readonly logger = LoggerService.getLogger(GroupService.name);
     currentGroupId: string;
+    currentGroup: Group;
     private currentUserId: string;
     private groupsSubject: BehaviorSubject<Group[]> = new BehaviorSubject<Group[]>([]);
     private groups$: Observable<Group[]>;
@@ -39,15 +39,11 @@ export class GroupService {
                 private translate: TranslateService) {
     }
 
-    getGroupsObservable(userId: string): Observable<Group[]> {
-        if (this.currentUserId !== userId) {
-            if (this.groupsSub) {
-                this.groupsSub();
-            }
-
+    observeGroups(userId: string): Observable<Group[]> {
+        if (this.currentUserId !== userId || !this.groups$) {
             this.currentUserId = userId;
 
-            this.initializeGroupObserver(userId);
+            this.initializeGroupsObserver(userId);
 
             this.groups$ = this.groupsSubject.asObservable();
         }
@@ -55,7 +51,24 @@ export class GroupService {
         return this.groups$;
     }
 
-    private initializeGroupObserver(userId: string) {
+    observeGroup(groupId: string): Observable<Group> {
+        let userId = this.authService.currentUser?.uid;
+
+        // For debug purposes.
+        if (!userId) {
+            userId = localStorage.getItem('userId');
+        }
+
+        return this.observeGroups(userId).pipe(
+            map(groups => groups.find(g => g.id === groupId)),
+        );
+    }
+
+    private initializeGroupsObserver(userId: string) {
+        if (this.groupsSub) {
+            this.groupsSub();
+        }
+
         this.groupsSub = this.fs.collection('groups')
             .ref
             .where('members', 'array-contains', userId)
@@ -122,21 +135,6 @@ export class GroupService {
 
                 return group;
             });
-    }
-
-    observeGroup(id: string): Observable<Group> {
-        return this.fs.collection('groups')
-            .doc(id)
-            .snapshotChanges()
-            .pipe(
-                map(action => {
-                    if (action.payload.exists) {
-                        return newGroup(action.payload.id, action.payload.data());
-                    } else {
-                        return undefined;
-                    }
-                })
-            );
     }
 
     /**
