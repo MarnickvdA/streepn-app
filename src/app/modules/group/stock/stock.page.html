@@ -66,13 +66,13 @@
             <ion-label>
                 <h2 [ngClass]="transaction.removed? 'red-text':''">
                     {{transaction.amount}}x
-                    {{transaction.product.name}} {{!transaction.removed ? 'voor ' + getBalanceString(transaction.cost) : ''}}
+                    {{group.getProductById(transaction.productId)?.name}} {{!transaction.removed ? 'voor ' + getBalanceString(transaction.cost) : ''}}
                 </h2>
                 <p *ngIf="!transaction.removed">
-                    Betaald door <span *ngFor="let account of transaction.paidBy">{{account.name}}</span>
+                    Betaald door <span *ngFor="let account of transaction.paidBy">{{group.getAccountById(account)?.name}}</span>
                 </p>
                 <p *ngIf="transaction.removed">
-                    Afgeboekt door {{transaction.createdBy.name}}
+                    Afgeboekt door {{group.getUserAccountById(transaction.createdBy)?.name}}
                 </p>
             </ion-label>
         </ion-item>

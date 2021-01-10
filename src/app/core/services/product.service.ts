@@ -14,8 +14,6 @@ export class ProductService {
     }
 
     addProduct(group: Group, name: string, price: number) {
-        // TODO Add validity checks.
-
         const product = new Product(uuidv4(), Timestamp.now(), name, price, undefined);
 
         group.products.push(product);
@@ -46,7 +44,6 @@ export class ProductService {
             return productConverter.toFirestore(p);
         });
 
-        // TODO Clearer would be using Cloud Functions, but money restrictions...
         return this.fs.collection('groups').doc(group.id).set({
             products
         }, {merge: true});

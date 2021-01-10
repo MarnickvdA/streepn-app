@@ -24,6 +24,8 @@ export class ProfilePage implements OnInit {
         this.storage.get('darkMode')
             .then((darkMode: boolean) => {
                 this.isDarkMode = darkMode;
+            })
+            .catch(() => {
             });
     }
 

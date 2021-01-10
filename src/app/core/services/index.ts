@@ -13,7 +13,7 @@ export {AdsService} from './ads.service';
 export {PushService, PushTopic} from './push.service';
 
 // Model services
-export {TransactionService} from './transaction.service';
+export {TransactionService, TransactionSet} from './transaction.service';
 export {UserService} from './user.service';
 export {AccountService} from './account.service';
 export {StockService} from './stock.service';

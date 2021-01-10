@@ -1,4 +1,4 @@
-import {ErrorHandler, Injectable, NgModule, Optional, SkipSelf} from '@angular/core';
+import {NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 import {TranslateModule} from '@ngx-translate/core';
@@ -8,7 +8,6 @@ import {
     AuthService,
     EventsService,
     GroupService,
-    LoggerService,
     ProductService,
     PushService,
     StockService,

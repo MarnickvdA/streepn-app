@@ -41,10 +41,12 @@
                   [disabled]="transaction.removed" button="{{!transaction.removed}}">
             <ion-label [ngStyle]="transaction.removed ? {'text-decoration': 'line-through'} : {}">
                 <h2 *ngFor="let item of transaction.items">
-                    {{item.amount}}x {{item.product.name}} voor {{item.account.name}}
+                    {{item.amount}}x {{group.getProductById(item.productId)?.name}}
+                    voor {{group.getAccountById(item.accountId)?.name}}
                 </h2>
                 <p>
-                    Op {{transaction.createdAt.toDate().toLocaleString()}} door {{transaction.createdBy.name}}
+                    Op {{transaction.createdAt.toDate().toLocaleString()}}
+                    door {{group.getUserAccountById(transaction.createdBy)?.name}}
                 </p>
             </ion-label>
         </ion-item>

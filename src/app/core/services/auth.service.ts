@@ -40,6 +40,11 @@ export class AuthService {
         this.user.subscribe(user => {
             this.currentUser = user;
 
+            // For debug purposes when using page reloads which resets the auth state
+            if (!environment.production) {
+                localStorage.setItem('userId', user?.uid);
+            }
+
             this.analytics.setUser(user?.uid);
             LoggerService.setUserId(user?.uid);
 

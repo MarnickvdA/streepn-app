@@ -16,7 +16,7 @@ export enum PushTopic {
     providedIn: 'root'
 })
 export class PushService {
-    private readonly logger = LoggerService.getLogger(EventsService.name);
+    private readonly logger = LoggerService.getLogger(PushService.name);
 
     constructor(private events: EventsService,
                 private storage: StorageService) {

@@ -1,12 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Account, Group, Product, Transaction, UserAccount} from '@core/models';
+import {Account, Group, Product, Transaction} from '@core/models';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {Capacitor, HapticsImpactStyle, Plugins} from '@capacitor/core';
 import {catchError} from 'rxjs/operators';
 import {EMPTY, Observable, Subscription} from 'rxjs';
-import {AdsService, AnalyticsService, AuthService, LoggerService, TransactionService, UserService} from '@core/services';
+import {AdsService, AnalyticsService, AuthService, LoggerService, TransactionService, TransactionSet, UserService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-import {TransactionItem} from '@core/models/transaction';
 
 const {Haptics} = Plugins;
 
@@ -17,13 +16,7 @@ const {Haptics} = Plugins;
 })
 export class AddTransactionComponent implements OnInit {
     @Input() group$: Observable<Group>;
-    transactions: {
-        [accountId: string]: {
-            [productId: string]: {
-                amount: number;
-            }
-        }
-    } = {};
+    transactions: TransactionSet = {};
     group: Group;
     currentProduct: Product;
     transactionCount = 0;
@@ -48,6 +41,7 @@ export class AddTransactionComponent implements OnInit {
                 this.currentProduct = group.products[0];
             }
         });
+
         this.ads.preloadInterstitial();
     }
 
@@ -93,45 +87,7 @@ export class AddTransactionComponent implements OnInit {
 
         await loading.present();
 
-        const productDictionary: { [productId: string]: Product } = {};
-        this.group.products.forEach(p => {
-            productDictionary[p.id] = p;
-        });
-
-        const accountDictionary: { [accountId: string]: Account } = {};
-        this.group.accounts.forEach(a => {
-            accountDictionary[a.id] = a;
-        });
-        this.group.sharedAccounts.forEach(a => {
-            accountDictionary[a.id] = a;
-        });
-
-        const currentUserAccount = this.group.accounts.find(acc => acc.userId === this.authService.currentUser.uid) as UserAccount;
-        const transactionItems: TransactionItem[] = [];
-        let totalPrice = 0;
-
-        Object.keys(this.transactions).forEach(accountId => {
-            const account = accountDictionary[accountId];
-
-            Object.keys(this.transactions[accountId]).forEach(productId => {
-                const product = productDictionary[productId];
-                const amount = this.transactions[accountId][productId].amount;
-
-                if (amount > 0) {
-                    totalPrice += product.price * amount;
-                    transactionItems.push({
-                        amount,
-                        account,
-                        product,
-                    } as TransactionItem);
-                }
-            });
-        });
-
-        const transaction = new Transaction(undefined, undefined, currentUserAccount,
-            totalPrice, transactionItems.length, transactionItems, false);
-
-        this.transactionService.addTransaction(this.group.id, transaction)
+        this.transactionService.addTransaction(this.group, this.transactions)
             .pipe(
                 catchError(err => {
                     this.logger.error({message: err});

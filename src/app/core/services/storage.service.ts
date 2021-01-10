@@ -9,7 +9,7 @@ const {Storage} = Plugins;
     providedIn: 'root'
 })
 export class StorageService {
-    private readonly logger = LoggerService.getLogger(EventsService.name);
+    private readonly logger = LoggerService.getLogger(StorageService.name);
 
     constructor() {
     }
