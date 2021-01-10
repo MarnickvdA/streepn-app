@@ -17,7 +17,7 @@ const {App, StatusBar, SplashScreen, FirebaseRemoteConfig} = Plugins;
     styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-    showSideMenu: boolean;
+    showSideMenu = false;
 
     constructor(
         private platform: Platform,

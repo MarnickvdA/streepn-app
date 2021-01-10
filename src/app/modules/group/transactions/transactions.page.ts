@@ -124,7 +124,7 @@ export class TransactionsPage implements OnInit, OnDestroy {
         if (transaction.removed) {
             return;
         }
-        this.navController.navigateForward(['transactions', transaction.id], {
+        this.navController.navigateForward([transaction.id], {
             relativeTo: this.route,
             state: {
                 group: this.group,

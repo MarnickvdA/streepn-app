@@ -9,13 +9,11 @@ const routes: Routes = [
         path: '',
         pathMatch: 'full',
         component: TransactionsPage,
-        children: [
-            {
-                path: ':transactionId',
-                component: TransactionDetailPage
-            }
-        ]
     },
+    {
+        path: ':transactionId',
+        component: TransactionDetailPage
+    }
 ];
 
 @NgModule({
