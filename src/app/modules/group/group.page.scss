@@ -1,9 +1,9 @@
-ion-tabs{
+ion-tabs {
   ion-fab {
     margin-bottom: env(safe-area-inset-bottom); /* fix notch ios*/
     .fab-button-disabled {
       opacity: 1;
-      --background: var(--ion-color-primary-tint);
+      --background: var(--ion-color-medium-tint);
     }
   }
 }

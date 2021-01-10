@@ -1,4 +1,4 @@
 <ion-item (click)="editProductStockItem()" [button]="canEdit" [detail]="canEdit">
-    <ion-note [color]="product.stock > 0 ? 'dark' : 'danger'" slot="start">{{product.stock}}</ion-note>
+    <ion-note [color]="product.stock >= 0 ? 'dark' : 'danger'" slot="start">{{product.stock}}</ion-note>
     <ion-label>{{product.name}}</ion-label>
 </ion-item>

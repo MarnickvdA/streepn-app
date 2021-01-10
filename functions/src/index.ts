@@ -222,6 +222,75 @@ exports.addStock = functions
         });
     });
 
+exports.removeStock = functions
+    .region('europe-west1')
+    .https
+    .onCall((data, context) => {
+
+        if (!context.auth?.uid) {
+            throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
+        }
+
+        let group: any;
+        const groupRef = db.collection('groups').doc(data.groupId);
+
+        return db.runTransaction(fireTrans => {
+            return fireTrans.get(groupRef)
+                .then(groupDoc => {
+                    group = groupDoc?.data();
+
+                    // Check if the group exists
+                    if (!groupDoc.exists || !group) {
+                        throw new functions.https.HttpsError('not-found', 'No such group document!');
+                    }
+
+                    // Check if the user is part of this group
+                    if (!group.members.includes(context.auth?.uid)) {
+                        throw new functions.https.HttpsError('permission-denied', 'User not member of group');
+                    }
+
+                    if (!data.stock) {
+                        throw new functions.https.HttpsError('not-found', 'No stock to be computed!');
+                    }
+
+                    const currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
+                    const currentProduct = group.products.find((product: any) => product.id === data.stock.product.id);
+
+                    if (!currentProduct) {
+                        throw new functions.https.HttpsError('not-found', 'Product not found!');
+                    }
+
+                    const uid = uuidv4();
+                    const removedStock = {
+                        id: uid,
+                        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                        createdBy: currentAccount,
+                        product: currentProduct,
+                        amount: -data.stock.amount,
+                        removed: true
+                    };
+
+                    // Add the transaction to firestore
+                    fireTrans.set(groupRef.collection('stock').doc(uid), removedStock);
+
+                    fireTrans.update(groupRef, {
+                        products: group.products.map((p: any) => {
+                            if (p.id === data.stock.product.id) {
+                                if (!p.stock || isNaN(p.stock)) {
+                                    p.stock = -removedStock.amount;
+                                } else {
+                                    p.stock -= removedStock.amount;
+                                }
+                            }
+                            return p;
+                        }),
+                    });
+
+                    return removedStock;
+                });
+        });
+    });
+
 exports.editTransaction = functions
     .region('europe-west1')
     .https

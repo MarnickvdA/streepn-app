@@ -76,6 +76,22 @@ export class AnalyticsService {
         });
     }
 
+    logEditStock(uid: string, groupId: string, stockId: string) {
+        this.logEvent('stock_edited', {
+            userId: uid,
+            groupId,
+            stockId
+        });
+    }
+
+    logRemoveStock(uid: string, groupId: string, stockId: string) {
+        this.logEvent('stock_removed', {
+            userId: uid,
+            groupId,
+            stockId
+        });
+    }
+
 
     private logEvent(event: string, data: { [key: string]: any }) {
         if (Capacitor.isNative) {

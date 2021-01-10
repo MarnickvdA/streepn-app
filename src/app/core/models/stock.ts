@@ -48,7 +48,7 @@ export const stockConverter: FirestoreDataConverter<Stock> = {
 
 export function newStock(id: string, data: { [key: string]: any }): Stock {
     return new Stock(id, data.createdAt as Timestamp, userAccountConverter.newAccount(data.createdBy),
-        data.paidBy.map(acc => {
+        data.paidBy?.map(acc => {
             switch (acc.type) {
                 case 'user':
                     return userAccountConverter.newAccount(acc);

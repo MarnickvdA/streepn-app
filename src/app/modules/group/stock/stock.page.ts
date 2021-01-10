@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {AddStockComponent} from '@modules/group/overview/add-stock/add-stock.component';
+import {AddStockComponent} from '@modules/group/stock/add-stock/add-stock.component';
 import {ModalController} from '@ionic/angular';
 import {GroupService} from '@core/services';
 import {Observable, Subscription} from 'rxjs';
 import {Group, Product, Stock, stockConverter} from '@core/models';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {getMoneyString} from '@core/utils/firestore-utils';
+import {EditStockComponent} from '@modules/group/stock/edit-stock/edit-stock.component';
 
 @Component({
     selector: 'app-group-stock',
@@ -48,6 +49,23 @@ export class StockPage implements OnInit {
     addStock() {
         this.modalController.create({
             component: AddStockComponent,
+            componentProps: {
+                group$: this.group$
+            },
+            swipeToClose: true
+        }).then((modal) => {
+            modal.present();
+
+            modal.onDidDismiss()
+                .then(() => {
+                    this.reset();
+                });
+        });
+    }
+
+    removeStock() {
+        this.modalController.create({
+            component: EditStockComponent,
             componentProps: {
                 group$: this.group$
             },
