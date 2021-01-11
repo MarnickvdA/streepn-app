@@ -21,7 +21,7 @@
     <ion-item *ngIf="group?.products.length > 0" (click)="removeStock()" button detail="false">
         <ion-icon name="create-outline" slot="start"></ion-icon>
         <ion-label>
-            {{'group.stock.remove.title' | translate}}
+            <h3>{{'group.stock.remove.title' | translate}}</h3>
             <p class="ion-text-wrap">
                 {{'group.stock.remove.description' | translate}}
             </p>
@@ -65,10 +65,10 @@
         <ion-item (click)="openStockItem(stockItem)" [button]="stockItem.isMutable" [detail]="stockItem.isMutable"
                   *ngFor="let stockItem of stockTransactions">
             <ion-label [ngStyle]="stockItem.removed ? {'text-decoration': 'line-through'} : {}">
-                <h2 [ngClass]="stockItem.writtenOff ? 'red-text' : ''">
+                <h3 [ngClass]="stockItem.writtenOff ? 'red-text' : ''">
                     {{stockItem.amount}}x
                     {{group.getProductById(stockItem.productId)?.name}} {{!stockItem.writtenOff ? 'voor ' + stockItem.costString : ''}}
-                </h2>
+                </h3>
                 <p *ngIf="!stockItem.writtenOff">
                     Betaald door <span
                         *ngFor="let account of stockItem.paidBy; let i = index">{{group.getAccountById(account)?.name}}

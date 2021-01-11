@@ -4,9 +4,14 @@
         <img *ngIf="!account.photoUrl" alt="" src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg">
     </ion-avatar>
     <div class="content">
-        <ion-label>{{account.name}}</ion-label>
-        <ion-label color="medium">Saldo: <span
-                [ngClass]="account.balance >= 0 ? 'positive-amount' : 'negative-amount'">{{account.balanceString}}</span>
+        <ion-label>
+            <h3>{{account.name}}</h3>
+            <p>
+                Saldo:
+                <span [ngClass]="account.balance >= 0 ? 'positive-amount' : 'negative-amount'">{{account.balanceString}}</span>
+            </p>
+        </ion-label>
+        <ion-label color="medium">
         </ion-label>
     </div>
 </ion-item>

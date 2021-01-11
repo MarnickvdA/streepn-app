@@ -1,4 +1,5 @@
 import {Timestamp} from '@firebase/firestore-types';
+import {getMoneyString} from '@core/utils/firestore-utils';
 
 export class Product {
     id: string;
@@ -13,6 +14,10 @@ export class Product {
         this.name = name;
         this.price = price;
         this.stock = stock;
+    }
+
+    get priceString(): string {
+        return getMoneyString(this.price);
     }
 }
 

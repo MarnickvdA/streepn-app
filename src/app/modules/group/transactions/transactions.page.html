@@ -40,15 +40,15 @@
         <ion-item (click)="openTransaction(transaction)" *ngFor="let transaction of transactions"
                   [disabled]="transaction.removed" button="{{!transaction.removed}}" detail="{{!transaction.removed}}">
             <ion-label [ngStyle]="transaction.removed ? {'text-decoration': 'line-through'} : {}">
-                <h2 *ngFor="let item of transaction.items">
+                <h3 *ngFor="let item of transaction.items">
                     {{item.amount}}x {{group.getProductById(item.productId)?.name}}
                     voor {{group.getAccountById(item.accountId)?.name}}
-                </h2>
+                </h3>
                 <div class="transaction-bill" *ngIf="transaction.priceByAccountId(currentAccount.id); let price">
                     <ion-icon name="remove-circle-outline"></ion-icon>
                     <span>{{price}}</span>
                 </div>
-                <p>
+                <p style="font-size: .7rem">
                     Op {{transaction.createdAt.toDate().toLocaleString()}}
                     door {{group.getUserAccountById(transaction.createdBy)?.name}}
                 </p>

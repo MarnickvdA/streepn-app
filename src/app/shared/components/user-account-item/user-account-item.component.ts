@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {UserAccount} from '@core/models';
-import {getMoneyString} from '@core/utils/firestore-utils';
 import {TranslateService} from '@ngx-translate/core';
 import {NavController} from '@ionic/angular';
 import {AuthService} from '@core/services';

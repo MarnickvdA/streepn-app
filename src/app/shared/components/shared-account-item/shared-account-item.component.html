@@ -1,8 +1,11 @@
-<ion-item>
+<ion-item (click)="openAccount()" [button]="canEditAccount" [detail]="canEditAccount">
     <div class="content">
-        <ion-label>{{account.name}}</ion-label>
-        <ion-label color="medium">Saldo: <span
-                [ngClass]="account.balance >= 0 ? 'positive-amount' : 'negative-amount'">{{balanceString}}</span>
+        <ion-label>
+            <h3>{{account.name}}</h3>
+            <p>
+                Saldo:
+                <span [ngClass]="account.balance >= 0 ? 'positive-amount' : 'negative-amount'">{{balanceString}}</span>
+            </p>
         </ion-label>
     </div>
 </ion-item>

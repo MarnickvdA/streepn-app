@@ -36,7 +36,7 @@ export class AccountService {
         return this.setSharedAccounts(group);
     }
 
-    editSharedAccount(group: Group, sharedAccount: SharedAccount) {
+    updateSharedAccount(group: Group, sharedAccount: SharedAccount) {
         group.sharedAccounts = group.sharedAccounts.map(obj => {
             if (obj.id === sharedAccount.id) {
                 return sharedAccount;

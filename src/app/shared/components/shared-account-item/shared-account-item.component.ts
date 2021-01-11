@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {SharedAccount} from '@core/models';
 import {getMoneyString} from '@core/utils/firestore-utils';
+import {NavController} from '@ionic/angular';
 
 @Component({
     selector: 'app-shared-account-item',
@@ -10,8 +11,10 @@ import {getMoneyString} from '@core/utils/firestore-utils';
 export class SharedAccountItemComponent implements OnInit {
 
     @Input() account: SharedAccount;
+    @Input() canEditAccount = false;
+    @Input() navLink?: string;
 
-    constructor() {
+    constructor(private navController: NavController) {
     }
 
     get balanceString(): string {
@@ -21,4 +24,13 @@ export class SharedAccountItemComponent implements OnInit {
     ngOnInit() {
     }
 
+    openAccount() {
+        if (this.canEditAccount) {
+            this.navController.navigateForward(this.navLink, {
+                state: {
+                    account: this.account
+                }
+            });
+        }
+    }
 }

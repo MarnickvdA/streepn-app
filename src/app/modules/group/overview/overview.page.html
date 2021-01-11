@@ -26,10 +26,10 @@
         <!--                    {{'group.overview.preferences.title' | translate:{name: group.name} }}-->
         <!--                </ion-label>-->
         <!--            </ion-item>-->
-        <ion-item lines="full" (click)="shareGroup()" *ngIf="isAdmin" button class="large-item" detail="false">
+        <ion-item lines="full" (click)="shareGroup()" *ngIf="isAdmin" button detail="false">
             <ion-icon name="share-social-outline" slot="start"></ion-icon>
             <ion-label>
-                {{'group.overview.accounts.inviteLink' | translate}}
+                <h3>{{'group.overview.accounts.inviteLink' | translate}}</h3>
                 <p>
                     {{'group.overview.accounts.' + (inviteLinkExpired ? 'expired' : 'validThrough') | translate}} {{group?.inviteLinkExpiry.toDate().toLocaleString()}}
                 </p>
@@ -60,7 +60,8 @@
         </ion-item>
 
         <app-shared-account-item *ngFor="let sharedAccount of group?.sharedAccounts"
-                                 [account]="sharedAccount"></app-shared-account-item>
+                                 [account]="sharedAccount" [canEditAccount]="isAdmin"
+                                 navLink="group/{{group?.id}}/preferences/shared-accounts/{{sharedAccount.id}}"></app-shared-account-item>
         <!-- END ACCOUNTS SECTION -->
 
 
