@@ -18,7 +18,6 @@ export class GroupPage implements OnInit {
 
     group$: Observable<Group>;
     private routeSub: Subscription;
-    private groupSub: Subscription;
     iOS: boolean;
     fabVisible = true;
 
@@ -33,18 +32,17 @@ export class GroupPage implements OnInit {
         this.routeSub = this.route.params.subscribe((params: Params) => {
             this.groupService.currentGroupId = params.id;
             this.group$ = this.groupService.observeGroup(params.id);
-            this.groupSub = this.group$.subscribe(group => {
-                this.groupService.currentGroup = group;
+        });
+
+        if (Capacitor.isPluginAvailable('Keyboard')) {
+            Keyboard.addListener('keyboardWillShow', (info: KeyboardInfo) => {
+                this.fabVisible = false;
             });
-        });
 
-        Keyboard.addListener('keyboardWillShow', (info: KeyboardInfo) => {
-            this.fabVisible = false;
-        });
-
-        Keyboard.addListener('keyboardWillHide', () => {
-            this.fabVisible = true;
-        });
+            Keyboard.addListener('keyboardWillHide', () => {
+                this.fabVisible = true;
+            });
+        }
     }
 
     addTransaction() {

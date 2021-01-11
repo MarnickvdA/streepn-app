@@ -6,6 +6,7 @@ import {Observable, Subscription} from 'rxjs';
 import {Group, Product, Stock, stockConverter} from '@core/models';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {getMoneyString} from '@core/utils/firestore-utils';
+import {RemoveStockComponent} from '@modules/group/stock/remove-stock/remove-stock.component';
 import {EditStockComponent} from '@modules/group/stock/edit-stock/edit-stock.component';
 
 @Component({
@@ -65,9 +66,33 @@ export class StockPage implements OnInit {
         });
     }
 
-    removeStock() {
+    openStockItem(stockItem: Stock) {
+        if (!stockItem.isMutable) {
+            return;
+        }
+
         this.modalController.create({
             component: EditStockComponent,
+            componentProps: {
+                group$: this.group$,
+                stockItem,
+            },
+            swipeToClose: true
+        }).then((modal) => {
+            modal.present();
+
+            modal.onDidDismiss()
+                .then((data) => {
+                    if (data) {
+                        this.reset();
+                    }
+                });
+        });
+    }
+
+    removeStock() {
+        this.modalController.create({
+            component: RemoveStockComponent,
             componentProps: {
                 group$: this.group$
             },
@@ -140,8 +165,5 @@ export class StockPage implements OnInit {
 
     getBalanceString(money: number): string {
         return getMoneyString(money);
-    }
-
-    openStockItem(transaction: Stock) {
     }
 }

@@ -13,7 +13,7 @@ import {AnalyticsService, AuthService, GroupService, LoggerService, ProductServi
 @Component({
     selector: 'app-add-stock',
     templateUrl: './add-stock.component.html',
-    styleUrls: ['./add-stock.component.scss'],
+    styleUrls: ['./add-stock.component.scss', '../stock.page.scss'],
 })
 export class AddStockComponent implements OnInit, OnDestroy {
     stockForm: FormGroup;
@@ -47,7 +47,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
             paidBy: ['', [Validators.required, Validators.minLength(1)]],
         });
 
-        this.paidByTitle = this.translate.instant('group.overview.addStock.paidByTitle');
+        this.paidByTitle = this.translate.instant('group.stock.add.paidByTitle');
     }
 
     get form() {

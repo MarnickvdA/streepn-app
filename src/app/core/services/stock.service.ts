@@ -19,7 +19,7 @@ export class StockService {
 
     addStockItem(group: Group, productId: string, cost: number, amount: number, paidBy: string[], paidAmount: number[]): Observable<Stock> {
         const currentAccount = group.accounts.find(acc => this.authService.currentUser.uid === acc.userId);
-        const stock = new Stock('', undefined, currentAccount.id, paidBy, paidAmount, productId, cost, amount, false);
+        const stock = new Stock('', undefined, currentAccount.id, paidBy, paidAmount, productId, cost, amount, false, false);
 
         const callable = this.functions.httpsCallable('addStock');
         return callable({
@@ -39,7 +39,7 @@ export class StockService {
             currentProduct.stock = 0;
         }
         const stock = new Stock('', undefined, currentAccount.id, undefined, undefined, productId,
-            undefined, amount, true);
+            undefined, amount, false, true);
 
         const callable = this.functions.httpsCallable('removeStock');
         return callable({
@@ -51,10 +51,34 @@ export class StockService {
             }));
     }
 
-    editStockItem(groupId: string, deltaStock: Stock, updatedStock: Stock): Observable<Stock> {
+    editStockItem(group: Group, original: Stock, productId: string, cost: number, amount: number,
+                  paidBy: string[], paidAmount: number[]): Observable<Stock> {
+
+        const currentAccount = group.accounts.find(acc => this.authService.currentUser.uid === acc.userId);
+        const updatedStock = new Stock(original.id, original.createdAt, currentAccount.id, paidBy, paidAmount,
+            productId, cost, amount, false, false);
+
+        const deltaPaidBy: string[] = [];
+        const deltaPaidAmount: number[] = [];
+        for (let i = 0; i < original.paidBy.length; i++) {
+            const accountId = original.paidBy[i];
+            const newIndex = paidBy.indexOf(accountId);
+
+            deltaPaidBy.push(accountId);
+            deltaPaidAmount.push((newIndex >= 0 ? paidAmount[newIndex] : 0) - original.paidAmount[i]);
+        }
+
+        paidBy.filter(accId => !original.paidBy.includes(accId)).forEach(id => {
+            deltaPaidBy.push(id);
+            deltaPaidAmount.push(paidAmount[paidBy.indexOf(id)]);
+        });
+
+        const deltaStock = new Stock(original.id, original.createdAt, currentAccount.id, deltaPaidBy, deltaPaidAmount,
+            original.productId, cost - original.cost, amount - original.amount, false, false);
+
         const callable = this.functions.httpsCallable('editStock');
         return callable({
-            groupId,
+            groupId: group.id,
             deltaStock,
             updatedStock
         });

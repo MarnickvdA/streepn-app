@@ -12,7 +12,9 @@ import {AnalyticsService} from './analytics.service';
 import {catchError} from 'rxjs/operators';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import {LoggerService} from './logger.service';
+import {MenuController} from '@ionic/angular';
 import User = firebase.User;
+import {GroupService} from '@core/services/group.service';
 
 const {SignInWithApple} = Plugins;
 
@@ -31,7 +33,8 @@ export class AuthService {
                 private storage: StorageService,
                 private googlePlus: GooglePlus,
                 private analytics: AnalyticsService,
-                private functions: AngularFireFunctions) {
+                private functions: AngularFireFunctions,
+                private menuController: MenuController) {
         this.eventsService.subscribe('auth:login', (userId) => {
             this.analytics.setUser(userId);
         });
@@ -161,9 +164,7 @@ export class AuthService {
     }
 
     logout() {
-        this.analytics.logUserLogout(this.currentUser.uid);
-        this.analytics.setUser(undefined);
-        this.storage.nuke();
+        this.eventsService.publish('auth:logout', {userId: this.currentUser.uid});
         return this.auth.signOut();
     }
 

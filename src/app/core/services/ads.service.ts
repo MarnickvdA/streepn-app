@@ -22,7 +22,6 @@ export class AdsService {
 
     initialize() {
         if (!this.enabled) {
-            console.warn('Initialization for AdMob aborted: Plugin not available');
             return;
         }
 

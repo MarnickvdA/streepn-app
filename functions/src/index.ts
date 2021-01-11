@@ -221,6 +221,88 @@ exports.addStock = functions
         });
     });
 
+exports.editStock = functions
+    .region('europe-west1')
+    .https
+    .onCall((data, context) => {
+
+        if (!context.auth?.uid) {
+            throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
+        }
+
+        let group: any;
+        const groupRef = db.collection('groups').doc(data.groupId);
+
+        return db.runTransaction(fireTrans => {
+            return fireTrans.get(groupRef)
+                .then(groupDoc => {
+                    group = groupDoc?.data();
+
+                    // Check if the group exists
+                    if (!groupDoc.exists || !group) {
+                        throw new functions.https.HttpsError('not-found', 'No such group document!');
+                    }
+
+                    // Check if the user is part of this group
+                    if (!group.members.includes(context.auth?.uid)) {
+                        throw new functions.https.HttpsError('permission-denied', 'User not member of group');
+                    }
+
+                    if (!data.updatedStock || !data.deltaStock) {
+                        throw new functions.https.HttpsError('not-found', 'No stock to be computed!');
+                    }
+
+                    // Update old stock and update stock in firestore
+                    if (data.updatedStock.amount === 0) {
+                        fireTrans.update(groupRef.collection('stock').doc(data.updatedStock.id), {
+                            removed: true,
+                        });
+                    } else {
+                        fireTrans.update(groupRef.collection('stock').doc(data.updatedStock.id), {
+                            paidBy: data.updatedStock.paidBy,
+                            paidAmount: data.updatedStock.paidAmount,
+                            cost: data.updatedStock.cost,
+                            amount: data.updatedStock.amount,
+                        });
+                    }
+
+                    fireTrans.update(groupRef, {
+                        accounts: group.accounts.map((acc: any) => {
+                            const index = data.deltaStock.paidBy.indexOf(acc.id);
+                            if (index >= 0) {
+                                acc.balance += data.deltaStock.paidAmount[index];
+                            }
+                            return acc;
+                        }),
+                        sharedAccounts: group.sharedAccounts.map((acc: any) => {
+                            const index = data.deltaStock.paidBy.indexOf(acc.id);
+                            if (index >= 0) {
+                                acc.balance += data.deltaStock.paidAmount[index];
+                            }
+                            return acc;
+                        }),
+                        products: group.products.map((p: any) => {
+                            if (p.id === data.deltaStock.productId) {
+                                p.stock += data.deltaStock.amount;
+                            }
+
+                            // If a different stock item was checked.
+                            if (data.updatedStock.productId !== data.deltaStock.productId && data.updatedStock.productId === p.id) {
+                                if (!p.stock || isNaN(p.stock)) {
+                                    p.stock = data.updatedStock.amount;
+                                } else {
+                                    p.stock += data.updatedStock.amount;
+                                }
+                            }
+                            return p;
+                        }),
+                    });
+
+                    return data.updatedStock;
+                });
+        });
+    });
+
 exports.removeStock = functions
     .region('europe-west1')
     .https
@@ -266,7 +348,7 @@ exports.removeStock = functions
                         createdBy: currentAccount.id,
                         productId: data.stock.productId,
                         amount: -data.stock.amount,
-                        removed: true,
+                        writtenOff: true,
                     };
 
                     // Add the transaction to firestore
@@ -318,7 +400,7 @@ exports.editTransaction = functions
                             throw new functions.https.HttpsError('permission-denied', 'User not member of group');
                         }
 
-                        if (!data.deltaTransaction) {
+                        if (!data.deltaTransaction || !data.updatedTransaction) {
                             throw new functions.https.HttpsError('not-found', 'No transaction to be computed!');
                         }
 

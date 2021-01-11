@@ -9,6 +9,7 @@ import {StockPageRoutingModule} from '@modules/group/stock/stock-routing.module'
 import {StockPage} from '@modules/group/stock/stock.page';
 import {SharedModule} from '@shared/shared.module';
 import {AddStockComponent} from '@modules/group/stock/add-stock/add-stock.component';
+import {RemoveStockComponent} from '@modules/group/stock/remove-stock/remove-stock.component';
 import {EditStockComponent} from '@modules/group/stock/edit-stock/edit-stock.component';
 
 @NgModule({
@@ -23,6 +24,7 @@ import {EditStockComponent} from '@modules/group/stock/edit-stock/edit-stock.com
     declarations: [
         StockPage,
         AddStockComponent,
+        RemoveStockComponent,
         EditStockComponent
     ]
 })

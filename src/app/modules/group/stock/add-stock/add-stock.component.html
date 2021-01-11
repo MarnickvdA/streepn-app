@@ -1,6 +1,6 @@
 <ion-header>
     <ion-toolbar>
-        <ion-title>{{'group.overview.addStock.title' | translate}}</ion-title>
+        <ion-title>{{'group.stock.add.title' | translate}}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="dismiss()">
                 <ion-icon name="close-outline" slot="icon-only"></ion-icon>
@@ -12,18 +12,18 @@
 <ion-content>
     <ion-header collapse="condense">
         <ion-toolbar>
-            <ion-title size="large">{{'group.overview.addStock.title' | translate}}</ion-title>
+            <ion-title size="large">{{'group.stock.add.title' | translate}}</ion-title>
         </ion-toolbar>
     </ion-header>
 
     <div *ngIf="group" class="content">
-        <p class="ion-text-center">{{'group.overview.addStock.description' | translate}}</p>
+        <p class="ion-text-center">{{'group.stock.add.description' | translate}}</p>
         <form (ngSubmit)="addStock()" [formGroup]="stockForm">
             <div class="input-field">
                 <ion-item class="form-input" lines="none">
                     <ion-icon name="bag-handle-outline"></ion-icon>
                     <ion-select formControlName="product" interface="popover"
-                                placeholder="{{'group.overview.addStock.selectProduct' | translate}}">
+                                placeholder="{{'group.stock.add.selectProduct' | translate}}">
                         <ion-select-option *ngFor="let product of group.products" value="{{product.id}}">
                             {{product.name}}
                         </ion-select-option>
@@ -31,11 +31,11 @@
                 </ion-item>
             </div>
             <span *ngIf="isSubmitted && form.product.errors?.required" class="form-input-error">
-                {{'group.overview.addStock.errors.product-required' | translate}}
+                {{'group.stock.add.errors.product-required' | translate}}
             </span>
 
             <div class="input-field">
-                <ion-label position="stacked">{{'group.overview.addStock.amount' | translate}}</ion-label>
+                <ion-label position="stacked">{{'group.stock.add.amount' | translate}}</ion-label>
                 <ion-item class="form-input" lines="none">
                     <ion-icon name="add-circle-outline"></ion-icon>
                     <ion-input [tabIndex]="1" enterkeyhint="next"
@@ -44,33 +44,33 @@
                 </ion-item>
             </div>
             <span *ngIf="isSubmitted && form.amount.errors?.required" class="form-input-error">
-                {{'group.overview.addStock.errors.amount-required' | translate}}
+                {{'group.stock.add.errors.amount-required' | translate}}
             </span>
             <span *ngIf="isSubmitted && form.amount.errors?.min" class="form-input-error">
-                {{'group.overview.addStock.errors.amount-min' | translate}}
+                {{'group.stock.add.errors.amount-min' | translate}}
             </span>
             <span *ngIf="isSubmitted && form.amount.errors?.min" class="form-input-error">
-                {{'group.overview.addStock.errors.amount-max' | translate}}
+                {{'group.stock.add.errors.amount-max' | translate}}
             </span>
 
             <div class="input-field">
-                <ion-label position="stacked">{{'group.overview.addStock.cost' | translate}}</ion-label>
+                <ion-label position="stacked">{{'group.stock.add.cost' | translate}}</ion-label>
                 <app-money-input (amountEntered)="amountChanged($event)" [amount]="''" [precision]="2"
                                  icon="cash-outline" tabIndex="2"></app-money-input>
             </div>
 
             <span *ngIf="isSubmitted && form.cost.errors?.required" class="form-input-error">
-                {{'group.overview.addStock.errors.cost-required' | translate}}
+                {{'group.stock.add.errors.cost-required' | translate}}
             </span>
             <span *ngIf="isSubmitted && form.cost.errors?.min" class="form-input-error">
-                {{'group.overview.addStock.errors.cost-min' | translate}}
+                {{'group.stock.add.errors.cost-min' | translate}}
             </span>
             <span *ngIf="isSubmitted && form.cost.errors?.max" class="form-input-error">
-                {{'group.overview.addStock.errors.cost-max' | translate}}
+                {{'group.stock.add.errors.cost-max' | translate}}
             </span>
 
             <div class="input-field">
-                <ion-label position="stacked">{{'group.overview.addStock.paidByTitle' | translate}}</ion-label>
+                <ion-label position="stacked">{{'group.stock.add.paidByTitle' | translate}}</ion-label>
                 <ion-item class="form-input"
                           disabled="{{!(form.product.valid && form.amount.valid && form.cost.valid)}}" lines="none">
                     <ion-icon name="people-outline"></ion-icon>
@@ -78,7 +78,7 @@
                                 formControlName="paidBy"
                                 multiple="true"
                                 okText="{{'actions.ok' | translate}}"
-                                placeholder="{{'group.overview.addStock.paidBy' | translate}}"
+                                placeholder="{{'group.stock.add.paidBy' | translate}}"
                                 selectedText="{{selectedNames}}">
                         <ion-select-option *ngFor="let account of allAccounts"
                                            value="{{account.id}}">
@@ -88,11 +88,11 @@
                 </ion-item>
             </div>
             <span *ngIf="isSubmitted && form.paidBy.errors?.required" class="form-input-error">
-                {{'group.overview.addStock.errors.paidBy-required' | translate}}
+                {{'group.stock.add.errors.paidBy-required' | translate}}
             </span>
 
             <span *ngIf="isSubmitted && form.paidBy.errors?.minLength" class="form-input-error">
-                {{'group.overview.addStock.errors.paidBy-required' | translate}}
+                {{'group.stock.add.errors.paidBy-required' | translate}}
             </span>
 
             <ion-button class="ion-margin-top" expand="block" id="name-button" type="submit">

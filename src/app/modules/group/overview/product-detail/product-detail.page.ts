@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Group, Product} from '@core/models';
 import {Subscription} from 'rxjs';
@@ -6,21 +6,20 @@ import {AlertController, LoadingController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Location} from '@angular/common';
-import {MoneyInputComponent} from '@shared/components/money-input/money-input.component';
 import {GroupService, ProductService} from '@core/services';
+import {MoneyInputComponent} from '@shared/components/money-input/money-input.component';
 
 @Component({
     selector: 'app-product-detail',
     templateUrl: './product-detail.page.html',
     styleUrls: ['./product-detail.page.scss'],
 })
-export class ProductDetailPage implements OnInit, OnDestroy {
-
-    @ViewChild(MoneyInputComponent) moneyInput: MoneyInputComponent;
+export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
 
     productForm: FormGroup;
     isSubmitted: boolean;
     groupCreated: boolean;
+    @ViewChild(MoneyInputComponent) moneyInput: MoneyInputComponent;
 
     groupId: string;
     productId: string;
@@ -61,11 +60,6 @@ export class ProductDetailPage implements OnInit, OnDestroy {
                     if (product) {
                         this.product = product;
                         this.productForm.controls.name.setValue(product.name);
-                        this.moneyInput.handleInput(new CustomEvent('', {
-                            detail: {
-                                data: product.price + ''
-                            }
-                        }));
                     }
                 }
             });
@@ -73,6 +67,10 @@ export class ProductDetailPage implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.groupSub.unsubscribe();
+    }
+
+    ngAfterViewInit(): void {
+        this.moneyInput.setAmount(this.product.price);
     }
 
     amountChanged($event: number) {
