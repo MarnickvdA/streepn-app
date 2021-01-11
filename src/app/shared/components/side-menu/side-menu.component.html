@@ -5,7 +5,8 @@
 </ion-header>
 
 <ion-content>
-    <ion-list class="ion-margin-top">
+    <ion-list>
+
         <ion-menu-toggle [autoHide]="false">
             <ion-item routerLink="dashboard" routerDirection="root">
                 <ion-icon color="primary" slot="start" name='speedometer-outline'></ion-icon>
@@ -14,6 +15,7 @@
                 </ion-label>
             </ion-item>
         </ion-menu-toggle>
+
         <ion-menu-toggle [autoHide]="false">
             <ion-item routerLink="profile" routerDirection="root">
                 <ion-icon color="primary" slot="start" name='person-circle-outline'></ion-icon>
@@ -23,13 +25,20 @@
             </ion-item>
         </ion-menu-toggle>
 
+        <ion-item lines="none" class="ion-margin-top">
+            <ion-icon color="primary" name="contrast-outline" slot="start"></ion-icon>
+            <ion-label>{{'dashboard.toggleDarkMode' | translate}}</ion-label>
+            <ion-toggle (ionChange)="onClick($event)" checked="{{isDarkMode}}" slot="end"></ion-toggle>
+        </ion-item>
+
         <ng-container *ngIf="(groups$ | async); let groups">
             <ion-list-header class="ion-margin-top" *ngIf="groups.length > 0" lines="full">
                 {{'dashboard.groups' | translate}}
             </ion-list-header>
 
             <ion-menu-toggle [autoHide]="false">
-                <ion-item *ngFor="let group of groups" button routerDirection="root" routerLink="/group/{{group.id}}/home">
+                <ion-item *ngFor="let group of groups" button routerDirection="root"
+                          routerLink="/group/{{group.id}}/home">
                     <ion-label>{{group.name}}</ion-label>
                 </ion-item>
             </ion-menu-toggle>

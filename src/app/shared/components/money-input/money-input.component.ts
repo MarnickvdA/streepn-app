@@ -77,4 +77,14 @@ export class MoneyInputComponent implements OnInit {
             native.value = '';
         });
     }
+
+    setAmount(amount: number) {
+        setTimeout(() => {
+            this.handleInput(new CustomEvent('', {
+                detail: {
+                    data: amount
+                }
+            }));
+        });
+    }
 }

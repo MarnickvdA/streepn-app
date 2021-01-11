@@ -3,6 +3,7 @@ import '@capacitor-community/firebase-analytics';
 
 import {Capacitor, Plugins} from '@capacitor/core';
 import {environment} from '@env/environment';
+import {EventsService} from '@core/services/events.service';
 
 const {FirebaseAnalytics} = Plugins;
 
@@ -11,7 +12,11 @@ const {FirebaseAnalytics} = Plugins;
 })
 export class AnalyticsService {
 
-    constructor() {
+    constructor(private events: EventsService) {
+        this.events.subscribe('auth:logout', (data) => {
+            this.logUserLogout(data.userId);
+            this.setUser(undefined);
+        });
     }
 
     setUser(uid: string) {

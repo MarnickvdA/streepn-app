@@ -173,10 +173,43 @@
       "title": "Voorraadbeheer",
       "current": "Huidige voorraad",
       "empty": "Er is nog geen voorraad toegevoegd om in het logboek te tonen",
-      "log": "Logboek",
+      "log": "Activiteit",
+      "add": {
+        "title": "Voorraad aanvullen",
+        "description": "Vul jouw krediet aan door voorraad toe te voegen! Je kunt de betalers pas invoeren als je alle velden hebt gevuld.",
+        "selectProduct": "Product selecteren",
+        "paidByTitle": "Betaler(s)",
+        "paidBy": "Betaler(s) selecteren",
+        "amount": "Hoeveelheid",
+        "cost": "Totale waarde",
+        "errors": {
+          "product-required": "Selecteer een product",
+          "amount-required": "Vul een hoeveelheid in",
+          "amount-min": "De hoeveelheid moet minimaal 1 zijn",
+          "amount-max": "De hoeveelheid moet niet hoger dan 10000 zijn",
+          "cost-required": "Vul de waarde van de voorraad in",
+          "cost-min": "De waarde moet niet negatief zijn",
+          "cost-max": "De waarde moet niet hoger zijn dan €10000,-",
+          "paidBy-required": "Selecteer minimaal 1 betaler"
+        }
+      },
+      "edit": {
+        "title": "Voorraad bijwerken",
+        "description": "Heb je een foutje gemaakt bij het invoeren van de voorraad? Dan is dit de plek om het aan te passen.",
+        "errors": {
+          "product-required": "Selecteer een product",
+          "amount-required": "Vul een hoeveelheid in",
+          "amount-min": "De hoeveelheid moet minimaal 1 zijn",
+          "amount-max": "De hoeveelheid moet niet hoger dan 10000 zijn",
+          "cost-required": "Vul de waarde van de voorraad in",
+          "cost-min": "De waarde moet niet negatief zijn",
+          "cost-max": "De waarde moet niet hoger zijn dan €10000,-",
+          "paidBy-required": "Selecteer minimaal 1 betaler"
+        }
+      },
       "remove": {
         "title": "Voorraad afboeken",
-        "description": "Als je voorraad in het echt verschilt van de app kun je hier de voorraad weer bijstellen",
+        "description": "Klopt de voorraad niet meer? Werk het dan bij.",
         "titleWithName": "{{name}} afboeken",
         "selectProduct": "Selecteer product",
         "amount": "Af te boeken hoeveelheid",
@@ -272,25 +305,6 @@
         "deleteWarning": {
           "header": "Waarschuwing",
           "message": "Weet je zeker dat je het product {{name}} wilt verwijderen?"
-        }
-      },
-      "addStock": {
-        "title": "Voorraad aanvullen",
-        "description": "Vul jouw krediet aan door voorraad toe te voegen! Je kunt de betalers pas invoeren als je alle velden hebt gevuld.",
-        "selectProduct": "Product selecteren",
-        "paidByTitle": "Betaler(s)",
-        "paidBy": "Betaler(s) selecteren",
-        "amount": "Hoeveelheid",
-        "cost": "Totale waarde",
-        "errors": {
-          "product-required": "Selecteer een product",
-          "amount-required": "Vul een hoeveelheid in",
-          "amount-min": "De hoeveelheid moet minimaal 1 zijn",
-          "amount-max": "De hoeveelheid moet niet hoger dan 10000 zijn",
-          "cost-required": "Vul de waarde van de voorraad in",
-          "cost-min": "De waarde moet niet negatief zijn",
-          "cost-max": "De waarde moet niet hoger zijn dan €10000,-",
-          "paidBy-required": "Selecteer minimaal 1 betaler"
         }
       }
     }

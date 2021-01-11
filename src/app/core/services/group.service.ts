@@ -5,8 +5,8 @@ import {EventsService} from './events.service';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
-import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {BehaviorSubject, EMPTY, Observable, Subject} from 'rxjs';
+import {catchError, map, takeUntil} from 'rxjs/operators';
 import {v4 as uuidv4} from 'uuid';
 import {AnalyticsService} from './analytics.service';
 import {PermissionType, Plugins} from '@capacitor/core';
@@ -24,9 +24,9 @@ const {Permissions} = Plugins;
 export class GroupService {
     private readonly logger = LoggerService.getLogger(GroupService.name);
     currentGroupId: string;
-    currentGroup: Group;
     private currentUserId: string;
     private groupsSubject: BehaviorSubject<Group[]> = new BehaviorSubject<Group[]>([]);
+    private destroyerSubject: Subject<void> = new Subject();
     private groups$: Observable<Group[]>;
     private groupsSub;
 
@@ -45,7 +45,10 @@ export class GroupService {
 
             this.initializeGroupsObserver(userId);
 
-            this.groups$ = this.groupsSubject.asObservable();
+            this.groups$ = this.groupsSubject.asObservable()
+                .pipe(
+                    takeUntil(this.destroyerSubject)
+                );
         }
 
         return this.groups$;
@@ -95,6 +98,12 @@ export class GroupService {
                         }));
                 }
             });
+    }
+
+    unsubscribe() {
+        this.currentUserId = undefined;
+        this.destroyerSubject.next();
+        this.groupsSubject.next(undefined);
     }
 
     getGroup(id: string): Promise<Group | undefined> {

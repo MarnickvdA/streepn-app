@@ -11,7 +11,10 @@ const {Storage} = Plugins;
 export class StorageService {
     private readonly logger = LoggerService.getLogger(StorageService.name);
 
-    constructor() {
+    constructor(private events: EventsService) {
+        this.events.subscribe('auth:logout', () => {
+            this.nuke();
+        });
     }
 
     get(key: string): Promise<unknown> {

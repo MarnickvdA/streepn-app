@@ -6,6 +6,9 @@ export abstract class Account {
     name: string;
     balance: number;
     type: string;
+    metadata?: {
+        [key: string]: unknown
+    };
 
     protected constructor(id: string, createdAt: Timestamp, name: string, balance: number, type: string) {
         this.id = id;

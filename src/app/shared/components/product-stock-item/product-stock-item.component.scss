@@ -1,0 +1,11 @@
+ion-badge {
+  padding: .5rem;
+  font-size: .9rem;
+  min-width: 3rem;
+  margin-right: 1rem;
+
+  &.danger {
+    --background: var(--ion-color-danger);
+    --color: var(--ion-color-light);
+  }
+}

@@ -38,7 +38,7 @@
             </ion-label>
         </ion-item>
         <ion-item (click)="openTransaction(transaction)" *ngFor="let transaction of transactions"
-                  [disabled]="transaction.removed" button="{{!transaction.removed}}">
+                  [disabled]="transaction.removed" button="{{!transaction.removed}}" detail="{{!transaction.removed}}">
             <ion-label [ngStyle]="transaction.removed ? {'text-decoration': 'line-through'} : {}">
                 <h2 *ngFor="let item of transaction.items">
                     {{item.amount}}x {{group.getProductById(item.productId)?.name}}

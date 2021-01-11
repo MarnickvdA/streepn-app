@@ -14,6 +14,9 @@ export class Group {
     private mAccounts: UserAccount[];
     private mSharedAccounts: SharedAccount[];
     private mProducts: Product[];
+    metadata: {
+        [key: string]: unknown
+    };
 
     groupDictionary: {
         accounts: {
@@ -36,7 +39,10 @@ export class Group {
                 members: string[],
                 accounts: UserAccount[],
                 products: Product[],
-                sharedAccounts: SharedAccount[]) {
+                sharedAccounts: SharedAccount[],
+                metadata?: {
+                    [key: string]: unknown
+                }) {
         this.id = id;
         this.createdAt = createdAt;
         this.name = name;
@@ -47,10 +53,9 @@ export class Group {
         this.mAccounts = accounts;
         this.mProducts = products;
         this.mSharedAccounts = sharedAccounts;
+        this.metadata = metadata  || {};
 
         this.setDictionary();
-
-        console.log('Creating group: ' + name);
     }
 
 
@@ -200,5 +205,5 @@ export function newGroup(id: string, data: { [key: string]: any }): Group {
         sharedAccounts.push(sharedAccountConverter.newSharedAccount(sharedAccount)));
 
     return new Group(id, data.createdAt, data.name, data.valuta, data.inviteLink,
-        data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts);
+        data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts, data.metadata);
 }
