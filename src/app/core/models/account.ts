@@ -1,4 +1,5 @@
 import {Timestamp} from '@firebase/firestore-types';
+import {getMoneyString} from '@core/utils/firestore-utils';
 
 export abstract class Account {
     id: string;
@@ -6,16 +7,37 @@ export abstract class Account {
     name: string;
     balance: number;
     type: string;
+    readonly totalIn: number;
+    readonly totalOut: number;
     metadata?: {
         [key: string]: unknown
     };
 
-    protected constructor(id: string, createdAt: Timestamp, name: string, balance: number, type: string) {
+    protected constructor(id: string, createdAt: Timestamp, name: string, balance: number, type: string,
+                          totalIn: number, totalOut: number) {
         this.id = id;
         this.createdAt = createdAt;
         this.name = name;
         this.balance = balance;
         this.type = type;
+        this.totalIn = totalIn;
+        this.totalOut = totalOut;
+    }
+
+    get totalInString(): string {
+        return getMoneyString(this.totalIn);
+    }
+
+    get totalOutString(): string {
+        return getMoneyString(this.totalOut);
+    }
+
+    get balanceString(): string {
+        return getMoneyString(this.balance);
+    }
+
+    get canLeaveGroup(): boolean {
+        return this.totalIn === 0 && this.totalOut === 0;
     }
 }
 
@@ -24,8 +46,9 @@ export class UserAccount extends Account {
     photoUrl?: string;
     roles: string[];
 
-    constructor(id: string, userId: string, createdAt: Timestamp, name: string, balance: number, roles: string[], photoUrl: string) {
-        super(id, createdAt, name, balance, 'user');
+    constructor(id: string, userId: string, createdAt: Timestamp, name: string, balance: number,
+                totalIn: number, totalOut: number, roles: string[], photoUrl: string) {
+        super(id, createdAt, name, balance, 'user', totalIn, totalOut);
         this.userId = userId;
         this.roles = roles || [];
         this.photoUrl = photoUrl;
@@ -33,14 +56,10 @@ export class UserAccount extends Account {
 }
 
 export class SharedAccount extends Account {
-    id: string;
-    createdAt: Timestamp;
-    name: string;
-    balance: number;
     accounts: string[];
 
-    constructor(id: string, createdAt: Timestamp, name: string, balance: number, accounts: string[]) {
-        super(id, createdAt, name, balance, 'shared');
+    constructor(id: string, createdAt: Timestamp, name: string, balance: number, totalIn: number, totalOut: number, accounts: string[]) {
+        super(id, createdAt, name, balance, 'shared', totalIn, totalOut);
         this.accounts = accounts;
     }
 }
@@ -53,6 +72,8 @@ export const accountConverter = {
             name: account.name,
             balance: account.balance,
             type: account.type,
+            totalIn: account.totalIn,
+            totalOut: account.totalOut,
         };
     }
 };
@@ -65,13 +86,16 @@ export const userAccountConverter = {
             createdAt: userAccount.createdAt,
             name: userAccount.name,
             balance: userAccount.balance,
+            totalIn: userAccount.totalIn,
+            totalOut: userAccount.totalOut,
             type: 'user',
             roles: userAccount.roles,
             photoUrl: userAccount.photoUrl
         };
     },
     newAccount(data: { [key: string]: any }): UserAccount {
-        return new UserAccount(data.id, data.userId, data.createdAt, data.name, data.balance, data.roles, data.photoUrl);
+        return new UserAccount(data.id, data.userId, data.createdAt, data.name, data.balance,
+            data.totalIn, data.totalOut, data.roles, data.photoUrl);
     }
 };
 
@@ -82,12 +106,14 @@ export const sharedAccountConverter = {
             createdAt: sharedAccount.createdAt,
             name: sharedAccount.name,
             balance: sharedAccount.balance,
+            totalIn: sharedAccount.totalIn,
+            totalOut: sharedAccount.totalOut,
             type: 'shared',
             accounts: sharedAccount.accounts
         };
     },
     newSharedAccount(data: { [key: string]: any }): SharedAccount {
-        return new SharedAccount(data.id, data.createdAt, data.name, data.balance, data.accounts);
+        return new SharedAccount(data.id, data.createdAt, data.name, data.balance, data.totalIn, data.totalOut, data.accounts);
     }
 };
 

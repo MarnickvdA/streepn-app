@@ -63,6 +63,8 @@ export class TransactionService {
         const transaction = new Transaction(undefined, undefined, currentUserAccount.id,
             totalPrice, transactionItems.length, transactionItems, false);
 
+        console.log(transaction);
+
         const callable = this.functions.httpsCallable('addTransaction');
         return callable({
             groupId: group.id,
@@ -86,6 +88,7 @@ export class TransactionService {
             }
         });
 
+        deltaTransaction.totalPrice = -transaction.totalPrice - totalPrice;
         deltaTransaction.itemCount = deltaTransaction.items.length;
 
         const updatedTransaction = newTransaction(transaction.id, transaction);

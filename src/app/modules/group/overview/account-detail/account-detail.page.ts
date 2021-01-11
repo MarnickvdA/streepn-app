@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Group, UserAccount} from '@core/models';
-import {getMoneyString} from '@core/utils/firestore-utils';
 import {Subscription} from 'rxjs';
 import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
@@ -15,7 +14,6 @@ import {
     PushTopic,
     StorageService
 } from '@core/services';
-import {take} from 'rxjs/operators';
 
 @Component({
     selector: 'app-account-detail',
@@ -33,7 +31,9 @@ export class AccountDetailPage implements OnInit, OnDestroy {
     newName: string;
     isAdmin: boolean;
     private readonly logger = LoggerService.getLogger(AccountDetailPage.name);
+    private routeSub: Subscription;
     private groupSub: Subscription;
+    private accountId: string;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
@@ -47,44 +47,40 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                 private translate: TranslateService,
                 private events: EventsService,
                 private navController: NavController) {
+        this.routeSub = this.route.params.subscribe((params: Params) => {
+            this.accountId = params.accountId;
+        });
+    }
 
-        this.account = this.router.getCurrentNavigation().extras.state?.account;
-        this.newName = this.account.name;
-
+    ngOnInit() {
         this.groupId = this.groupService.currentGroupId;
-
         this.groupSub = this.groupService.observeGroup(this.groupId)
             .subscribe(group => {
                 this.group = group;
 
                 if (group) {
                     this.isAdmin = this.group.accounts
-                        .find(acc => acc.userId === authService.currentUser?.uid)?.roles.includes('ADMIN');
-                    this.account = this.group.accounts.find(acc => acc.id === this.account.id);
+                        .find(acc => acc.userId === this.authService.currentUser?.uid)?.roles.includes('ADMIN');
+                    this.account = this.group.accounts.find(acc => acc.id === this.accountId);
+                    this.newName = this.account.name;
+                    this.isSelf = this.authService.currentUser.uid === this.account.userId;
                     this.canDisableAdmin = this.group.accounts.filter(acc => acc.roles.includes('ADMIN'))?.length > 1 || !this.isSelf;
                     this.enableAdmin = this.account.roles.includes('ADMIN');
+                    this.storage.get(`${this.account.id}_enablePush`)
+                        .then((enabled: boolean) => {
+                            this.enablePush = enabled;
+                        })
+                        .catch(() => {
+                            this.enablePush = false;
+                        });
+
                 }
             });
     }
 
-    ngOnInit() {
-        this.storage.get(`${this.account.id}_enablePush`)
-            .then((enabled: boolean) => {
-                this.enablePush = enabled;
-            })
-            .catch(() => {
-                this.enablePush = false;
-            });
-
-        this.isSelf = this.authService.currentUser.uid === this.account.userId;
-    }
-
     ngOnDestroy() {
+        this.routeSub.unsubscribe();
         this.groupSub.unsubscribe();
-    }
-
-    getBalance(money: number) {
-        return `€ ${getMoneyString(money)}`;
     }
 
     togglePush() {

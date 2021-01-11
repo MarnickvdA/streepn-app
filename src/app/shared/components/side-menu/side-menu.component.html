@@ -25,7 +25,7 @@
             </ion-item>
         </ion-menu-toggle>
 
-        <ion-item lines="none" class="ion-margin-top">
+        <ion-item lines="full">
             <ion-icon color="primary" name="contrast-outline" slot="start"></ion-icon>
             <ion-label>{{'dashboard.toggleDarkMode' | translate}}</ion-label>
             <ion-toggle (ionChange)="onClick($event)" checked="{{isDarkMode}}" slot="end"></ion-toggle>

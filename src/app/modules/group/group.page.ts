@@ -1,25 +1,22 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Observable, Subscription} from 'rxjs';
 import {EventsService, GroupService} from '@core/services';
 import {Group} from '@core/models';
 import {AddTransactionComponent} from '@modules/group/add-transaction/add-transaction.component';
 import {ModalController} from '@ionic/angular';
-import {Capacitor, KeyboardInfo, Plugins} from '@capacitor/core';
-
-const {Keyboard} = Plugins;
+import {Capacitor} from '@capacitor/core';
 
 @Component({
     selector: 'app-group',
     templateUrl: './group.page.html',
     styleUrls: ['./group.page.scss'],
 })
-export class GroupPage implements OnInit {
+export class GroupPage implements OnInit, OnDestroy {
 
     group$: Observable<Group>;
     private routeSub: Subscription;
     iOS: boolean;
-    fabVisible = true;
 
     constructor(private route: ActivatedRoute,
                 private groupService: GroupService,
@@ -33,16 +30,10 @@ export class GroupPage implements OnInit {
             this.groupService.currentGroupId = params.id;
             this.group$ = this.groupService.observeGroup(params.id);
         });
+    }
 
-        if (Capacitor.isPluginAvailable('Keyboard')) {
-            Keyboard.addListener('keyboardWillShow', (info: KeyboardInfo) => {
-                this.fabVisible = false;
-            });
-
-            Keyboard.addListener('keyboardWillHide', () => {
-                this.fabVisible = true;
-            });
-        }
+    ngOnDestroy() {
+        this.routeSub.unsubscribe();
     }
 
     addTransaction() {

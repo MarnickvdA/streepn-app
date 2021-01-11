@@ -1,5 +1,6 @@
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
+import {getMoneyString} from '@core/utils/firestore-utils';
 
 export class Stock {
     id: string;
@@ -29,6 +30,10 @@ export class Stock {
 
     get isMutable(): boolean {
         return !this.removed && !this.writtenOff;
+    }
+
+    get costString(): string {
+        return getMoneyString(this.cost);
     }
 }
 

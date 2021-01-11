@@ -68,14 +68,15 @@ export class TransactionDetailPage implements OnInit {
     }
 
     async deleteTransaction() {
-        this.transaction.items.map(item => {
+        const delTransaction = newTransaction(this.transaction.id, JSON.parse(JSON.stringify(this.transaction)));
+        delTransaction.items.map(item => {
             item.amount = 0;
             return item;
         });
 
         this.interactionCount = 1;
 
-        await this.editTransaction();
+        await this.submitForm(delTransaction);
     }
 
     async editTransaction() {
@@ -83,6 +84,10 @@ export class TransactionDetailPage implements OnInit {
             return this.toggleEditing();
         }
 
+        await this.submitForm(this.transaction);
+    }
+
+    private async submitForm(transaction: Transaction) {
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.updating'),
             translucent: true,
@@ -91,7 +96,7 @@ export class TransactionDetailPage implements OnInit {
 
         await loading.present();
 
-        this.transactionService.editTransaction(this.groupId, this.transaction, this.itemsAmount)
+        this.transactionService.editTransaction(this.groupId, transaction, this.itemsAmount)
             .pipe(
                 catchError((err) => {
                     loading.dismiss();
@@ -99,10 +104,10 @@ export class TransactionDetailPage implements OnInit {
                     return EMPTY;
                 })
             )
-            .subscribe((transaction) => {
+            .subscribe((t) => {
                 loading.dismiss();
                 this.navController.pop();
-                this.events.publish('transactions:update', transaction);
+                this.events.publish('transactions:update', t);
             });
     }
 

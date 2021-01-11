@@ -2,6 +2,7 @@ import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {Product, productConverter} from './product';
 import {Account, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from './account';
+import {getMoneyString} from '@core/utils/firestore-utils';
 
 export class Group {
     readonly id: string;
@@ -14,6 +15,8 @@ export class Group {
     private mAccounts: UserAccount[];
     private mSharedAccounts: SharedAccount[];
     private mProducts: Product[];
+    totalIn: number;
+    totalOut: number;
     metadata: {
         [key: string]: unknown
     };
@@ -40,6 +43,8 @@ export class Group {
                 accounts: UserAccount[],
                 products: Product[],
                 sharedAccounts: SharedAccount[],
+                totalIn: number,
+                totalOut: number,
                 metadata?: {
                     [key: string]: unknown
                 }) {
@@ -53,7 +58,9 @@ export class Group {
         this.mAccounts = accounts;
         this.mProducts = products;
         this.mSharedAccounts = sharedAccounts;
-        this.metadata = metadata  || {};
+        this.totalIn = totalIn;
+        this.totalOut = totalOut;
+        this.metadata = metadata || {};
 
         this.setDictionary();
     }
@@ -84,6 +91,14 @@ export class Group {
     set products(value: Product[]) {
         this.mProducts = value;
         this.setProducts();
+    }
+
+    get totalInString(): string {
+        return getMoneyString(this.totalIn);
+    }
+
+    get totalOutString(): string {
+        return getMoneyString(this.totalOut);
     }
 
     getAccountById(accountId: string): Account | undefined {
@@ -185,6 +200,8 @@ export const groupConverter: FirestoreDataConverter<Group> = {
             accounts,
             products,
             sharedAccounts,
+            totalIn: group.totalIn,
+            totalOut: group.totalOut,
         };
     },
     fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Group {
@@ -205,5 +222,5 @@ export function newGroup(id: string, data: { [key: string]: any }): Group {
         sharedAccounts.push(sharedAccountConverter.newSharedAccount(sharedAccount)));
 
     return new Group(id, data.createdAt, data.name, data.valuta, data.inviteLink,
-        data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts, data.metadata);
+        data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts, data.totalIn, data.totalOut, data.metadata);
 }

@@ -168,6 +168,8 @@ export class GroupService {
                 roles: ['ADMIN'],
                 userId: user.uid,
                 balance: 0,
+                totalIn: 0,
+                totalOut: 0,
                 createdAt: now,
             } as UserAccount],
             members: [user.uid],
@@ -175,6 +177,8 @@ export class GroupService {
             createdAt: now,
             inviteLink: randomLink,
             inviteLinkExpiry: nextWeek,
+            totalIn: 0,
+            totalOut: 0,
         } as Group;
 
         return this.fs.collection('groups')

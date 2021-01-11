@@ -112,7 +112,8 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
-        this.submitForm('editing');
+        this.submitForm('editing', this.form.product.value, +this.form.cost.value,
+            +this.form.amount.value, this.selectedAccounts.map(acc => acc.id), this.paidAmount);
     }
 
     updatePayout() {
@@ -128,16 +129,11 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     removeStock() {
-        this.form.product.setValue('');
-        this.form.cost.setValue(0);
-        this.form.amount.setValue(0);
-        this.form.paidBy.setValue([]);
-        this.paidAmount = [];
-
-        this.submitForm('removing');
+        this.submitForm('removing', '', 0, 0, [], []);
     }
 
-    private async submitForm(action: 'editing' | 'removing') {
+    private async submitForm(action: 'editing' | 'removing', productId: string, cost: number, amount: number,
+                             paidBy: string[], paidAmount: number[]) {
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.' + action),
             translucent: true,
@@ -148,8 +144,7 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.updatePayout();
 
-        this.stockService.editStockItem(this.group, this.stockItem, this.form.product.value, +this.form.cost.value,
-            +this.form.amount.value, this.selectedAccounts.map(acc => acc.id), this.paidAmount)
+        this.stockService.editStockItem(this.group, this.stockItem, productId, cost, amount, paidBy, paidAmount)
             .pipe(
                 catchError(err => {
                     this.logger.error({message: err});

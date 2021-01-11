@@ -1,13 +1,5 @@
 <ion-tabs>
-
-    <ion-fab vertical="bottom" horizontal="center" [edge]="iOS">
-        <ion-fab-button (click)="addTransaction()" [disabled]="!((group$ | async)?.products.length > 0)">
-            <ion-icon name="add-outline"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
-
     <ion-tab-bar slot="bottom">
-
         <ion-tab-button tab="home">
             <ion-icon name="home"></ion-icon>
             <ion-label>{{'group.home.title' | translate}}</ion-label>
@@ -18,7 +10,8 @@
             <ion-label>{{'group.transactions.title' | translate}}</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button></ion-tab-button>
+        <ion-tab-button disabled="true">
+        </ion-tab-button>
 
         <ion-tab-button tab="stock">
             <ion-icon name="basket"></ion-icon>
@@ -29,7 +22,12 @@
             <ion-icon name="cog"></ion-icon>
             <ion-label>{{'group.overview.title' | translate}}</ion-label>
         </ion-tab-button>
-
     </ion-tab-bar>
 
+    <ion-fab slot="fixed" horizontal="center" vertical="bottom" [edge]="iOS">
+        <ion-fab-button (click)="addTransaction()" [disabled]="!((group$ | async)?.products.length > 0)">
+            <ion-icon name="add-outline"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
 </ion-tabs>
+

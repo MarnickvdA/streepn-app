@@ -8,6 +8,9 @@
     "SplashScreen": {
       "launchAutoHide": false
     },
+    "Keyboard": {
+      "resize": "none"
+    },
     "PushNotifications": {
       "presentationOptions": [
         "badge",

@@ -57,35 +57,44 @@ exports.joinGroup = functions
         const user: any = data.user;
 
         const groupRef = db.collection('groups').doc(data.groupId);
-        const now = admin.firestore.Timestamp.now();
 
-        groupRef.update(
-            'members', admin.firestore.FieldValue.arrayUnion(userId)
-        ).catch(err => {
-            console.error(err);
-            throw new functions.https.HttpsError('unknown', 'Error occurred while writing document', err);
+        return db.runTransaction(fireTrans => {
+            return fireTrans.get(groupRef)
+                .then(groupDoc => {
+                    const group = groupDoc?.data();
+
+                    // Check if the group exists
+                    if (!groupDoc.exists || !group) {
+                        throw new functions.https.HttpsError('not-found', 'No such group document!');
+                    }
+
+                    const now = admin.firestore.Timestamp.now();
+
+                    if (group.inviteLinkExpiry < now) {
+                        throw new functions.https.HttpsError('permission-denied', 'Invite link expired!');
+                    }
+
+                    fireTrans.update(groupRef, {
+                        members: admin.firestore.FieldValue.arrayUnion(userId),
+                    });
+
+                    const account = {
+                        id: uuidv4(),
+                        name: user.displayName,
+                        photoUrl: user.photoURL,
+                        roles: group.accounts.length === 0 ? ['ADMIN'] : [],
+                        userId,
+                        balance: 0,
+                        totalIn: 0,
+                        totalOut: 0,
+                        createdAt: now,
+                    };
+
+                    return fireTrans.update(groupRef, {
+                        accounts: admin.firestore.FieldValue.arrayUnion(account),
+                    });
+                });
         });
-
-        const account = {
-            id: uuidv4(),
-            name: user.displayName,
-            photoUrl: user.photoURL,
-            roles: [],
-            userId,
-            balance: 0,
-            createdAt: now,
-        };
-
-        return groupRef.update(
-            'accounts', admin.firestore.FieldValue.arrayUnion(account)
-            )
-            .then(() => {
-                return account;
-            })
-            .catch(err => {
-                console.error(err);
-                throw new functions.https.HttpsError('unknown', 'Error occurred while writing document', err);
-            });
     });
 
 exports.leaveGroup = functions
@@ -128,7 +137,13 @@ exports.leaveGroup = functions
                             accounts: admin.firestore.FieldValue.arrayRemove(account),
                         });
                     } else {
-                        fireTrans.delete(groupRef);
+                        fireTrans.update(groupRef, {
+                            members: [],
+                            accounts: [],
+                            archived: true,
+                            archivedAt: admin.firestore.FieldValue.serverTimestamp(),
+                            inviteLinkExpiry: admin.firestore.FieldValue.serverTimestamp(),
+                        });
                     }
 
                     return group.accounts.find((acc: any) => acc.userId === context.auth?.uid);
@@ -190,10 +205,12 @@ exports.addStock = functions
                     fireTrans.set(groupRef.collection('stock').doc(uid), newStock);
 
                     fireTrans.update(groupRef, {
+                        totalIn: admin.firestore.FieldValue.increment(data.stock.cost),
                         accounts: group.accounts.map((acc: any) => {
                             const index = data.stock.paidBy.indexOf(acc.id);
                             if (index >= 0) {
                                 acc.balance += data.stock.paidAmount[index];
+                                acc.totalIn += data.stock.paidAmount[index];
                             }
                             return acc;
                         }),
@@ -201,6 +218,7 @@ exports.addStock = functions
                             const index = data.stock.paidBy.indexOf(acc.id);
                             if (index >= 0) {
                                 acc.balance += data.stock.paidAmount[index];
+                                acc.totalIn += data.stock.paidAmount[index];
                             }
                             return acc;
                         }),
@@ -267,10 +285,12 @@ exports.editStock = functions
                     }
 
                     fireTrans.update(groupRef, {
+                        totalIn: admin.firestore.FieldValue.increment(data.deltaStock.cost),
                         accounts: group.accounts.map((acc: any) => {
                             const index = data.deltaStock.paidBy.indexOf(acc.id);
                             if (index >= 0) {
                                 acc.balance += data.deltaStock.paidAmount[index];
+                                acc.totalIn += data.deltaStock.paidAmount[index];
                             }
                             return acc;
                         }),
@@ -278,6 +298,7 @@ exports.editStock = functions
                             const index = data.deltaStock.paidBy.indexOf(acc.id);
                             if (index >= 0) {
                                 acc.balance += data.deltaStock.paidAmount[index];
+                                acc.totalIn += data.deltaStock.paidAmount[index];
                             }
                             return acc;
                         }),
@@ -410,6 +431,7 @@ exports.editTransaction = functions
                         updateTransactionAccounts(group, data.deltaTransaction);
 
                         fireTrans.update(groupRef, {
+                            totalOut: admin.firestore.FieldValue.increment(data.deltaTransaction.totalPrice),
                             accounts: group.accounts,
                             sharedAccounts: group.sharedAccounts,
                             products: group.products,
@@ -510,12 +532,14 @@ exports.addTransaction = functions
                             totalPrice: data.transaction.totalPrice,
                             itemCount: data.transaction.itemCount,
                             items: data.transaction.items,
+                            removed: false,
                         };
 
                         // Add the transaction to firestore
                         fireTrans.set(groupRef.collection('transactions').doc(uid), newTransaction);
 
                         fireTrans.update(groupRef, {
+                            totalOut: admin.firestore.FieldValue.increment(data.transaction.totalPrice),
                             accounts: group.accounts,
                             sharedAccounts: group.sharedAccounts,
                             products: group.products,
@@ -560,7 +584,7 @@ exports.addTransaction = functions
     });
 
 export function updateTransactionAccounts(group: any, transaction: any) {
-    transaction.items.forEach((t: { amount: number, accountId: any, productId: any, productPrice: number }) => {
+    transaction.items.forEach((t: { amount: number, accountId: string, productId: string, productPrice: number }) => {
         let acc: any = group.accounts.find((account: any) => account.id === t.accountId);
 
         if (!acc) {
@@ -571,25 +595,8 @@ export function updateTransactionAccounts(group: any, transaction: any) {
             throw new functions.https.HttpsError('not-found', 'Shared Account not found!');
         }
 
-        let index: number;
-        switch (acc.type) {
-            case 'user':
-
-                index = group.accounts.indexOf(acc);
-                // Update balance of the account
-                acc.balance -= (t.productPrice * t.amount);
-                group.accounts[index] = acc;
-
-                break;
-            case 'shared':
-                index = group.sharedAccounts.indexOf(acc);
-
-                // Update balance of the account
-                acc.balance -= (t.productPrice * t.amount);
-                group.sharedAccounts[index] = acc;
-
-                break;
-        }
+        acc.balance -= (t.productPrice * t.amount);
+        acc.totalOut += (t.productPrice * t.amount);
 
         group.products = group.products.map((pr: any) => {
             if (pr.id === t.productId) {

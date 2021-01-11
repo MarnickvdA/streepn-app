@@ -26,7 +26,7 @@
         <!--                    {{'group.overview.preferences.title' | translate:{name: group.name} }}-->
         <!--                </ion-label>-->
         <!--            </ion-item>-->
-        <ion-item (click)="shareGroup()" *ngIf="isAdmin" button class="large-item" detail="false">
+        <ion-item lines="full" (click)="shareGroup()" *ngIf="isAdmin" button class="large-item" detail="false">
             <ion-icon name="share-social-outline" slot="start"></ion-icon>
             <ion-label>
                 {{'group.overview.accounts.inviteLink' | translate}}
@@ -67,7 +67,7 @@
         <!-- START PRODUCTS SECTION -->
         <ion-list-header class="ion-margin-top" lines="full">
             <ion-label>{{'group.overview.products' | translate}}</ion-label>
-            <ion-button (click)="addProduct()" *ngIf="isAdmin">{{'actions.new' | translate}}</ion-button>
+            <ion-button (click)="addProduct()" *ngIf="isAdmin">{{'actions.add' | translate}}</ion-button>
         </ion-list-header>
 
         <ion-item *ngIf="group?.products.length === 0" lines="none">

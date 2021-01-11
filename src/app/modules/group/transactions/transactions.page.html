@@ -44,6 +44,10 @@
                     {{item.amount}}x {{group.getProductById(item.productId)?.name}}
                     voor {{group.getAccountById(item.accountId)?.name}}
                 </h2>
+                <div class="transaction-bill" *ngIf="transaction.priceByAccountId(currentAccount.id); let price">
+                    <ion-icon name="remove-circle-outline"></ion-icon>
+                    <span>{{price}}</span>
+                </div>
                 <p>
                     Op {{transaction.createdAt.toDate().toLocaleString()}}
                     door {{group.getUserAccountById(transaction.createdBy)?.name}}

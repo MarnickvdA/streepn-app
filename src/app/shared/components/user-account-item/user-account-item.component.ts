@@ -22,10 +22,6 @@ export class UserAccountItemComponent implements OnInit {
                 private navController: NavController) {
     }
 
-    get balanceString(): string {
-        return getMoneyString(this.account.balance);
-    }
-
     ngOnInit() {
     }
 

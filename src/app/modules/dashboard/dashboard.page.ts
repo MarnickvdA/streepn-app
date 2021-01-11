@@ -2,7 +2,7 @@ import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core
 import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
 import firebase from 'firebase/app';
-import {Group} from '@core/models';
+import {Group, UserAccount} from '@core/models';
 import {AdsService, AuthService, EventsService, GroupService, LoggerService, StorageService, UIService, UserService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {take} from 'rxjs/operators';
@@ -17,11 +17,13 @@ import User = firebase.User;
 export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     user$: Observable<User>;
     groups$: Observable<Group[]>;
+    private groupsSub: Subscription;
     private userSub: Subscription;
     private readonly logger = LoggerService.getLogger(DashboardPage.name);
     private user: User;
     private loadingGroupJoin?: HTMLIonLoadingElement;
     private onboarding: boolean;
+    groupAccounts: { [groupId: string]: UserAccount } = {};
 
     constructor(private authService: AuthService,
                 private navController: NavController,
@@ -49,6 +51,12 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             .subscribe(user => {
                 if (user) {
                     this.groups$ = this.groupService.observeGroups(user.uid);
+                    this.groupsSub = this.groups$.subscribe(groups => {
+                        groups.forEach(group => {
+                            this.groupAccounts = {};
+                            this.groupAccounts[group.id] = group.accounts.find(acc => user.uid === acc.userId);
+                        });
+                    });
                 }
             });
 
@@ -59,6 +67,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnDestroy() {
         this.userSub.unsubscribe();
+        this.groupsSub?.unsubscribe();
         this.eventsService.unsubscribe('app:resume', () => {
             this.checkForGroupInvite();
         });

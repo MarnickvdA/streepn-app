@@ -5,7 +5,6 @@ import {GroupService} from '@core/services';
 import {Observable, Subscription} from 'rxjs';
 import {Group, Product, Stock, stockConverter} from '@core/models';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
-import {getMoneyString} from '@core/utils/firestore-utils';
 import {RemoveStockComponent} from '@modules/group/stock/remove-stock/remove-stock.component';
 import {EditStockComponent} from '@modules/group/stock/edit-stock/edit-stock.component';
 
@@ -161,9 +160,5 @@ export class StockPage implements OnInit {
                     });
                 }
             });
-    }
-
-    getBalanceString(money: number): string {
-        return getMoneyString(money);
     }
 }

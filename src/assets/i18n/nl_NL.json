@@ -39,10 +39,12 @@
     "saving": "Opslaan...",
     "loading": "Aan het laden...",
     "deleting": "Aan het verwijderen...",
+    "removing": "Aan het verwijderen...",
     "adding": "Aan het toevoegen...",
     "streeping": "Aan het strepen...",
     "joining": "Aan het deelnemen...",
-    "updating": "Aan het bijwerken..."
+    "updating": "Aan het bijwerken...",
+    "editing": "Aan het bijwerken..."
   },
   "errors": {
     "error": "Foutmelding",
@@ -240,6 +242,7 @@
       },
       "account": {
         "preferences": "Voorkeuren",
+        "balance": "Geldstromen",
         "enablePush": "Push Notificaties",
         "enableAdmin": "Beheerders rechten",
         "disableAdmin": {
@@ -247,10 +250,10 @@
           "message": "Weet je zeker dat je de beheerdersrechten van {{name}} wilt ontnemen?",
           "you": "jezelf"
         },
-        "deletePrecondition": "{{name}} moet een saldo van € 0,00 hebben om de groep te kunnen verlaten",
+        "deletePrecondition": "Om de groep te verlaten moet elke geldstroom op € 0,00 staan.",
         "deleteAccount": "{{name}} verwijderen",
         "leaveGroup": "{{groupName}} verlaten",
-        "you": "Je"
+        "you": "je"
       },
       "accounts": {
         "title": "Deelnemers",

@@ -5,3 +5,15 @@ div.account-toolbar {
   text-align: center;
   padding-bottom: 0.5rem;
 }
+
+.transaction-bill {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: var(--ion-color-danger);
+  font-size: 1rem;
+  span {
+    padding-left: .2rem;
+  }
+  padding-bottom: .4rem;
+}
