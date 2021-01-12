@@ -11,15 +11,9 @@ import {CoreModule} from '@core/core.module';
 import {SharedModule} from '@shared/shared.module';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {RouteReuseStrategy} from '@angular/router';
-import {AngularFireFunctionsModule, REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR} from '@angular/fire/functions';
 import {environment} from '@env/environment';
-import {AngularFireModule} from '@angular/fire';
-import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/auth';
 import * as Sentry from '@sentry/browser';
 import {LoggerService} from '@core/services';
-import {USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/firestore';
-
-require('./firebase-init');
 
 Sentry.init({
     dsn: 'https://898ea0c4100341d581f3a5d645db3c12@o352784.ingest.sentry.io/5178411',
@@ -67,17 +61,10 @@ export function createTranslateLoader(http: HttpClient) {
             }
         }),
         AppRoutingModule,
-        AngularFireModule.initializeApp(environment.firebaseConfig),
-        AngularFireAuthModule,
-        AngularFireFunctionsModule,
     ],
     exports: [TranslateModule],
     providers: [
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-        {provide: REGION, useValue: 'europe-west1'},
-        {provide: USE_AUTH_EMULATOR, useValue: !environment.production ? ['localhost', 9099] : undefined},
-        {provide: USE_FIRESTORE_EMULATOR, useValue: !environment.production ? ['localhost', 8080] : undefined},
-        {provide: USE_FUNCTIONS_EMULATOR, useValue: !environment.production ? ['localhost', 5001] : undefined},
         {provide: ErrorHandler, useClass: SentryErrorHandler},
     ],
     bootstrap: [AppComponent]
