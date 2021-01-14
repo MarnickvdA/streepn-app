@@ -9,12 +9,13 @@ export abstract class Account {
     type: string;
     readonly totalIn: number;
     readonly totalOut: number;
+    settledAt: Timestamp;
     metadata?: {
         [key: string]: unknown
     };
 
     protected constructor(id: string, createdAt: Timestamp, name: string, balance: number, type: string,
-                          totalIn: number, totalOut: number) {
+                          totalIn: number, totalOut: number, settledAt?: Timestamp) {
         this.id = id;
         this.createdAt = createdAt;
         this.name = name;
@@ -22,6 +23,7 @@ export abstract class Account {
         this.type = type;
         this.totalIn = totalIn;
         this.totalOut = totalOut;
+        this.settledAt = settledAt;
     }
 
     get totalInString(): string {
@@ -47,8 +49,8 @@ export class UserAccount extends Account {
     roles: string[];
 
     constructor(id: string, userId: string, createdAt: Timestamp, name: string, balance: number,
-                totalIn: number, totalOut: number, roles: string[], photoUrl: string) {
-        super(id, createdAt, name, balance, 'user', totalIn, totalOut);
+                totalIn: number, totalOut: number, roles: string[], photoUrl: string, settledAt?: Timestamp) {
+        super(id, createdAt, name, balance, 'user', totalIn, totalOut, settledAt);
         this.userId = userId;
         this.roles = roles || [];
         this.photoUrl = photoUrl;
@@ -58,8 +60,9 @@ export class UserAccount extends Account {
 export class SharedAccount extends Account {
     accounts: string[];
 
-    constructor(id: string, createdAt: Timestamp, name: string, balance: number, totalIn: number, totalOut: number, accounts: string[]) {
-        super(id, createdAt, name, balance, 'shared', totalIn, totalOut);
+    constructor(id: string, createdAt: Timestamp, name: string, balance: number, totalIn: number,
+                totalOut: number, accounts: string[], settledAt?: Timestamp) {
+        super(id, createdAt, name, balance, 'shared', totalIn, totalOut, settledAt);
         this.accounts = accounts;
     }
 }
@@ -74,6 +77,7 @@ export const accountConverter = {
             type: account.type,
             totalIn: account.totalIn,
             totalOut: account.totalOut,
+            settledAt: account.settledAt,
         };
     }
 };
@@ -90,12 +94,13 @@ export const userAccountConverter = {
             totalOut: userAccount.totalOut,
             type: 'user',
             roles: userAccount.roles,
-            photoUrl: userAccount.photoUrl
+            photoUrl: userAccount.photoUrl,
+            settledAt: userAccount.settledAt,
         };
     },
     newAccount(data: { [key: string]: any }): UserAccount {
         return new UserAccount(data.id, data.userId, data.createdAt, data.name, data.balance,
-            data.totalIn, data.totalOut, data.roles, data.photoUrl);
+            data.totalIn, data.totalOut, data.roles, data.photoUrl, data.settledAt);
     }
 };
 
@@ -109,11 +114,13 @@ export const sharedAccountConverter = {
             totalIn: sharedAccount.totalIn,
             totalOut: sharedAccount.totalOut,
             type: 'shared',
-            accounts: sharedAccount.accounts
+            accounts: sharedAccount.accounts,
+            settledAt: sharedAccount.settledAt,
         };
     },
     newSharedAccount(data: { [key: string]: any }): SharedAccount {
-        return new SharedAccount(data.id, data.createdAt, data.name, data.balance, data.totalIn, data.totalOut, data.accounts);
+        return new SharedAccount(data.id, data.createdAt, data.name, data.balance,
+            data.totalIn, data.totalOut, data.accounts, data.settledAt);
     }
 };
 

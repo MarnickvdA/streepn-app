@@ -7,13 +7,18 @@ export class Product {
     name: string;
     price: number;
     stock?: number;
+    totalStock?: number;
+    totalStockWorth?: number;
 
-    constructor(id: string, createdAt: Timestamp, name: string, price: number, stock?: number) {
+    constructor(id: string, createdAt: Timestamp, name: string, price: number, stock?: number,
+                totalStock?: number, totalStockWorth?: number) {
         this.id = id;
         this.createdAt = createdAt;
         this.name = name;
         this.price = price;
         this.stock = stock;
+        this.totalStock = totalStock;
+        this.totalStockWorth = totalStockWorth;
     }
 
     get priceString(): string {
@@ -34,9 +39,17 @@ export const productConverter = {
             p.stock = product.stock;
         }
 
+        if (!isNaN(product.totalStock)) {
+            p.totalStock = product.totalStock;
+        }
+
+        if (!isNaN(product.totalStockWorth)) {
+            p.totalStockWorth = product.totalStockWorth;
+        }
+
         return p;
     },
     newProduct(data: { [key: string]: any }): Product {
-        return new Product(data.id, data.createdAt, data.name, data.price, data.stock);
+        return new Product(data.id, data.createdAt, data.name, data.price, data.stock, data.totalStock, data.totalStockWorth);
     }
 };

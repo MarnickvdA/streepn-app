@@ -1,0 +1,59 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{sharedAccount?.name}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="dismiss()">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
+                                 [icon]="['fad', 'times-circle']"></fa-duotone-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{sharedAccount?.name}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <ion-item lines="full">
+        <ion-label>{{'group.overview.settle.sharedAccount.amount' | translate}}</ion-label>
+        <span slot="end"
+              [ngClass]="sharedAccount?.balance >= 0 ? 'positive-amount' : 'negative-amount'">{{sharedAccount?.balanceString}}</span>
+    </ion-item>
+
+    <p class="description ion-text-wrap">
+        {{'group.overview.settle.sharedAccount.description' | translate}}<br><br> <b>{{'group.overview.settle.sharedAccount.description-alert' | translate}}</b>
+    </p>
+
+    <ion-list>
+        <ion-list-header lines="inset">
+            {{'group.overview.settle.sharedAccount.select-payers' | translate}}
+        </ion-list-header>
+        <ion-item class="account-item" *ngFor="let account of group?.accounts">
+            <ion-avatar slot="start">
+                <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
+                <img *ngIf="!account.photoUrl" alt=""
+                     src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg">
+            </ion-avatar>
+            <div class="content">
+                <ion-label>
+                    <h3>{{account.name}}</h3>
+                    <p>
+                        {{'group.overview.settle.sharedAccount.balance' | translate}}
+                        <span [ngClass]="account.balance - (payerAmount[account.id] ? payerAmount[account.id] : 0) >= 0
+                        ? 'positive-amount' : 'negative-amount'">{{getMoneyAmount(account.balance
+                            - (payerAmount[account.id] ? payerAmount[account.id] : 0))}}</span>
+                    </p>
+                </ion-label>
+            </div>
+            <ion-checkbox slot="end" [checked]="payers[account.id]"
+                          (ionChange)="toggleAccount($event, account)"></ion-checkbox>
+        </ion-item>
+    </ion-list>
+
+    <ion-button [disabled]="!canSettle()" (click)="settleAccount()" class="settle" expand="block">
+        <ion-label>{{'group.overview.settle.sharedAccount.settle' | translate}}</ion-label>
+    </ion-button>
+</ion-content>

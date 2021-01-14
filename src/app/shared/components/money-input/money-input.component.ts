@@ -14,6 +14,7 @@ export class MoneyInputComponent implements OnInit {
     @Input() precision: number;
     @Input() amount: string;
     @Input() icon = 'pricetag-outline';
+    @Input() padding: 'none' | undefined = undefined;
     @Input() tabIndex = -1;
     @Output() amountEntered = new EventEmitter<number>();
     amountString: string;
@@ -79,6 +80,8 @@ export class MoneyInputComponent implements OnInit {
     }
 
     setAmount(amount: number) {
+        this.amount = '0';
+        this.amountString = this.formattedAmount;
         setTimeout(() => {
             this.handleInput(new CustomEvent('', {
                 detail: {

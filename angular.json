@@ -49,8 +49,8 @@
                   "with": "src/environments/environment.prod.ts"
                 },
                 {
-                  "replace": "src/app/firebase-init.ts",
-                  "with": "src/app/firebase-init.prod.ts"
+                  "replace": "src/app/core/firebase-init.ts",
+                  "with": "src/app/core/firebase-init.prod.ts"
                 }
               ],
               "optimization": true,

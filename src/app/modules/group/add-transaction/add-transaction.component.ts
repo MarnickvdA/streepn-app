@@ -6,6 +6,8 @@ import {catchError} from 'rxjs/operators';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {AdsService, AnalyticsService, AuthService, LoggerService, TransactionService, TransactionSet, UserService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
+import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
+import {faShoppingCart} from '@fortawesome/pro-regular-svg-icons';
 
 const {Haptics} = Plugins;
 
@@ -30,7 +32,9 @@ export class AddTransactionComponent implements OnInit {
                 private userService: UserService,
                 private analyticsService: AnalyticsService,
                 private authService: AuthService,
-                private ads: AdsService) {
+                private ads: AdsService,
+                private iconLibrary: FaIconLibrary) {
+        this.iconLibrary.addIcons(faShoppingCart);
     }
 
     ngOnInit() {
@@ -118,5 +122,10 @@ export class AddTransactionComponent implements OnInit {
 
         this.transactions[account.id][this.currentProduct.id].amount -= 1;
         this.transactionCount -= 1;
+    }
+
+    reset() {
+        this.transactions = {};
+        this.transactionCount = 0;
     }
 }

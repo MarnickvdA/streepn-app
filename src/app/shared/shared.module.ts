@@ -11,6 +11,7 @@ import {SharedAccountItemComponent} from './components/shared-account-item/share
 import {RouterModule} from '@angular/router';
 import {ProductStockItemComponent} from './components/product-stock-item/product-stock-item.component';
 import {SideMenuComponent} from '@shared/components/side-menu/side-menu.component';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 export const components = [
     MoneyInputComponent,
@@ -33,6 +34,7 @@ export const components = [
         HttpClientModule,
         IonicModule,
         RouterModule,
+        FontAwesomeModule,
     ],
     providers: [
         CurrencyPipe
@@ -43,6 +45,7 @@ export const components = [
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
+        FontAwesomeModule,
         ...components,
     ]
 })

@@ -3,7 +3,7 @@
         <ion-buttons slot="start">
             <ion-menu-toggle>
                 <ion-button>
-                    <ion-icon slot="icon-only" name="menu"></ion-icon>
+                    <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'bars']"></fa-duotone-icon>
                 </ion-button>
             </ion-menu-toggle>
         </ion-buttons>
@@ -20,16 +20,16 @@
 
     <ion-list *ngIf="group$ | async; let group">
         <ion-item>
-            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+            <fa-duotone-icon slot="start" class="success" [icon]="['fad', 'plus-circle']"></fa-duotone-icon>
             <ion-label>
-                Totaal in
+                <h3>Totaal in</h3>
             </ion-label>
             <span slot="end">{{group.totalInString}}</span>
         </ion-item>
         <ion-item>
-            <ion-icon name="remove-circle-outline" slot="start"></ion-icon>
+            <fa-duotone-icon slot="start" class="danger" [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
             <ion-label>
-                Totaal uit
+                <h3>Totaal uit</h3>
             </ion-label>
             <span slot="end">{{group.totalOutString}}</span>
         </ion-item>

@@ -1,5 +1,5 @@
-<ion-item (click)="openInput()" class="form-input" lines="none">
-    <ion-icon name="{{icon}}" slot="start"></ion-icon>
+<ion-item [ngClass]="padding === 'none' ? 'ion-no-padding' : ''" (click)="openInput()" class="form-input" lines="none">
+    <ion-icon *ngIf="icon" name="{{icon}}" slot="start"></ion-icon>
     <span [ngClass]="amount === '0' ? 'form-input-grey' : ''">
     {{ amountString }}
   </span>

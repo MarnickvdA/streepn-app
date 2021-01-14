@@ -9,7 +9,7 @@
 
         <ion-menu-toggle [autoHide]="false">
             <ion-item routerLink="dashboard" routerDirection="root">
-                <ion-icon color="primary" slot="start" name='speedometer-outline'></ion-icon>
+                <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'list']"></fa-duotone-icon>
                 <ion-label>
                     {{'dashboard.title' | translate}}
                 </ion-label>
@@ -18,7 +18,7 @@
 
         <ion-menu-toggle [autoHide]="false">
             <ion-item routerLink="profile" routerDirection="root">
-                <ion-icon color="primary" slot="start" name='person-circle-outline'></ion-icon>
+                <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'user-cog']"></fa-duotone-icon>
                 <ion-label>
                     {{'dashboard.profile' | translate}}
                 </ion-label>
@@ -26,7 +26,7 @@
         </ion-menu-toggle>
 
         <ion-item lines="full">
-            <ion-icon color="primary" name="contrast-outline" slot="start"></ion-icon>
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'adjust']"></fa-duotone-icon>
             <ion-label>{{'dashboard.toggleDarkMode' | translate}}</ion-label>
             <ion-toggle (ionChange)="onClick($event)" checked="{{isDarkMode}}" slot="end"></ion-toggle>
         </ion-item>
@@ -40,6 +40,9 @@
                 <ion-item *ngFor="let group of groups" button routerDirection="root"
                           routerLink="/group/{{group.id}}/home">
                     <ion-label>{{group.name}}</ion-label>
+                    <fa-icon (click)="toggleFavorite($event, group.id)" slot="end" class="primary"
+                             [ngClass]="this.favorite === group.id ? 'warning' : 'medium'" fixedWidth
+                             [icon]="this.favorite === group.id ? ['fas', 'star'] : ['fal', 'star']"></fa-icon>
                 </ion-item>
             </ion-menu-toggle>
         </ng-container>

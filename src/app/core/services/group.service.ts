@@ -159,27 +159,8 @@ export class GroupService {
         const nextWeek = Timestamp.fromDate(date);
         const randomLink = uuidv4().substring(0, 8).toUpperCase();
 
-        const group = {
-            name,
-            accounts: [{
-                id: uuidv4(),
-                name: user.displayName,
-                photoUrl: user.photoURL,
-                roles: ['ADMIN'],
-                userId: user.uid,
-                balance: 0,
-                totalIn: 0,
-                totalOut: 0,
-                createdAt: now,
-            } as UserAccount],
-            members: [user.uid],
-            valuta: 'EUR',
-            createdAt: now,
-            inviteLink: randomLink,
-            inviteLinkExpiry: nextWeek,
-            totalIn: 0,
-            totalOut: 0,
-        } as Group;
+        const account = new UserAccount(uuidv4(), user.uid, now, user.displayName, 0, 0, 0, ['ADMIN'], user.photoURL);
+        const group = new Group(undefined, now, name, 'EUR', randomLink, nextWeek, [user.uid], [account], [], [], 0, 0);
 
         return this.fs.collection('groups')
             .add(groupConverter.toFirestore(group))
@@ -270,5 +251,17 @@ export class GroupService {
             .then(() => {
                 return randomLink;
             });
+    }
+
+    settleSharedAccount(groupId: string, sharedAccountId: string, payers: {[id: string]: number}) {
+        const callable = this.functions.httpsCallable('settleSharedAccount');
+        return callable({
+            groupId,
+            sharedAccountId,
+            payers,
+        }).pipe(
+            map(result => {
+                console.log(result);
+            }));
     }
 }

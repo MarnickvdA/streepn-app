@@ -3,7 +3,7 @@
         <ion-title>{{'group.stock.edit.title' | translate}}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="dismiss()">
-                <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth [icon]="['fad', 'times-circle']"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
     </ion-toolbar>
@@ -81,7 +81,7 @@
                                 okText="{{'actions.ok' | translate}}"
                                 placeholder="{{'group.stock.add.paidBy' | translate}}"
                                 selectedText="{{selectedNames}}">
-                        <ion-select-option *ngFor="let account of allAccounts"
+                        <ion-select-option *ngFor="let account of group.accounts"
                                            value="{{account.id}}">
                             {{account.name}}
                         </ion-select-option>

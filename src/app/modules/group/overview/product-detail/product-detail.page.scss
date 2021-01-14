@@ -7,3 +7,11 @@
     margin-top: 1rem;
   }
 }
+
+
+app-money-input {
+  ion-item::part(native) {
+    padding: 0;
+    padding-inline:0;
+  }
+}

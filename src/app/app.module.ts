@@ -14,6 +14,7 @@ import {RouteReuseStrategy} from '@angular/router';
 import {environment} from '@env/environment';
 import * as Sentry from '@sentry/browser';
 import {LoggerService} from '@core/services';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 Sentry.init({
     dsn: 'https://898ea0c4100341d581f3a5d645db3c12@o352784.ingest.sentry.io/5178411',
@@ -61,6 +62,7 @@ export function createTranslateLoader(http: HttpClient) {
             }
         }),
         AppRoutingModule,
+        FontAwesomeModule,
     ],
     exports: [TranslateModule],
     providers: [

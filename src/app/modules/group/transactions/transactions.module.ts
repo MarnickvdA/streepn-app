@@ -8,6 +8,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {TransactionDetailPage} from './transaction-detail/transaction-detail.page';
 import {TransactionsPage} from '@modules/group/transactions/transactions.page';
 import {TransactionsPageRoutingModule} from '@modules/group/transactions/transactions-routing.module';
+import {SharedModule} from '@shared/shared.module';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import {TransactionsPageRoutingModule} from '@modules/group/transactions/transac
         FormsModule,
         IonicModule,
         TransactionsPageRoutingModule,
-        TranslateModule
+        TranslateModule,
+        SharedModule
     ],
     declarations: [
         TransactionsPage,

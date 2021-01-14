@@ -8,6 +8,7 @@ import {RegisterPageRoutingModule} from './register-routing.module';
 
 import {RegisterPage} from './register.page';
 import {TranslateModule} from '@ngx-translate/core';
+import {SharedModule} from '@shared/shared.module';
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import {TranslateModule} from '@ngx-translate/core';
         IonicModule,
         RegisterPageRoutingModule,
         ReactiveFormsModule,
-        TranslateModule
+        TranslateModule,
+        SharedModule
     ],
     declarations: [RegisterPage]
 })

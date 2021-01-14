@@ -1,7 +1,9 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button [defaultHref]="'/group/' + groupId + '/preferences'"></ion-back-button>
+            <ion-button mode="ios" fill="none" [routerLink]="'/group/' + groupId + '/preferences'" routerDirection="back">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+            </ion-button>
         </ion-buttons>
         <ion-title>{{account?.name}}</ion-title>
     </ion-toolbar>
@@ -20,13 +22,13 @@
             </ion-label>
         </ion-list-header>
         <ion-item lines="inset">
-            <ion-icon icon="person-outline" slot="start"></ion-icon>
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'user']"></fa-duotone-icon>
             <ion-input [(ngModel)]="newName" value="{{account?.name}}"></ion-input>
             <ion-button (click)="setName()"
                         [attr.disabled]="newName === account?.name || newName?.length < 2">{{'actions.edit' | translate}}</ion-button>
         </ion-item>
         <ion-item *ngIf="isSelf">
-            <ion-icon icon="notifications-outline" slot="start"></ion-icon>
+            <fa-duotone-icon slot="start" class="primary-reversed" fixedWidth [icon]="['fad', 'bell']"></fa-duotone-icon>
             <ion-label>
                 {{'group.overview.account.enablePush' | translate}}
             </ion-label>
@@ -34,7 +36,7 @@
                         slot="end"></ion-toggle>
         </ion-item>
         <ion-item lines="full" *ngIf="isAdmin">
-            <ion-icon icon="lock-open-outline" slot="start"></ion-icon>
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'users-crown']"></fa-duotone-icon>
             <ion-label>
                 {{'group.overview.account.enableAdmin' | translate}}
             </ion-label>
@@ -48,20 +50,20 @@
             </ion-label>
         </ion-list-header>
         <ion-item>
-            <ion-icon name="wallet-outline" slot="start"></ion-icon>
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'wallet']"></fa-duotone-icon>
             <ion-label>Saldo</ion-label>
             <span slot="end"
                   [ngClass]="account?.balance >= 0 ? 'positive-amount' : 'negative-amount'">{{account?.balanceString}}</span>
         </ion-item>
         <ion-item>
-            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+            <fa-duotone-icon slot="start" class="success" fixedWidth [icon]="['fad', 'plus-circle']"></fa-duotone-icon>
             <ion-label>
                 Totaal in
             </ion-label>
             <span slot="end">{{account?.totalInString}}</span>
         </ion-item>
         <ion-item lines="full">
-            <ion-icon name="remove-circle-outline" slot="start"></ion-icon>
+            <fa-duotone-icon slot="start" class="danger" fixedWidth [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
             <ion-label>
                 Totaal uit
             </ion-label>

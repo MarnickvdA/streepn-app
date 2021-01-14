@@ -6,6 +6,10 @@ import {AccountService, GroupService, LoggerService} from '@core/services';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Params} from '@angular/router';
+import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
+import {faPiggyBank, faUser, faWallet} from '@fortawesome/pro-duotone-svg-icons';
+import {NewSharedAccountComponent} from '@modules/group/overview/new-shared-account/new-shared-account.component';
+import {SettleComponent} from '@modules/group/overview/shared-account-detail/settle/settle.component';
 
 @Component({
     selector: 'app-shared-account-detail',
@@ -30,7 +34,9 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
                 private loadingController: LoadingController,
                 private modalController: ModalController,
                 private translate: TranslateService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private iconLibrary: FaIconLibrary) {
+        this.iconLibrary.addIcons(faPiggyBank, faWallet);
         this.routeSub = this.route.params.subscribe((params: Params) => {
             this.accountId = params.accountId;
         });
@@ -74,6 +80,18 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
             .finally(() => {
                 loading.dismiss();
             });
+    }
+
+    settleSharedAccount(sharedAccountId: string) {
+        this.modalController.create({
+            component: SettleComponent,
+            componentProps: {
+                sharedAccountId
+            },
+            swipeToClose: true
+        }).then((modal) => {
+            modal.present();
+        });
     }
 
     dismiss() {

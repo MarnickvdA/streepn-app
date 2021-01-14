@@ -7,6 +7,7 @@ import {GroupPage} from '@modules/group/group.page';
 import {GroupPageRoutingModule} from '@modules/group/group-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {AddTransactionComponent} from '@modules/group/add-transaction/add-transaction.component';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     imports: [
@@ -14,7 +15,8 @@ import {AddTransactionComponent} from '@modules/group/add-transaction/add-transa
         FormsModule,
         IonicModule,
         GroupPageRoutingModule,
-        TranslateModule
+        TranslateModule,
+        FontAwesomeModule
     ],
     declarations: [
         GroupPage,

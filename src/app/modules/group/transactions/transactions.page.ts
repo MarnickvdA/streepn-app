@@ -7,6 +7,8 @@ import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {Observable, Subscription} from 'rxjs';
 import {getMoneyString} from '@core/utils/firestore-utils';
 import {AuthService, EventsService, GroupService, TransactionService} from '@core/services';
+import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
+import {faMinusCircle} from '@fortawesome/pro-duotone-svg-icons';
 
 @Component({
     selector: 'app-transactions',
@@ -33,7 +35,9 @@ export class TransactionsPage implements OnInit, OnDestroy {
                 private fs: AngularFirestore,
                 private modalController: ModalController,
                 private events: EventsService,
-                private navController: NavController) {
+                private navController: NavController,
+                private iconLibrary: FaIconLibrary) {
+        this.iconLibrary.addIcons(faMinusCircle);
         this.refreshSub = () => {
             this.reset();
         };

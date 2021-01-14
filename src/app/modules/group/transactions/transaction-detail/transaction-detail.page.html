@@ -1,13 +1,17 @@
 <ion-header class="ion-no-border">
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button *ngIf="!editing" defaultHref="/group/{{groupId}}"></ion-back-button>
+            <ion-button mode="ios" fill="none" *ngIf="!editing" routerLink="/group/{{groupId}}/transactions"
+                        routerDirection="back">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
+                                 [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+            </ion-button>
             <ion-button (click)="toggleEditing()" *ngIf="editing">
                 <ion-label>{{'actions.cancel' | translate}}</ion-label>
             </ion-button>
         </ion-buttons>
         <ion-buttons slot="end">
-            <ion-button (click)="toggleEditing()" *ngIf="!editing">
+            <ion-button [disabled]="!canEdit" (click)="toggleEditing()" *ngIf="!editing">
                 <ion-label>{{'actions.edit' | translate}}</ion-label>
             </ion-button>
             <ion-button (click)="editTransaction()" *ngIf="editing">
@@ -24,24 +28,29 @@
             <img *ngIf="!account.photoUrl" alt="" src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg">
         </ion-avatar>
         <ion-label>
-            <h1>{{account.name}}</h1>
+            <h2>{{account.name}}</h2>
             <p>Op {{transaction.createdAt.toDate().toLocaleString()}}</p>
+            <p *ngIf="!canEdit" class="small"><b>{{'group.transactions.disabledEditing' | translate}}</b></p>
         </ion-label>
     </div>
     <ion-list *ngIf="transaction?.items">
         <ion-item *ngFor="let item of transaction.items; index as i">
+            <ion-avatar slot="start" *ngIf="group.getUserAccountById(item.accountId); let user">
+                <img *ngIf="user.photoUrl" alt="" src="{{user.photoUrl}}">
+                <img *ngIf="!user.photoUrl" alt="" src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg">
+            </ion-avatar>
             <ion-label>
-                <h2>{{item.amount}} {{group.getProductById(item.productId)?.name}}
-                    voor {{getPriceString(item.productPrice * item.amount)}}</h2>
-                <p>
-                    Gestreept op {{group.getAccountById(item.accountId)?.name}}
+                <h3>{{item.amount}} {{group.getProductById(item.productId)?.name}}
+                    voor {{getPriceString(item.productPrice * item.amount)}}</h3>
+                <p class="small">
+                    Voor {{group.getAccountById(item.accountId)?.name}}
                 </p>
             </ion-label>
-            <ion-fab-button (click)="removeItem(item)" *ngIf="editing" [attr.disabled]="item.amount === 0"
+            <ion-fab-button (click)="removeItem(item)" *ngIf="editing && canEditItem(item)" [attr.disabled]="item.amount === 0"
                             color="danger" size="small">
                 <ion-icon name="remove-outline"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button (click)="addItem(item)" *ngIf="editing" [attr.disabled]="item.amount >= itemsAmount[i]"
+            <ion-fab-button (click)="addItem(item)" *ngIf="editing && canEditItem(item)" [attr.disabled]="item.amount >= itemsAmount[i]"
                             color="success"
                             size="small">
                 <ion-icon name="add-outline"></ion-icon>

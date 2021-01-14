@@ -4,6 +4,10 @@ import {Group} from '@core/models';
 import {AuthService, EventsService, GroupService, StorageService} from '@core/services';
 import {Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
 import {MenuController} from '@ionic/angular';
+import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
+import {faAdjust, faList, faUserCog} from '@fortawesome/pro-duotone-svg-icons';
+import {faStar} from '@fortawesome/pro-light-svg-icons';
+import {faStar as faStarSolid} from '@fortawesome/pro-solid-svg-icons';
 
 const {StatusBar} = Plugins;
 
@@ -18,18 +22,28 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     private userSub: Subscription;
     groups$: Observable<Group[]>;
     isDarkMode: boolean;
+    favorite: string;
 
     constructor(private authService: AuthService,
                 private groupService: GroupService,
                 private storage: StorageService,
                 private events: EventsService,
-                private menuController: MenuController) {
+                private menuController: MenuController,
+                private iconLibrary: FaIconLibrary) {
+        this.iconLibrary.addIcons(faList, faUserCog, faAdjust, faStar, faStarSolid);
     }
 
     ngOnInit() {
         this.storage.get('darkMode')
             .then((darkMode: boolean) => {
                 this.isDarkMode = darkMode;
+            })
+            .catch(() => {
+            });
+
+        this.storage.get('favorite')
+            .then((favorite: string) => {
+                this.favorite = favorite;
             })
             .catch(() => {
             });
@@ -66,6 +80,21 @@ export class SideMenuComponent implements OnInit, OnDestroy {
             } else {
                 StatusBar.setBackgroundColor({color: '#FFFFFF'});
             }
+        }
+    }
+
+    toggleFavorite(event: MouseEvent, groupId: string) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (this.favorite === groupId) {
+            this.favorite = undefined;
+            this.storage.delete('favorite');
+        } else {
+            this.favorite = groupId;
+            this.storage.set('favorite', groupId)
+                .catch(() => {
+                });
         }
     }
 }

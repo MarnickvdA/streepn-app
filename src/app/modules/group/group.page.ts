@@ -4,8 +4,11 @@ import {Observable, Subscription} from 'rxjs';
 import {EventsService, GroupService} from '@core/services';
 import {Group} from '@core/models';
 import {AddTransactionComponent} from '@modules/group/add-transaction/add-transaction.component';
-import {ModalController} from '@ionic/angular';
+import {ModalController, NavController} from '@ionic/angular';
 import {Capacitor} from '@capacitor/core';
+import {faPlus} from '@fortawesome/pro-regular-svg-icons';
+import {faBoxFull, faCogs, faHouse, faReceipt} from '@fortawesome/pro-duotone-svg-icons';
+import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-group',
@@ -17,11 +20,16 @@ export class GroupPage implements OnInit, OnDestroy {
     group$: Observable<Group>;
     private routeSub: Subscription;
     iOS: boolean;
+    private group: Group;
+    private groupSub: Subscription;
 
     constructor(private route: ActivatedRoute,
                 private groupService: GroupService,
                 private modalController: ModalController,
-                private events: EventsService) {
+                private events: EventsService,
+                private library: FaIconLibrary,
+                private navController: NavController) {
+        this.library.addIcons(faPlus, faHouse, faReceipt, faBoxFull, faCogs);
         this.iOS = Capacitor.isNative && Capacitor.platform === 'ios';
     }
 
@@ -29,11 +37,16 @@ export class GroupPage implements OnInit, OnDestroy {
         this.routeSub = this.route.params.subscribe((params: Params) => {
             this.groupService.currentGroupId = params.id;
             this.group$ = this.groupService.observeGroup(params.id);
+
+            this.groupSub = this.group$.subscribe((group) => {
+                this.group = group;
+            });
         });
     }
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
+        this.groupSub.unsubscribe();
     }
 
     addTransaction() {
@@ -49,6 +62,7 @@ export class GroupPage implements OnInit, OnDestroy {
                 .then((callback) => {
                     if (callback.data) {
                         this.events.publish('transactions:update');
+                        this.navController.navigateRoot(['group', this.group?.id, 'transactions']);
                     }
                 });
         });

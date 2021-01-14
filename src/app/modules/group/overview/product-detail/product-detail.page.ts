@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {Group, Product} from '@core/models';
 import {Subscription} from 'rxjs';
 import {AlertController, LoadingController} from '@ionic/angular';
@@ -8,6 +8,9 @@ import {ActivatedRoute, Params} from '@angular/router';
 import {Location} from '@angular/common';
 import {GroupService, ProductService} from '@core/services';
 import {MoneyInputComponent} from '@shared/components/money-input/money-input.component';
+import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
+import {faBoxFull, faEdit, faTag, faTrashAlt} from '@fortawesome/pro-duotone-svg-icons';
+import {getMoneyString} from '@core/utils/firestore-utils';
 
 @Component({
     selector: 'app-product-detail',
@@ -16,11 +19,10 @@ import {MoneyInputComponent} from '@shared/components/money-input/money-input.co
 })
 export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
 
-    productForm: FormGroup;
-    isSubmitted: boolean;
-    groupCreated: boolean;
     @ViewChild(MoneyInputComponent) moneyInput: MoneyInputComponent;
 
+    newName: string;
+    newPrice: number;
     groupId: string;
     productId: string;
     product: Product;
@@ -34,19 +36,13 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
                 private route: ActivatedRoute,
                 private location: Location,
                 private groupService: GroupService,
-                private alertController: AlertController) {
-        this.productForm = this.formBuilder.group({
-            name: ['', [Validators.required]],
-            price: ['', [Validators.required, Validators.min(0), Validators.max(100000)]]
-        });
+                private alertController: AlertController,
+                private iconLibrary: FaIconLibrary) {
+        this.iconLibrary.addIcons(faEdit, faTag, faTrashAlt, faBoxFull);
 
         this.route.params.subscribe((params: Params) => {
             this.productId = params.productId;
         });
-    }
-
-    get form() {
-        return this.productForm.controls;
     }
 
     ngOnInit() {
@@ -59,7 +55,8 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
                     const product = group.products.find(p => p.id === this.productId);
                     if (product) {
                         this.product = product;
-                        this.productForm.controls.name.setValue(product.name);
+                        this.newName = this.product.name;
+                        this.moneyInput?.setAmount(this.product?.price);
                     }
                 }
             });
@@ -70,32 +67,10 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.moneyInput.setAmount(this.product.price);
+        this.moneyInput?.setAmount(this.product?.price);
     }
 
-    amountChanged($event: number) {
-        this.form.price.setValue($event);
-    }
-
-    async editProduct() {
-        this.isSubmitted = true;
-
-        if (this.form.name.value.length < 3) {
-            this.form.name.setErrors({
-                length: true
-            });
-        }
-
-        if (this.group.products.find(p => (p.name === this.form.name.value && p.id !== this.productId))) {
-            this.form.name.setErrors({
-                conflict: true
-            });
-        }
-
-        if (this.productForm.invalid) {
-            return;
-        }
-
+    private async editProduct(product: Product) {
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.updating'),
             translucent: true,
@@ -104,22 +79,10 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
 
         await loading.present();
 
-        const product = Object.create(this.product);
-        product.name = this.form.name.value;
-        product.price = this.form.price.value;
-
-        let isSuccessful = false;
         this.productService
             .editProduct(this.group, product)
-            .then(() => {
-                isSuccessful = true;
-            })
             .finally(() => {
                 loading.dismiss();
-
-                if (isSuccessful) {
-                    this.location.back();
-                }
             });
     }
 
@@ -141,16 +104,9 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
 
                         await loading.present();
 
-                        let isSuccessful = false;
                         this.productService.removeProduct(this.group, this.product)
-                            .then(() => {
-                                isSuccessful = true;
-                            })
                             .finally(() => {
                                 loading.dismiss();
-                                if (isSuccessful) {
-                                    this.location.back();
-                                }
                             });
                     }
                 }
@@ -158,6 +114,32 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
         });
 
         await alert.present();
+    }
+
+    get uniqueName() {
+        return this.group.products.find(p => p.name === this.newName) === undefined;
+    }
+
+    get advicedPrice(): string {
+        return getMoneyString(this.product?.totalStockWorth / this.product?.totalStock);
+    }
+
+    async setName() {
+        const product = Object.create(this.product);
+        product.name = this.newName;
+
+        await this.editProduct(product);
+    }
+
+    async setPrice() {
+        const product = Object.create(this.product);
+        product.price = this.newPrice;
+
+        await this.editProduct(product);
+    }
+
+    amountChanged($event: number) {
+        this.newPrice = $event;
     }
 }
 

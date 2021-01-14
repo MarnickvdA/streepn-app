@@ -11,3 +11,12 @@ ion-fab {
 ion-icon.large-icon {
   font-size: 2rem;
 }
+
+ion-tab-button {
+  ion-label {
+    margin: .1rem 0 0;
+    line-height: 1;
+    min-height: 0;
+    font-size: .7rem;
+  }
+}

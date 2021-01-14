@@ -14,6 +14,8 @@ import {
     PushTopic,
     StorageService
 } from '@core/services';
+import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
+import {faBell, faMinusCircle, faPlusCircle, faUser, faUsersCrown, faWallet} from '@fortawesome/pro-duotone-svg-icons';
 
 @Component({
     selector: 'app-account-detail',
@@ -46,7 +48,10 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                 private alertController: AlertController,
                 private translate: TranslateService,
                 private events: EventsService,
-                private navController: NavController) {
+                private navController: NavController,
+                private iconLibary: FaIconLibrary) {
+        this.iconLibary.addIcons(faUser, faBell, faUsersCrown, faWallet, faPlusCircle, faMinusCircle);
+
         this.routeSub = this.route.params.subscribe((params: Params) => {
             this.accountId = params.accountId;
         });

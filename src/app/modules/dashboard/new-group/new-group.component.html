@@ -1,7 +1,9 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button defaultHref="/dashboard"></ion-back-button>
+            <ion-button mode="ios" fill="none" [routerLink]="'/dashboard'" routerDirection="back">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+            </ion-button>
         </ion-buttons>
 
         <ion-title>{{'dashboard.createGroup.title' | translate}}</ion-title>

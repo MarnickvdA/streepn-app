@@ -1,6 +1,6 @@
 import {Component, NgZone} from '@angular/core';
 
-import {MenuController, Platform} from '@ionic/angular';
+import {MenuController, NavController, Platform} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {AppState, Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
 import {AdsService} from '@core/services/ads.service';
@@ -8,6 +8,8 @@ import {StorageService} from '@core/services/storage.service';
 import {EventsService} from '@core/services/events.service';
 import {PushService} from '@core/services/push.service';
 import {NavigationEnd, Router} from '@angular/router';
+import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
+import {faBars, faChevronLeft, faTimes, faTimesCircle} from '@fortawesome/pro-duotone-svg-icons';
 
 const {App, StatusBar, SplashScreen, FirebaseRemoteConfig} = Plugins;
 
@@ -28,9 +30,13 @@ export class AppComponent {
         private events: EventsService,
         private pushService: PushService,
         private router: Router,
-        public menuCtrl: MenuController
+        public menuCtrl: MenuController,
+        private iconLibrary: FaIconLibrary,
+        private navController: NavController
     ) {
         this.initializeApp();
+
+        this.iconLibrary.addIcons(faBars, faChevronLeft, faTimes, faTimesCircle);
 
         this.router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
@@ -89,6 +95,13 @@ export class AppComponent {
             this.adsService.initialize();
 
             SplashScreen.hide();
+
+            this.storage.get('favorite')
+                .then((favorite: string) => {
+                    this.navController.navigateRoot('group/' + favorite + '/home');
+                })
+                .catch(() => {
+                });
         });
     }
 

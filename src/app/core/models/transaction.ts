@@ -71,5 +71,5 @@ export const transactionConverter: FirestoreDataConverter<Transaction> = {
 
 export function newTransaction(id: string, data: { [key: string]: any }): Transaction {
     return new Transaction(id, data.createdAt as Timestamp, data.createdBy, data.totalPrice,
-        data.itemCount, data.items, data.removed);
+        data.itemCount, JSON.parse(JSON.stringify(data.items)), data.removed);
 }

@@ -29,7 +29,7 @@ export class AccountService {
     addSharedAccount(group: Group, accountName: string) {
         // TODO Add validity checks.
 
-        const sharedAccount = new SharedAccount(uuidv4(), Timestamp.now(), accountName, 0, 0, 0,[]);
+        const sharedAccount = new SharedAccount(uuidv4(), Timestamp.now(), accountName, 0, 0, 0, [], undefined);
 
         group.sharedAccounts.push(sharedAccount);
 

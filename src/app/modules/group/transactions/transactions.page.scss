@@ -4,6 +4,11 @@ div.account-toolbar {
   align-items: center;
   text-align: center;
   padding-bottom: 0.5rem;
+
+  ion-avatar {
+    max-width: 3.5rem;
+    max-height: 3.5rem;
+  }
 }
 
 .transaction-bill {

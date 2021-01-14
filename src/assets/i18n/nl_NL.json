@@ -44,7 +44,8 @@
     "streeping": "Aan het strepen...",
     "joining": "Aan het deelnemen...",
     "updating": "Aan het bijwerken...",
-    "editing": "Aan het bijwerken..."
+    "editing": "Aan het bijwerken...",
+    "settling": "Aan het verrekenen..."
   },
   "errors": {
     "error": "Foutmelding",
@@ -165,7 +166,8 @@
       "title": "Transacties",
       "empty": "Er is nog niks gestreept",
       "currentProduct": "Geselecteerd product",
-      "allPlusOne": "Allemaal +1"
+      "allPlusOne": "Allemaal +1",
+      "disabledEditing": "Sommige transacties zijn reeds verrekend waardoor je ze niet meer kan bewerken."
     },
     "transaction": {
       "title": "Transactie"
@@ -308,6 +310,18 @@
         "deleteWarning": {
           "header": "Waarschuwing",
           "message": "Weet je zeker dat je het product {{name}} wilt verwijderen?"
+        }
+      },
+      "settle": {
+        "sharedAccount": {
+          "amount": "Te verrekenen bedrag",
+          "select-payers": "Betalers selecteren",
+          "settle": "Verrekenen",
+          "balance": "Saldo:",
+          "header": "Pas op!",
+          "message": "Weet je zeker dat je dit potje wil verrekenen? Deze actie is namelijk niet terug te draaien.",
+          "description": "Het bovenstaande bedrag wordt verrekend over de personen die je selecteert.",
+          "description-alert": "Pas op: deze handeling is niet terug te draaien!"
         }
       }
     }

@@ -182,7 +182,6 @@ exports.addStock = functions
                         throw new functions.https.HttpsError('not-found', 'No stock to be computed!');
                     }
 
-                    const currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
                     const currentProduct = group.products.find((product: any) => product.id === data.stock.productId);
 
                     if (!currentProduct) {
@@ -193,7 +192,7 @@ exports.addStock = functions
                     const newStock = {
                         id: uid,
                         createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                        createdBy: currentAccount,
+                        createdBy: data.stock.createdBy,
                         paidBy: data.stock.paidBy,
                         paidAmount: data.stock.paidAmount,
                         productId: data.stock.productId,
@@ -214,20 +213,16 @@ exports.addStock = functions
                             }
                             return acc;
                         }),
-                        sharedAccounts: group.sharedAccounts.map((acc: any) => {
-                            const index = data.stock.paidBy.indexOf(acc.id);
-                            if (index >= 0) {
-                                acc.balance += data.stock.paidAmount[index];
-                                acc.totalIn += data.stock.paidAmount[index];
-                            }
-                            return acc;
-                        }),
                         products: group.products.map((p: any) => {
                             if (p.id === data.stock.productId) {
                                 if (!p.stock || isNaN(p.stock)) {
                                     p.stock = newStock.amount;
+                                    p.totalStock = newStock.amount;
+                                    p.totalStockWorth = newStock.cost;
                                 } else {
                                     p.stock += newStock.amount;
+                                    p.totalStock += newStock.amount;
+                                    p.totalStockWorth += newStock.cost;
                                 }
                             }
                             return p;
@@ -281,6 +276,7 @@ exports.editStock = functions
                             paidAmount: data.updatedStock.paidAmount,
                             cost: data.updatedStock.cost,
                             amount: data.updatedStock.amount,
+                            productId: data.updatedStock.productId,
                         });
                     }
 
@@ -294,27 +290,26 @@ exports.editStock = functions
                             }
                             return acc;
                         }),
-                        sharedAccounts: group.sharedAccounts.map((acc: any) => {
-                            const index = data.deltaStock.paidBy.indexOf(acc.id);
-                            if (index >= 0) {
-                                acc.balance += data.deltaStock.paidAmount[index];
-                                acc.totalIn += data.deltaStock.paidAmount[index];
-                            }
-                            return acc;
-                        }),
                         products: group.products.map((p: any) => {
                             if (p.id === data.deltaStock.productId) {
                                 p.stock += data.deltaStock.amount;
+                                p.totalStock += data.deltaStock.amount;
+                                p.totalStockWorth += data.deltaStock.cost;
                             }
 
                             // If a different stock item was checked.
-                            if (data.updatedStock.productId !== data.deltaStock.productId && data.updatedStock.productId === p.id) {
+                            if (data.updatedStock.productId === p.id && data.updatedStock.productId !== data.deltaStock.productId) {
                                 if (!p.stock || isNaN(p.stock)) {
                                     p.stock = data.updatedStock.amount;
+                                    p.totalStock = data.updatedStock.amount;
+                                    p.totalStockWorth = data.updatedStock.cost;
                                 } else {
                                     p.stock += data.updatedStock.amount;
+                                    p.totalStock += data.updatedStock.amount;
+                                    p.totalStockWorth += data.updatedStock.cost;
                                 }
                             }
+
                             return p;
                         }),
                     });
@@ -380,8 +375,10 @@ exports.removeStock = functions
                             if (p.id === data.stock.productId) {
                                 if (!p.stock || isNaN(p.stock)) {
                                     p.stock = removedStock.amount;
+                                    p.totalStock = removedStock.amount;
                                 } else {
                                     p.stock += removedStock.amount;
+                                    p.totalStock += removedStock.amount;
                                 }
                             }
                             return p;
@@ -581,6 +578,64 @@ exports.addTransaction = functions
                 console.error(err);
                 throw new functions.https.HttpsError('unknown', 'Firebase transaction error occurred', err);
             });
+    });
+
+exports.settleSharedAccount = functions
+    .region('europe-west1')
+    .https
+    .onCall((data, context) => {
+
+        if (!context.auth?.uid) {
+            throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
+        }
+
+        let group: any;
+        const groupRef = db.collection('groups').doc(data.groupId);
+
+        return db.runTransaction(fireTrans => {
+            return fireTrans.get(groupRef)
+                .then(groupDoc => {
+                    group = groupDoc?.data();
+
+                    // Check if the group exists
+                    if (!groupDoc.exists || !group) {
+                        throw new functions.https.HttpsError('not-found', 'No such group document!');
+                    }
+
+                    // Check if the user is part of this group
+                    if (!group.members.includes(context.auth?.uid)) {
+                        throw new functions.https.HttpsError('permission-denied', 'User not member of group');
+                    }
+
+                    if (!data.sharedAccountId && !group.sharedAccounts.find((acc: any) => acc.id === data.sharedAccountId)) {
+                        throw new functions.https.HttpsError('not-found', 'No shared account to be found!');
+                    }
+
+                    if (!data.payers) {
+                        throw new functions.https.HttpsError('not-found', 'No payers to be found!');
+                    }
+
+                    return fireTrans.update(groupRef, {
+                        accounts: group.accounts.map((acc: any) => {
+                            const payer = data.payers[acc.id];
+                            if (payer) {
+                                acc.balance -= payer;
+                                acc.totalOut += payer;
+                            }
+                            return acc;
+                        }),
+                        sharedAccounts: group.sharedAccounts.map((acc: any) => {
+                            if (acc.id === data.sharedAccountId) {
+                                acc.balance = 0;
+                                acc.totalOut = 0;
+                                acc.settledAt = admin.firestore.Timestamp.now();
+                            }
+
+                            return acc;
+                        }),
+                    });
+                });
+        });
     });
 
 export function updateTransactionAccounts(group: any, transaction: any) {

@@ -8,6 +8,8 @@ import {SharedAccountDetailPageRoutingModule} from './shared-account-detail-rout
 
 import {SharedAccountDetailPage} from './shared-account-detail.page';
 import {TranslateModule} from '@ngx-translate/core';
+import {SharedModule} from '@shared/shared.module';
+import {SettleComponent} from '@modules/group/overview/shared-account-detail/settle/settle.component';
 
 @NgModule({
     imports: [
@@ -16,9 +18,10 @@ import {TranslateModule} from '@ngx-translate/core';
         IonicModule,
         TranslateModule,
         SharedAccountDetailPageRoutingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SharedModule
     ],
-    declarations: [SharedAccountDetailPage]
+    declarations: [SharedAccountDetailPage, SettleComponent]
 })
 export class SharedAccountDetailPageModule {
 }

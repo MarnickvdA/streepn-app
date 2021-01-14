@@ -10,6 +10,7 @@ import {NewSharedAccountComponent} from './new-shared-account/new-shared-account
 import {SharedModule} from '@shared/shared.module';
 import {OverviewPage} from '@modules/group/overview/overview.page';
 import {OverviewPageRoutingModule} from '@modules/group/overview/overview-routing.module';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     imports: [
@@ -20,6 +21,7 @@ import {OverviewPageRoutingModule} from '@modules/group/overview/overview-routin
         TranslateModule,
         ReactiveFormsModule,
         SharedModule,
+        FontAwesomeModule,
     ],
     declarations: [
         OverviewPage,

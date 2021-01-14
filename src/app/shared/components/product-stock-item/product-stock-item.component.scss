@@ -4,8 +4,14 @@ ion-badge {
   min-width: 3rem;
   margin-right: 1rem;
 
+  --background: rgba(var(--ion-color-primary-rgb), .75);
+
   &.danger {
-    --background: var(--ion-color-danger);
+    --background: rgba(var(--ion-color-danger-rgb), .75);
     --color: var(--ion-color-light);
   }
+}
+
+ion-item {
+  --min-height: 3.5rem;
 }

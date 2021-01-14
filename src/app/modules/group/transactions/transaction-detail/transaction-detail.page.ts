@@ -18,6 +18,7 @@ import {TranslateService} from '@ngx-translate/core';
 export class TransactionDetailPage implements OnInit {
 
     editing: boolean;
+    canEdit = false;
     groupId: string;
     transactionId: string;
     group: Group;
@@ -56,7 +57,18 @@ export class TransactionDetailPage implements OnInit {
         transaction?.items.forEach((item, index) => {
             this.itemsAmount.push(item.amount);
         });
+
         this.transaction = newTransaction(transaction.id, transaction);
+
+        for (const item of this.transaction.items) {
+            if (!this.canEdit) {
+                const canEditItem = this.canEditItem(item);
+                if (canEditItem) {
+                    this.canEdit = true;
+                    break;
+                }
+            }
+        }
     }
 
     getPriceString(price: number): string {
@@ -70,7 +82,9 @@ export class TransactionDetailPage implements OnInit {
     async deleteTransaction() {
         const delTransaction = newTransaction(this.transaction.id, JSON.parse(JSON.stringify(this.transaction)));
         delTransaction.items.map(item => {
-            item.amount = 0;
+            if (this.canEditItem(item)) {
+                item.amount = 0;
+            }
             return item;
         });
 
@@ -119,5 +133,15 @@ export class TransactionDetailPage implements OnInit {
     addItem(item: TransactionItem) {
         item.amount++;
         this.interactionCount--;
+    }
+
+    canEditItem(item: TransactionItem) {
+        // If this account was settled after this transaction was created, we cannot edit this transaction item.
+        const settleTimestamp = this.group.getAccountById(item.accountId)?.settledAt;
+        if (settleTimestamp) {
+            return this.transaction.createdAt > settleTimestamp;
+        } else {
+            return true;
+        }
     }
 }

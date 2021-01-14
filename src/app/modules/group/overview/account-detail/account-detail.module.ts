@@ -8,6 +8,7 @@ import {AccountDetailPageRoutingModule} from './account-detail-routing.module';
 
 import {AccountDetailPage} from './account-detail.page';
 import {TranslateModule} from '@ngx-translate/core';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import {TranslateModule} from '@ngx-translate/core';
         FormsModule,
         IonicModule,
         AccountDetailPageRoutingModule,
-        TranslateModule
+        TranslateModule,
+        FontAwesomeModule
     ],
     declarations: [AccountDetailPage]
 })

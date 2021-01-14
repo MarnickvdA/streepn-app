@@ -7,6 +7,8 @@ import {Group, Product, Stock, stockConverter} from '@core/models';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {RemoveStockComponent} from '@modules/group/stock/remove-stock/remove-stock.component';
 import {EditStockComponent} from '@modules/group/stock/edit-stock/edit-stock.component';
+import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
+import {faEdit} from '@fortawesome/pro-duotone-svg-icons';
 
 @Component({
     selector: 'app-group-stock',
@@ -27,7 +29,9 @@ export class StockPage implements OnInit {
 
     constructor(private modalController: ModalController,
                 private groupService: GroupService,
-                private fs: AngularFirestore) {
+                private fs: AngularFirestore,
+                private iconLibrary: FaIconLibrary) {
+        this.iconLibrary.addIcons(faEdit);
     }
 
     ngOnInit() {

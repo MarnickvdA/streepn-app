@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {Group, Product, UserAccount} from '@core/models';
+import {Group, UserAccount} from '@core/models';
 import {ActivatedRoute} from '@angular/router';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
@@ -8,6 +8,8 @@ import {Plugins} from '@capacitor/core';
 import {NewProductComponent} from './new-product/new-product.component';
 import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
 import {AuthService, GroupService, ProductService} from '@core/services';
+import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
+import {faShareAltSquare} from '@fortawesome/pro-duotone-svg-icons';
 
 const {Clipboard, Share} = Plugins;
 
@@ -33,7 +35,9 @@ export class OverviewPage implements OnInit, OnDestroy {
                 private loadingController: LoadingController,
                 private translate: TranslateService,
                 private productService: ProductService,
-                private modalController: ModalController) {
+                private modalController: ModalController,
+                private iconLibrary: FaIconLibrary) {
+        this.iconLibrary.addIcons(faShareAltSquare);
     }
 
     ngOnInit() {

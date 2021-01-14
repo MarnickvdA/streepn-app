@@ -74,7 +74,10 @@ export class StockService {
         });
 
         const deltaStock = new Stock(original.id, original.createdAt, currentAccount.id, deltaPaidBy, deltaPaidAmount,
-            original.productId, cost - original.cost, amount - original.amount, false, false);
+            original.productId, original.productId !== productId ? -original.cost : cost - original.cost,
+            original.productId !== productId ? -original.amount : amount - original.amount, false, false);
+
+        console.log(deltaStock);
 
         const callable = this.functions.httpsCallable('editStock');
         return callable({

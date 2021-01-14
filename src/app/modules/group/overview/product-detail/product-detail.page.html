@@ -1,10 +1,20 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button defaultHref="/group/{{groupId}}/overview"></ion-back-button>
+            <ion-button mode="ios" fill="none" routerLink="/group/{{groupId}}/preferences" routerDirection="back">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
+                                 [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+            </ion-button>
         </ion-buttons>
 
         <ion-title>{{product?.name}}</ion-title>
+
+        <ion-buttons slot="end">
+            <ion-button (click)="removeProduct()" [disabled]="product?.stock !== 0">
+                <fa-duotone-icon slot="icon-only" class="danger" fixedWidth
+                                 [icon]="['fad', 'trash-alt']"></fa-duotone-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
@@ -15,46 +25,26 @@
         </ion-toolbar>
     </ion-header>
 
-    <div class="form-content">
-        <form (ngSubmit)="editProduct()" [formGroup]="productForm">
-            <ion-item class="form-input" lines="none">
-                <ion-icon name="bag-handle-outline"></ion-icon>
-                <ion-input autocapitalize="words" clearInput
-                           enterkeyhint="next"
-                           formControlName="name" inputmode="text"
-                           placeholder="{{'group.overview.editProduct.productName' | translate}}"
-                           type="text"></ion-input>
-            </ion-item>
-            <span *ngIf="isSubmitted && form.name.errors?.required" class="form-input-error">
-                {{'group.overview.editProduct.errors.name-required' | translate}}
-            </span>
-            <span *ngIf="isSubmitted && form.name.errors?.length" class="form-input-error">
-                {{'group.overview.editProduct.errors.name-length' | translate}}
-            </span>
-            <span *ngIf="isSubmitted && form.name.errors?.conflict" class="form-input-error">
-                {{'group.overview.editProduct.errors.name-conflict' | translate}}
-            </span>
-
-            <div class="m-t">
-                <app-money-input (amountEntered)="amountChanged($event)" [amount]="''"
-                                 [precision]="2"></app-money-input>
-            </div>
-            <span *ngIf="isSubmitted && form.price.errors?.required" class="form-input-error">
-                {{'group.overview.editProduct.errors.price-required' | translate}}
-            </span>
-            <span *ngIf="isSubmitted && form.price.errors?.min" class="form-input-error">
-                {{'group.overview.editProduct.errors.price-min' | translate}}
-            </span>
-            <span *ngIf="isSubmitted && form.price.errors?.max" class="form-input-error">
-                {{'group.overview.editProduct.errors.price-max' | translate}}
-            </span>
-
-            <ion-button class="ion-margin-top" expand="block" type="submit">
-                <ion-label>{{'actions.edit' | translate}}</ion-label>
-            </ion-button>
-        </form>
-        <ion-button (click)="removeProduct()" class="ion-margin-top" color="danger" expand="block">
-            <ion-label>{{product?.name}} {{'actions.delete' | translate}}</ion-label>
-        </ion-button>
-    </div>
+    <ion-list>
+        <ion-item lines="inset">
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'edit']"></fa-duotone-icon>
+            <ion-input [(ngModel)]="newName" value="{{product?.name}}"></ion-input>
+            <ion-button (click)="setName()"
+                        [attr.disabled]="newName === product?.name || newName?.length < 2 || !uniqueName">{{'actions.edit' | translate}}</ion-button>
+        </ion-item>
+        <ion-item lines="full">
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'tag']"></fa-duotone-icon>
+            <app-money-input padding="none" [icon]="undefined" (amountEntered)="amountChanged($event)" [amount]="''"
+                             [precision]="2"></app-money-input>
+            <ion-button (click)="setPrice()"
+                        [attr.disabled]="newPrice === product?.price">{{'actions.edit' | translate}}</ion-button>
+        </ion-item>
+        <ion-item *ngIf="product?.totalStock && product?.totalStockWorth" lines="none">
+            <ion-label class="ion-text-wrap">
+                <p class="small">
+                    Onze adviesprijs voor dit product is <b>{{advicedPrice}}</b>. Dit bedrag is gebaseerd op de voorraad.
+                </p>
+            </ion-label>
+        </ion-item>
+    </ion-list>
 </ion-content>

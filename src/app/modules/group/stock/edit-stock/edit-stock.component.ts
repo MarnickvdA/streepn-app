@@ -25,7 +25,6 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MoneyInputComponent) moneyInput: MoneyInputComponent;
 
     group: Group;
-    allAccounts: Account[];
     paidAmount: number[];
     selectedNames: string;
     private readonly logger = LoggerService.getLogger(EditStockComponent.name);
@@ -53,7 +52,7 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
     get selectedAccounts(): Account[] {
         const selectedAccounts = this.form.paidBy.value;
         if (selectedAccounts?.length > 0) {
-            return this.allAccounts.filter(acc => selectedAccounts.includes(acc.id)) || [];
+            return this.group.accounts.filter(acc => selectedAccounts.includes(acc.id)) || [];
         } else {
             return [];
         }
@@ -71,7 +70,6 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
             this.group = group;
 
             if (group) {
-                this.allAccounts = [...group.accounts, ...group.sharedAccounts];
                 this.updatePayout();
             }
         }));
@@ -112,6 +110,8 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
+        this.updatePayout();
+
         this.submitForm('editing', this.form.product.value, +this.form.cost.value,
             +this.form.amount.value, this.selectedAccounts.map(acc => acc.id), this.paidAmount);
     }
@@ -129,6 +129,8 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     removeStock() {
+        this.updatePayout();
+
         this.submitForm('removing', '', 0, 0, [], []);
     }
 
@@ -141,8 +143,6 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         await loading.present();
-
-        this.updatePayout();
 
         this.stockService.editStockItem(this.group, this.stockItem, productId, cost, amount, paidBy, paidAmount)
             .pipe(

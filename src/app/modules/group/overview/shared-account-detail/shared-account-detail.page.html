@@ -1,7 +1,9 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button [defaultHref]="'/group/' + group?.id + '/preferences'"></ion-back-button>
+            <ion-button mode="ios" fill="none" [routerLink]="'/group/' + group?.id + '/preferences'" routerDirection="back">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+            </ion-button>
         </ion-buttons>
         <ion-title>{{account?.name}}</ion-title>
     </ion-toolbar>
@@ -21,36 +23,20 @@
             </ion-label>
         </ion-list-header>
         <ion-item>
-            <ion-icon icon="person-outline" slot="start"></ion-icon>
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'piggy-bank']"></fa-duotone-icon>
             <ion-input [(ngModel)]="newName" value="{{account?.name}}"></ion-input>
             <ion-button (click)="setName()"
                         [attr.disabled]="newName === account?.name || newName?.length < 2">{{'actions.edit' | translate}}</ion-button>
         </ion-item>
-
-        <ion-list-header class="ion-margin-top" lines="full">
-            <ion-label>
-                {{'group.overview.account.balance' | translate}}
-            </ion-label>
-        </ion-list-header>
         <ion-item>
-            <ion-icon name="wallet-outline" slot="start"></ion-icon>
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'wallet']"></fa-duotone-icon>
             <ion-label>Saldo</ion-label>
             <span slot="end"
                   [ngClass]="account?.balance >= 0 ? 'positive-amount' : 'negative-amount'">{{account?.balanceString}}</span>
         </ion-item>
-        <ion-item>
-            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-            <ion-label>
-                Totaal in
-            </ion-label>
-            <span slot="end">{{account?.totalInString}}</span>
-        </ion-item>
-        <ion-item lines="full">
-            <ion-icon name="remove-circle-outline" slot="start"></ion-icon>
-            <ion-label>
-                Totaal uit
-            </ion-label>
-            <span slot="end">{{account?.totalOutString}}</span>
-        </ion-item>
+
+        <ion-button [disabled]="account?.balance === 0" expand="block" class="ion-margin" (click)="settleSharedAccount(account?.id)">
+            {{account?.name}} verrekenen
+        </ion-button>
     </ion-list>
 </ion-content>

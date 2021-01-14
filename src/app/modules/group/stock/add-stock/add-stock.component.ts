@@ -21,7 +21,6 @@ export class AddStockComponent implements OnInit, OnDestroy {
     paidByTitle: string;
     @Input() group$: Observable<Group>;
     group: Group;
-    allAccounts: Account[];
     paidAmount: number[];
     selectedNames: string;
     private readonly logger = LoggerService.getLogger(AddStockComponent.name);
@@ -57,7 +56,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
     get selectedAccounts(): Account[] {
         const selectedAccounts = this.form.paidBy.value;
         if (selectedAccounts?.length > 0) {
-            return this.allAccounts.filter(acc => selectedAccounts.includes(acc.id)) || [];
+            return this.group.accounts.filter(acc => selectedAccounts.includes(acc.id)) || [];
         } else {
             return [];
         }
@@ -66,10 +65,6 @@ export class AddStockComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.groupSub = this.group$.subscribe((group => {
             this.group = group;
-
-            if (group) {
-                this.allAccounts = [...group.accounts, ...group.sharedAccounts];
-            }
         }));
     }
 

@@ -1,0 +1,104 @@
+fa-icon, fa-duotone-icon {
+
+  // START ALIGNMENT RELATED
+  min-width: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.no-width {
+    min-width: 0;
+  }
+
+  // END ALIGNMENT RELATED
+
+  // START SIZE RELATED
+  font-size: 1.5rem;
+
+  &.small {
+    font-size: 0.8rem;
+  }
+
+  &.large {
+    font-size: 1.9rem;
+  }
+
+  &.tab-icon {
+    font-size: 1.4rem;
+  }
+
+  // END SIZE RELATED
+
+  // START COLOR RELATED
+  &.primary {
+    color: var(--ion-color-primary);
+
+    --fa-primary-color: var(--ion-color-primary);
+    --fa-secondary-color: var(--ion-color-primary-shade);
+
+    &-reversed {
+      --fa-primary-color: var(--ion-color-primary-shade);
+      --fa-secondary-color: var(--ion-color-primary);
+      --fa-primary-opacity: 0.5;
+      --fa-secondary-opacity: 1;
+    }
+  }
+
+  &.secondary {
+    color: var(--ion-color-secondary);
+
+    --fa-primary-color: var(--ion-color-secondary);
+    --fa-secondary-color: var(--ion-color-secondary-shade);
+  }
+
+  &.tertiary {
+    color: var(--ion-color-tertiary);
+
+    --fa-primary-color: var(--ion-color-tertiary);
+    --fa-secondary-color: var(--ion-color-tertiary-shade);
+  }
+
+  &.success {
+    color: var(--ion-color-success);
+
+    --fa-primary-color: var(--ion-color-success);
+    --fa-secondary-color: var(--ion-color-success-shade);
+  }
+
+  &.warning {
+    color: var(--ion-color-warning);
+
+    --fa-primary-color: var(--ion-color-warning);
+    --fa-secondary-color: var(--ion-color-warning-shade);
+  }
+
+  &.danger {
+    color: var(--ion-color-danger);
+
+    --fa-primary-color: var(--ion-color-danger);
+    --fa-secondary-color: var(--ion-color-danger-shade);
+  }
+
+  &.dark {
+    color: var(--ion-color-dark);
+
+    --fa-primary-color: var(--ion-color-dark);
+    --fa-secondary-color: var(--ion-color-dark-shade);
+  }
+
+  &.medium {
+    color: var(--ion-color-medium);
+
+    --fa-primary-color: var(--ion-color-medium);
+    --fa-secondary-color: var(--ion-color-medium-shade);
+  }
+
+  &.light {
+    color: var(--ion-color-light);
+
+    --fa-primary-color: var(--ion-color-light);
+    --fa-secondary-color: var(--ion-color-light-shade);
+  }
+
+  // END COLOR RELATED
+}

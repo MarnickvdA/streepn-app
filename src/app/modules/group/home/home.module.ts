@@ -7,6 +7,7 @@ import {IonicModule} from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
 import {HomePageRoutingModule} from '@modules/group/home/home-routing.module';
 import {HomePage} from '@modules/group/home/home.page';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     imports: [
@@ -14,7 +15,8 @@ import {HomePage} from '@modules/group/home/home.page';
         FormsModule,
         IonicModule,
         HomePageRoutingModule,
-        TranslateModule
+        TranslateModule,
+        FontAwesomeModule
     ],
     declarations: [HomePage]
 })
