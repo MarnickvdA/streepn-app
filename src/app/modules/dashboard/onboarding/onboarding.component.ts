@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonSlides, LoadingController, ModalController} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Group} from '@core/models';
+import {Group, GroupInvite} from '@core/models';
 import {environment} from '@env/environment';
 import {Plugins} from '@capacitor/core';
 import {AuthService, EventsService, GroupService, PushService, StorageService, UIService, UserService} from '@core/services';
@@ -25,7 +25,7 @@ export class OnboardingComponent implements OnInit {
     name: string;
     nameForm: FormGroup;
     isSubmitted: boolean;
-    group: Group;
+    groupInvite: GroupInvite;
     hasAcceptedLegals = false;
 
     constructor(private modalController: ModalController,
@@ -134,7 +134,7 @@ export class OnboardingComponent implements OnInit {
         this.authService.acceptTerms();
     }
 
-    async joinGroup(groupId: string) {
+    async joinGroup() {
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.joining'),
             translucent: true,
@@ -150,7 +150,7 @@ export class OnboardingComponent implements OnInit {
 
         this.events.subscribe('group:joined', joinedGroupFn);
 
-        this.groupService.joinGroup(groupId, this.authService.currentUser);
+        this.groupService.joinGroup(this.groupInvite, this.authService.currentUser);
     }
 
     openLegalPage() {
@@ -164,10 +164,8 @@ export class OnboardingComponent implements OnInit {
         this.storage.delete('groupInvite');
 
         this.groupService.getGroupByInviteLink(groupInvite)
-            .then(group => {
-                if (!group.members.find(uid => uid === this.authService.currentUser.uid)) {
-                    this.group = group;
-                }
+            .then(invite => {
+                this.groupInvite = invite;
             })
             .catch(err => {
                 this.uiService.showError(this.translate.instant('errors.error'), err);

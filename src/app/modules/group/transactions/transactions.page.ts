@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '@core/services/user.service';
 import {ActivatedRoute} from '@angular/router';
-import {Group, Transaction, transactionConverter, UserAccount} from '@core/models';
+import {Balance, Group, Transaction, transactionConverter, UserAccount} from '@core/models';
 import {ModalController, NavController} from '@ionic/angular';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {Observable, Subscription} from 'rxjs';
@@ -18,6 +18,7 @@ import {faMinusCircle} from '@fortawesome/pro-duotone-svg-icons';
 export class TransactionsPage implements OnInit, OnDestroy {
     group?: Group;
     currentAccount?: UserAccount;
+    balance?: Balance;
     transactions: Transaction[];
     doneLoading = false;
     isLoadingMore = false;
@@ -43,10 +44,6 @@ export class TransactionsPage implements OnInit, OnDestroy {
         };
     }
 
-    get accountBalanceString(): string {
-        return getMoneyString(this.currentAccount.balance);
-    }
-
     ngOnInit(): void {
         this.group$ = this.groupService.observeGroup(this.groupService.currentGroupId);
         this.groupSub = this.group$
@@ -55,6 +52,7 @@ export class TransactionsPage implements OnInit, OnDestroy {
 
                 if (group) {
                     this.currentAccount = group.accounts.find(acc => acc.userId === this.authService.currentUser.uid);
+                    this.balance = group.getAccountBalance(this.currentAccount.id);
 
                     if (!this.transactions) {
                         this.reset();

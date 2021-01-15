@@ -9,6 +9,7 @@ import {AccountDetailPageRoutingModule} from './account-detail-routing.module';
 import {AccountDetailPage} from './account-detail.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {SharedModule} from '@shared/shared.module';
 
 @NgModule({
     imports: [
@@ -17,7 +18,8 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
         IonicModule,
         AccountDetailPageRoutingModule,
         TranslateModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        SharedModule
     ],
     declarations: [AccountDetailPage]
 })

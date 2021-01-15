@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Group, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from '../models';
+import {Balance, Group, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from '../models';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {v4 as uuidv4} from 'uuid';
 import firebase from 'firebase/app';
+import {Logger, LoggerService} from '@core/services/logger.service';
 import Timestamp = firebase.firestore.Timestamp;
 
 
@@ -10,6 +11,7 @@ import Timestamp = firebase.firestore.Timestamp;
     providedIn: 'root'
 })
 export class AccountService {
+    private readonly logger: Logger = LoggerService.getLogger(AccountService.name);
 
     constructor(private fs: AngularFirestore) {
     }
@@ -28,28 +30,25 @@ export class AccountService {
 
     addSharedAccount(group: Group, accountName: string) {
         // TODO Add validity checks.
-
-        const sharedAccount = new SharedAccount(uuidv4(), Timestamp.now(), accountName, 0, 0, 0, [], undefined);
+        const accountId = uuidv4();
+        const sharedAccount = new SharedAccount(accountId, Timestamp.now(), accountName, [], undefined);
 
         group.sharedAccounts.push(sharedAccount);
 
-        return this.setSharedAccounts(group);
+        return Promise.all([
+            this.setSharedAccounts(group),
+            this.addSharedAccountBalance(group.id, accountId)
+        ]);
     }
 
-    updateSharedAccount(group: Group, sharedAccount: SharedAccount) {
+    updateSharedAccount(group: Group, account: SharedAccount) {
         group.sharedAccounts = group.sharedAccounts.map(obj => {
-            if (obj.id === sharedAccount.id) {
-                return sharedAccount;
+            if (obj.id === account.id) {
+                return account;
             } else {
                 return obj;
             }
         });
-
-        return this.setSharedAccounts(group);
-    }
-
-    removeSharedAccount(group: Group, sharedAccount: SharedAccount) {
-        group.sharedAccounts = group.sharedAccounts.filter(obj => obj.id !== sharedAccount.id);
 
         return this.setSharedAccounts(group);
     }
@@ -67,5 +66,17 @@ export class AccountService {
         return this.fs.collection('groups').doc(group.id).set({
             sharedAccounts: group.sharedAccounts.map(sa => sharedAccountConverter.toFirestore(sa))
         }, {merge: true});
+    }
+
+    private addSharedAccountBalance(groupId: string, accountId: string) {
+        const newBalance: Balance = { // not the shoe though lol
+            amount: 0,
+            totalIn: 0,
+            totalOut: 0,
+        };
+
+        return this.fs.collection('groups').doc(groupId).update({
+            [`balances.${accountId}`]: newBalance
+        });
     }
 }

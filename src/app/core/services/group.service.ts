@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {Group, groupConverter, UserAccount} from '../models';
+import {Group, groupConverter, GroupInvite, groupInviteConverter, UserAccount} from '../models';
 import {AuthService} from './auth.service';
 import {EventsService} from './events.service';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {BehaviorSubject, EMPTY, Observable, Subject} from 'rxjs';
-import {catchError, map, takeUntil} from 'rxjs/operators';
+import {catchError, map, take, takeUntil} from 'rxjs/operators';
 import {v4 as uuidv4} from 'uuid';
 import {AnalyticsService} from './analytics.service';
 import {PermissionType, Plugins} from '@capacitor/core';
@@ -125,24 +125,29 @@ export class GroupService {
             });
     }
 
-    getGroupByInviteLink(link: string): Promise<Group | undefined> {
-        return this.fs.collection('groups')
+    getGroupByInviteLink(link: string): Promise<GroupInvite> {
+        return this.fs.collection('groupInvites')
+            .doc(link)
             .ref
-            .where('inviteLink', '==', link)
-            .withConverter(groupConverter)
+            .withConverter(groupInviteConverter)
             .get()
-            .then(querySnapshot => {
-                if (querySnapshot.empty) {
+            .then((snapshot) => {
+                if (!snapshot.exists) {
                     return Promise.reject(this.translate.instant('errors.group-not-found'));
                 }
 
-                const group = querySnapshot.docs.pop().data();
+                const invite: GroupInvite = snapshot.data();
 
-                if (group.inviteLinkExpiry.toMillis() < new Date().getMilliseconds()) {
+                if (invite.isExpired) {
                     return Promise.reject(this.translate.instant('errors.group-invite-expired'));
                 }
 
-                return group;
+                return this.groups$.pipe(take(1)).toPromise().then((groups) => {
+                    // If user is not already a member of this group
+                    if (!groups.find(group => group.id === invite.groupId)) {
+                        return invite;
+                    }
+                });
             });
     }
 
@@ -154,13 +159,17 @@ export class GroupService {
     createGroup(name: string): Promise<string> {
         const user = this.authService.currentUser;
         const now = Timestamp.now();
-        const date = new Date();
-        date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
-        const nextWeek = Timestamp.fromDate(date);
-        const randomLink = uuidv4().substring(0, 8).toUpperCase();
 
-        const account = new UserAccount(uuidv4(), user.uid, now, user.displayName, 0, 0, 0, ['ADMIN'], user.photoURL);
-        const group = new Group(undefined, now, name, 'EUR', randomLink, nextWeek, [user.uid], [account], [], [], 0, 0);
+        const uid = uuidv4();
+        const account = new UserAccount(uid, user.uid, now, user.displayName, ['ADMIN'], user.photoURL);
+        const group = new Group(undefined, now, name, 'EUR', undefined, undefined, [user.uid], [account],
+            [], [], 0, 0, {
+                [uid]: {
+                    amount: 0,
+                    totalIn: 0,
+                    totalOut: 0,
+                }
+            });
 
         return this.fs.collection('groups')
             .add(groupConverter.toFirestore(group))
@@ -170,6 +179,11 @@ export class GroupService {
 
                 return docRef.id;
             })
+            .then((groupId: string) => {
+                return this.renewInviteLink(groupId, name).then(() => {
+                    return groupId;
+                });
+            })
             .catch(err => {
                 this.logger.error({message: 'createGroup', error: err});
 
@@ -177,10 +191,12 @@ export class GroupService {
             });
     }
 
-    joinGroup(groupId: string, user: User) {
+    joinGroup(groupInvite: GroupInvite, user: User) {
         const callable = this.functions.httpsCallable('joinGroup');
         callable({
-            groupId, user: {
+            groupId: groupInvite.groupId,
+            inviteLink: groupInvite.id,
+            user: {
                 displayName: user.displayName,
                 photoURL: user.photoURL
             }
@@ -192,14 +208,14 @@ export class GroupService {
             }))
             .subscribe((account) => {
                 if (account) {
-                    this.analyticsService.logJoinGroup(user.uid, groupId);
+                    this.analyticsService.logJoinGroup(user.uid, groupInvite.groupId);
 
                     // Enable push messages for this user.
                     Permissions.query({
                         name: PermissionType.Notifications
                     }).then((result) => {
                         if (result.state === 'granted') {
-                            this.pushService.subscribeTopic(PushTopic.GROUP_ALL, {groupId, accountId: account.id});
+                            this.pushService.subscribeTopic(PushTopic.GROUP_ALL, {groupId: groupInvite.groupId, accountId: account.id});
                         }
                     });
 
@@ -236,24 +252,29 @@ export class GroupService {
             });
     }
 
-    renewInviteLink(groupId: string): Promise<string> {
-        const date = new Date();
-        date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
-        const nextWeek = Timestamp.fromDate(date);
+    async renewInviteLink(groupId: string, groupName: string, oldInvite?: string): Promise<string> {
+        const nextWeek = Timestamp.fromDate(new Date(new Date().getTime() + (7 * 24 * 60 * 60 * 1000)));
         const randomLink = uuidv4().substring(0, 8).toUpperCase();
 
-        return this.fs.collection('groups')
-            .doc(groupId)
-            .update({
-                inviteLink: randomLink,
-                inviteLinkExpiry: nextWeek
-            })
-            .then(() => {
-                return randomLink;
-            });
+        if (oldInvite) {
+            await this.fs.collection('groupInvites').doc(oldInvite).delete();
+        }
+
+        return Promise.all([
+            this.fs.collection('groups').doc(groupId)
+                .update({
+                    inviteLink: randomLink,
+                    inviteLinkExpiry: nextWeek
+                }),
+            this.fs.collection('groupInvites')
+                .doc(randomLink)
+                .set(groupInviteConverter.toFirestore(new GroupInvite(randomLink, groupName, groupId, nextWeek)))
+        ]).then(() => {
+            return randomLink;
+        });
     }
 
-    settleSharedAccount(groupId: string, sharedAccountId: string, payers: {[id: string]: number}) {
+    settleSharedAccount(groupId: string, sharedAccountId: string, payers: { [id: string]: number }) {
         const callable = this.functions.httpsCallable('settleSharedAccount');
         return callable({
             groupId,

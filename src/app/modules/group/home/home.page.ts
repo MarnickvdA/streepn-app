@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {Group} from '@core/models';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {faMinusCircle, faPlusCircle} from '@fortawesome/pro-duotone-svg-icons';
+import {AngularFirestore} from '@angular/fire/firestore';
 
 @Component({
     selector: 'app-group-home',
@@ -15,6 +16,7 @@ export class HomePage implements OnInit {
     group$: Observable<Group>;
 
     constructor(private groupService: GroupService,
+                private fs: AngularFirestore,
                 private iconLibrary: FaIconLibrary) {
         this.iconLibrary.addIcons(faPlusCircle, faMinusCircle);
     }
@@ -22,5 +24,4 @@ export class HomePage implements OnInit {
     ngOnInit() {
         this.group$ = this.groupService.observeGroup(this.groupService.currentGroupId);
     }
-
 }

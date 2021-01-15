@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
-import {Group, SharedAccount, UserAccount} from '@core/models';
+import {Balance, Group, SharedAccount, UserAccount} from '@core/models';
 import {GroupService} from '@core/services';
 import {calculatePayout, getMoneyString} from '@core/utils/firestore-utils';
 import {TranslateService} from '@ngx-translate/core';
@@ -16,6 +16,7 @@ export class SettleComponent implements OnInit {
     @Input() sharedAccountId: string;
 
     sharedAccount?: SharedAccount;
+    balance?: Balance;
     group$: Observable<Group>;
     group?: Group;
     private groupSub: Subscription;
@@ -38,6 +39,7 @@ export class SettleComponent implements OnInit {
         this.groupSub = this.group$.subscribe((group => {
             this.group = group;
             this.sharedAccount = group?.getSharedAccountById(this.sharedAccountId);
+            this.balance = group?.getAccountBalance(this.sharedAccountId);
         }));
     }
 
@@ -64,7 +66,7 @@ export class SettleComponent implements OnInit {
     private updateSettle() {
         const payerKeys: string[] = Object.keys(this.payers).filter(k => this.payers[k]);
 
-        const payout = calculatePayout(-this.sharedAccount?.balance, payerKeys.length);
+        const payout = calculatePayout(-this.balance.amount, payerKeys.length);
         const newPayerAmount = {};
         payerKeys.forEach((k, index) => {
             newPayerAmount[k] = payout[index];

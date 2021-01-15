@@ -19,7 +19,7 @@
             <ion-label>
                 <h2>{{account.name}}</h2>
                 <p>Saldo: <span
-                        [ngClass]="account.balance >= 0 ? 'positive-amount' : 'negative-amount'">{{accountBalanceString}}</span>
+                        [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
                 </p>
             </ion-label>
         </div>

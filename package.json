@@ -15,8 +15,7 @@
     "prod": "npm install && ng build --prod --source-map && npx cap sync",
     "emulator": "firebase emulators:start --import ./data --export-on-exit=./data",
     "postinstall": "npx jetifier && ngcc",
-    "resources": "cordova-res ios && cordova-res android && node scripts/resources.js",
-    "deploy-rules": "firebase deploy --only firestore:rules"
+    "resources": "cordova-res ios && cordova-res android && node scripts/resources.js"
   },
   "private": true,
   "dependencies": {

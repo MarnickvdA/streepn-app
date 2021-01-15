@@ -61,13 +61,13 @@
                 </ion-button>
             </form>
         </ion-slide>
-        <ion-slide *ngIf="group">
+        <ion-slide *ngIf="groupInvite">
             <ion-icon class="image" name="ticket-outline"></ion-icon>
             <div class="text-area">
-                <h1>{{'onboarding.joinGroup.title' | translate}} {{group.name}}</h1>
+                <h1>{{'onboarding.joinGroup.title' | translate}} {{groupInvite.groupName}}</h1>
                 <p>{{'onboarding.joinGroup.description' | translate}}</p>
             </div>
-            <ion-button (click)="joinGroup(group.id)" expand="block">
+            <ion-button (click)="joinGroup()" expand="block">
                 {{'actions.join' | translate}}
             </ion-button>
             <ion-button (click)="slideNext()" color="danger" expand="block" fill="outline">

@@ -20,11 +20,12 @@
     <ion-item lines="full">
         <ion-label>{{'group.overview.settle.sharedAccount.amount' | translate}}</ion-label>
         <span slot="end"
-              [ngClass]="sharedAccount?.balance >= 0 ? 'positive-amount' : 'negative-amount'">{{sharedAccount?.balanceString}}</span>
+              [ngClass]="balance?.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance?.amount | money}}</span>
     </ion-item>
 
     <p class="description ion-text-wrap">
-        {{'group.overview.settle.sharedAccount.description' | translate}}<br><br> <b>{{'group.overview.settle.sharedAccount.description-alert' | translate}}</b>
+        {{'group.overview.settle.sharedAccount.description' | translate}}<br><br>
+        <b>{{'group.overview.settle.sharedAccount.description-alert' | translate}}</b>
     </p>
 
     <ion-list>
@@ -42,9 +43,9 @@
                     <h3>{{account.name}}</h3>
                     <p>
                         {{'group.overview.settle.sharedAccount.balance' | translate}}
-                        <span [ngClass]="account.balance - (payerAmount[account.id] ? payerAmount[account.id] : 0) >= 0
-                        ? 'positive-amount' : 'negative-amount'">{{getMoneyAmount(account.balance
-                            - (payerAmount[account.id] ? payerAmount[account.id] : 0))}}</span>
+                        <span *ngIf="group.getAccountBalance(account.id); let accBalance" [ngClass]="accBalance.amount - (payerAmount[account.id] ? payerAmount[account.id] : 0) >= 0
+                        ? 'positive-amount' : 'negative-amount'">{{accBalance.amount
+                        - (payerAmount[account.id] ? payerAmount[account.id] : 0) | money}}</span>
                     </p>
                 </ion-label>
             </div>

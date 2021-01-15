@@ -12,6 +12,7 @@ import {RouterModule} from '@angular/router';
 import {ProductStockItemComponent} from './components/product-stock-item/product-stock-item.component';
 import {SideMenuComponent} from '@shared/components/side-menu/side-menu.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {MoneyPipe} from './pipes/money.pipe';
 
 export const components = [
     MoneyInputComponent,
@@ -22,9 +23,14 @@ export const components = [
     SideMenuComponent
 ];
 
+export const pipes = [
+    MoneyPipe,
+];
+
 @NgModule({
     declarations: [
         ...components,
+        ...pipes,
     ],
     imports: [
         CommonModule,
@@ -47,6 +53,7 @@ export const components = [
         HttpClientModule,
         FontAwesomeModule,
         ...components,
+        ...pipes,
     ]
 })
 export class SharedModule {

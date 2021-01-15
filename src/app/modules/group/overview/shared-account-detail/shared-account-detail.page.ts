@@ -1,14 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {Observable, Subscription} from 'rxjs';
-import {Group, SharedAccount} from '@core/models';
+import {Balance, Group, SharedAccount} from '@core/models';
 import {AccountService, GroupService, LoggerService} from '@core/services';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faPiggyBank, faUser, faWallet} from '@fortawesome/pro-duotone-svg-icons';
-import {NewSharedAccountComponent} from '@modules/group/overview/new-shared-account/new-shared-account.component';
+import {faPiggyBank, faWallet} from '@fortawesome/pro-duotone-svg-icons';
 import {SettleComponent} from '@modules/group/overview/shared-account-detail/settle/settle.component';
 
 @Component({
@@ -21,7 +20,8 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
 
     newName: string;
     group: Group;
-    account: SharedAccount;
+    account?: SharedAccount;
+    balance?: Balance;
 
     private group$: Observable<Group>;
     private routeSub: Subscription;
@@ -48,6 +48,7 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
             if (group) {
                 this.group = group;
                 this.account = group.sharedAccounts.find(acc => acc.id === this.accountId);
+                this.balance = group.getAccountBalance(this.account.id);
                 this.newName = this.account.name;
             }
         }));

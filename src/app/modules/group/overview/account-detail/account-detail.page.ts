@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Group, UserAccount} from '@core/models';
+import {Balance, Group, UserAccount} from '@core/models';
 import {Subscription} from 'rxjs';
 import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
@@ -24,7 +24,8 @@ import {faBell, faMinusCircle, faPlusCircle, faUser, faUsersCrown, faWallet} fro
 })
 export class AccountDetailPage implements OnInit, OnDestroy {
     groupId: string;
-    account: UserAccount;
+    account?: UserAccount;
+    balance?: Balance;
     isSelf: boolean;
     enablePush: boolean;
     enableAdmin: boolean;
@@ -67,6 +68,7 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                     this.isAdmin = this.group.accounts
                         .find(acc => acc.userId === this.authService.currentUser?.uid)?.roles.includes('ADMIN');
                     this.account = this.group.accounts.find(acc => acc.id === this.accountId);
+                    this.balance = this.group.getAccountBalance(this.account.id);
                     this.newName = this.account.name;
                     this.isSelf = this.authService.currentUser.uid === this.account.userId;
                     this.canDisableAdmin = this.group.accounts.filter(acc => acc.roles.includes('ADMIN'))?.length > 1 || !this.isSelf;

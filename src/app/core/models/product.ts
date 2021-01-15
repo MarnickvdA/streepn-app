@@ -20,10 +20,6 @@ export class Product {
         this.totalStock = totalStock;
         this.totalStockWorth = totalStockWorth;
     }
-
-    get priceString(): string {
-        return getMoneyString(this.price);
-    }
 }
 
 export const productConverter = {

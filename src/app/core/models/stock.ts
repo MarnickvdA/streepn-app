@@ -31,10 +31,6 @@ export class Stock {
     get isMutable(): boolean {
         return !this.removed && !this.writtenOff;
     }
-
-    get costString(): string {
-        return getMoneyString(this.cost);
-    }
 }
 
 export const stockConverter: FirestoreDataConverter<Stock> = {

@@ -105,7 +105,7 @@ export class OverviewPage implements OnInit, OnDestroy {
                             });
 
                             await loading.present();
-                            this.groupService.renewInviteLink(this.group.id)
+                            this.groupService.renewInviteLink(this.group.id, this.group.name, this.group.inviteLink)
                                 .then((inviteLink) => {
                                     this.inviteLink = inviteLink;
                                     this.shareGroup();

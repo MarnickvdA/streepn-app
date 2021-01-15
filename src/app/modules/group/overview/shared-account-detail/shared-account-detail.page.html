@@ -32,10 +32,10 @@
             <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'wallet']"></fa-duotone-icon>
             <ion-label>Saldo</ion-label>
             <span slot="end"
-                  [ngClass]="account?.balance >= 0 ? 'positive-amount' : 'negative-amount'">{{account?.balanceString}}</span>
+                  [ngClass]="balance?.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance?.amount | money}}</span>
         </ion-item>
 
-        <ion-button [disabled]="account?.balance === 0" expand="block" class="ion-margin" (click)="settleSharedAccount(account?.id)">
+        <ion-button [disabled]="balance?.amount === 0" expand="block" class="ion-margin" (click)="settleSharedAccount(account?.id)">
             {{account?.name}} verrekenen
         </ion-button>
     </ion-list>

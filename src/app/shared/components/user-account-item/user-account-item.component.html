@@ -8,7 +8,8 @@
             <h3>{{account.name}}</h3>
             <p>
                 Saldo:
-                <span [ngClass]="account.balance >= 0 ? 'positive-amount' : 'negative-amount'">{{account.balanceString}}</span>
+                <span *ngIf="group?.getAccountBalance(account.id); let balance"
+                      [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
             </p>
         </ion-label>
         <ion-label color="medium">

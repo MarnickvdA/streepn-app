@@ -56,45 +56,57 @@ exports.joinGroup = functions
 
         const user: any = data.user;
 
-        const groupRef = db.collection('groups').doc(data.groupId);
+        return db.collection('groups').doc(data.groupId).get()
+            .then(async (groupSnapshot: any) => {
+                const group: any = groupSnapshot.data();
+                // Check if the group exists
+                if (!groupSnapshot.exists || !group) {
+                    throw new functions.https.HttpsError('not-found', 'No such group document! ' + data.groupId);
+                }
 
-        return db.runTransaction(fireTrans => {
-            return fireTrans.get(groupRef)
-                .then(groupDoc => {
-                    const group = groupDoc?.data();
+                if (group.inviteLink !== data.inviteLink) {
+                    throw new functions.https.HttpsError('permission-denied', 'Invalid invite link');
+                }
 
-                    // Check if the group exists
-                    if (!groupDoc.exists || !group) {
-                        throw new functions.https.HttpsError('not-found', 'No such group document!');
-                    }
+                const now = admin.firestore.Timestamp.now();
 
-                    const now = admin.firestore.Timestamp.now();
+                if (group.inviteLinkExpiry < now) {
+                    throw new functions.https.HttpsError('permission-denied', 'Invite link expired!');
+                }
 
-                    if (group.inviteLinkExpiry < now) {
-                        throw new functions.https.HttpsError('permission-denied', 'Invite link expired!');
-                    }
+                const accountId = uuidv4();
+                const account = {
+                    id: accountId,
+                    name: user.displayName,
+                    photoUrl: user.photoURL,
+                    roles: group.accounts.length === 0 ? ['ADMIN'] : [],
+                    userId,
+                    createdAt: now,
+                };
 
-                    fireTrans.update(groupRef, {
-                        members: admin.firestore.FieldValue.arrayUnion(userId),
-                    });
+                const batch = db.batch();
 
-                    const account = {
-                        id: uuidv4(),
-                        name: user.displayName,
-                        photoUrl: user.photoURL,
-                        roles: group.accounts.length === 0 ? ['ADMIN'] : [],
-                        userId,
-                        balance: 0,
-                        totalIn: 0,
-                        totalOut: 0,
-                        createdAt: now,
-                    };
-
-                    return fireTrans.update(groupRef, {
-                        accounts: admin.firestore.FieldValue.arrayUnion(account),
-                    });
+                const groupRef = db.collection('groups').doc(data.groupId);
+                batch.update(groupRef, {
+                    accounts: admin.firestore.FieldValue.arrayUnion(account),
+                    members: admin.firestore.FieldValue.arrayUnion(userId),
                 });
-        });
+
+                await groupRef.set({
+                    balances: {
+                        [accountId]: {
+                            amount: 0,
+                            totalIn: 0,
+                            totalOut: 0,
+                        },
+                    },
+                }, {merge: true});
+
+                return batch.commit();
+            })
+            .catch((err: any) => {
+                throw new functions.https.HttpsError('internal', err.message);
+            });
     });
 
 exports.leaveGroup = functions
@@ -127,21 +139,27 @@ exports.leaveGroup = functions
 
                     if (group.members.length > 1) {
                         const account = group.accounts.find((acc: any) => acc.userId === context.auth?.uid);
+                        const accountBalance = group.balances[account.id];
 
-                        if (account.balance !== 0) {
+                        if (accountBalance.amount !== 0 && accountBalance.totalIn !== 0 && accountBalance.totalOut) {
                             throw new functions.https.HttpsError('permission-denied', 'User account balance not 0');
                         }
+
+                        delete group.balances[account.id];
 
                         fireTrans.update(groupRef, {
                             members: admin.firestore.FieldValue.arrayRemove(userId),
                             accounts: admin.firestore.FieldValue.arrayRemove(account),
+                            balances: group.balances,
                         });
                     } else {
                         fireTrans.update(groupRef, {
                             members: [],
                             accounts: [],
+                            balances: {},
                             archived: true,
                             archivedAt: admin.firestore.FieldValue.serverTimestamp(),
+                            inviteLink: 'Die is er lekker niet meer haha!',
                             inviteLinkExpiry: admin.firestore.FieldValue.serverTimestamp(),
                         });
                     }
@@ -205,14 +223,6 @@ exports.addStock = functions
 
                     fireTrans.update(groupRef, {
                         totalIn: admin.firestore.FieldValue.increment(data.stock.cost),
-                        accounts: group.accounts.map((acc: any) => {
-                            const index = data.stock.paidBy.indexOf(acc.id);
-                            if (index >= 0) {
-                                acc.balance += data.stock.paidAmount[index];
-                                acc.totalIn += data.stock.paidAmount[index];
-                            }
-                            return acc;
-                        }),
                         products: group.products.map((p: any) => {
                             if (p.id === data.stock.productId) {
                                 if (!p.stock || isNaN(p.stock)) {
@@ -227,6 +237,16 @@ exports.addStock = functions
                             }
                             return p;
                         }),
+                    });
+
+                    Object.keys(group.balances).forEach((accId: any) => {
+                        const index = data.stock.paidBy.indexOf(accId);
+                        if (index >= 0) {
+                            fireTrans.update(groupRef, {
+                                [`balances.${accId}.amount`]: admin.firestore.FieldValue.increment(data.stock.paidAmount[index]),
+                                [`balances.${accId}.totalIn`]: admin.firestore.FieldValue.increment(data.stock.paidAmount[index]),
+                            });
+                        }
                     });
 
                     return newStock;
@@ -282,14 +302,6 @@ exports.editStock = functions
 
                     fireTrans.update(groupRef, {
                         totalIn: admin.firestore.FieldValue.increment(data.deltaStock.cost),
-                        accounts: group.accounts.map((acc: any) => {
-                            const index = data.deltaStock.paidBy.indexOf(acc.id);
-                            if (index >= 0) {
-                                acc.balance += data.deltaStock.paidAmount[index];
-                                acc.totalIn += data.deltaStock.paidAmount[index];
-                            }
-                            return acc;
-                        }),
                         products: group.products.map((p: any) => {
                             if (p.id === data.deltaStock.productId) {
                                 p.stock += data.deltaStock.amount;
@@ -312,6 +324,16 @@ exports.editStock = functions
 
                             return p;
                         }),
+                    });
+
+                    Object.keys(group.balances).forEach((accId: any) => {
+                        const index = data.deltaStock.paidBy.indexOf(accId);
+                        if (index >= 0) {
+                            fireTrans.update(groupRef, {
+                                [`balances.${accId}.amount`]: admin.firestore.FieldValue.increment(data.deltaStock.paidAmount[index]),
+                                [`balances.${accId}.totalIn`]: admin.firestore.FieldValue.increment(data.deltaStock.paidAmount[index]),
+                            });
+                        }
                     });
 
                     return data.updatedStock;
@@ -390,101 +412,6 @@ exports.removeStock = functions
         });
     });
 
-exports.editTransaction = functions
-    .region('europe-west1')
-    .https
-    .onCall((data, context) => {
-
-        if (!context.auth?.uid) {
-            throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
-        }
-
-        let currentAccount: any;
-        let group: any;
-        const groupRef = db.collection('groups').doc(data.groupId);
-
-        return db.runTransaction(fireTrans => {
-                return fireTrans.get(groupRef)
-                    .then(groupDoc => {
-                        group = groupDoc?.data();
-
-                        // Check if the group exists
-                        if (!groupDoc.exists || !group) {
-                            throw new functions.https.HttpsError('not-found', 'No such group document!');
-                        }
-
-                        // Check if the user is part of this group
-                        if (!group.members.includes(context.auth?.uid)) {
-                            throw new functions.https.HttpsError('permission-denied', 'User not member of group');
-                        }
-
-                        if (!data.deltaTransaction || !data.updatedTransaction) {
-                            throw new functions.https.HttpsError('not-found', 'No transaction to be computed!');
-                        }
-
-                        currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
-
-                        // Update the balance of the accounts
-                        updateTransactionAccounts(group, data.deltaTransaction);
-
-                        fireTrans.update(groupRef, {
-                            totalOut: admin.firestore.FieldValue.increment(data.deltaTransaction.totalPrice),
-                            accounts: group.accounts,
-                            sharedAccounts: group.sharedAccounts,
-                            products: group.products,
-                        });
-
-                        // Update old transaction and add new transaction to firestore
-                        if (data.updatedTransaction.itemCount === 0) {
-                            fireTrans.update(groupRef.collection('transactions').doc(data.updatedTransaction.id), {
-                                removed: true,
-                            });
-                        } else {
-                            fireTrans.update(groupRef.collection('transactions').doc(data.updatedTransaction.id), {
-                                items: data.updatedTransaction.items,
-                                itemCount: data.updatedTransaction.itemCount,
-                                totalPrice: data.updatedTransaction.totalPrice,
-                            });
-                        }
-
-                        return data.updatedTransaction;
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        throw new functions.https.HttpsError('unknown', 'Error occurred while getting document', err);
-                    });
-            })
-            .then((transaction) => {
-                try {
-                    const topic = `group_${data.groupId}_all`;
-
-                    const message = {
-                        notification: {
-                            title: `Transactie in ${group.name} ${transaction.itemCount === 0 ? 'verwijderd' : 'aangepast'}`,
-                            body: `${currentAccount.name} heeft een transactie ${transaction.itemCount === 0 ? 'verwijderd' : 'aangepast'}`,
-                        },
-                        data: {
-                            groupId: data.groupId as string,
-                        },
-                        topic,
-                    };
-
-                    admin.messaging().send(message)
-                        .catch((error) => {
-                            console.error('Error sending message:', error);
-                        });
-                } catch (e) {
-                    console.error(e);
-                }
-
-                return transaction;
-            })
-            .catch(err => {
-                console.error(err);
-                throw new functions.https.HttpsError('unknown', 'Firebase transaction error occurred', err);
-            });
-    });
-
 exports.addTransaction = functions
     .region('europe-west1')
     .https
@@ -520,7 +447,7 @@ exports.addTransaction = functions
                         currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
 
                         // Update the balance of the accounts
-                        updateTransactionAccounts(group, data.transaction);
+                        updateTransactionAccounts(fireTrans, data.groupId, group, data.transaction);
 
                         const uid = uuidv4();
                         const newTransaction = {
@@ -537,8 +464,6 @@ exports.addTransaction = functions
 
                         fireTrans.update(groupRef, {
                             totalOut: admin.firestore.FieldValue.increment(data.transaction.totalPrice),
-                            accounts: group.accounts,
-                            sharedAccounts: group.sharedAccounts,
                             products: group.products,
                         });
 
@@ -557,6 +482,99 @@ exports.addTransaction = functions
                         notification: {
                             title: `Nieuwe transactie in ${group.name}`,
                             body: `${currentAccount.name} heeft ${transaction.itemCount} transactie${transaction.itemCount > 1 ? 's' : ''} gedaan!`,
+                        },
+                        data: {
+                            groupId: data.groupId as string,
+                        },
+                        topic,
+                    };
+
+                    admin.messaging().send(message)
+                        .catch((error) => {
+                            console.error('Error sending message:', error);
+                        });
+                } catch (e) {
+                    console.error(e);
+                }
+
+                return transaction;
+            })
+            .catch(err => {
+                console.error(err);
+                throw new functions.https.HttpsError('unknown', 'Firebase transaction error occurred', err);
+            });
+    });
+
+exports.editTransaction = functions
+    .region('europe-west1')
+    .https
+    .onCall((data, context) => {
+
+        if (!context.auth?.uid) {
+            throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
+        }
+
+        let currentAccount: any;
+        let group: any;
+        const groupRef = db.collection('groups').doc(data.groupId);
+
+        return db.runTransaction(fireTrans => {
+                return fireTrans.get(groupRef)
+                    .then(groupDoc => {
+                        group = groupDoc?.data();
+
+                        // Check if the group exists
+                        if (!groupDoc.exists || !group) {
+                            throw new functions.https.HttpsError('not-found', 'No such group document!');
+                        }
+
+                        // Check if the user is part of this group
+                        if (!group.members.includes(context.auth?.uid)) {
+                            throw new functions.https.HttpsError('permission-denied', 'User not member of group');
+                        }
+
+                        if (!data.deltaTransaction || !data.updatedTransaction) {
+                            throw new functions.https.HttpsError('not-found', 'No transaction to be computed!');
+                        }
+
+                        currentAccount = group.accounts.find((account: any) => account.userId === context.auth?.uid);
+
+                        // Update the balance of the accounts
+                        updateTransactionAccounts(fireTrans, data.groupId, group, data.deltaTransaction);
+
+                        fireTrans.update(groupRef, {
+                            totalOut: admin.firestore.FieldValue.increment(data.deltaTransaction.totalPrice),
+                            products: group.products,
+                        });
+
+                        // Update old transaction and add new transaction to firestore
+                        if (data.updatedTransaction.itemCount === 0) {
+                            fireTrans.update(groupRef.collection('transactions').doc(data.updatedTransaction.id), {
+                                removed: true,
+                            });
+                        } else {
+                            fireTrans.update(groupRef.collection('transactions').doc(data.updatedTransaction.id), {
+                                items: data.updatedTransaction.items,
+                                itemCount: data.updatedTransaction.itemCount,
+                                totalPrice: data.updatedTransaction.totalPrice,
+                            });
+                        }
+
+                        return data.updatedTransaction;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        throw new functions.https.HttpsError('unknown', 'Error occurred while getting document', err);
+                    });
+            })
+            .then((transaction) => {
+                try {
+                    const topic = `group_${data.groupId}_all`;
+
+                    const message = {
+                        notification: {
+                            title: `Transactie in ${group.name} ${transaction.itemCount === 0 ? 'verwijderd' : 'aangepast'}`,
+                            body: `${currentAccount.name} heeft een transactie ${transaction.itemCount === 0 ? 'verwijderd' : 'aangepast'}`,
                         },
                         data: {
                             groupId: data.groupId as string,
@@ -615,19 +633,24 @@ exports.settleSharedAccount = functions
                         throw new functions.https.HttpsError('not-found', 'No payers to be found!');
                     }
 
-                    return fireTrans.update(groupRef, {
-                        accounts: group.accounts.map((acc: any) => {
-                            const payer = data.payers[acc.id];
-                            if (payer) {
-                                acc.balance -= payer;
-                                acc.totalOut += payer;
-                            }
-                            return acc;
-                        }),
+                    Object.keys(group.balances).forEach((accId: any) => {
+                        const payer = data.payers[accId];
+                        if (payer) {
+                            fireTrans.update(groupRef, {
+                                [`balances.${accId}.amount`]: admin.firestore.FieldValue.increment(-payer),
+                                [`balances.${accId}.totalOut`]: admin.firestore.FieldValue.increment(+payer),
+                            });
+                        }
+                    });
+
+                    fireTrans.update(groupRef, {
+                        [`balances.${data.sharedAccountId}.amount`]: 0,
+                        [`balances.${data.sharedAccountId}.totalOut`]: 0,
+                    });
+
+                    fireTrans.update(groupRef, {
                         sharedAccounts: group.sharedAccounts.map((acc: any) => {
                             if (acc.id === data.sharedAccountId) {
-                                acc.balance = 0;
-                                acc.totalOut = 0;
                                 acc.settledAt = admin.firestore.Timestamp.now();
                             }
 
@@ -638,7 +661,7 @@ exports.settleSharedAccount = functions
         });
     });
 
-export function updateTransactionAccounts(group: any, transaction: any) {
+export function updateTransactionAccounts(fireTrans: any, groupId: string, group: any, transaction: any) {
     transaction.items.forEach((t: { amount: number, accountId: string, productId: string, productPrice: number }) => {
         let acc: any = group.accounts.find((account: any) => account.id === t.accountId);
 
@@ -650,8 +673,10 @@ export function updateTransactionAccounts(group: any, transaction: any) {
             throw new functions.https.HttpsError('not-found', 'Shared Account not found!');
         }
 
-        acc.balance -= (t.productPrice * t.amount);
-        acc.totalOut += (t.productPrice * t.amount);
+        fireTrans.update(db.collection('groups').doc(groupId) as any, {
+            [`balances.${acc.id}.amount`]: admin.firestore.FieldValue.increment(-(t.productPrice * t.amount)),
+            [`balances.${acc.id}.totalOut`]: admin.firestore.FieldValue.increment(t.productPrice * t.amount),
+        });
 
         group.products = group.products.map((pr: any) => {
             if (pr.id === t.productId) {
@@ -664,4 +689,8 @@ export function updateTransactionAccounts(group: any, transaction: any) {
             return pr;
         });
     });
+}
+
+export function getAccountBalance(group: any, accountId: string): { amount: number, totalIn: number, totalOut: number } {
+    return group.balances[accountId];
 }

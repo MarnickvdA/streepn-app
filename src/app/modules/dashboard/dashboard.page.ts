@@ -2,7 +2,7 @@ import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core
 import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
 import firebase from 'firebase/app';
-import {Group, UserAccount} from '@core/models';
+import {Group, GroupInvite, UserAccount} from '@core/models';
 import {AdsService, AuthService, EventsService, GroupService, LoggerService, StorageService, UIService, UserService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {take} from 'rxjs/operators';
@@ -169,27 +169,25 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         this.storage.delete('groupInvite');
 
         this.groupService.getGroupByInviteLink(groupInvite)
-            .then(group => {
+            .then(invite => {
                 this.zone.run(() => {
-                    if (!group.members.find(uid => uid === this.user.uid)) {
-                        this.alertController.create({
-                            header: this.translate.instant('dashboard.groupInvite.header'),
-                            message: this.translate.instant('dashboard.groupInvite.question') + '<b>' + group.name + '</b>?',
-                            buttons: [
-                                {
-                                    text: this.translate.instant('actions.deny'),
-                                    role: 'cancel'
-                                }, {
-                                    text: this.translate.instant('actions.accept'),
-                                    handler: () => {
-                                        this.joinGroup(group.id);
-                                    }
+                    this.alertController.create({
+                        header: this.translate.instant('dashboard.groupInvite.header'),
+                        message: this.translate.instant('dashboard.groupInvite.question') + '<b>' + invite.groupName + '</b>?',
+                        buttons: [
+                            {
+                                text: this.translate.instant('actions.deny'),
+                                role: 'cancel'
+                            }, {
+                                text: this.translate.instant('actions.accept'),
+                                handler: () => {
+                                    this.joinGroup(invite);
                                 }
-                            ]
-                        }).then(alert => {
-                            return alert.present();
-                        });
-                    }
+                            }
+                        ]
+                    }).then(alert => {
+                        return alert.present();
+                    });
                 });
             })
             .catch((err) => {
@@ -200,7 +198,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             });
     }
 
-    private joinGroup(groupId: string) {
+    private joinGroup(groupInvite: GroupInvite) {
         this.showLoading();
 
         this.eventsService.subscribe('group:joined', () => {
@@ -209,7 +207,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             this.eventsService.unsubscribe('group:joined');
         });
 
-        this.groupService.joinGroup(groupId, this.user);
+        this.groupService.joinGroup(groupInvite, this.user);
     }
 
     private async showLoading() {

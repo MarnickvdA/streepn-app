@@ -24,14 +24,14 @@
             <ion-label>
                 <h3>Totaal in</h3>
             </ion-label>
-            <span slot="end">{{group.totalInString}}</span>
+            <span slot="end">{{group.totalIn | money}}</span>
         </ion-item>
         <ion-item>
             <fa-duotone-icon slot="start" class="danger" [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
             <ion-label>
                 <h3>Totaal uit</h3>
             </ion-label>
-            <span slot="end">{{group.totalOutString}}</span>
+            <span slot="end">{{group.totalOut | money}}</span>
         </ion-item>
     </ion-list>
 </ion-content>

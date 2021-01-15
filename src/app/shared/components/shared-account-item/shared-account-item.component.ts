@@ -1,27 +1,38 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {SharedAccount} from '@core/models';
-import {getMoneyString} from '@core/utils/firestore-utils';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Group, SharedAccount} from '@core/models';
 import {NavController} from '@ionic/angular';
+import {Subscription} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {GroupService} from '@core/services';
 
 @Component({
     selector: 'app-shared-account-item',
     templateUrl: './shared-account-item.component.html',
     styleUrls: ['./shared-account-item.component.scss'],
 })
-export class SharedAccountItemComponent implements OnInit {
+export class SharedAccountItemComponent implements OnInit, OnDestroy {
 
     @Input() account: SharedAccount;
     @Input() canEditAccount = false;
     @Input() navLink?: string;
 
-    constructor(private navController: NavController) {
-    }
+    group?: Group;
+    private groupSub: Subscription;
 
-    get balanceString(): string {
-        return getMoneyString(this.account.balance);
+    constructor(private translate: TranslateService,
+                private groupService: GroupService,
+                private navController: NavController) {
     }
 
     ngOnInit() {
+        this.groupSub = this.groupService.observeGroup(this.groupService.currentGroupId)
+            .subscribe((group) => {
+                this.group = group;
+            });
+    }
+
+    ngOnDestroy(): void {
+        this.groupSub.unsubscribe();
     }
 
     openAccount() {

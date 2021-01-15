@@ -2,7 +2,12 @@ import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {Product, productConverter} from './product';
 import {Account, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from './account';
-import {getMoneyString} from '@core/utils/firestore-utils';
+
+export interface Balance {
+    amount: number;
+    totalIn: number;
+    totalOut: number;
+}
 
 export class Group {
     readonly id: string;
@@ -17,8 +22,8 @@ export class Group {
     private mProducts: Product[];
     totalIn: number;
     totalOut: number;
-    metadata: {
-        [key: string]: unknown
+    balances: {
+        [id: string]: Balance
     };
 
     groupDictionary: {
@@ -45,8 +50,8 @@ export class Group {
                 sharedAccounts: SharedAccount[],
                 totalIn: number,
                 totalOut: number,
-                metadata?: {
-                    [key: string]: unknown
+                balances: {
+                    [id: string]: Balance
                 }) {
         this.id = id;
         this.createdAt = createdAt;
@@ -60,7 +65,7 @@ export class Group {
         this.mSharedAccounts = sharedAccounts;
         this.totalIn = totalIn;
         this.totalOut = totalOut;
-        this.metadata = metadata || {};
+        this.balances = balances;
 
         this.setDictionary();
     }
@@ -93,12 +98,12 @@ export class Group {
         this.setProducts();
     }
 
-    get totalInString(): string {
-        return getMoneyString(this.totalIn);
+    getAccountBalance(accountId: string): Balance {
+        return this.balances[accountId];
     }
 
-    get totalOutString(): string {
-        return getMoneyString(this.totalOut);
+    canLeaveGroup(accountId: string): boolean {
+        return this.balances[accountId].totalIn === 0 && this.balances[accountId].totalOut === 0;
     }
 
     getAccountById(accountId: string): Account | undefined {
@@ -202,6 +207,7 @@ export const groupConverter: FirestoreDataConverter<Group> = {
             sharedAccounts,
             totalIn: group.totalIn,
             totalOut: group.totalOut,
+            balances: group.balances,
         };
     },
     fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Group {
@@ -222,5 +228,5 @@ export function newGroup(id: string, data: { [key: string]: any }): Group {
         sharedAccounts.push(sharedAccountConverter.newSharedAccount(sharedAccount)));
 
     return new Group(id, data.createdAt, data.name, data.valuta, data.inviteLink,
-        data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts, data.totalIn, data.totalOut, data.metadata);
+        data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts, data.totalIn, data.totalOut, data.balances);
 }
