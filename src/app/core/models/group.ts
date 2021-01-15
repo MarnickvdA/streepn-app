@@ -98,6 +98,10 @@ export class Group {
         this.setProducts();
     }
 
+    isAdmin(userId: string): boolean {
+        return this.accounts.find(account => account.userId === userId)?.roles.includes('ADMIN') || false;
+    }
+
     getAccountBalance(accountId: string): Balance {
         return this.balances[accountId];
     }

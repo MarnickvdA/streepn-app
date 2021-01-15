@@ -7,7 +7,7 @@ import {AddTransactionComponent} from '@modules/group/add-transaction/add-transa
 import {ModalController, NavController} from '@ionic/angular';
 import {Capacitor} from '@capacitor/core';
 import {faPlus} from '@fortawesome/pro-regular-svg-icons';
-import {faBoxFull, faCogs, faHouse, faReceipt} from '@fortawesome/pro-duotone-svg-icons';
+import {faBoxFull, faCogs, faHouse, faInventory, faReceipt} from '@fortawesome/pro-duotone-svg-icons';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 
 @Component({
@@ -29,7 +29,7 @@ export class GroupPage implements OnInit, OnDestroy {
                 private events: EventsService,
                 private library: FaIconLibrary,
                 private navController: NavController) {
-        this.library.addIcons(faPlus, faHouse, faReceipt, faBoxFull, faCogs);
+        this.library.addIcons(faPlus, faHouse, faReceipt, faInventory, faCogs);
         this.iOS = Capacitor.isNative && Capacitor.platform === 'ios';
     }
 

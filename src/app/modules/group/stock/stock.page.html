@@ -18,7 +18,18 @@
         </ion-toolbar>
     </ion-header>
 
-    <ion-item lines="full" *ngIf="group?.products.length > 0" (click)="removeStock()" button detail="false">
+    <ion-item lines="full" [disabled]="!(group?.products.length > 0)" routerLink="log" routerDirection="forward" button
+              detail="true">
+        <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'history']"></fa-duotone-icon>
+        <ion-label>
+            <h3>{{'group.stock.log.title' | translate}}</h3>
+            <p class="small ion-text-wrap">
+                {{'group.stock.log.description' | translate}}
+            </p>
+        </ion-label>
+    </ion-item>
+
+    <ion-item lines="full" [disabled]="!(group?.products.length > 0)" (click)="removeStock()" button detail="false">
         <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'edit']"></fa-duotone-icon>
         <ion-label>
             <h3>{{'group.stock.remove.title' | translate}}</h3>
@@ -27,6 +38,24 @@
             </p>
         </ion-label>
     </ion-item>
+
+    <!-- START PRODUCTS SECTION -->
+    <ion-list-header lines="full">
+        <ion-label>{{'group.overview.products' | translate}}</ion-label>
+        <ion-button (click)="addProduct()" *ngIf="isAdmin">{{'actions.add' | translate}}</ion-button>
+    </ion-list-header>
+
+    <ion-item *ngIf="group?.products.length === 0" lines="none">
+        <ion-label>
+            <p>
+                {{'group.overview.emptyProducts' | translate}}
+            </p>
+        </ion-label>
+    </ion-item>
+
+    <app-product-item *ngFor="let product of group?.products" [canEdit]="isAdmin"
+                      [product]="product"></app-product-item>
+    <!-- END PRODUCTS SECTION -->
 
     <!-- START SUPPLY SECTION -->
     <ion-list-header lines="full">
@@ -49,40 +78,5 @@
     <app-product-stock-item *ngFor="let product of stockProducts" [canEdit]="false"
                             [product]="product"></app-product-stock-item>
     <!-- END SUPPLY SECTION -->
-
-    <ion-list-header lines="full">
-        <ion-label>{{'group.stock.log' | translate}}</ion-label>
-        <ion-button [disabled]="group?.products.length === 0"
-                    (click)="reset()">{{'actions.refresh' | translate}}</ion-button>
-    </ion-list-header>
-
-    <ion-list>
-        <ion-item *ngIf="stockTransactions?.length === 0" lines="none">
-            <ion-label class="ion-text-wrap">
-                <p>{{'group.stock.empty' | translate}}</p>
-            </ion-label>
-        </ion-item>
-        <ion-item (click)="openStockItem(stockItem)" [button]="stockItem.isMutable" [detail]="stockItem.isMutable"
-                  *ngFor="let stockItem of stockTransactions" [disabled]="stockItem.removed">
-            <ion-label [ngStyle]="stockItem.removed ? {'text-decoration': 'line-through'} : {}">
-                <h3 [ngClass]="stockItem.writtenOff ? 'red-text' : ''">
-                    {{stockItem.amount}}x
-                    {{group.getProductById(stockItem.productId)?.name}} {{!stockItem.writtenOff ? 'voor ' + (stockItem.cost | money) : ''}}
-                </h3>
-                <p class="small" *ngIf="!stockItem.writtenOff">
-                    Betaald door <span
-                        *ngFor="let account of stockItem.paidBy; let i = index">{{group.getUserAccountById(account)?.name}}
-                    {{i < stockItem.paidBy.length - 1 ? ' & ' : ''}}</span>
-                </p>
-                <p class="small" *ngIf="stockItem.writtenOff">
-                    Afgeboekt door {{group.getUserAccountById(stockItem.createdBy)?.name}}
-                </p>
-            </ion-label>
-        </ion-item>
-        <ion-button (click)="loadNext()" *ngIf="!doneLoading" [disabled]="isLoadingMore" fill="none">
-            <ion-label *ngIf="!isLoadingMore" color="primary">{{'actions.loadMore' | translate}}</ion-label>
-            <ion-progress-bar *ngIf="isLoadingMore"></ion-progress-bar>
-        </ion-button>
-    </ion-list>
 
 </ion-content>

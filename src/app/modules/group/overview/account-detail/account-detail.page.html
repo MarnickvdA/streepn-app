@@ -16,11 +16,6 @@
         </ion-toolbar>
     </ion-header>
     <ion-list>
-        <ion-list-header lines="full">
-            <ion-label>
-                {{'group.overview.account.preferences' | translate}}
-            </ion-label>
-        </ion-list-header>
         <ion-item lines="inset">
             <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'user']"></fa-duotone-icon>
             <ion-input [(ngModel)]="newName" value="{{account?.name}}"></ion-input>

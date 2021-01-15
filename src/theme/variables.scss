@@ -241,6 +241,7 @@ body.dark {
 @import "font";
 @import "forms";
 @import "icons";
+@import "lists";
 
 ion-buttons {
   ion-button:focus {
@@ -264,8 +265,4 @@ span.negative-amount {
 
 span.positive-amount {
   color: var(--ion-color-dark);
-}
-
-ion-list-header {
-  margin-top: .75rem;
 }

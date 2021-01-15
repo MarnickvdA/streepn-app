@@ -5,7 +5,6 @@ import {ActivatedRoute} from '@angular/router';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Plugins} from '@capacitor/core';
-import {NewProductComponent} from './new-product/new-product.component';
 import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
 import {AuthService, GroupService, ProductService} from '@core/services';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
@@ -50,7 +49,7 @@ export class OverviewPage implements OnInit, OnDestroy {
                 if (group) {
                     this.inviteLink = group.inviteLink;
                     this.inviteLinkExpired = group.inviteLinkExpiry.toDate() < new Date();
-                    this.isAdmin = group.accounts.find(account => account.userId === this.authService.currentUser.uid)?.roles.includes('ADMIN') || false;
+                    this.isAdmin = group.isAdmin(this.authService.currentUser.uid);
                 }
             });
     }
@@ -66,18 +65,6 @@ export class OverviewPage implements OnInit, OnDestroy {
     addSharedAccount() {
         this.modalController.create({
             component: NewSharedAccountComponent,
-            componentProps: {
-                group$: this.group$
-            },
-            swipeToClose: true
-        }).then((modal) => {
-            modal.present();
-        });
-    }
-
-    addProduct() {
-        this.modalController.create({
-            component: NewProductComponent,
             componentProps: {
                 group$: this.group$
             },

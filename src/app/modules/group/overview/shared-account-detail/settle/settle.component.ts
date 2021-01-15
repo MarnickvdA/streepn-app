@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
 import {Balance, Group, SharedAccount, UserAccount} from '@core/models';
@@ -11,7 +11,7 @@ import {TranslateService} from '@ngx-translate/core';
     templateUrl: './settle.component.html',
     styleUrls: ['./settle.component.scss'],
 })
-export class SettleComponent implements OnInit {
+export class SettleComponent implements OnInit, OnDestroy {
 
     @Input() sharedAccountId: string;
 
@@ -43,6 +43,10 @@ export class SettleComponent implements OnInit {
         }));
     }
 
+    ngOnDestroy() {
+        this.groupSub.unsubscribe();
+    }
+
     dismiss() {
         this.modalController.dismiss();
     }
@@ -51,10 +55,12 @@ export class SettleComponent implements OnInit {
         this.payers = {};
     }
 
-    selectAll() {
-        this.group?.accounts.forEach(acc => {
+    toggleAll($event) {
+        this.group?.accounts.forEach((acc) => {
             this.payers[acc.id] = true;
         });
+
+        this.updateSettle();
     }
 
     toggleAccount($event: any, account: UserAccount) {

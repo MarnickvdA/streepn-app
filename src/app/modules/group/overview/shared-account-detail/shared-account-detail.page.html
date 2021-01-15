@@ -17,26 +17,22 @@
     </ion-header>
 
     <ion-list>
-        <ion-list-header lines="full">
-            <ion-label>
-                {{'group.overview.account.preferences' | translate}}
-            </ion-label>
-        </ion-list-header>
         <ion-item>
-            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'piggy-bank']"></fa-duotone-icon>
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'edit']"></fa-duotone-icon>
             <ion-input [(ngModel)]="newName" value="{{account?.name}}"></ion-input>
             <ion-button (click)="setName()"
                         [attr.disabled]="newName === account?.name || newName?.length < 2">{{'actions.edit' | translate}}</ion-button>
         </ion-item>
-        <ion-item>
+        <ion-item lines="full">
             <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'wallet']"></fa-duotone-icon>
             <ion-label>Saldo</ion-label>
             <span slot="end"
                   [ngClass]="balance?.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance?.amount | money}}</span>
         </ion-item>
 
-        <ion-button [disabled]="balance?.amount === 0" expand="block" class="ion-margin" (click)="settleSharedAccount(account?.id)">
-            {{account?.name}} verrekenen
-        </ion-button>
+        <ion-item class="top-line margin-top" lines="full" [disabled]="balance?.amount === 0" button (click)="settleSharedAccount(account?.id)">
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'cash-register']"></fa-duotone-icon>
+            <ion-label>{{account?.name}} verrekenen</ion-label>
+        </ion-item>
     </ion-list>
 </ion-content>

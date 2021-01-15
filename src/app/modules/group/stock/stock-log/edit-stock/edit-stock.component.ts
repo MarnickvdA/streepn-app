@@ -14,7 +14,7 @@ import {MoneyInputComponent} from '@shared/components/money-input/money-input.co
 @Component({
     selector: 'app-edit-stock',
     templateUrl: './edit-stock.component.html',
-    styleUrls: ['./edit-stock.component.scss', '../stock.page.scss'],
+    styleUrls: ['./edit-stock.component.scss', '../../stock.page.scss'],
 })
 export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
     stockForm: FormGroup;

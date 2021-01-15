@@ -1,0 +1,13 @@
+ion-list-header {
+  margin-top: .75rem;
+}
+
+ion-item {
+  &.top-line {
+    border-top: solid 1px var(--border-color);
+  }
+
+  &.margin-top {
+    margin-top: 2rem;
+  }
+}

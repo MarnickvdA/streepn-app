@@ -64,24 +64,5 @@
                                  navLink="group/{{group?.id}}/preferences/shared-accounts/{{sharedAccount.id}}"></app-shared-account-item>
         <!-- END ACCOUNTS SECTION -->
 
-
-        <!-- START PRODUCTS SECTION -->
-        <ion-list-header lines="full">
-            <ion-label>{{'group.overview.products' | translate}}</ion-label>
-            <ion-button (click)="addProduct()" *ngIf="isAdmin">{{'actions.add' | translate}}</ion-button>
-        </ion-list-header>
-
-        <ion-item *ngIf="group?.products.length === 0" lines="none">
-            <ion-label>
-                <p>
-                    {{'group.overview.emptyProducts' | translate}}
-                </p>
-            </ion-label>
-        </ion-item>
-
-        <app-product-item *ngFor="let product of group?.products" [canEdit]="isAdmin"
-                          [product]="product"></app-product-item>
-        <!-- END PRODUCTS SECTION -->
-
     </ion-list>
 </ion-content>

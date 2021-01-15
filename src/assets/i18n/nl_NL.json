@@ -20,6 +20,7 @@
     "create": "Creeër",
     "delete": "Verwijderen",
     "edit": "Bewerken",
+    "all": "Iedereen",
     "save": "Opslaan",
     "cancel": "Annuleren",
     "new": "Nieuw",
@@ -173,11 +174,14 @@
       "title": "Transactie"
     },
     "stock": {
-      "tab": "Voorraad",
-      "title": "Voorraadbeheer",
+      "tab": "Producten",
+      "title": "Producten",
       "current": "Huidige voorraad",
       "empty": "Er is nog geen voorraad toegevoegd om in het logboek te tonen",
-      "log": "Activiteit",
+      "log": {
+        "title": "Logboek",
+        "description": "Bekijk aanpassingen in de voorraad."
+      },
       "add": {
         "title": "Voorraad aanvullen",
         "description": "Vul jouw krediet aan door voorraad toe te voegen! Je kunt de betalers pas invoeren als je alle velden hebt gevuld.",
@@ -198,7 +202,7 @@
         }
       },
       "edit": {
-        "title": "Voorraad bijwerken",
+        "title": "Voorraad aanpassen",
         "description": "Heb je een foutje gemaakt bij het invoeren van de voorraad? Dan is dit de plek om het aan te passen.",
         "errors": {
           "product-required": "Selecteer een product",
@@ -212,14 +216,14 @@
         }
       },
       "remove": {
-        "title": "Voorraad afboeken",
+        "title": "Voorraad afschrijven",
         "description": "Klopt de voorraad niet meer? Werk het dan bij.",
         "titleWithName": "{{name}} afboeken",
         "selectProduct": "Selecteer product",
-        "amount": "Af te boeken hoeveelheid",
+        "amount": "Af te schrijven hoeveelheid",
         "errors": {
           "product-required": "Selecteer een product",
-          "amount-required": "Vul een hoeveelheid in om af te boeken",
+          "amount-required": "Vul een hoeveelheid in om af te schrijven",
           "amount-min": "De hoeveelheid moet minimaal 1 zijn"
         }
       }
@@ -315,7 +319,7 @@
       "settle": {
         "sharedAccount": {
           "amount": "Te verrekenen bedrag",
-          "select-payers": "Betalers selecteren",
+          "select-payers": "Betalers",
           "settle": "Verrekenen",
           "balance": "Saldo:",
           "header": "Pas op!",

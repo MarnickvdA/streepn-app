@@ -30,7 +30,7 @@
 
     <ion-list>
         <ion-list-header lines="inset">
-            {{'group.overview.settle.sharedAccount.select-payers' | translate}}
+            <ion-label>{{'group.overview.settle.sharedAccount.select-payers' | translate}}</ion-label>
         </ion-list-header>
         <ion-item class="account-item" *ngFor="let account of group?.accounts">
             <ion-avatar slot="start">
@@ -49,8 +49,7 @@
                     </p>
                 </ion-label>
             </div>
-            <ion-checkbox slot="end" [checked]="payers[account.id]"
-                          (ionChange)="toggleAccount($event, account)"></ion-checkbox>
+            <ion-checkbox slot="end" (ionChange)="toggleAccount($event, account)"></ion-checkbox>
         </ion-item>
     </ion-list>
 
