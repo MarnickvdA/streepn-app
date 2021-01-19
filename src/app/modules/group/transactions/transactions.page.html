@@ -46,7 +46,7 @@
                 </h3>
                 <div class="transaction-bill" *ngIf="transaction.priceByAccountId(currentAccount.id); let price">
                     <fa-duotone-icon slot="start" class="danger small no-width" fixedWidth [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
-                    <span>{{price}}</span>
+                    <span>{{price | money}}</span>
                 </div>
                 <p class="small">
                     Op {{transaction.createdAt.toDate().toLocaleString()}}

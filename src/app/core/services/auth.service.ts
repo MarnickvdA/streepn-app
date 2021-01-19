@@ -14,7 +14,6 @@ import {AngularFireFunctions} from '@angular/fire/functions';
 import {LoggerService} from './logger.service';
 import {MenuController} from '@ionic/angular';
 import User = firebase.User;
-import {GroupService} from '@core/services/group.service';
 
 const {SignInWithApple} = Plugins;
 

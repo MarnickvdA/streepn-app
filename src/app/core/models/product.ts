@@ -1,14 +1,13 @@
 import {Timestamp} from '@firebase/firestore-types';
-import {getMoneyString} from '@core/utils/firestore-utils';
 
 export class Product {
     id: string;
     createdAt: Timestamp;
     name: string;
-    price: number;
-    stock?: number;
-    totalStock?: number;
-    totalStockWorth?: number;
+    price: number; // Price (currently in cents, since we only support EURO right now.)
+    stock?: number; // The current amount of stock available
+    totalStock?: number; // The total amount of stock that was deposited for this product
+    totalStockWorth?: number; // Total stock worth
 
     constructor(id: string, createdAt: Timestamp, name: string, price: number, stock?: number,
                 totalStock?: number, totalStockWorth?: number) {

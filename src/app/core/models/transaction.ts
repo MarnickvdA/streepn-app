@@ -1,22 +1,25 @@
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
-import {getMoneyString} from '@core/utils/firestore-utils';
 
 export interface TransactionItem {
-    amount: number;
-    accountId: string;
-    productId: string;
-    productPrice: number;
+    productId: string; // Id of bought product
+    productPrice: number; // Price of the product at the moment of buying (in cents)
+    amount: number; // Amount of productId bought
+    accountId: string; // Account whom bought this product at the described price and amount.
 }
 
 export class Transaction {
     readonly id: string;
     createdAt: Timestamp;
     createdBy: string;
-    totalPrice: number;
-    itemCount: number;
+    totalPrice: number; // Price of all TransactionItems combined
+    itemCount: number; // Count of TransactionItems (NOT amount of products sold)
     items: TransactionItem[];
     removed: boolean;
+
+    private priceDictionary: {
+        [accountId: string]: number;
+    } = {};
 
     constructor(id: string, createdAt: Timestamp, createdBy: string, totalPrice: number, itemCount: number,
                 items: TransactionItem[], removed: boolean) {
@@ -27,27 +30,20 @@ export class Transaction {
         this.itemCount = itemCount;
         this.items = [...items];
         this.removed = removed || false;
-    }
 
-    containsAccount(accountId: string): boolean {
-        return this.items.find(item => item.accountId === accountId) !== undefined;
-    }
-
-    priceByAccountId(accountId: string): string {
-        const items = this.items.filter(item => item.accountId === accountId);
-
-        if (items.length > 0) {
-            let price = 0;
-            items.forEach(item => {
-                price -= item.productPrice * item.amount;
-            });
-
-            if (price < 0) {
-                return getMoneyString(price);
+        this.items.forEach((item) => {
+            if (!this.priceDictionary[item.accountId]) {
+                this.priceDictionary[item.accountId] = 0;
             }
-        }
 
-        return undefined;
+            this.priceDictionary[item.accountId] -= item.productPrice * item.amount;
+        });
+    }
+
+    priceByAccountId(accountId: string): number {
+        const price = this.priceDictionary[accountId];
+
+        return price < 0 ? price : undefined;
     }
 }
 
