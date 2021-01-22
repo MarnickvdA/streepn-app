@@ -94,6 +94,7 @@
     "emailVerified": "Geverifieerd",
     "memberSince": "Gebruiker sinds",
     "emptyGroups": "Je hebt nog geen groepen.",
+    "yourBalance": "Jouw saldo: ",
     "createGroup": {
       "title": "Nieuwe groep",
       "groupName": "Groepsnaam",
@@ -161,7 +162,9 @@
       "more": "Meer"
     },
     "home": {
-      "title": "Groep"
+      "title": "Groep",
+      "totalIn": "Totaal gestort",
+      "totalOut": "Totaal uitgegeven"
     },
     "transactions": {
       "title": "Transacties",
@@ -171,7 +174,11 @@
       "disabledEditing": "Sommige transacties zijn reeds verrekend waardoor je ze niet meer kan bewerken."
     },
     "transaction": {
-      "title": "Transactie"
+      "title": "Transactie",
+      "header": "{{amount}}x {{productName}} voor {{accountName}}",
+      "timeline": "Op {{date}} door {{accountName}}",
+      "for": "Voor {{accountName}}",
+      "at": "Op {{date}}"
     },
     "stock": {
       "tab": "Producten",
@@ -185,6 +192,9 @@
         "writtenOff": "Afgeboekt door {{name}}",
         "stockLog": "{{amount}}x {{productName}}",
         "stockLogFor": " voor {{cost}}"
+      },
+      "detail": {
+        "advisedPrice": "Onze adviesprijs voor dit product is <b>{{price}}</b>. Dit bedrag is gebaseerd op de voorraad."
       },
       "add": {
         "title": "Voorraad aanvullen",
@@ -263,7 +273,11 @@
         "deletePrecondition": "Om de groep te verlaten moet elke geldstroom op € 0,00 staan.",
         "deleteAccount": "{{name}} verwijderen",
         "leaveGroup": "{{groupName}} verlaten",
-        "you": "je"
+        "you": "je",
+        "balanceAmount": "Saldo",
+        "totalIn": "Totaal gestort",
+        "totalOut": "Totaal uitgegeven",
+        "settle": "{{name}} verrekenen"
       },
       "accounts": {
         "title": "Deelnemers",

@@ -41,9 +41,7 @@
         </ion-item>
         <ion-item *ngIf="product?.totalStock && product?.totalStockWorth" lines="none">
             <ion-label class="ion-text-wrap">
-                <p class="small">
-                    Onze adviesprijs voor dit product is <b>{{advicedPrice}}</b>. Dit bedrag is gebaseerd op de voorraad.
-                </p>
+                <p class="small" [innerHTML]="'group.stock.detail.advisedPrice' | translate:{price: advicedPrice}"></p>
             </ion-label>
         </ion-item>
     </ion-list>

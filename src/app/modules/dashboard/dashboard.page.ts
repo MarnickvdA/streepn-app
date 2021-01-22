@@ -7,6 +7,8 @@ import {AdsService, AuthService, EventsService, GroupService, LoggerService, Sto
 import {TranslateService} from '@ngx-translate/core';
 import {take} from 'rxjs/operators';
 import {OnboardingComponent} from '@modules/dashboard/onboarding/onboarding.component';
+import {Capacitor} from '@capacitor/core';
+import {NewGroupComponent} from '@modules/dashboard/new-group/new-group.component';
 import User = firebase.User;
 
 @Component({
@@ -24,6 +26,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     private loadingGroupJoin?: HTMLIonLoadingElement;
     private onboarding: boolean;
     groupAccounts: { [groupId: string]: UserAccount } = {};
+    iOS: boolean;
 
     constructor(private authService: AuthService,
                 private navController: NavController,
@@ -38,6 +41,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 private storage: StorageService,
                 private uiService: UIService,
                 private ads: AdsService) {
+        this.iOS = Capacitor.isNative && Capacitor.platform === 'ios';
     }
 
     ngOnInit() {
@@ -228,6 +232,18 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     openGroup(group: Group) {
         this.navController.navigateRoot(['group', group.id, 'home'], {
             animationDirection: 'forward',
+        });
+    }
+
+    addGroup() {
+        this.modalController.create({
+            swipeToClose: true,
+            backdropDismiss: true,
+            component: NewGroupComponent
+        }).then((modal) => {
+            this.zone.run(() => {
+                modal.present();
+            });
         });
     }
 }

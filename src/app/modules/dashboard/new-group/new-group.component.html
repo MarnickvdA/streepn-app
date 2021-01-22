@@ -1,12 +1,12 @@
 <ion-header>
     <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-button mode="ios" fill="none" [routerLink]="'/dashboard'" routerDirection="back">
-                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+        <ion-title>{{'dashboard.createGroup.title' | translate}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="dismiss()">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
+                                 [icon]="['fad', 'times-circle']"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
-
-        <ion-title>{{'dashboard.createGroup.title' | translate}}</ion-title>
     </ion-toolbar>
 </ion-header>
 

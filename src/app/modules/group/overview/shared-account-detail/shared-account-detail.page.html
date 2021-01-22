@@ -1,8 +1,10 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-button mode="ios" fill="none" [routerLink]="'/group/' + group?.id + '/preferences'" routerDirection="back">
-                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+            <ion-button mode="ios" fill="none" [routerLink]="'/group/' + group?.id + '/preferences'"
+                        routerDirection="back">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
+                                 [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
         <ion-title>{{account?.name}}</ion-title>
@@ -25,14 +27,20 @@
         </ion-item>
         <ion-item lines="full">
             <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'wallet']"></fa-duotone-icon>
-            <ion-label>Saldo</ion-label>
+            <ion-label>
+                <h3>{{'group.overview.account.balanceAmount' | translate}}</h3>
+            </ion-label>
             <span slot="end"
                   [ngClass]="balance?.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance?.amount | money}}</span>
         </ion-item>
 
-        <ion-item class="top-line margin-top list-button" lines="full" [disabled]="balance?.amount === 0" button (click)="settleSharedAccount(account?.id)">
-            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'calculator-alt']"></fa-duotone-icon>
-            <ion-label>{{account?.name}} verrekenen</ion-label>
+        <ion-item class="top-line margin-top list-button" lines="full" [disabled]="balance?.amount === 0" button
+                  (click)="settleSharedAccount(account?.id)">
+            <fa-duotone-icon slot="start" class="primary" fixedWidth
+                             [icon]="['fad', 'calculator-alt']"></fa-duotone-icon>
+            <ion-label>
+                <h3>{{'group.overview.account.settle' | translate:{name: account?.name} }}</h3>
+            </ion-label>
         </ion-item>
     </ion-list>
 </ion-content>

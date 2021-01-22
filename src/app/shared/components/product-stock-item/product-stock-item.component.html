@@ -1,5 +1,7 @@
 <ion-item (click)="editProductStockItem()" [button]="canEdit" [detail]="canEdit">
-    <ion-badge [ngClass]="product.stock >= 0 ? '' : 'danger'" slot="start">{{product.stock}}</ion-badge>
+    <ion-label class="amount" [ngClass]="product.stock >= 0 ? '' : 'danger'" slot="start">
+        <h3><b>{{product.stock}}</b></h3>
+    </ion-label>
     <ion-label>
         <h3>{{product.name}}</h3>
     </ion-label>

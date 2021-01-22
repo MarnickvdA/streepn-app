@@ -10,16 +10,3 @@ div.account-toolbar {
     max-height: 3.5rem;
   }
 }
-
-.transaction-bill {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  color: var(--ion-color-danger);
-  font-size: 1rem;
-  span {
-    font-size: 0.9rem;
-    padding-left: .2rem;
-  }
-  padding-bottom: .4rem;
-}

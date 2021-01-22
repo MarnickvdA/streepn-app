@@ -37,7 +37,6 @@ export class TransactionsPage implements OnInit, OnDestroy {
                 private events: EventsService,
                 private navController: NavController,
                 private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faMinusCircle);
         this.refreshSub = () => {
             this.reset();
         };
@@ -119,18 +118,5 @@ export class TransactionsPage implements OnInit, OnDestroy {
                     });
                 }
             });
-    }
-
-    openTransaction(transaction: Transaction) {
-        if (transaction.removed) {
-            return;
-        }
-        this.navController.navigateForward([transaction.id], {
-            relativeTo: this.route,
-            state: {
-                group: this.group,
-                transaction
-            }
-        });
     }
 }

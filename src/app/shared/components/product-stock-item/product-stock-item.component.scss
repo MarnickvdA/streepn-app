@@ -1,13 +1,9 @@
-ion-badge {
-  padding: .5rem;
-  font-size: .9rem;
-  min-width: 3rem;
-  margin-right: 1rem;
+ion-label.amount {
+  max-width: 1.75rem;
 
-  --background: rgba(var(--ion-color-primary-rgb), .75);
+  color: rgba(var(--ion-color-dark-rgb), .75);
 
   &.danger {
-    --background: rgba(var(--ion-color-danger-rgb), .75);
-    --color: var(--ion-color-light);
+    color: rgba(var(--ion-color-danger-rgb), .75);
   }
 }

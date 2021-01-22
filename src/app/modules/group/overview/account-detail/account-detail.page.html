@@ -25,7 +25,7 @@
         <ion-item *ngIf="isSelf">
             <fa-duotone-icon slot="start" class="primary-reversed" fixedWidth [icon]="['fad', 'bell']"></fa-duotone-icon>
             <ion-label>
-                {{'group.overview.account.enablePush' | translate}}
+                <h3>{{'group.overview.account.enablePush' | translate}}</h3>
             </ion-label>
             <ion-toggle (ngModelChange)="togglePush()" [(ngModel)]="enablePush"
                         slot="end"></ion-toggle>
@@ -33,7 +33,7 @@
         <ion-item lines="full" *ngIf="isAdmin">
             <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'users-crown']"></fa-duotone-icon>
             <ion-label>
-                {{'group.overview.account.enableAdmin' | translate}}
+                <h3>{{'group.overview.account.enableAdmin' | translate}}</h3>
             </ion-label>
             <ion-toggle (ngModelChange)="toggleAdmin()" [(ngModel)]="enableAdmin" [disabled]="!canDisableAdmin"
                         slot="end"></ion-toggle>
@@ -46,21 +46,23 @@
         </ion-list-header>
         <ion-item>
             <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'wallet']"></fa-duotone-icon>
-            <ion-label>Saldo</ion-label>
+            <ion-label>
+                <h3>{{'group.overview.account.balanceAmount' | translate}}</h3>
+            </ion-label>
             <span slot="end"
                   [ngClass]="balance?.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance?.amount | money}}</span>
         </ion-item>
         <ion-item>
             <fa-duotone-icon slot="start" class="success" fixedWidth [icon]="['fad', 'plus-circle']"></fa-duotone-icon>
             <ion-label>
-                Totaal in
+                <h3>{{'group.overview.account.totalIn' | translate}}</h3>
             </ion-label>
             <span slot="end">{{balance?.totalIn | money}}</span>
         </ion-item>
         <ion-item lines="full">
             <fa-duotone-icon slot="start" class="danger" fixedWidth [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
             <ion-label>
-                Totaal uit
+                <h3>{{'group.overview.account.totalOut' | translate}}</h3>
             </ion-label>
             <span slot="end">{{balance?.totalOut | money}}</span>
         </ion-item>
@@ -68,7 +70,7 @@
 
     <div class="delete-clause">
         <ion-label color="medium" id="explanation" *ngIf="!group?.canLeaveGroup(account.id)">
-            {{'group.overview.account.deletePrecondition' | translate:{name: isSelf ? ('group.overview.account.you' | translate) : account?.name} }}
+            <p>{{'group.overview.account.deletePrecondition' | translate:{name: isSelf ? ('group.overview.account.you' | translate) : account?.name} }}</p>
         </ion-label>
         <ion-button (click)="deleteAccount()" *ngIf="isAdmin && !isSelf" [disabled]="!group?.canLeaveGroup(account.id)"
                     color="danger" expand="block">
