@@ -1,3 +1,14 @@
 :host {
   height: 100%;
 }
+
+.versionStatement {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-bottom: 3.75rem;
+  text-align: center;
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+}

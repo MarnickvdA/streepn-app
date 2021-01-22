@@ -1,4 +1,8 @@
 import {Timestamp} from '@firebase/firestore-types';
+import {v4 as uuidv4} from 'uuid';
+import firebase from 'firebase/app';
+require('firebase/firestore');
+import TimestampFn = firebase.firestore.Timestamp;
 
 export class Product {
     id: string;
@@ -18,6 +22,14 @@ export class Product {
         this.stock = stock;
         this.totalStock = totalStock;
         this.totalStockWorth = totalStockWorth;
+    }
+
+    static new(name: string, price: number) {
+        return new Product(uuidv4(), TimestampFn.now(), name, price, undefined);
+    }
+
+    deepCopy(): Product {
+        return JSON.parse(JSON.stringify(this));
     }
 }
 

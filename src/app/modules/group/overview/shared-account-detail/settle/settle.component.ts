@@ -3,7 +3,7 @@ import {AlertController, LoadingController, ModalController} from '@ionic/angula
 import {Observable, Subscription} from 'rxjs';
 import {Balance, Group, SharedAccount, UserAccount} from '@core/models';
 import {GroupService} from '@core/services';
-import {calculatePayout, getMoneyString} from '@core/utils/firestore-utils';
+import {calculatePayout, getMoneyString} from '@core/utils/streepn-logic';
 import {TranslateService} from '@ngx-translate/core';
 
 @Component({
@@ -55,7 +55,7 @@ export class SettleComponent implements OnInit, OnDestroy {
         this.payers = {};
     }
 
-    toggleAll($event) {
+    toggleAll() {
         this.group?.accounts.forEach((acc) => {
             this.payers[acc.id] = true;
         });

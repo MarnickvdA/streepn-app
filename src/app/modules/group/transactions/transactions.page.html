@@ -32,7 +32,7 @@
     </ion-refresher>
 
     <ion-list>
-        <ion-item *ngIf="transactions?.length === 0" lines="none">
+        <ion-item class="no-min-height" *ngIf="transactions?.length === 0" lines="none">
             <ion-label>
                 <p>{{'group.transactions.empty' | translate}}</p>
             </ion-label>

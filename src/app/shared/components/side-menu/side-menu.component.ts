@@ -8,6 +8,7 @@ import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {faAdjust, faList, faUserCog} from '@fortawesome/pro-duotone-svg-icons';
 import {faStar} from '@fortawesome/pro-light-svg-icons';
 import {faStar as faStarSolid} from '@fortawesome/pro-solid-svg-icons';
+import {environment} from '@env/environment';
 
 const {StatusBar} = Plugins;
 
@@ -23,6 +24,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     groups$: Observable<Group[]>;
     isDarkMode: boolean;
     favorite: string;
+    appVersion = environment.version;
 
     constructor(private authService: AuthService,
                 private groupService: GroupService,

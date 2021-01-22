@@ -30,8 +30,8 @@
                   [ngClass]="balance?.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance?.amount | money}}</span>
         </ion-item>
 
-        <ion-item class="top-line margin-top" lines="full" [disabled]="balance?.amount === 0" button (click)="settleSharedAccount(account?.id)">
-            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'cash-register']"></fa-duotone-icon>
+        <ion-item class="top-line margin-top list-button" lines="full" [disabled]="balance?.amount === 0" button (click)="settleSharedAccount(account?.id)">
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'calculator-alt']"></fa-duotone-icon>
             <ion-label>{{account?.name}} verrekenen</ion-label>
         </ion-item>
     </ion-list>

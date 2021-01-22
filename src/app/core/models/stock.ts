@@ -1,5 +1,6 @@
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
+import {Group} from '@core/models/group';
 
 export class Stock {
     id: string;
@@ -12,6 +13,10 @@ export class Stock {
     amount: number; // Amount of items of productId added.
     removed: boolean; // Describes if the stock transaction was removed (after editing: all items removed)
     writtenOff: boolean; // TODO Add documentation what 'writtenOff' means.
+
+    static new(id: string, paidBy: string[], paidAmount: number[], productId: string, cost: number, amount: number) {
+        return new Stock(undefined, undefined, id, paidBy, paidAmount, productId, cost, amount, false, false);
+    }
 
     constructor(id: string, createdAt: Timestamp, createdById: string, paidBy: string[], paidAmount: number[], productId: string,
                 cost: number, amount: number, removed: boolean, writtenOff: boolean) {
@@ -32,6 +37,14 @@ export class Stock {
      */
     get isMutable(): boolean {
         return !this.removed && !this.writtenOff;
+    }
+
+    paidByString(group: Group) {
+        return this.paidBy.map(account => group.getUserAccountById(account)?.name).join(', ');
+    }
+
+    deepCopy(): Stock {
+        return JSON.parse(JSON.stringify(this));
     }
 }
 

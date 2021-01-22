@@ -7,7 +7,6 @@ import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {BehaviorSubject, EMPTY, Observable, Subject} from 'rxjs';
 import {catchError, map, take, takeUntil} from 'rxjs/operators';
-import {v4 as uuidv4} from 'uuid';
 import {AnalyticsService} from './analytics.service';
 import {PermissionType, Plugins} from '@capacitor/core';
 import {PushService, PushTopic} from './push.service';
@@ -159,18 +158,7 @@ export class GroupService {
      */
     createGroup(name: string): Promise<string> {
         const user = this.authService.currentUser;
-        const now = Timestamp.now();
-
-        const uid = uuidv4();
-        const account = new UserAccount(uid, user.uid, now, user.displayName, [UserRole.ADMIN], user.photoURL);
-        const group = new Group(undefined, now, name, Valuta.EURO, undefined, undefined, [user.uid], [account],
-            [], [], 0, 0, {
-                [uid]: {
-                    amount: 0,
-                    totalIn: 0,
-                    totalOut: 0,
-                }
-            });
+        const group = Group.new(user, name, Valuta.EURO);
 
         return this.fs.collection('groups')
             .add(groupConverter.toFirestore(group))

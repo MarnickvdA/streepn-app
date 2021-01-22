@@ -8,7 +8,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 import {catchError} from 'rxjs/operators';
-import {calculatePayout} from '@core/utils/firestore-utils';
+import {calculatePayout} from '@core/utils/streepn-logic';
 import {MoneyInputComponent} from '@shared/components/money-input/money-input.component';
 
 @Component({
@@ -52,7 +52,7 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
     get selectedAccounts(): Account[] {
         const selectedAccounts = this.form.paidBy.value;
         if (selectedAccounts?.length > 0) {
-            return this.group.accounts.filter(acc => selectedAccounts.includes(acc.id)) || [];
+            return this.group.getAccountsById(selectedAccounts);
         } else {
             return [];
         }

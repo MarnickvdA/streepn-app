@@ -16,6 +16,10 @@ const routes: Routes = [
         path: 'shared-accounts',
         loadChildren: () => import('./shared-account-detail/shared-account-detail.module').then(m => m.SharedAccountDetailPageModule)
     },
+    {
+        path: 'settlements',
+        loadChildren: () => import('./settlements/settlements.module').then(m => m.SettlementsPageModule)
+    },
 ];
 
 @NgModule({

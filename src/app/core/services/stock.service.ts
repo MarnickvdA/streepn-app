@@ -18,8 +18,8 @@ export class StockService {
     }
 
     addStockItem(group: Group, productId: string, cost: number, amount: number, paidBy: string[], paidAmount: number[]): Observable<Stock> {
-        const currentAccount = group.accounts.find(acc => this.authService.currentUser.uid === acc.userId);
-        const stock = new Stock('', undefined, currentAccount.id, paidBy, paidAmount, productId, cost, amount, false, false);
+        const currentAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
+        const stock = Stock.new(currentAccount.id, paidBy, paidAmount, productId, cost, amount);
 
         const callable = this.functions.httpsCallable('addStock');
         return callable({
@@ -32,8 +32,8 @@ export class StockService {
     }
 
     removeStockItem(group: Group, productId: string, amount: number) {
-        const currentAccount = group.accounts.find(acc => this.authService.currentUser.uid === acc.userId);
-        const currentProduct = group.products.find(p => p.id === productId);
+        const currentAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
+        const currentProduct = group.getProductById(productId);
 
         if (isNaN(currentProduct.stock)) {
             currentProduct.stock = 0;
@@ -54,7 +54,7 @@ export class StockService {
     editStockItem(group: Group, original: Stock, productId: string, cost: number, amount: number,
                   paidBy: string[], paidAmount: number[]): Observable<Stock> {
 
-        const currentAccount = group.accounts.find(acc => this.authService.currentUser.uid === acc.userId);
+        const currentAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
         const updatedStock = new Stock(original.id, original.createdAt, currentAccount.id, paidBy, paidAmount,
             productId, cost, amount, false, false);
 
@@ -76,8 +76,6 @@ export class StockService {
         const deltaStock = new Stock(original.id, original.createdAt, currentAccount.id, deltaPaidBy, deltaPaidAmount,
             original.productId, original.productId !== productId ? -original.cost : cost - original.cost,
             original.productId !== productId ? -original.amount : amount - original.amount, false, false);
-
-        console.log(deltaStock);
 
         const callable = this.functions.httpsCallable('editStock');
         return callable({

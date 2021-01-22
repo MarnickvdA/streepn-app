@@ -1,13 +1,13 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Account, Group} from '@core/models';
+import {Account, UserAccount, SharedAccount, Group} from '@core/models';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {calculatePayout} from '@core/utils/firestore-utils';
+import {calculatePayout} from '@core/utils/streepn-logic';
 import {AnalyticsService, AuthService, GroupService, LoggerService, ProductService, StockService} from '@core/services';
 
 @Component({
@@ -56,7 +56,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
     get selectedAccounts(): Account[] {
         const selectedAccounts = this.form.paidBy.value;
         if (selectedAccounts?.length > 0) {
-            return this.group.accounts.filter(acc => selectedAccounts.includes(acc.id)) || [];
+            return this.group.getAccountsById(selectedAccounts);
         } else {
             return [];
         }

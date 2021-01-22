@@ -6,7 +6,6 @@
 
 <ion-content>
     <ion-list>
-
         <ion-menu-toggle [autoHide]="false">
             <ion-item routerLink="dashboard" routerDirection="root">
                 <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'list']"></fa-duotone-icon>
@@ -48,4 +47,8 @@
         </ng-container>
 
     </ion-list>
+
+    <span class="versionStatement">{{'version' | translate:{version: appVersion} }}</span>
 </ion-content>
+
+

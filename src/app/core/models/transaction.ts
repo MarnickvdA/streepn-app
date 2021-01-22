@@ -45,6 +45,10 @@ export class Transaction {
 
         return price < 0 ? price : undefined;
     }
+
+    deepCopy(): Transaction {
+        return JSON.parse(JSON.stringify(this));
+    }
 }
 
 export const transactionConverter: FirestoreDataConverter<Transaction> = {

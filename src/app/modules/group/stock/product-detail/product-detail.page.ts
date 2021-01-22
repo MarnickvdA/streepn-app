@@ -10,7 +10,7 @@ import {GroupService, ProductService} from '@core/services';
 import {MoneyInputComponent} from '@shared/components/money-input/money-input.component';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {faBoxFull, faEdit, faTag, faTrashAlt} from '@fortawesome/pro-duotone-svg-icons';
-import {getMoneyString} from '@core/utils/firestore-utils';
+import {getMoneyString} from '@core/utils/streepn-logic';
 
 @Component({
     selector: 'app-product-detail',
@@ -125,14 +125,14 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     async setName() {
-        const product = Object.create(this.product);
+        const product = this.product.deepCopy();
         product.name = this.newName;
 
         await this.editProduct(product);
     }
 
     async setPrice() {
-        const product = Object.create(this.product);
+        const product = this.product.deepCopy();
         product.price = this.newPrice;
 
         await this.editProduct(product);

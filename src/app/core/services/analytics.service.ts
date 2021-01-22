@@ -15,12 +15,16 @@ export class AnalyticsService {
     constructor(private events: EventsService) {
         this.events.subscribe('auth:logout', (data) => {
             this.logUserLogout(data.userId);
-            this.setUser(undefined);
+            this.setCurrentUser(undefined);
         });
     }
 
-    setUser(uid: string) {
-        if (Capacitor.isNative && environment.production) {
+    static isAnalyticsAvailable(): boolean {
+        return Capacitor.isPluginAvailable('FirebaseAnalytics') && Capacitor.isNative && environment.production;
+    }
+
+    setCurrentUser(uid: string) {
+        if (AnalyticsService.isAnalyticsAvailable()) {
             FirebaseAnalytics.setUserId({
                 userId: uid,
             });
@@ -99,7 +103,7 @@ export class AnalyticsService {
     }
 
     logEvent(event: string, data: { [key: string]: any }) {
-        if (Capacitor.isNative && environment.production) {
+        if (AnalyticsService.isAnalyticsAvailable()) {
             FirebaseAnalytics.logEvent({
                 name: event,
                 params: data,

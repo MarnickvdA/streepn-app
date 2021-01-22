@@ -1,0 +1,44 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button mode="ios" fill="none" [routerLink]="'/group/' + groupId + '/preferences'"
+                        routerDirection="back">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
+                                 [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>{{'group.overview.settle.group.title' | translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{'group.overview.settle.group.title' | translate}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <ion-list>
+        <ion-item class="list-button"  lines="full" (click)="settleGroup()" button detail="false">
+            <fa-duotone-icon slot="start" class="primary large" fixedWidth
+                             [icon]="['fad', 'calculator-alt']"></fa-duotone-icon>
+            <ion-label>
+                <h3>{{'group.overview.settle.group.settle' | translate:{name: group?.name} }}</h3>
+            </ion-label>
+        </ion-item>
+
+        <ion-list-header lines="full">
+            <ion-label>
+                {{'group.overview.settle.group.history' | translate }}
+            </ion-label>
+        </ion-list-header>
+
+        <ion-item class="no-min-height" *ngIf="true" lines="none">
+            <ion-label>
+                <p>
+                    {{'group.overview.settle.group.emptyHistory' | translate}}
+                </p>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+</ion-content>

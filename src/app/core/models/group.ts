@@ -1,7 +1,15 @@
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {Product, productConverter} from './product';
-import {Account, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter, UserRole} from './account';
+import {v4 as uuidv4} from 'uuid';
+import firebase from 'firebase/app';
+import {Account} from '@core/models/account';
+import User = firebase.User;
+import TimestampFn = firebase.firestore.Timestamp;
+import {UserAccount, userAccountConverter, UserRole} from '@core/models/user-account';
+import {SharedAccount, sharedAccountConverter} from '@core/models/shared-account';
+
+require('firebase/firestore');
 
 /**
  * Helper interface for readability of the code within the Group class. Amount is the current balance, based on the totalIn and totalOut.
@@ -57,6 +65,20 @@ export class Group {
             [productId: string]: Product
         }
     };
+
+    static new(user: User, name: string, valuta: Valuta) {
+        const uid = uuidv4();
+        const account = UserAccount.new(uid, user.uid, user.displayName, [UserRole.ADMIN], user.photoURL);
+
+        return new Group(uuidv4(), TimestampFn.now(), name, valuta, undefined, undefined, [user.uid], [account],
+            [], [], 0, 0, {
+                [uid]: {
+                    amount: 0,
+                    totalIn: 0,
+                    totalOut: 0,
+                }
+            });
+    }
 
     constructor(id: string,
                 createdAt: Timestamp,
@@ -133,10 +155,20 @@ export class Group {
     getAccountById(accountId: string): Account | undefined {
         const userAccount = this.getUserAccountById(accountId);
         if (userAccount) {
-            return userAccount;
+            return userAccount as unknown as Account;
         } else {
-            return this.getSharedAccountById(accountId);
+            return this.getSharedAccountById(accountId) as unknown as Account;
         }
+    }
+
+    getAccountsById(accountIds: string[]): Account[] {
+        const accounts: Account[] = [];
+
+        accountIds.forEach(accountId => {
+            accounts.push(this.getAccountById(accountId));
+        });
+
+        return accounts;
     }
 
     getUserAccountById(accountId: string): UserAccount | undefined {
@@ -206,6 +238,14 @@ export class Group {
         } else {
             return newDict;
         }
+    }
+
+    deepCopy(): Group {
+        return JSON.parse(JSON.stringify(this));
+    }
+
+    getUserAccountByUserId(uid: string) {
+        return this.accounts.find(acc => acc.userId === uid) as UserAccount;
     }
 }
 
