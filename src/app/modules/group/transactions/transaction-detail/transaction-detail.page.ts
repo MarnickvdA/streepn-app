@@ -3,7 +3,7 @@ import {EMPTY, Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Group, Transaction} from '@core/models';
 import {newTransaction, TransactionItem} from '@core/models/transaction';
-import {getMoneyString} from '@core/utils/firestore-utils';
+import {getMoneyString} from '@core/utils/streepn-logic';
 import {catchError} from 'rxjs/operators';
 import {newGroup} from '@core/models/group';
 import {EventsService, GroupService, TransactionService} from '@core/services';
@@ -80,7 +80,7 @@ export class TransactionDetailPage implements OnInit {
     }
 
     async deleteTransaction() {
-        const delTransaction = newTransaction(this.transaction.id, JSON.parse(JSON.stringify(this.transaction)));
+        const delTransaction = newTransaction(this.transaction.id, this.transaction.deepCopy());
         delTransaction.items.map(item => {
             if (this.canEditItem(item)) {
                 item.amount = 0;

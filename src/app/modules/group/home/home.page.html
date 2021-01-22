@@ -22,14 +22,14 @@
         <ion-item>
             <fa-duotone-icon slot="start" class="success" [icon]="['fad', 'plus-circle']"></fa-duotone-icon>
             <ion-label>
-                <h3>Totaal in</h3>
+                <h3>{{'group.home.totalIn' | translate}}</h3>
             </ion-label>
             <span slot="end">{{group.totalIn | money}}</span>
         </ion-item>
         <ion-item>
             <fa-duotone-icon slot="start" class="danger" [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
             <ion-label>
-                <h3>Totaal uit</h3>
+                <h3>{{'group.home.totalOut' | translate}}</h3>
             </ion-label>
             <span slot="end">{{group.totalOut | money}}</span>
         </ion-item>

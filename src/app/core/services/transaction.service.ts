@@ -26,26 +26,13 @@ export class TransactionService {
     }
 
     addTransaction(group: Group, transactionSet: TransactionSet): Observable<Transaction> {
-        const productDictionary: { [productId: string]: Product } = {};
-        group.products.forEach(p => {
-            productDictionary[p.id] = p;
-        });
-
-        const accountDictionary: { [accountId: string]: Account } = {};
-        group.accounts.forEach(a => {
-            accountDictionary[a.id] = a;
-        });
-        group.sharedAccounts.forEach(a => {
-            accountDictionary[a.id] = a;
-        });
-
-        const currentUserAccount = group.accounts.find(acc => acc.userId === this.authService.currentUser.uid) as UserAccount;
+        const currentUserAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
         const transactionItems: TransactionItem[] = [];
         let totalPrice = 0;
 
         Object.keys(transactionSet).forEach(accountId => {
             Object.keys(transactionSet[accountId]).forEach(productId => {
-                const product = productDictionary[productId];
+                const product = group.getProductById(productId);
                 const amount = transactionSet[accountId][productId].amount;
 
                 if (amount > 0) {

@@ -5,7 +5,6 @@ import {Balance, Group, Transaction, transactionConverter, UserAccount} from '@c
 import {ModalController, NavController} from '@ionic/angular';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {Observable, Subscription} from 'rxjs';
-import {getMoneyString} from '@core/utils/firestore-utils';
 import {AuthService, EventsService, GroupService, TransactionService} from '@core/services';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {faMinusCircle} from '@fortawesome/pro-duotone-svg-icons';
@@ -38,7 +37,6 @@ export class TransactionsPage implements OnInit, OnDestroy {
                 private events: EventsService,
                 private navController: NavController,
                 private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faMinusCircle);
         this.refreshSub = () => {
             this.reset();
         };
@@ -51,7 +49,7 @@ export class TransactionsPage implements OnInit, OnDestroy {
                 this.group = group;
 
                 if (group) {
-                    this.currentAccount = group.accounts.find(acc => acc.userId === this.authService.currentUser.uid);
+                    this.currentAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
                     this.balance = group.getAccountBalance(this.currentAccount.id);
 
                     if (!this.transactions) {
@@ -120,18 +118,5 @@ export class TransactionsPage implements OnInit, OnDestroy {
                     });
                 }
             });
-    }
-
-    openTransaction(transaction: Transaction) {
-        if (transaction.removed) {
-            return;
-        }
-        this.navController.navigateForward([transaction.id], {
-            relativeTo: this.route,
-            state: {
-                group: this.group,
-                transaction
-            }
-        });
     }
 }

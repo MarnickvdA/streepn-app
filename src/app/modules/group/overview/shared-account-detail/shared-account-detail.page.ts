@@ -7,7 +7,7 @@ import {LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faCashRegister, faEdit, faWallet} from '@fortawesome/pro-duotone-svg-icons';
+import {faCalculatorAlt, faEdit, faWallet} from '@fortawesome/pro-duotone-svg-icons';
 import {SettleComponent} from '@modules/group/overview/shared-account-detail/settle/settle.component';
 
 @Component({
@@ -36,7 +36,7 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
                 private translate: TranslateService,
                 private route: ActivatedRoute,
                 private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faWallet, faEdit, faCashRegister);
+        this.iconLibrary.addIcons(faWallet, faEdit, faCalculatorAlt);
         this.routeSub = this.route.params.subscribe((params: Params) => {
             this.accountId = params.accountId;
         });
@@ -60,7 +60,7 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
     }
 
     async setName() {
-        const account = Object.create(this.account);
+        const account = this.account.deepCopy();
         account.name = this.newName;
 
         const loading = await this.loadingController.create({

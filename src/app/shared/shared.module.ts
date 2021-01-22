@@ -10,9 +10,10 @@ import {UserAccountItemComponent} from './components/user-account-item/user-acco
 import {SharedAccountItemComponent} from './components/shared-account-item/shared-account-item.component';
 import {RouterModule} from '@angular/router';
 import {ProductStockItemComponent} from './components/product-stock-item/product-stock-item.component';
-import {SideMenuComponent} from '@shared/components/side-menu/side-menu.component';
+import {SideMenuComponent} from './components/side-menu/side-menu.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {MoneyPipe} from './pipes/money.pipe';
+import {TransactionItemComponent} from './components/transaction-item/transaction-item.component';
 
 export const components = [
     MoneyInputComponent,
@@ -20,7 +21,8 @@ export const components = [
     UserAccountItemComponent,
     SharedAccountItemComponent,
     ProductStockItemComponent,
-    SideMenuComponent
+    SideMenuComponent,
+    TransactionItemComponent,
 ];
 
 export const pipes = [

@@ -35,7 +35,10 @@ export class PushService {
         );
 
         PushNotifications.addListener('registrationError', (error: any) => {
-            // alert('Error on registration: ' + JSON.stringify(error));
+            this.logger.warn({
+                message: 'registration error',
+                error,
+            });
         });
 
         PushNotifications.addListener(

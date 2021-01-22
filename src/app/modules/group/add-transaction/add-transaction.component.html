@@ -33,7 +33,7 @@
         <ion-item *ngFor="let account of group.accounts">
             <ion-avatar slot="start">
                 <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
-                <img *ngIf="!account.photoUrl" alt="" src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg">
+                <img *ngIf="!account.photoUrl" alt="" src="assets/svg/avatar.svg">
             </ion-avatar>
             <ion-label>{{account.name}}</ion-label>
             <ion-chip

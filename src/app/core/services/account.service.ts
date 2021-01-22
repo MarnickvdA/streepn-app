@@ -1,18 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Balance, Group, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from '../models';
 import {AngularFirestore} from '@angular/fire/firestore';
-import {v4 as uuidv4} from 'uuid';
-import firebase from 'firebase/app';
-import {Logger, LoggerService} from '@core/services/logger.service';
-import Timestamp = firebase.firestore.Timestamp;
-
 
 @Injectable({
     providedIn: 'root'
 })
 export class AccountService {
-    private readonly logger: Logger = LoggerService.getLogger(AccountService.name);
-
     constructor(private fs: AngularFirestore) {
     }
 
@@ -29,15 +22,13 @@ export class AccountService {
     }
 
     addSharedAccount(group: Group, accountName: string) {
-        // TODO Add validity checks.
-        const accountId = uuidv4();
-        const sharedAccount = new SharedAccount(accountId, Timestamp.now(), accountName, [], undefined);
+        const sharedAccount = SharedAccount.new(accountName);
 
         group.sharedAccounts.push(sharedAccount);
 
         return Promise.all([
             this.setSharedAccounts(group),
-            this.addSharedAccountBalance(group.id, accountId)
+            this.addSharedAccountBalance(group.id, sharedAccount.id)
         ]);
     }
 
@@ -54,15 +45,12 @@ export class AccountService {
     }
 
     private setUserAccounts(group: Group): Promise<void> {
-        // TODO Clearer would be using Cloud Functions, but money restrictions...
-        // FIXME Balance is dependent on this update, so inconsistency can occur...
         return this.fs.collection('groups').doc(group.id).set({
             accounts: group.accounts.map(ua => userAccountConverter.toFirestore(ua))
         }, {merge: true});
     }
 
     private setSharedAccounts(group: Group): Promise<void> {
-        // TODO Clearer would be using Cloud Functions, but money restrictions...
         return this.fs.collection('groups').doc(group.id).set({
             sharedAccounts: group.sharedAccounts.map(sa => sharedAccountConverter.toFirestore(sa))
         }, {merge: true});

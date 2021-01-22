@@ -7,14 +7,12 @@
                 </ion-button>
             </ion-menu-toggle>
         </ion-buttons>
-
-        <ion-title (click)="content.scrollToTop(500)">{{'group.transactions.title' | translate}}</ion-title>
     </ion-toolbar>
     <ion-toolbar *ngIf="currentAccount as account">
-        <div class="account-toolbar">
+        <div class="account-toolbar" (dblclick)="content.scrollToTop(500)">
             <ion-avatar>
                 <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
-                <img *ngIf="!account.photoUrl" alt="" src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg">
+                <img *ngIf="!account.photoUrl" alt="" src="assets/svg/avatar.svg">
             </ion-avatar>
             <ion-label>
                 <h2>{{account.name}}</h2>
@@ -32,28 +30,14 @@
     </ion-refresher>
 
     <ion-list>
-        <ion-item *ngIf="transactions?.length === 0" lines="none">
+        <ion-item class="no-min-height" *ngIf="transactions?.length === 0" lines="none">
             <ion-label>
                 <p>{{'group.transactions.empty' | translate}}</p>
             </ion-label>
         </ion-item>
-        <ion-item (click)="openTransaction(transaction)" *ngFor="let transaction of transactions"
-                  [disabled]="transaction.removed" button="{{!transaction.removed}}" detail="{{!transaction.removed}}">
-            <ion-label [ngStyle]="transaction.removed ? {'text-decoration': 'line-through'} : {}">
-                <h3 *ngFor="let item of transaction.items">
-                    {{item.amount}}x {{group.getProductById(item.productId)?.name}}
-                    voor {{group.getAccountById(item.accountId)?.name}}
-                </h3>
-                <div class="transaction-bill" *ngIf="transaction.priceByAccountId(currentAccount.id); let price">
-                    <fa-duotone-icon slot="start" class="danger small no-width" fixedWidth [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
-                    <span>{{price}}</span>
-                </div>
-                <p class="small">
-                    Op {{transaction.createdAt.toDate().toLocaleString()}}
-                    door {{group.getUserAccountById(transaction.createdBy)?.name}}
-                </p>
-            </ion-label>
-        </ion-item>
+
+        <app-transaction-item *ngFor="let transaction of transactions" [transaction]="transaction"></app-transaction-item>
+
         <ion-button (click)="loadNext()" *ngIf="!doneLoading" [disabled]="isLoadingMore" fill="none">
             <ion-label *ngIf="!isLoadingMore" color="primary">{{'actions.loadMore' | translate}}</ion-label>
             <ion-progress-bar *ngIf="isLoadingMore"></ion-progress-bar>

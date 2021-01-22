@@ -3,6 +3,14 @@ ion-list-header {
 }
 
 ion-item {
+  &.list-button {
+    --min-height: 3.5rem;
+  }
+
+  &.no-min-height {
+    --min-height: unset;
+  }
+
   &.top-line {
     border-top: solid 1px var(--border-color);
   }

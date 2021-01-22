@@ -21,7 +21,6 @@
     <ion-list *ngIf="groups$ | async; let groups">
         <ion-list-header lines="full">
             <ion-label>{{'dashboard.groups' | translate}}</ion-label>
-            <ion-button routerDirection="forward" routerLink="new-group">{{'actions.new' | translate}}</ion-button>
         </ion-list-header>
 
         <ion-item *ngIf="groups.length === 0" lines="none">
@@ -35,7 +34,7 @@
         <ion-item *ngFor="let group of groups" button (click)="openGroup(group)">
             <ion-label>
                 <h2>{{group.name}}</h2>
-                <p>Jouw saldo: <span *ngIf="group?.getAccountBalance(groupAccounts[group.id].id); let balance"
+                <p>{{'dashboard.yourBalance' | translate}} <span *ngIf="group?.getAccountBalance(groupAccounts[group.id].id); let balance"
                                      [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
                 </p>
             </ion-label>
@@ -48,5 +47,11 @@
             </ion-label>
         </ion-item>
     </ion-list>
+
+    <ion-fab slot="fixed" horizontal="end" vertical="bottom" [edge]="iOS">
+        <ion-fab-button (click)="addGroup()">
+            <fa-icon [icon]="['far', 'plus']"></fa-icon>
+        </ion-fab-button>
+    </ion-fab>
 
 </ion-content>

@@ -12,9 +12,7 @@ import {AnalyticsService} from './analytics.service';
 import {catchError} from 'rxjs/operators';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import {LoggerService} from './logger.service';
-import {MenuController} from '@ionic/angular';
 import User = firebase.User;
-import {GroupService} from '@core/services/group.service';
 
 const {SignInWithApple} = Plugins;
 
@@ -33,10 +31,9 @@ export class AuthService {
                 private storage: StorageService,
                 private googlePlus: GooglePlus,
                 private analytics: AnalyticsService,
-                private functions: AngularFireFunctions,
-                private menuController: MenuController) {
+                private functions: AngularFireFunctions) {
         this.eventsService.subscribe('auth:login', (userId) => {
-            this.analytics.setUser(userId);
+            this.analytics.setCurrentUser(userId);
         });
 
         this.user = this.auth.authState;
@@ -48,13 +45,14 @@ export class AuthService {
                 localStorage.setItem('userId', user?.uid);
             }
 
-            this.analytics.setUser(user?.uid);
+            this.analytics.setCurrentUser(user?.uid);
             LoggerService.setUserId(user?.uid);
 
             if (user) {
                 user.getIdToken(true)
                     .then(token => {
                         if (token) {
+                            // Decode base-64 encoded string and parse it to JSON
                             const payload = JSON.parse(atob(token.split('.')[1]));
 
                             this.hasAcceptedLegals.next(payload.acceptedTermsAndPrivacy);
@@ -173,7 +171,10 @@ export class AuthService {
                 displayName: newName
             })
             .catch(err => {
-                // TODO Error handling
+                this.logger.error({
+                    message: 'setName failed!',
+                    error: err
+                });
             });
     }
 

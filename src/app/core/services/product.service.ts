@@ -2,8 +2,6 @@ import {Injectable} from '@angular/core';
 import {Group, Product, productConverter} from '../models';
 import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
-import {v4 as uuidv4} from 'uuid';
-import Timestamp = firebase.firestore.Timestamp;
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +12,7 @@ export class ProductService {
     }
 
     addProduct(group: Group, name: string, price: number) {
-        const product = new Product(uuidv4(), Timestamp.now(), name, price, undefined);
+        const product = Product.new(name, price);
 
         group.products.push(product);
 

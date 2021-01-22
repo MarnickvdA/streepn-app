@@ -1,47 +1,89 @@
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {Product, productConverter} from './product';
-import {Account, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from './account';
+import {v4 as uuidv4} from 'uuid';
+import firebase from 'firebase/app';
+import {Account} from '@core/models/account';
+import User = firebase.User;
+import TimestampFn = firebase.firestore.Timestamp;
+import {UserAccount, userAccountConverter, UserRole} from '@core/models/user-account';
+import {SharedAccount, sharedAccountConverter} from '@core/models/shared-account';
 
+require('firebase/firestore');
+
+/**
+ * Helper interface for readability of the code within the Group class. Amount is the current balance, based on the totalIn and totalOut.
+ */
 export interface Balance {
     amount: number;
     totalIn: number;
     totalOut: number;
 }
 
+/**
+ * List of supported valutas currently available in the application.
+ */
+export enum Valuta {
+    EURO = 'EUR'
+}
+
+/**
+ * A Group is used for keeping track of transactions and stock for a group of users (represented as UserAccounts).
+ */
 export class Group {
     readonly id: string;
     createdAt: Timestamp;
     name: string;
-    valuta: string;
+    valuta: Valuta;
     inviteLink: string;
-    inviteLinkExpiry: Timestamp;
-    members: string[];
+    inviteLinkExpiry: Timestamp; // A week after generation.
+    members: string[]; // List of user ids which is used for querying the current user's groups.
+
+    // Private arrays for the accounts and products. They need to be in sync with the groupDictionary.
     private mAccounts: UserAccount[];
     private mSharedAccounts: SharedAccount[];
     private mProducts: Product[];
+
+    // We use totalIn and totalOut of the whole group to account for the difference that can occur between the stock and the sold products.
     totalIn: number;
     totalOut: number;
+
+    // Balances of all accounts, findable through the accountId. This is the fastest way to query balances for accounts.
     balances: {
-        [id: string]: Balance
+        [accountId: string]: Balance
     };
 
+    // A lookup dictionary for improved performance. Every array is very expensive to search through and maps are more efficient.
     groupDictionary: {
         accounts: {
-            [id: string]: UserAccount
+            [accountId: string]: UserAccount
         },
         sharedAccounts: {
-            [id: string]: SharedAccount
+            [accountId: string]: SharedAccount
         },
         products: {
-            [id: string]: Product
+            [productId: string]: Product
         }
     };
+
+    static new(user: User, name: string, valuta: Valuta) {
+        const uid = uuidv4();
+        const account = UserAccount.new(uid, user.uid, user.displayName, [UserRole.ADMIN], user.photoURL);
+
+        return new Group(uuidv4(), TimestampFn.now(), name, valuta, undefined, undefined, [user.uid], [account],
+            [], [], 0, 0, {
+                [uid]: {
+                    amount: 0,
+                    totalIn: 0,
+                    totalOut: 0,
+                }
+            });
+    }
 
     constructor(id: string,
                 createdAt: Timestamp,
                 name: string,
-                valuta: string,
+                valuta: Valuta,
                 inviteLink: string,
                 inviteLinkExpiry: Timestamp,
                 members: string[],
@@ -99,7 +141,7 @@ export class Group {
     }
 
     isAdmin(userId: string): boolean {
-        return this.accounts.find(account => account.userId === userId)?.roles.includes('ADMIN') || false;
+        return this.accounts.find(account => account.userId === userId)?.roles.includes(UserRole.ADMIN) || false;
     }
 
     getAccountBalance(accountId: string): Balance {
@@ -113,10 +155,20 @@ export class Group {
     getAccountById(accountId: string): Account | undefined {
         const userAccount = this.getUserAccountById(accountId);
         if (userAccount) {
-            return userAccount;
+            return userAccount as unknown as Account;
         } else {
-            return this.getSharedAccountById(accountId);
+            return this.getSharedAccountById(accountId) as unknown as Account;
         }
+    }
+
+    getAccountsById(accountIds: string[]): Account[] {
+        const accounts: Account[] = [];
+
+        accountIds.forEach(accountId => {
+            accounts.push(this.getAccountById(accountId));
+        });
+
+        return accounts;
     }
 
     getUserAccountById(accountId: string): UserAccount | undefined {
@@ -187,18 +239,18 @@ export class Group {
             return newDict;
         }
     }
+
+    deepCopy(): Group {
+        return JSON.parse(JSON.stringify(this));
+    }
+
+    getUserAccountByUserId(uid: string) {
+        return this.accounts.find(acc => acc.userId === uid) as UserAccount;
+    }
 }
 
 export const groupConverter: FirestoreDataConverter<Group> = {
     toFirestore(group: Group) {
-        const accounts = [];
-        const products = [];
-        const sharedAccounts = [];
-
-        group.accounts?.forEach((account) => accounts.push(userAccountConverter.toFirestore(account)));
-        group.products?.forEach((product) => products.push(productConverter.toFirestore(product)));
-        group.sharedAccounts?.forEach((sharedAccount) => sharedAccounts.push(sharedAccountConverter.toFirestore(sharedAccount)));
-
         return {
             createdAt: group.createdAt,
             name: group.name,
@@ -206,9 +258,9 @@ export const groupConverter: FirestoreDataConverter<Group> = {
             inviteLink: group.inviteLink,
             inviteLinkExpiry: group.inviteLinkExpiry,
             members: group.members,
-            accounts,
-            products,
-            sharedAccounts,
+            accounts: group.accounts.map((account) => userAccountConverter.toFirestore(account)),
+            products: group.products.map((product) => productConverter.toFirestore(product)),
+            sharedAccounts: group.sharedAccounts.map((account) => sharedAccountConverter.toFirestore(account)),
             totalIn: group.totalIn,
             totalOut: group.totalOut,
             balances: group.balances,

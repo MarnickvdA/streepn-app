@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Group, groupConverter, GroupInvite, groupInviteConverter, UserAccount} from '../models';
+import {Group, groupConverter, GroupInvite, groupInviteConverter, UserAccount, UserRole} from '../models';
 import {AuthService} from './auth.service';
 import {EventsService} from './events.service';
 import {AngularFireFunctions} from '@angular/fire/functions';
@@ -7,12 +7,12 @@ import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {BehaviorSubject, EMPTY, Observable, Subject} from 'rxjs';
 import {catchError, map, take, takeUntil} from 'rxjs/operators';
-import {v4 as uuidv4} from 'uuid';
 import {AnalyticsService} from './analytics.service';
 import {PermissionType, Plugins} from '@capacitor/core';
 import {PushService, PushTopic} from './push.service';
 import {TranslateService} from '@ngx-translate/core';
 import {LoggerService} from './logger.service';
+import {Valuta} from '@core/models/group';
 import Timestamp = firebase.firestore.Timestamp;
 import User = firebase.User;
 
@@ -158,18 +158,7 @@ export class GroupService {
      */
     createGroup(name: string): Promise<string> {
         const user = this.authService.currentUser;
-        const now = Timestamp.now();
-
-        const uid = uuidv4();
-        const account = new UserAccount(uid, user.uid, now, user.displayName, ['ADMIN'], user.photoURL);
-        const group = new Group(undefined, now, name, 'EUR', undefined, undefined, [user.uid], [account],
-            [], [], 0, 0, {
-                [uid]: {
-                    amount: 0,
-                    totalIn: 0,
-                    totalOut: 0,
-                }
-            });
+        const group = Group.new(user, name, Valuta.EURO);
 
         return this.fs.collection('groups')
             .add(groupConverter.toFirestore(group))
@@ -195,7 +184,7 @@ export class GroupService {
         const callable = this.functions.httpsCallable('joinGroup');
         callable({
             groupId: groupInvite.groupId,
-            inviteLink: groupInvite.id,
+            inviteLink: groupInvite.inviteLink,
             user: {
                 displayName: user.displayName,
                 photoURL: user.photoURL
@@ -253,8 +242,7 @@ export class GroupService {
     }
 
     async renewInviteLink(groupId: string, groupName: string, oldInvite?: string): Promise<string> {
-        const nextWeek = Timestamp.fromDate(new Date(new Date().getTime() + (7 * 24 * 60 * 60 * 1000)));
-        const randomLink = uuidv4().substring(0, 8).toUpperCase();
+        const groupInvite: GroupInvite = GroupInvite.generate(groupId, groupName);
 
         if (oldInvite) {
             await this.fs.collection('groupInvites').doc(oldInvite).delete();
@@ -263,14 +251,14 @@ export class GroupService {
         return Promise.all([
             this.fs.collection('groups').doc(groupId)
                 .update({
-                    inviteLink: randomLink,
-                    inviteLinkExpiry: nextWeek
+                    inviteLink: groupInvite.inviteLink,
+                    inviteLinkExpiry: groupInvite.expiry
                 }),
             this.fs.collection('groupInvites')
-                .doc(randomLink)
-                .set(groupInviteConverter.toFirestore(new GroupInvite(randomLink, groupName, groupId, nextWeek)))
+                .doc(groupInvite.inviteLink)
+                .set(groupInviteConverter.toFirestore(groupInvite))
         ]).then(() => {
-            return randomLink;
+            return groupInvite.inviteLink;
         });
     }
 

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {getMoneyString} from '@core/utils/firestore-utils';
+import {getMoneyString} from '@core/utils/streepn-logic';
 
 @Pipe({
   name: 'money'

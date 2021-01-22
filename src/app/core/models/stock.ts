@@ -1,18 +1,22 @@
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
-import {getMoneyString} from '@core/utils/firestore-utils';
+import {Group} from '@core/models/group';
 
 export class Stock {
     id: string;
     createdAt: Timestamp;
-    createdBy: string;
-    paidBy: string[];
+    createdBy: string; // accountId
+    paidBy: string[]; // TODO Change to map with key as accountId and value as paidAmount
     paidAmount: number[];
     productId: string;
-    cost: number;
-    amount: number;
-    removed: boolean;
-    writtenOff: boolean;
+    cost: number; // Costs of this stock transaction. Currently in cents.
+    amount: number; // Amount of items of productId added.
+    removed: boolean; // Describes if the stock transaction was removed (after editing: all items removed)
+    writtenOff: boolean; // TODO Add documentation what 'writtenOff' means.
+
+    static new(id: string, paidBy: string[], paidAmount: number[], productId: string, cost: number, amount: number) {
+        return new Stock(undefined, undefined, id, paidBy, paidAmount, productId, cost, amount, false, false);
+    }
 
     constructor(id: string, createdAt: Timestamp, createdById: string, paidBy: string[], paidAmount: number[], productId: string,
                 cost: number, amount: number, removed: boolean, writtenOff: boolean) {
@@ -28,8 +32,19 @@ export class Stock {
         this.writtenOff = writtenOff || false;
     }
 
+    /**
+     * Check if the stock can be edited.
+     */
     get isMutable(): boolean {
         return !this.removed && !this.writtenOff;
+    }
+
+    paidByString(group: Group) {
+        return this.paidBy.map(account => group.getUserAccountById(account)?.name).join(', ');
+    }
+
+    deepCopy(): Stock {
+        return JSON.parse(JSON.stringify(this));
     }
 }
 

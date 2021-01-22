@@ -1,5 +1,6 @@
 {
   "appName": "Streepn",
+  "version": "Versie: {{version}}",
   "actions": {
     "yes": "Ja",
     "no": "Nee",
@@ -85,7 +86,6 @@
     "registerNow": "Registreer je nu"
   },
   "side-menu": {
-
   },
   "dashboard": {
     "title": "Dashboard",
@@ -94,6 +94,7 @@
     "emailVerified": "Geverifieerd",
     "memberSince": "Gebruiker sinds",
     "emptyGroups": "Je hebt nog geen groepen.",
+    "yourBalance": "Jouw saldo: ",
     "createGroup": {
       "title": "Nieuwe groep",
       "groupName": "Groepsnaam",
@@ -161,7 +162,9 @@
       "more": "Meer"
     },
     "home": {
-      "title": "Groep"
+      "title": "Groep",
+      "totalIn": "Totaal gestort",
+      "totalOut": "Totaal uitgegeven"
     },
     "transactions": {
       "title": "Transacties",
@@ -171,7 +174,11 @@
       "disabledEditing": "Sommige transacties zijn reeds verrekend waardoor je ze niet meer kan bewerken."
     },
     "transaction": {
-      "title": "Transactie"
+      "title": "Transactie",
+      "header": "{{amount}}x {{productName}} voor {{accountName}}",
+      "timeline": "Op {{date}} door {{accountName}}",
+      "for": "Voor {{accountName}}",
+      "at": "Op {{date}}"
     },
     "stock": {
       "tab": "Producten",
@@ -180,7 +187,14 @@
       "empty": "Er is nog geen voorraad toegevoegd om in het logboek te tonen",
       "log": {
         "title": "Logboek",
-        "description": "Bekijk aanpassingen in de voorraad."
+        "description": "Bekijk aanpassingen in de voorraad.",
+        "paidBy": "Betaald door {{name}}",
+        "writtenOff": "Afgeboekt door {{name}}",
+        "stockLog": "{{amount}}x {{productName}}",
+        "stockLogFor": " voor {{cost}}"
+      },
+      "detail": {
+        "advisedPrice": "Onze adviesprijs voor dit product is <b>{{price}}</b>. Dit bedrag is gebaseerd op de voorraad."
       },
       "add": {
         "title": "Voorraad aanvullen",
@@ -243,7 +257,7 @@
         "header": "Groepslink vernieuwen",
         "message": "Je oude groepslink is verlopen... Wil je deze vernieuwen? De nieuwe link is dan 1 week geldig."
       },
-      "preferences" : {
+      "preferences": {
         "title": "Voorkeuren voor {{name}}"
       },
       "account": {
@@ -259,7 +273,11 @@
         "deletePrecondition": "Om de groep te verlaten moet elke geldstroom op € 0,00 staan.",
         "deleteAccount": "{{name}} verwijderen",
         "leaveGroup": "{{groupName}} verlaten",
-        "you": "je"
+        "you": "je",
+        "balanceAmount": "Saldo",
+        "totalIn": "Totaal gestort",
+        "totalOut": "Totaal uitgegeven",
+        "settle": "{{name}} verrekenen"
       },
       "accounts": {
         "title": "Deelnemers",
@@ -317,6 +335,13 @@
         }
       },
       "settle": {
+        "group": {
+          "itemTitle": "Verrekeningen",
+          "title": "Verrekeningen",
+          "settle": "{{name}} verrekenen",
+          "history": "Historie",
+          "emptyHistory": "Er zijn nog geen verrekeningen gedaan."
+        },
         "sharedAccount": {
           "amount": "Te verrekenen bedrag",
           "select-payers": "Betalers",

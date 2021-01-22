@@ -1,13 +1,13 @@
 <ion-item (click)="openAccount()" [button]="canEditAccount" [detail]="canEditAccount">
     <ion-avatar slot="start">
         <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
-        <img *ngIf="!account.photoUrl" alt="" src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg">
+        <img *ngIf="!account.photoUrl" alt="" src="assets/svg/avatar.svg">
     </ion-avatar>
     <div class="content">
         <ion-label>
             <h3>{{account.name}}</h3>
             <p>
-                Saldo:
+                {{'group.overview.account.balanceAmount' | translate }}:
                 <span *ngIf="group?.getAccountBalance(account.id); let balance"
                       [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
             </p>

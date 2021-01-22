@@ -1,0 +1,28 @@
+<ion-item (click)="openTransaction(transaction)"
+          [disabled]="transaction.removed" button="{{!transaction.removed}}" detail="{{!transaction.removed}}">
+    <ion-avatar slot="start">
+        <img *ngIf="account?.photoUrl" alt="" src="{{account.photoUrl}}">
+        <img *ngIf="!account?.photoUrl" alt="" src="assets/svg/avatar.svg">
+    </ion-avatar>
+
+    <ion-label [ngStyle]="transaction.removed ? {'text-decoration': 'line-through'} : {}">
+        <h3 *ngFor="let item of transaction.items">
+            {{'group.transaction.header' | translate:{
+            amount: item.amount,
+            productName: group.getProductById(item.productId)?.name,
+            accountName: group.getAccountById(item.accountId)?.name
+        } }}
+        </h3>
+        <div class="transaction-bill" *ngIf="transaction.priceByAccountId(currentAccount.id); let price">
+            <fa-duotone-icon slot="start" class="danger small no-width" fixedWidth
+                             [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
+            <span>{{price | money}}</span>
+        </div>
+        <p class="small">
+            {{'group.transaction.timeline' | translate:{
+            date: transaction.createdAt.toDate().toLocaleString(),
+            accountName: group.getUserAccountById(transaction.createdBy)?.name
+        } }}
+        </p>
+    </ion-label>
+</ion-item>

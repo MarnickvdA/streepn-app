@@ -18,7 +18,7 @@
         </ion-toolbar>
     </ion-header>
 
-    <ion-item lines="full" [disabled]="!(group?.products.length > 0)" routerLink="log" routerDirection="forward" button
+    <ion-item class="list-button" lines="full" [disabled]="!(group?.products.length > 0)" routerLink="log" routerDirection="forward" button
               detail="true">
         <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'history']"></fa-duotone-icon>
         <ion-label>
@@ -29,7 +29,7 @@
         </ion-label>
     </ion-item>
 
-    <ion-item lines="full" [disabled]="!(group?.products.length > 0)" (click)="removeStock()" button detail="false">
+    <ion-item class="list-button"  lines="full" [disabled]="!(group?.products.length > 0)" (click)="removeStock()" button detail="false">
         <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'edit']"></fa-duotone-icon>
         <ion-label>
             <h3>{{'group.stock.remove.title' | translate}}</h3>
@@ -45,7 +45,7 @@
         <ion-button (click)="addProduct()" *ngIf="isAdmin">{{'actions.add' | translate}}</ion-button>
     </ion-list-header>
 
-    <ion-item *ngIf="group?.products.length === 0" lines="none">
+    <ion-item class="no-min-height" *ngIf="group?.products.length === 0" lines="none">
         <ion-label>
             <p>
                 {{'group.overview.emptyProducts' | translate}}
@@ -64,7 +64,7 @@
                     [disabled]="group?.products.length === 0">{{'actions.add' | translate}}</ion-button>
     </ion-list-header>
 
-    <ion-item *ngIf="stockProducts?.length === 0 || group?.products.length === 0" lines="none">
+    <ion-item class="no-min-height" *ngIf="stockProducts?.length === 0 || group?.products.length === 0" lines="none">
         <ion-label>
             <p *ngIf="stockProducts?.length === 0 && group?.products.length > 0">
                 {{'group.overview.emptyStock' | translate}}

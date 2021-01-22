@@ -8,7 +8,7 @@ import {Plugins} from '@capacitor/core';
 import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
 import {AuthService, GroupService, ProductService} from '@core/services';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faShareAltSquare} from '@fortawesome/pro-duotone-svg-icons';
+import {faCalculatorAlt, faShareAltSquare} from '@fortawesome/pro-duotone-svg-icons';
 
 const {Clipboard, Share} = Plugins;
 
@@ -36,7 +36,7 @@ export class OverviewPage implements OnInit, OnDestroy {
                 private productService: ProductService,
                 private modalController: ModalController,
                 private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faShareAltSquare);
+        this.iconLibrary.addIcons(faShareAltSquare, faCalculatorAlt);
     }
 
     ngOnInit() {

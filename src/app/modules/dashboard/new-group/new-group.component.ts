@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Group} from '@core/models';
 import {PermissionType, Plugins} from '@capacitor/core';
-import {AlertController, NavController} from '@ionic/angular';
+import {AlertController, ModalController, NavController} from '@ionic/angular';
 import {GroupService, LoggerService, PushService, PushTopic, UIService, UserService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 
@@ -30,7 +30,8 @@ export class NewGroupComponent implements OnInit {
                 private translate: TranslateService,
                 private alertController: AlertController,
                 private pushService: PushService,
-                private navController: NavController) {
+                private navController: NavController,
+                private modalController: ModalController) {
         this.groupForm = this.formBuilder.group({
             name: ['', [Validators.required]],
         });
@@ -125,5 +126,11 @@ export class NewGroupComponent implements OnInit {
         this.navController.navigateRoot(['group', this.group.id, 'preferences'], {
             animationDirection: 'forward'
         });
+
+        this.dismiss();
+    }
+
+    dismiss() {
+        this.modalController.dismiss();
     }
 }

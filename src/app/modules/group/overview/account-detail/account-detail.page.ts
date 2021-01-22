@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Balance, Group, UserAccount} from '@core/models';
+import {Balance, Group, UserAccount, UserRole} from '@core/models';
 import {Subscription} from 'rxjs';
 import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
@@ -65,14 +65,13 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                 this.group = group;
 
                 if (group) {
-                    this.isAdmin = this.group.accounts
-                        .find(acc => acc.userId === this.authService.currentUser?.uid)?.roles.includes('ADMIN');
-                    this.account = this.group.accounts.find(acc => acc.id === this.accountId);
+                    this.isAdmin = this.group.getUserAccountByUserId(this.authService.currentUser?.uid)?.isAdmin;
+                    this.account = this.group.getUserAccountById(this.accountId);
                     this.balance = this.group.getAccountBalance(this.account.id);
                     this.newName = this.account.name;
                     this.isSelf = this.authService.currentUser.uid === this.account.userId;
-                    this.canDisableAdmin = this.group.accounts.filter(acc => acc.roles.includes('ADMIN'))?.length > 1 || !this.isSelf;
-                    this.enableAdmin = this.account.roles.includes('ADMIN');
+                    this.canDisableAdmin = this.group.accounts.filter(acc => acc.isAdmin)?.length > 1 || !this.isSelf;
+                    this.enableAdmin = this.account.isAdmin;
                     this.storage.get(`${this.account.id}_enablePush`)
                         .then((enabled: boolean) => {
                             this.enablePush = enabled;
@@ -99,7 +98,7 @@ export class AccountDetailPage implements OnInit, OnDestroy {
     }
 
     async setName() {
-        const account = Object.create(this.account);
+        const account = this.account.deepCopy();
         account.name = this.newName;
 
         const loading = await this.loadingController.create({
@@ -167,7 +166,7 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                             });
 
                             await loading.present();
-                            const account: UserAccount = Object.create(this.account);
+                            const account: UserAccount = this.account.deepCopy();
 
                             account.roles = account.roles.filter(item => item !== 'ADMIN');
 
@@ -189,9 +188,9 @@ export class AccountDetailPage implements OnInit, OnDestroy {
             });
 
             await loading.present();
-            const account: UserAccount = Object.create(this.account);
+            const account: UserAccount = this.account.deepCopy();
 
-            account.roles.push('ADMIN');
+            account.roles.push(UserRole.ADMIN);
 
             this.accountService.updateUserAccount(this.group, account)
                 .finally(() => {
