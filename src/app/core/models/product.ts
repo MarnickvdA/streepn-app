@@ -1,35 +1,74 @@
 import {Timestamp} from '@firebase/firestore-types';
-import {v4 as uuidv4} from 'uuid';
+import {v4 as uuid} from 'uuid';
 import firebase from 'firebase/app';
+
 require('firebase/firestore');
 import TimestampFn = firebase.firestore.Timestamp;
+import {getMoneyString} from '@core/utils/formatting-utils';
 
 export class Product {
     id: string;
     createdAt: Timestamp;
     name: string;
     price: number; // Price (currently in cents, since we only support EURO right now.)
-    stock?: number; // The current amount of stock available
-    totalStock?: number; // The total amount of stock that was deposited for this product
-    totalStockWorth?: number; // Total stock worth
+    totalIn: number; // Total product worth added to this product
+    totalOut: number; // Total product cost
+    amountIn: number; // Total stock of this product added
+    amountOut: number; // Total stock of this product removed
 
-    constructor(id: string, createdAt: Timestamp, name: string, price: number, stock?: number,
-                totalStock?: number, totalStockWorth?: number) {
+    constructor(id: string, createdAt: Timestamp, name: string, price: number,
+                totalIn: number, totalOut: number, amountIn: number, amountOut: number) {
         this.id = id;
         this.createdAt = createdAt;
         this.name = name;
         this.price = price;
-        this.stock = stock;
-        this.totalStock = totalStock;
-        this.totalStockWorth = totalStockWorth;
+        this.totalIn = totalIn || 0;
+        this.totalOut = totalOut || 0;
+        this.amountIn = amountIn || 0;
+        this.amountOut = amountOut || 0;
     }
 
     static new(name: string, price: number) {
-        return new Product(uuidv4(), TimestampFn.now(), name, price, undefined);
+        return new Product(uuid(), TimestampFn.now(), name, price, 0, 0, 0, 0);
     }
 
     deepCopy(): Product {
         return JSON.parse(JSON.stringify(this));
+    }
+
+    get stock(): number {
+        return this.amountIn - this.amountOut;
+    }
+
+    get advisedPrice(): string | undefined {
+        return this.amountIn !== 0 ? getMoneyString(this.totalIn / this.amountIn) : undefined;
+    }
+
+    get removable(): boolean {
+        return this.totalIn === 0 && this.totalOut === 0 && this.amountIn === 0 && this.amountOut === 0;
+    }
+
+    /*
+     * SETTLEMENT HELPER METHODS
+     */
+    get currentStockWorth(): number {
+        return this.totalIn - this.totalOut;
+    }
+
+    get amountLeftPercentage(): number {
+        return this.amountIn !== 0 ? 1 - this.amountOut / this.amountIn : 0;
+    }
+
+    get maxRevenue(): number {
+        return this.stock * this.price;
+    }
+
+    get worthDifference(): number {
+        return this.currentStockWorth - this.maxRevenue;
+    }
+
+    get restWorth(): number {
+        return Math.round((this.worthDifference * this.amountLeftPercentage) + this.maxRevenue);
     }
 }
 
@@ -42,21 +81,10 @@ export const productConverter = {
             price: product.price,
         };
 
-        if (!isNaN(product.stock)) {
-            p.stock = product.stock;
-        }
-
-        if (!isNaN(product.totalStock)) {
-            p.totalStock = product.totalStock;
-        }
-
-        if (!isNaN(product.totalStockWorth)) {
-            p.totalStockWorth = product.totalStockWorth;
-        }
-
         return p;
     },
     newProduct(data: { [key: string]: any }): Product {
-        return new Product(data.id, data.createdAt, data.name, data.price, data.stock, data.totalStock, data.totalStockWorth);
+        return new Product(data.id, data.createdAt, data.name, data.price,
+            data.totalIn, data.totalOut, data.amountIn, data.amountOut);
     }
 };

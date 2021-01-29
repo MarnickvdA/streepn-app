@@ -16,7 +16,9 @@
 
 <ion-content *ngIf="group">
     <ion-item lines="full">
-        <ion-label>{{'group.transactions.currentProduct' | translate}}</ion-label>
+        <ion-label>
+            <h3>{{'group.transactions.currentProduct' | translate}}</h3>
+        </ion-label>
         <ion-select (ionChange)="selectProduct($event)" interface="popover" value="{{group.products[0].id}}">
             <ion-select-option *ngFor="let product of group.products" value="{{product.id}}">
                 {{product.name}}
@@ -35,7 +37,9 @@
                 <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
                 <img *ngIf="!account.photoUrl" alt="" src="assets/svg/avatar.svg">
             </ion-avatar>
-            <ion-label>{{account.name}}</ion-label>
+            <ion-label>
+                <h3>{{account.name}}</h3>
+            </ion-label>
             <ion-chip
                     *ngIf="transactions[account.id] && transactions[account.id][currentProduct.id] && transactions[account.id][currentProduct.id].amount > 0">
                 <ion-label>{{transactions[account.id][currentProduct.id].amount}}</ion-label>
@@ -55,7 +59,9 @@
             </ion-list-header>
 
             <ion-item *ngFor="let account of group.sharedAccounts">
-                <ion-label>{{account.name}}</ion-label>
+                <ion-label>
+                    <h3>{{account.name}}</h3>
+                </ion-label>
                 <ion-chip
                         *ngIf="transactions[account.id] && transactions[account.id][currentProduct.id] && transactions[account.id][currentProduct.id].amount > 0">
                     <ion-label>{{transactions[account.id][currentProduct.id].amount}}</ion-label>

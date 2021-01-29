@@ -29,16 +29,6 @@
         </ion-label>
     </ion-item>
 
-    <ion-item class="list-button"  lines="full" [disabled]="!(group?.products.length > 0)" (click)="removeStock()" button detail="false">
-        <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'edit']"></fa-duotone-icon>
-        <ion-label>
-            <h3>{{'group.stock.remove.title' | translate}}</h3>
-            <p class="small ion-text-wrap">
-                {{'group.stock.remove.description' | translate}}
-            </p>
-        </ion-label>
-    </ion-item>
-
     <!-- START PRODUCTS SECTION -->
     <ion-list-header lines="full">
         <ion-label>{{'group.overview.products' | translate}}</ion-label>
@@ -47,7 +37,7 @@
 
     <ion-item class="no-min-height" *ngIf="group?.products.length === 0" lines="none">
         <ion-label>
-            <p>
+            <p class="small">
                 {{'group.overview.emptyProducts' | translate}}
             </p>
         </ion-label>
@@ -66,7 +56,7 @@
 
     <ion-item class="no-min-height" *ngIf="stockProducts?.length === 0 || group?.products.length === 0" lines="none">
         <ion-label>
-            <p *ngIf="stockProducts?.length === 0 && group?.products.length > 0">
+            <p class="small" *ngIf="stockProducts?.length === 0 && group?.products.length > 0">
                 {{'group.overview.emptyStock' | translate}}
             </p>
             <p *ngIf="group?.products.length === 0" class="small ion-text-wrap">

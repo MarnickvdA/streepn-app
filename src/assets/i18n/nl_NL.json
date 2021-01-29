@@ -37,6 +37,7 @@
     "invite": "Uitnodigen",
     "admin": "Beheren",
     "submit": "Invoeren",
+    "complete": "Afronden",
     "loadMore": "Meer laden...",
     "saving": "Opslaan...",
     "loading": "Aan het laden...",
@@ -95,6 +96,7 @@
     "memberSince": "Gebruiker sinds",
     "emptyGroups": "Je hebt nog geen groepen.",
     "yourBalance": "Jouw saldo: ",
+    "balance": "Saldo: ",
     "createGroup": {
       "title": "Nieuwe groep",
       "groupName": "Groepsnaam",
@@ -198,10 +200,10 @@
       },
       "add": {
         "title": "Voorraad aanvullen",
-        "description": "Vul jouw krediet aan door voorraad toe te voegen! Je kunt de betalers pas invoeren als je alle velden hebt gevuld.",
+        "description": "Vul jouw krediet aan door voorraad toe te voegen!",
         "selectProduct": "Product selecteren",
-        "paidByTitle": "Betaler(s)",
-        "paidBy": "Betaler(s) selecteren",
+        "paidByTitle": "Betaler",
+        "paidBy": "Betaler selecteren",
         "amount": "Hoeveelheid",
         "cost": "Totale waarde",
         "errors": {
@@ -227,18 +229,6 @@
           "cost-min": "De waarde moet niet negatief zijn",
           "cost-max": "De waarde moet niet hoger zijn dan €10000,-",
           "paidBy-required": "Selecteer minimaal 1 betaler"
-        }
-      },
-      "remove": {
-        "title": "Voorraad afschrijven",
-        "description": "Klopt de voorraad niet meer? Werk het dan bij.",
-        "titleWithName": "{{name}} afboeken",
-        "selectProduct": "Selecteer product",
-        "amount": "Af te schrijven hoeveelheid",
-        "errors": {
-          "product-required": "Selecteer een product",
-          "amount-required": "Vul een hoeveelheid in om af te schrijven",
-          "amount-min": "De hoeveelheid moet minimaal 1 zijn"
         }
       }
     },
@@ -340,7 +330,17 @@
           "title": "Verrekeningen",
           "settle": "{{name}} verrekenen",
           "history": "Historie",
-          "emptyHistory": "Er zijn nog geen verrekeningen gedaan."
+          "emptyHistory": "Er zijn nog geen verrekeningen gedaan.",
+          "description": "Voordat je de groep kunt verrekenen, moet de administratie up-to-date zijn. We controleren de gehele administratie stapsgewijs waarna je de groep kunt verrekenen.",
+          "checkStock": "Voorraad controleren",
+          "stockDescription": "De voorraad van de producten in je administratie moeten minstens 0 zijn. Vul, indien aanwezig, tekorten aan zodat de groep verrekend kan worden.",
+          "settleSharedAccounts": "Potjes verrekenen",
+          "settleSharedDescription": "Alle potjes moeten verrekend worden voordat een verrekening kan worden gedaan.",
+          "sharedCompleted": "Alle potjes zijn verrekend!",
+          "sharedIncomplete": "Nog niet alle potjes zijn verrekend!",
+          "settleUsers": "Verrekenen afronden",
+          "settleUsersDescription": "Als alles up-to-date is kun je de verrekening afronden. Let wel op: deze actie is niet terug te draaien!",
+          "toOverview": "Verrekening afronden"
         },
         "sharedAccount": {
           "amount": "Te verrekenen bedrag",

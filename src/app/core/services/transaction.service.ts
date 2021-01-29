@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {AngularFireFunctions} from '@angular/fire/functions';
-import {Account, Group, Product, Transaction, transactionConverter, UserAccount} from '../models';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Group, Transaction, transactionConverter} from '../models';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {map, takeUntil} from 'rxjs/operators';
 import {newTransaction, TransactionItem} from '../models/transaction';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {AuthService} from '@core/services/auth.service';
@@ -20,9 +20,21 @@ export interface TransactionSet {
 })
 export class TransactionService {
 
+    private curTransactionId: string;
+    private transactionSubject: BehaviorSubject<Transaction> = new BehaviorSubject<Transaction>(undefined);
+    private transaction$: Observable<Transaction>;
+    private transactionSub;
+    private destroyerSubject: Subject<void> = new Subject();
+
     constructor(private authService: AuthService,
                 private functions: AngularFireFunctions,
                 private fs: AngularFirestore) {
+    }
+
+    unsubscribe() {
+        this.curTransactionId = undefined;
+        this.destroyerSubject.next();
+        this.transactionSubject.next(undefined);
     }
 
     addTransaction(group: Group, transactionSet: TransactionSet): Observable<Transaction> {
@@ -47,8 +59,7 @@ export class TransactionService {
             });
         });
 
-        const transaction = new Transaction(undefined, undefined, currentUserAccount.id,
-            totalPrice, transactionItems.length, transactionItems, false);
+        const transaction = new Transaction(undefined, undefined, currentUserAccount.id, transactionItems, false);
 
         const callable = this.functions.httpsCallable('addTransaction');
         return callable({
@@ -73,21 +84,11 @@ export class TransactionService {
             }
         });
 
-        deltaTransaction.totalPrice = totalPrice;
-        deltaTransaction.itemCount = deltaTransaction.items.length;
 
         const updatedTransaction = newTransaction(transaction.id, transaction);
-        updatedTransaction.totalPrice = 0;
-        updatedTransaction.items = updatedTransaction.items.filter((item, index) => {
-            if (item.amount > 0) {
-                updatedTransaction.totalPrice += item.amount * item.productPrice;
-                return true;
-            } else {
-                return false;
-            }
+        updatedTransaction.items = updatedTransaction.items.filter((item) => {
+            return item.amount > 0;
         });
-
-        updatedTransaction.itemCount = updatedTransaction.items.length;
 
         const callable = this.functions.httpsCallable('editTransaction');
         return callable({
@@ -106,4 +107,34 @@ export class TransactionService {
                 return group.data();
             });
     }
+
+    observeTransaction(groupId: string, transactionId: string) {
+        if (!this.transaction$ || transactionId !== this.curTransactionId) {
+            this.curTransactionId = transactionId;
+
+            this.initTransactionObserver(groupId, transactionId);
+
+            this.transaction$ = this.transactionSubject.asObservable()
+                .pipe(
+                    takeUntil(this.destroyerSubject)
+                );
+        }
+
+        return this.transaction$;
+    }
+
+    private initTransactionObserver(groupId: string, transactionId: string) {
+        if (this.transactionSub) {
+            this.transactionSub();
+        }
+
+        this.transactionSub = this.fs.collection('groups').doc(groupId).collection('transactions').doc(transactionId)
+            .ref
+            .withConverter(transactionConverter)
+            .onSnapshot((snapshot) => {
+                this.transactionSubject.next(snapshot.data());
+            });
+    }
+
+
 }

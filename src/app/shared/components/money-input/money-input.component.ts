@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {IonInput} from '@ionic/angular';
-import {getMoneyString} from '@core/utils/streepn-logic';
+import {getMoneyString} from '@core/utils/formatting-utils';
 
 @Component({
     selector: 'app-money-input',

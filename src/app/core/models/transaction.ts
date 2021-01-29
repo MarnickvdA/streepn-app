@@ -12,8 +12,6 @@ export class Transaction {
     readonly id: string;
     createdAt: Timestamp;
     createdBy: string;
-    totalPrice: number; // Price of all TransactionItems combined
-    itemCount: number; // Count of TransactionItems (NOT amount of products sold)
     items: TransactionItem[];
     removed: boolean;
 
@@ -21,13 +19,10 @@ export class Transaction {
         [accountId: string]: number;
     } = {};
 
-    constructor(id: string, createdAt: Timestamp, createdBy: string, totalPrice: number, itemCount: number,
-                items: TransactionItem[], removed: boolean) {
+    constructor(id: string, createdAt: Timestamp, createdBy: string, items: TransactionItem[], removed: boolean) {
         this.id = id;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
-        this.totalPrice = totalPrice;
-        this.itemCount = itemCount;
         this.items = [...items];
         this.removed = removed || false;
 
@@ -49,6 +44,14 @@ export class Transaction {
     deepCopy(): Transaction {
         return JSON.parse(JSON.stringify(this));
     }
+
+    get totalPrice(): number {
+        let totalPrice = 0;
+        this.items.forEach(item => {
+            totalPrice += item.productPrice * item.amount;
+        });
+        return totalPrice;
+    }
 }
 
 export const transactionConverter: FirestoreDataConverter<Transaction> = {
@@ -56,8 +59,6 @@ export const transactionConverter: FirestoreDataConverter<Transaction> = {
         return {
             createdAt: transaction.createdAt,
             createdBy: transaction.createdBy,
-            totalPrice: transaction.totalPrice,
-            itemCount: transaction.items.length,
             items: transaction.items,
             removed: transaction.removed,
         };
@@ -70,6 +71,6 @@ export const transactionConverter: FirestoreDataConverter<Transaction> = {
 };
 
 export function newTransaction(id: string, data: { [key: string]: any }): Transaction {
-    return new Transaction(id, data.createdAt as Timestamp, data.createdBy, data.totalPrice,
-        data.itemCount, JSON.parse(JSON.stringify(data.items)), data.removed);
+    return new Transaction(id, data.createdAt as Timestamp, data.createdBy,
+        JSON.parse(JSON.stringify(data.items)), data.removed);
 }

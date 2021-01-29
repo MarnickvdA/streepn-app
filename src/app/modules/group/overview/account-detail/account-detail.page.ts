@@ -25,7 +25,6 @@ import {faBell, faMinusCircle, faPlusCircle, faUser, faUsersCrown, faWallet} fro
 export class AccountDetailPage implements OnInit, OnDestroy {
     groupId: string;
     account?: UserAccount;
-    balance?: Balance;
     isSelf: boolean;
     enablePush: boolean;
     enableAdmin: boolean;
@@ -67,7 +66,6 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                 if (group) {
                     this.isAdmin = this.group.getUserAccountByUserId(this.authService.currentUser?.uid)?.isAdmin;
                     this.account = this.group.getUserAccountById(this.accountId);
-                    this.balance = this.group.getAccountBalance(this.account.id);
                     this.newName = this.account.name;
                     this.isSelf = this.authService.currentUser.uid === this.account.userId;
                     this.canDisableAdmin = this.group.accounts.filter(acc => acc.isAdmin)?.length > 1 || !this.isSelf;

@@ -1,4 +1,5 @@
-export {Group, groupConverter, Balance, Valuta} from './group';
+export {Group, groupConverter, Currency} from './group';
+export {Balance, balanceConverter} from './balance';
 export {Account, accountConverter, AccountType} from './account';
 export {UserAccount, UserRole, userAccountConverter} from './user-account';
 export {SharedAccount, sharedAccountConverter} from './shared-account';
@@ -6,3 +7,4 @@ export {Product, productConverter} from './product';
 export {GroupInvite, groupInviteConverter} from './group-invite';
 export {Transaction, TransactionItem, transactionConverter} from './transaction';
 export {Stock, stockConverter} from './stock';
+export {Settlement, SettleItem, settlementConverter} from './settlement';

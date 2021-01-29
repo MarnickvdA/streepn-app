@@ -1,13 +1,12 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Account, UserAccount, SharedAccount, Group} from '@core/models';
+import {Account, Group} from '@core/models';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {calculatePayout} from '@core/utils/streepn-logic';
 import {AnalyticsService, AuthService, GroupService, LoggerService, ProductService, StockService} from '@core/services';
 
 @Component({
@@ -21,8 +20,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
     paidByTitle: string;
     @Input() group$: Observable<Group>;
     group: Group;
-    paidAmount: number[];
-    selectedNames: string;
+    selectedName: string;
     private readonly logger = LoggerService.getLogger(AddStockComponent.name);
     private groupSub: Subscription;
     private moneyInputInitialized = false;
@@ -53,12 +51,12 @@ export class AddStockComponent implements OnInit, OnDestroy {
         return this.stockForm.controls;
     }
 
-    get selectedAccounts(): Account[] {
-        const selectedAccounts = this.form.paidBy.value;
-        if (selectedAccounts?.length > 0) {
-            return this.group.getAccountsById(selectedAccounts);
+    get selectedAccount(): Account | undefined {
+        const selectedAccount = this.form.paidBy.value;
+        if (selectedAccount?.length > 0) {
+            return this.group.getAccountById(selectedAccount);
         } else {
-            return [];
+            return undefined;
         }
     }
 
@@ -112,7 +110,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
         await loading.present();
 
         this.stockService.addStockItem(this.group, this.form.product.value, +this.form.cost.value,
-            +this.form.amount.value, this.selectedAccounts.map(acc => acc.id), this.paidAmount)
+            +this.form.amount.value, this.selectedAccount.id)
             .pipe(
                 catchError(err => {
                     this.logger.error({message: err});
@@ -130,15 +128,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
             });
     }
 
-    updatePayout() {
-        const selected = this.selectedAccounts;
-
-        this.selectedNames = selected?.map(acc => acc.name.trim()).join(', ');
-
-        if (selected?.length > 0) {
-            this.paidAmount = calculatePayout(this.form.cost.value, selected.length);
-        } else {
-            this.paidAmount = [];
-        }
+    updateSelectedName() {
+        this.selectedName = this.selectedAccount?.name;
     }
 }

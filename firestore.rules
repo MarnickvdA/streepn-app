@@ -23,6 +23,10 @@ service cloud.firestore {
                   allow delete: if false;
               }
 
+              match /settlements/{settlementId} {
+                  allow read: if isSignedIn() && isMemberOfGroup(getGroup(groupId));
+              }
+
               function getGroup(groupId) {
                   return get(/databases/$(database)/documents/groups/$(groupId)).data;
               }

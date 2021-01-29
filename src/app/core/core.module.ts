@@ -22,6 +22,7 @@ import {environment} from '@env/environment';
 import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/auth';
 import {AngularFireFunctionsModule, REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR} from '@angular/fire/functions';
 import {SETTINGS, USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/firestore';
+import {SettlementService} from '@core/services/settlement.service';
 
 require('./firebase-init');
 
@@ -40,6 +41,7 @@ export const services = [
     UserService,
     ProductService,
     StockService,
+    SettlementService,
 ];
 
 @NgModule({

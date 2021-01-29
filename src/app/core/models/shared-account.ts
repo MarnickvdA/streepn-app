@@ -1,21 +1,20 @@
 import firebase from 'firebase/app';
 import {Timestamp} from '@firebase/firestore-types';
-import {v4 as uuidv4} from 'uuid';
+import {v4 as uuid} from 'uuid';
+import {Account, accountConverter, AccountType} from '@core/models/account';
+import {Balance} from '@core/models/balance';
 
 require('firebase/firestore');
 import TimestampFn = firebase.firestore.Timestamp;
-import {Account, accountConverter, AccountType} from '@core/models/account';
 
 export class SharedAccount extends Account {
-    accounts: string[];
 
-    constructor(id: string, createdAt: Timestamp, name: string, accounts: string[], settledAt?: Timestamp) {
-        super(id, createdAt, name, AccountType.SHARED, settledAt);
-        this.accounts = accounts;
+    constructor(id: string, createdAt: Timestamp, name: string, balance: Balance, settledAt?: Timestamp) {
+        super(id, createdAt, name, AccountType.SHARED, balance, settledAt);
     }
 
     static new(accountName: string) {
-        return new SharedAccount(uuidv4(), TimestampFn.now(), accountName, [], undefined);
+        return new SharedAccount(uuid(), TimestampFn.now(), accountName, Balance.new());
     }
 
     deepCopy(): SharedAccount {
@@ -26,15 +25,9 @@ export class SharedAccount extends Account {
 
 export const sharedAccountConverter = {
     toFirestore(sharedAccount: SharedAccount) {
-        const accountObject = accountConverter.toFirestore(sharedAccount);
-
-        const sharedAccountObject = {
-            accounts: sharedAccount.accounts,
-        };
-
-        return {...accountObject, ...sharedAccountObject};
+        return accountConverter.toFirestore(sharedAccount);
     },
     newSharedAccount(data: { [key: string]: any }): SharedAccount {
-        return new SharedAccount(data.id, data.createdAt, data.name, data.accounts, data.settledAt);
+        return new SharedAccount(data.id, data.createdAt, data.name, data.balance, data.settledAt);
     }
 };

@@ -16,8 +16,8 @@
             </ion-avatar>
             <ion-label>
                 <h2>{{account.name}}</h2>
-                <p>Saldo: <span
-                        [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
+                <p>{{'dashboard.balance' | translate}} <span
+                        [ngClass]="account.balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{account.balance.amount | money}}</span>
                 </p>
             </ion-label>
         </div>
@@ -32,11 +32,12 @@
     <ion-list>
         <ion-item class="no-min-height" *ngIf="transactions?.length === 0" lines="none">
             <ion-label>
-                <p>{{'group.transactions.empty' | translate}}</p>
+                <p class="small">{{'group.transactions.empty' | translate}}</p>
             </ion-label>
         </ion-item>
 
-        <app-transaction-item *ngFor="let transaction of transactions" [transaction]="transaction"></app-transaction-item>
+        <app-transaction-item *ngFor="let transaction of transactions"
+                              [transaction]="transaction"></app-transaction-item>
 
         <ion-button (click)="loadNext()" *ngIf="!doneLoading" [disabled]="isLoadingMore" fill="none">
             <ion-label *ngIf="!isLoadingMore" color="primary">{{'actions.loadMore' | translate}}</ion-label>

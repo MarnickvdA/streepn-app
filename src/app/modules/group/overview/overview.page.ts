@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {Group, UserAccount} from '@core/models';
+import {Group, SharedAccount, UserAccount} from '@core/models';
 import {ActivatedRoute} from '@angular/router';
-import {AlertController, LoadingController, ModalController} from '@ionic/angular';
+import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Plugins} from '@capacitor/core';
 import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
@@ -35,7 +35,8 @@ export class OverviewPage implements OnInit, OnDestroy {
                 private translate: TranslateService,
                 private productService: ProductService,
                 private modalController: ModalController,
-                private iconLibrary: FaIconLibrary) {
+                private iconLibrary: FaIconLibrary,
+                private navController: NavController) {
         this.iconLibrary.addIcons(faShareAltSquare, faCalculatorAlt);
     }
 
@@ -137,6 +138,16 @@ export class OverviewPage implements OnInit, OnDestroy {
             });
 
             await alert.present();
+        }
+    }
+
+    openAccount(account: SharedAccount) {
+        if (this.isAdmin) {
+            this.navController.navigateForward(`group/${this.group.id}/preferences/shared-accounts/${account.id}`, {
+                state: {
+                    account
+                }
+            });
         }
     }
 }

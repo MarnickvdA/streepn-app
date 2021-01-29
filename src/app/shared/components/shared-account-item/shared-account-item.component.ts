@@ -1,6 +1,5 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Group, SharedAccount} from '@core/models';
-import {NavController} from '@ionic/angular';
 import {Subscription} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {GroupService} from '@core/services';
@@ -13,15 +12,15 @@ import {GroupService} from '@core/services';
 export class SharedAccountItemComponent implements OnInit, OnDestroy {
 
     @Input() account: SharedAccount;
-    @Input() canEditAccount = false;
-    @Input() navLink?: string;
+    @Input() isButton = true;
+    @Output() clicked: EventEmitter<any> = new EventEmitter();
 
     group?: Group;
+    hasCallback: boolean;
     private groupSub: Subscription;
 
     constructor(private translate: TranslateService,
-                private groupService: GroupService,
-                private navController: NavController) {
+                private groupService: GroupService) {
     }
 
     ngOnInit() {
@@ -35,13 +34,7 @@ export class SharedAccountItemComponent implements OnInit, OnDestroy {
         this.groupSub.unsubscribe();
     }
 
-    openAccount() {
-        if (this.canEditAccount) {
-            this.navController.navigateForward(this.navLink, {
-                state: {
-                    account: this.account
-                }
-            });
-        }
+    onClick() {
+        this.clicked.emit();
     }
 }

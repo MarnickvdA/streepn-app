@@ -21,7 +21,6 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
     newName: string;
     group: Group;
     account?: SharedAccount;
-    balance?: Balance;
 
     private group$: Observable<Group>;
     private routeSub: Subscription;
@@ -48,7 +47,6 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
             if (group) {
                 this.group = group;
                 this.account = group.sharedAccounts.find(acc => acc.id === this.accountId);
-                this.balance = group.getAccountBalance(this.account.id);
                 this.newName = this.account.name;
             }
         }));

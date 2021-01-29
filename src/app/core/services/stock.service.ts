@@ -17,9 +17,9 @@ export class StockService {
                 private authService: AuthService) {
     }
 
-    addStockItem(group: Group, productId: string, cost: number, amount: number, paidBy: string[], paidAmount: number[]): Observable<Stock> {
+    addStockItem(group: Group, productId: string, cost: number, amount: number, paidById: string): Observable<Stock> {
         const currentAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
-        const stock = Stock.new(currentAccount.id, paidBy, paidAmount, productId, cost, amount);
+        const stock = Stock.new(currentAccount.id, paidById, productId, cost, amount);
 
         const callable = this.functions.httpsCallable('addStock');
         return callable({
@@ -33,12 +33,8 @@ export class StockService {
 
     removeStockItem(group: Group, productId: string, amount: number) {
         const currentAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
-        const currentProduct = group.getProductById(productId);
 
-        if (isNaN(currentProduct.stock)) {
-            currentProduct.stock = 0;
-        }
-        const stock = new Stock('', undefined, currentAccount.id, undefined, undefined, productId,
+        const stock = new Stock('', undefined, currentAccount.id, undefined, productId,
             undefined, amount, false, true);
 
         const callable = this.functions.httpsCallable('removeStock');
@@ -52,29 +48,15 @@ export class StockService {
     }
 
     editStockItem(group: Group, original: Stock, productId: string, cost: number, amount: number,
-                  paidBy: string[], paidAmount: number[]): Observable<Stock> {
+                  paidById: string): Observable<Stock> {
 
         const currentAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
-        const updatedStock = new Stock(original.id, original.createdAt, currentAccount.id, paidBy, paidAmount,
+
+        const updatedStock = new Stock(original.id, original.createdAt, currentAccount.id, paidById,
             productId, cost, amount, false, false);
 
-        const deltaPaidBy: string[] = [];
-        const deltaPaidAmount: number[] = [];
-        for (let i = 0; i < original.paidBy.length; i++) {
-            const accountId = original.paidBy[i];
-            const newIndex = paidBy.indexOf(accountId);
-
-            deltaPaidBy.push(accountId);
-            deltaPaidAmount.push((newIndex >= 0 ? paidAmount[newIndex] : 0) - original.paidAmount[i]);
-        }
-
-        paidBy.filter(accId => !original.paidBy.includes(accId)).forEach(id => {
-            deltaPaidBy.push(id);
-            deltaPaidAmount.push(paidAmount[paidBy.indexOf(id)]);
-        });
-
-        const deltaStock = new Stock(original.id, original.createdAt, currentAccount.id, deltaPaidBy, deltaPaidAmount,
-            original.productId, original.productId !== productId ? -original.cost : cost - original.cost,
+        const deltaStock = new Stock(original.id, original.createdAt, currentAccount.id, original.paidById, original.productId,
+            original.paidById !== paidById ? -original.cost : cost - original.cost,
             original.productId !== productId ? -original.amount : amount - original.amount, false, false);
 
         const callable = this.functions.httpsCallable('editStock');

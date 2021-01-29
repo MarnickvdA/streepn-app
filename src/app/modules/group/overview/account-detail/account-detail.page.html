@@ -1,8 +1,10 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-button mode="ios" fill="none" [routerLink]="'/group/' + groupId + '/preferences'" routerDirection="back">
-                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+            <ion-button mode="ios" fill="none" [routerLink]="'/group/' + groupId + '/preferences'"
+                        routerDirection="back">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
+                                 [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
         <ion-title>{{account?.name}}</ion-title>
@@ -23,7 +25,8 @@
                         [attr.disabled]="newName === account?.name || newName?.length < 2">{{'actions.edit' | translate}}</ion-button>
         </ion-item>
         <ion-item *ngIf="isSelf">
-            <fa-duotone-icon slot="start" class="primary-reversed" fixedWidth [icon]="['fad', 'bell']"></fa-duotone-icon>
+            <fa-duotone-icon slot="start" class="primary-reversed" fixedWidth
+                             [icon]="['fad', 'bell']"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'group.overview.account.enablePush' | translate}}</h3>
             </ion-label>
@@ -50,35 +53,35 @@
                 <h3>{{'group.overview.account.balanceAmount' | translate}}</h3>
             </ion-label>
             <span slot="end"
-                  [ngClass]="balance?.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance?.amount | money}}</span>
+                  [ngClass]="account?.balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{account?.balance.amount | money}}</span>
         </ion-item>
         <ion-item>
             <fa-duotone-icon slot="start" class="success" fixedWidth [icon]="['fad', 'plus-circle']"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'group.overview.account.totalIn' | translate}}</h3>
             </ion-label>
-            <span slot="end">{{balance?.totalIn | money}}</span>
+            <span slot="end">{{account?.balance.totalIn | money}}</span>
         </ion-item>
         <ion-item lines="full">
             <fa-duotone-icon slot="start" class="danger" fixedWidth [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'group.overview.account.totalOut' | translate}}</h3>
             </ion-label>
-            <span slot="end">{{balance?.totalOut | money}}</span>
+            <span slot="end">{{account?.balance.totalOut | money}}</span>
         </ion-item>
     </ion-list>
 
     <div class="delete-clause">
-        <ion-label color="medium" id="explanation" *ngIf="!group?.canLeaveGroup(account.id)">
+        <ion-label color="medium" id="explanation" *ngIf="!account.canLeaveGroup">
             <p>{{'group.overview.account.deletePrecondition' | translate:{name: isSelf ? ('group.overview.account.you' | translate) : account?.name} }}</p>
         </ion-label>
-        <ion-button (click)="deleteAccount()" *ngIf="isAdmin && !isSelf" [disabled]="!group?.canLeaveGroup(account.id)"
+        <ion-button (click)="deleteAccount()" *ngIf="isAdmin && !isSelf" [disabled]="!account.canLeaveGroup"
                     color="danger" expand="block">
             <ion-label>
                 {{'group.overview.account.deleteAccount' | translate:{name: account?.name} }}
             </ion-label>
         </ion-button>
-        <ion-button (click)="deleteAccount()" *ngIf="isSelf" [disabled]="!group?.canLeaveGroup(account.id)" color="danger">
+        <ion-button (click)="deleteAccount()" *ngIf="isSelf" [disabled]="!account.canLeaveGroup" color="danger">
             <ion-label>
                 {{'group.overview.account.leaveGroup' | translate:{groupName: group?.name} }}
             </ion-label>

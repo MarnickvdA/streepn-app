@@ -1,30 +1,30 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {EMPTY, Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Group, Transaction} from '@core/models';
 import {newTransaction, TransactionItem} from '@core/models/transaction';
-import {getMoneyString} from '@core/utils/streepn-logic';
 import {catchError} from 'rxjs/operators';
-import {newGroup} from '@core/models/group';
 import {EventsService, GroupService, TransactionService} from '@core/services';
 import {LoadingController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
+import {getMoneyString} from '@core/utils/formatting-utils';
 
 @Component({
     selector: 'app-transaction-detail',
     templateUrl: './transaction-detail.page.html',
     styleUrls: ['./transaction-detail.page.scss'],
 })
-export class TransactionDetailPage implements OnInit {
+export class TransactionDetailPage implements OnInit, OnDestroy {
 
     editing: boolean;
     canEdit = false;
-    groupId: string;
-    transactionId: string;
-    group: Group;
-    transaction: Transaction;
+    transactionId?: string;
+    group?: Group;
+    transaction?: Transaction;
     itemsAmount: number[] = [];
     interactionCount = 0;
+    private groupSub: Subscription;
+    private transactionSub: Subscription;
     private routeSub: Subscription;
 
     constructor(private route: ActivatedRoute,
@@ -36,21 +36,29 @@ export class TransactionDetailPage implements OnInit {
                 private groupService: GroupService,
                 private events: EventsService) {
         this.routeSub = this.route.params.subscribe((params: Params) => {
-            this.groupId = this.groupService.currentGroupId;
             this.transactionId = params.transactionId;
         });
     }
 
     ngOnInit() {
-        this.group = newGroup(this.groupId, this.router.getCurrentNavigation().extras.state?.group);
-        this.setTransaction(newTransaction(this.transactionId, this.router.getCurrentNavigation().extras.state?.transaction));
+        this.groupSub = this.groupService.observeGroup(this.groupService.currentGroupId)
+            .subscribe((group) => {
+                this.group = group;
+            });
 
-        if (!this.transaction) {
-            this.transactionService.getTransaction(this.groupId, this.transactionId)
-                .then((transaction) => {
+        this.transactionSub = this.transactionService.observeTransaction(this.groupService.currentGroupId, this.transactionId)
+            .subscribe((transaction) => {
+                // TODO Show error if transaction was edited by someone else while editing.
+                if (transaction) {
                     this.setTransaction(transaction);
-                });
-        }
+                }
+            });
+    }
+
+    ngOnDestroy() {
+        this.groupSub.unsubscribe();
+        this.transactionSub.unsubscribe();
+        this.routeSub.unsubscribe();
     }
 
     setTransaction(transaction: Transaction) {
@@ -110,7 +118,7 @@ export class TransactionDetailPage implements OnInit {
 
         await loading.present();
 
-        this.transactionService.editTransaction(this.groupId, transaction, this.itemsAmount)
+        this.transactionService.editTransaction(this.groupService.currentGroupId, transaction, this.itemsAmount)
             .pipe(
                 catchError((err) => {
                     loading.dismiss();
@@ -137,7 +145,7 @@ export class TransactionDetailPage implements OnInit {
 
     canEditItem(item: TransactionItem) {
         // If this account was settled after this transaction was created, we cannot edit this transaction item.
-        const settleTimestamp = this.group.getAccountById(item.accountId)?.settledAt;
+        const settleTimestamp = this.group?.getAccountById(item.accountId)?.settledAt;
         if (settleTimestamp) {
             return this.transaction.createdAt > settleTimestamp;
         } else {

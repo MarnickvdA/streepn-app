@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { RemoveStockComponent } from './remove-stock.component';
+import { SettleGroupComponent } from './settle-group.component';
 
-describe('EditStockComponent', () => {
-  let component: RemoveStockComponent;
-  let fixture: ComponentFixture<RemoveStockComponent>;
+describe('SettleGroupComponent', () => {
+  let component: SettleGroupComponent;
+  let fixture: ComponentFixture<SettleGroupComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RemoveStockComponent ],
+      declarations: [ SettleGroupComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RemoveStockComponent);
+    fixture = TestBed.createComponent(SettleGroupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

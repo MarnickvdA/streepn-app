@@ -10,7 +10,6 @@ import {GroupService, ProductService} from '@core/services';
 import {MoneyInputComponent} from '@shared/components/money-input/money-input.component';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {faBoxFull, faEdit, faTag, faTrashAlt} from '@fortawesome/pro-duotone-svg-icons';
-import {getMoneyString} from '@core/utils/streepn-logic';
 
 @Component({
     selector: 'app-product-detail',
@@ -118,10 +117,6 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
 
     get uniqueName() {
         return this.group.products.find(p => p.name === this.newName) === undefined;
-    }
-
-    get advicedPrice(): string {
-        return getMoneyString(this.product?.totalStockWorth / this.product?.totalStock);
     }
 
     async setName() {

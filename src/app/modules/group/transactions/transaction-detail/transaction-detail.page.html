@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-button mode="ios" fill="none" *ngIf="!editing" routerLink="/group/{{groupId}}/transactions"
+            <ion-button mode="ios" fill="none" *ngIf="!editing" routerLink="/group/{{group.id}}/transactions"
                         routerDirection="back">
                 <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
                                  [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
@@ -22,31 +22,31 @@
 </ion-header>
 
 <ion-content>
-    <div *ngIf="group.getUserAccountById(transaction?.createdBy) as account" class="createdBy">
+    <div *ngIf="group?.getUserAccountById(transaction?.createdBy) as account" class="createdBy">
         <ion-avatar>
             <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
             <img *ngIf="!account.photoUrl" alt="" src="assets/svg/avatar.svg">
         </ion-avatar>
         <ion-label>
             <h2>{{account.name}}</h2>
-            <p>{{'group.transaction.at' | translate:{date: transaction.createdAt.toDate().toLocaleString()} }}</p>
+            <p>{{'group.transaction.at' | translate:{date: transaction?.createdAt?.toDate().toLocaleString()} }}</p>
             <p *ngIf="!canEdit" class="small"><b>{{'group.transactions.disabledEditing' | translate}}</b></p>
         </ion-label>
     </div>
     <ion-list *ngIf="transaction?.items">
         <ion-item *ngFor="let item of transaction.items; index as i">
-            <ion-avatar slot="start" *ngIf="group.getUserAccountById(item.accountId); let user">
+            <ion-avatar slot="start" *ngIf="group?.getUserAccountById(item.accountId); let user">
                 <img *ngIf="user.photoUrl" alt="" src="{{user.photoUrl}}">
                 <img *ngIf="!user.photoUrl" alt="" src="assets/svg/avatar.svg">
             </ion-avatar>
             <ion-label>
                 <h3>{{'group.transaction.header' | translate:{
                     amount: item.amount,
-                    productName: group.getProductById(item.productId)?.name,
-                    accountName: group.getAccountById(item.accountId)?.name
+                    productName: group?.getProductById(item.productId)?.name,
+                    accountName: group?.getAccountById(item.accountId)?.name
                 } }}</h3>
                 <p class="small">
-                    {{'group.transaction.for' | translate:{accountName: group.getAccountById(item.accountId)?.name} }}
+                    {{'group.transaction.for' | translate:{accountName: group?.getAccountById(item.accountId)?.name} }}
                 </p>
             </ion-label>
             <ion-fab-button (click)="removeItem(item)" *ngIf="editing && canEditItem(item)"

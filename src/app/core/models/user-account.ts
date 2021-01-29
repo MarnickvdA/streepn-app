@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import {Timestamp} from '@firebase/firestore-types';
 import {Account, accountConverter, AccountType} from '@core/models/account';
+import {Balance} from '@core/models/balance';
 
 require('firebase/firestore');
 import TimestampFn = firebase.firestore.Timestamp;
@@ -11,12 +12,12 @@ export class UserAccount extends Account {
     roles: UserRole[]; // Permission-system for a group.
 
     static new(id: string, userId: string, name: string, roles: UserRole[], photoUrl: string) {
-        return new UserAccount(id, userId, TimestampFn.now(), name, roles, photoUrl);
+        return new UserAccount(id, userId, TimestampFn.now(), name, roles, photoUrl, Balance.new());
     }
 
     constructor(id: string, userId: string, createdAt: Timestamp, name: string, roles: UserRole[],
-                photoUrl: string, settledAt?: Timestamp) {
-        super(id, createdAt, name, AccountType.USER, settledAt);
+                photoUrl: string, balance: Balance, settledAt?: Timestamp) {
+        super(id, createdAt, name, AccountType.USER, balance, settledAt);
         this.userId = userId;
         this.roles = roles || [];
         this.photoUrl = photoUrl;
@@ -44,7 +45,7 @@ export const userAccountConverter = {
         return {...accountObject, ...userAccountObject};
     },
     newAccount(data: { [key: string]: any }): UserAccount {
-        return new UserAccount(data.id, data.userId, data.createdAt, data.name, data.roles, data.photoUrl, data.settledAt);
+        return new UserAccount(data.id, data.userId, data.createdAt, data.name, data.roles, data.photoUrl, data.balance, data.settledAt);
     }
 };
 

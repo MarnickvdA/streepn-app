@@ -31,10 +31,10 @@
                 <h3>{{'group.overview.account.balanceAmount' | translate}}</h3>
             </ion-label>
             <span slot="end"
-                  [ngClass]="balance?.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance?.amount | money}}</span>
+                  [ngClass]="account?.balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{account?.balance.amount | money}}</span>
         </ion-item>
 
-        <ion-item class="top-line margin-top list-button" lines="full" [disabled]="balance?.amount === 0" button
+        <ion-item class="top-line margin-top list-button" lines="full" [disabled]="account?.balance.amount === 0" button
                   (click)="settleSharedAccount(account?.id)">
             <fa-duotone-icon slot="start" class="primary" fixedWidth
                              [icon]="['fad', 'calculator-alt']"></fa-duotone-icon>

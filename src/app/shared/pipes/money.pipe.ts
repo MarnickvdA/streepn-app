@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {getMoneyString} from '@core/utils/streepn-logic';
+import {getMoneyString} from '@core/utils/formatting-utils';
 
 @Pipe({
   name: 'money'

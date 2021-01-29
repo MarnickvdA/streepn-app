@@ -80,7 +80,7 @@
                                 multiple="true"
                                 okText="{{'actions.ok' | translate}}"
                                 placeholder="{{'group.stock.add.paidBy' | translate}}"
-                                selectedText="{{selectedNames}}">
+                                selectedText="{{selectedAccount?.name}}">
                         <ion-select-option *ngFor="let account of group.accounts"
                                            value="{{account.id}}">
                             {{account.name}}

@@ -1,10 +1,11 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
-import {Balance, Group, SharedAccount, UserAccount} from '@core/models';
+import {Group, SharedAccount, UserAccount} from '@core/models';
 import {GroupService} from '@core/services';
-import {calculatePayout, getMoneyString} from '@core/utils/streepn-logic';
+import {AccountPayout, calculatePayout} from '@core/utils/streepn-logic';
 import {TranslateService} from '@ngx-translate/core';
+import {getMoneyString} from '@core/utils/formatting-utils';
 
 @Component({
     selector: 'app-settle',
@@ -16,7 +17,6 @@ export class SettleComponent implements OnInit, OnDestroy {
     @Input() sharedAccountId: string;
 
     sharedAccount?: SharedAccount;
-    balance?: Balance;
     group$: Observable<Group>;
     group?: Group;
     private groupSub: Subscription;
@@ -26,6 +26,9 @@ export class SettleComponent implements OnInit, OnDestroy {
     payerAmount: {
         [id: string]: number
     } = {};
+    private settlement: {
+        [id: string]: AccountPayout
+    };
 
     constructor(private modalController: ModalController,
                 private groupService: GroupService,
@@ -39,7 +42,6 @@ export class SettleComponent implements OnInit, OnDestroy {
         this.groupSub = this.group$.subscribe((group => {
             this.group = group;
             this.sharedAccount = group?.getSharedAccountById(this.sharedAccountId);
-            this.balance = group?.getAccountBalance(this.sharedAccountId);
         }));
     }
 
@@ -72,10 +74,14 @@ export class SettleComponent implements OnInit, OnDestroy {
     private updateSettle() {
         const payerKeys: string[] = Object.keys(this.payers).filter(k => this.payers[k]);
 
-        const payout = calculatePayout(-this.balance.amount, payerKeys.length);
+        this.settlement = {};
+        calculatePayout(this.sharedAccount?.balance, payerKeys.length).forEach((p, i) => {
+            this.settlement[payerKeys[i]] = p;
+        });
+
         const newPayerAmount = {};
-        payerKeys.forEach((k, index) => {
-            newPayerAmount[k] = payout[index];
+        payerKeys.forEach((k) => {
+            newPayerAmount[k] = this.settlement[k]?.totalOut || 0;
         });
 
         this.payerAmount = newPayerAmount;
@@ -108,7 +114,7 @@ export class SettleComponent implements OnInit, OnDestroy {
 
                         await loading.present();
 
-                        this.groupService.settleSharedAccount(this.group?.id, this.sharedAccount?.id, this.payerAmount)
+                        this.groupService.settleSharedAccount(this.group?.id, this.sharedAccount?.id, this.settlement)
                             .subscribe(() => {
                                 loading.dismiss();
                                 this.dismiss();

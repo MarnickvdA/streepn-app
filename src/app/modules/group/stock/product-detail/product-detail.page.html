@@ -10,7 +10,7 @@
         <ion-title>{{product?.name}}</ion-title>
 
         <ion-buttons slot="end">
-            <ion-button (click)="removeProduct()" [disabled]="product?.stock !== 0">
+            <ion-button (click)="removeProduct()" [disabled]="!product?.removable">
                 <fa-duotone-icon slot="icon-only" class="danger" fixedWidth
                                  [icon]="['fad', 'trash-alt']"></fa-duotone-icon>
             </ion-button>
@@ -39,9 +39,9 @@
             <ion-button (click)="setPrice()"
                         [attr.disabled]="newPrice === product?.price">{{'actions.edit' | translate}}</ion-button>
         </ion-item>
-        <ion-item *ngIf="product?.totalStock && product?.totalStockWorth" lines="none">
+        <ion-item *ngIf="product?.advisedPrice; let advisedPrice" lines="none">
             <ion-label class="ion-text-wrap">
-                <p class="small" [innerHTML]="'group.stock.detail.advisedPrice' | translate:{price: advicedPrice}"></p>
+                <p class="small" [innerHTML]="'group.stock.detail.advisedPrice' | translate:{price: advisedPrice}"></p>
             </ion-label>
         </ion-item>
     </ion-list>

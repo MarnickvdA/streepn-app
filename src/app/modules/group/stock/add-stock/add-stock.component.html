@@ -71,15 +71,14 @@
 
             <div class="input-field">
                 <ion-label position="stacked">{{'group.stock.add.paidByTitle' | translate}}</ion-label>
-                <ion-item class="form-input"
-                          disabled="{{!(form.product.valid && form.amount.valid && form.cost.valid)}}" lines="none">
+                <ion-item class="form-input" lines="none">
                     <ion-icon name="people-outline"></ion-icon>
-                    <ion-select (ionChange)="updatePayout()" [interfaceOptions]="{header: paidByTitle}" cancelText="{{'actions.cancel' | translate}}"
+                    <ion-select (ionChange)="updateSelectedName()" [interfaceOptions]="{header: paidByTitle}" cancelText="{{'actions.cancel' | translate}}"
                                 formControlName="paidBy"
-                                multiple="true"
+                                multiple="false"
                                 okText="{{'actions.ok' | translate}}"
                                 placeholder="{{'group.stock.add.paidBy' | translate}}"
-                                selectedText="{{selectedNames}}">
+                                selectedText="{{selectedName}}">
                         <ion-select-option *ngFor="let account of group.accounts"
                                            value="{{account.id}}">
                             {{account.name}}
@@ -95,7 +94,7 @@
                 {{'group.stock.add.errors.paidBy-required' | translate}}
             </span>
 
-            <ion-button class="ion-margin-top" expand="block" id="name-button" type="submit">
+            <ion-button [disabled]="stockForm.invalid" class="ion-margin-top" expand="block" id="name-button" type="submit">
                 <ion-label>{{'actions.add' | translate}}</ion-label>
             </ion-button>
         </form>

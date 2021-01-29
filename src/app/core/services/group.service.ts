@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Group, groupConverter, GroupInvite, groupInviteConverter, UserAccount, UserRole} from '../models';
+import {Currency, Group, groupConverter, GroupInvite, groupInviteConverter} from '@core/models';
 import {AuthService} from './auth.service';
 import {EventsService} from './events.service';
 import {AngularFireFunctions} from '@angular/fire/functions';
@@ -12,8 +12,7 @@ import {PermissionType, Plugins} from '@capacitor/core';
 import {PushService, PushTopic} from './push.service';
 import {TranslateService} from '@ngx-translate/core';
 import {LoggerService} from './logger.service';
-import {Valuta} from '@core/models/group';
-import Timestamp = firebase.firestore.Timestamp;
+import {AccountPayout} from '@core/utils/streepn-logic';
 import User = firebase.User;
 
 const {Permissions} = Plugins;
@@ -101,6 +100,7 @@ export class GroupService {
     }
 
     unsubscribe() {
+        this.currentGroupId = undefined;
         this.currentUserId = undefined;
         this.destroyerSubject.next();
         this.groupsSubject.next(undefined);
@@ -158,7 +158,7 @@ export class GroupService {
      */
     createGroup(name: string): Promise<string> {
         const user = this.authService.currentUser;
-        const group = Group.new(user, name, Valuta.EURO);
+        const group = Group.new(user, name, Currency.EURO);
 
         return this.fs.collection('groups')
             .add(groupConverter.toFirestore(group))
@@ -262,12 +262,12 @@ export class GroupService {
         });
     }
 
-    settleSharedAccount(groupId: string, sharedAccountId: string, payers: { [id: string]: number }) {
+    settleSharedAccount(groupId: string, sharedAccountId: string, settlement: { [id: string]: AccountPayout }) {
         const callable = this.functions.httpsCallable('settleSharedAccount');
         return callable({
             groupId,
             sharedAccountId,
-            payers,
+            settlement,
         }).pipe(
             map(result => {
                 console.log(result);

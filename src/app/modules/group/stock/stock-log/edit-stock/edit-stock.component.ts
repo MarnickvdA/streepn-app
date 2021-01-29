@@ -8,7 +8,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 import {catchError} from 'rxjs/operators';
-import {calculatePayout} from '@core/utils/streepn-logic';
 import {MoneyInputComponent} from '@shared/components/money-input/money-input.component';
 
 @Component({
@@ -25,8 +24,7 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MoneyInputComponent) moneyInput: MoneyInputComponent;
 
     group: Group;
-    paidAmount: number[];
-    selectedNames: string;
+    selectedAccount: Account;
     private readonly logger = LoggerService.getLogger(EditStockComponent.name);
     private groupSub: Subscription;
 
@@ -49,21 +47,12 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.stockForm.controls;
     }
 
-    get selectedAccounts(): Account[] {
-        const selectedAccounts = this.form.paidBy.value;
-        if (selectedAccounts?.length > 0) {
-            return this.group.getAccountsById(selectedAccounts);
-        } else {
-            return [];
-        }
-    }
-
     ngOnInit() {
         this.stockForm = this.formBuilder.group({
             product: [this.stockItem.productId, [Validators.required]],
             amount: [this.stockItem.amount, [Validators.required, Validators.min(1), Validators.max(10000)]],
             cost: [this.stockItem.cost, [Validators.required, Validators.min(0), Validators.max(10000_00)]],
-            paidBy: [this.stockItem.paidBy, [Validators.required, Validators.minLength(1)]],
+            paidBy: [this.stockItem.paidById, [Validators.required, Validators.minLength(1)]],
         });
 
         this.groupSub = this.group$.subscribe((group => {
@@ -113,29 +102,21 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
         this.updatePayout();
 
         this.submitForm('editing', this.form.product.value, +this.form.cost.value,
-            +this.form.amount.value, this.selectedAccounts.map(acc => acc.id), this.paidAmount);
+            +this.form.amount.value, this.selectedAccount?.id);
     }
 
     updatePayout() {
-        const selected = this.selectedAccounts;
-
-        this.selectedNames = selected?.map(acc => acc.name.trim()).join(', ');
-
-        if (selected?.length > 0) {
-            this.paidAmount = calculatePayout(this.form.cost.value, selected.length);
-        } else {
-            this.paidAmount = [];
-        }
+        this.selectedAccount = this.group.getAccountById(this.form.paidBy.value);
     }
 
     removeStock() {
         this.updatePayout();
 
-        this.submitForm('removing', '', 0, 0, [], []);
+        this.submitForm('removing', '', 0, 0, undefined);
     }
 
     private async submitForm(action: 'editing' | 'removing', productId: string, cost: number, amount: number,
-                             paidBy: string[], paidAmount: number[]) {
+                             paidBy: string) {
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.' + action),
             translucent: true,
@@ -144,7 +125,7 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
 
         await loading.present();
 
-        this.stockService.editStockItem(this.group, this.stockItem, productId, cost, amount, paidBy, paidAmount)
+        this.stockService.editStockItem(this.group, this.stockItem, productId, cost, amount, paidBy)
             .pipe(
                 catchError(err => {
                     this.logger.error({message: err});

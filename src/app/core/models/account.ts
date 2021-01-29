@@ -1,4 +1,5 @@
 import {Timestamp} from '@firebase/firestore-types';
+import {Balance} from '@core/models/balance';
 
 /**
  * The account class is the abstract super class of several types of accounts. It holds the basic information for interacting within a
@@ -18,19 +19,27 @@ export abstract class Account {
     // Filter label for the sub-types of Account. Useful for quick checking which type the account is.
     type: AccountType;
 
+    // This value is retrieved from Group but with Firestore conversion saved to Account object
+    balance: Balance;
+
     // Moment in time when the account was last settled. Transactions until this time cannot be edited for this account.
     settledAt: Timestamp;
 
-    protected constructor(id: string, createdAt: Timestamp, name: string, type: AccountType, settledAt?: Timestamp) {
+    protected constructor(id: string, createdAt: Timestamp, name: string, type: AccountType, balance: Balance, settledAt?: Timestamp) {
         this.id = id;
         this.createdAt = createdAt;
         this.name = name;
         this.type = type;
+        this.balance = new Balance(balance?.totalIn, balance?.totalOut, balance?.products);
         this.settledAt = settledAt;
     }
 
     deepCopy(): Account {
         return JSON.parse(JSON.stringify(this));
+    }
+
+    get canLeaveGroup(): boolean {
+        return this.balance.totalIn === 0 && this.balance.totalOut === 0;
     }
 }
 

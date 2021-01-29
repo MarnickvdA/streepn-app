@@ -12,7 +12,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prod": "npm install && ng build --prod --source-map && npx cap sync",
+    "prod": "npm install && ng build --prod && npx cap sync",
     "emulator": "firebase emulators:start --import ./data --export-on-exit=./data",
     "postinstall": "npx jetifier && ngcc",
     "resources": "cordova-res ios && cordova-res android && node scripts/resources.js"

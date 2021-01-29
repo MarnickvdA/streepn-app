@@ -4,7 +4,6 @@ import {ModalController} from '@ionic/angular';
 import {AuthService, GroupService} from '@core/services';
 import {Observable, Subscription} from 'rxjs';
 import {Group, Product} from '@core/models';
-import {RemoveStockComponent} from '@modules/group/stock/remove-stock/remove-stock.component';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {faEdit, faHistory} from '@fortawesome/pro-duotone-svg-icons';
 import {NewProductComponent} from '@modules/group/stock/new-product/new-product.component';
@@ -61,18 +60,6 @@ export class StockPage implements OnInit, OnDestroy {
     addProduct() {
         this.modalController.create({
             component: NewProductComponent,
-            componentProps: {
-                group$: this.group$
-            },
-            swipeToClose: true
-        }).then((modal) => {
-            modal.present();
-        });
-    }
-
-    removeStock() {
-        this.modalController.create({
-            component: RemoveStockComponent,
             componentProps: {
                 group$: this.group$
             },

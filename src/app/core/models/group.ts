@@ -1,29 +1,21 @@
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {Product, productConverter} from './product';
-import {v4 as uuidv4} from 'uuid';
+import {v4 as uuid} from 'uuid';
 import firebase from 'firebase/app';
 import {Account} from '@core/models/account';
-import User = firebase.User;
-import TimestampFn = firebase.firestore.Timestamp;
 import {UserAccount, userAccountConverter, UserRole} from '@core/models/user-account';
 import {SharedAccount, sharedAccountConverter} from '@core/models/shared-account';
+import {balanceConverter} from '@core/models/balance';
+import User = firebase.User;
+import TimestampFn = firebase.firestore.Timestamp;
 
 require('firebase/firestore');
 
 /**
- * Helper interface for readability of the code within the Group class. Amount is the current balance, based on the totalIn and totalOut.
+ * List of supported currencies currently available in the application.
  */
-export interface Balance {
-    amount: number;
-    totalIn: number;
-    totalOut: number;
-}
-
-/**
- * List of supported valutas currently available in the application.
- */
-export enum Valuta {
+export enum Currency {
     EURO = 'EUR'
 }
 
@@ -33,8 +25,10 @@ export enum Valuta {
 export class Group {
     readonly id: string;
     createdAt: Timestamp;
+    settledAt?: Timestamp;
+    isSettling?: boolean;
     name: string;
-    valuta: Valuta;
+    currency: Currency;
     inviteLink: string;
     inviteLinkExpiry: Timestamp; // A week after generation.
     members: string[]; // List of user ids which is used for querying the current user's groups.
@@ -47,11 +41,6 @@ export class Group {
     // We use totalIn and totalOut of the whole group to account for the difference that can occur between the stock and the sold products.
     totalIn: number;
     totalOut: number;
-
-    // Balances of all accounts, findable through the accountId. This is the fastest way to query balances for accounts.
-    balances: {
-        [accountId: string]: Balance
-    };
 
     // A lookup dictionary for improved performance. Every array is very expensive to search through and maps are more efficient.
     groupDictionary: {
@@ -66,24 +55,18 @@ export class Group {
         }
     };
 
-    static new(user: User, name: string, valuta: Valuta) {
-        const uid = uuidv4();
+    static new(user: User, name: string, currency: Currency) {
+        const uid = uuid();
         const account = UserAccount.new(uid, user.uid, user.displayName, [UserRole.ADMIN], user.photoURL);
 
-        return new Group(uuidv4(), TimestampFn.now(), name, valuta, undefined, undefined, [user.uid], [account],
-            [], [], 0, 0, {
-                [uid]: {
-                    amount: 0,
-                    totalIn: 0,
-                    totalOut: 0,
-                }
-            });
+        return new Group(uuid(), TimestampFn.now(), name, currency, undefined, undefined, [user.uid], [account],
+            [], [], 0, 0);
     }
 
     constructor(id: string,
                 createdAt: Timestamp,
                 name: string,
-                valuta: Valuta,
+                currency: Currency,
                 inviteLink: string,
                 inviteLinkExpiry: Timestamp,
                 members: string[],
@@ -92,13 +75,12 @@ export class Group {
                 sharedAccounts: SharedAccount[],
                 totalIn: number,
                 totalOut: number,
-                balances: {
-                    [id: string]: Balance
-                }) {
+                settledAt?: Timestamp,
+                isSettling?: boolean) {
         this.id = id;
         this.createdAt = createdAt;
         this.name = name;
-        this.valuta = valuta;
+        this.currency = currency;
         this.inviteLink = inviteLink;
         this.inviteLinkExpiry = inviteLinkExpiry;
         this.members = members;
@@ -107,7 +89,8 @@ export class Group {
         this.mSharedAccounts = sharedAccounts;
         this.totalIn = totalIn;
         this.totalOut = totalOut;
-        this.balances = balances;
+        this.settledAt = settledAt;
+        this.isSettling = isSettling || false;
 
         this.setDictionary();
     }
@@ -120,6 +103,12 @@ export class Group {
     set accounts(value: UserAccount[]) {
         this.mAccounts = value;
         this.setUserAccounts();
+    }
+
+    get settleSharedAccounts(): SharedAccount[] {
+        return this.mSharedAccounts.filter(acc => {
+            return acc.balance.amount !== 0;
+        });
     }
 
     get sharedAccounts(): SharedAccount[] {
@@ -140,16 +129,12 @@ export class Group {
         this.setProducts();
     }
 
+    get isSettleable(): boolean {
+        return !(this.mSharedAccounts.find((acc) => !acc.canLeaveGroup) || this.mProducts.find((product) => product.stock < 0));
+    }
+
     isAdmin(userId: string): boolean {
         return this.accounts.find(account => account.userId === userId)?.roles.includes(UserRole.ADMIN) || false;
-    }
-
-    getAccountBalance(accountId: string): Balance {
-        return this.balances[accountId];
-    }
-
-    canLeaveGroup(accountId: string): boolean {
-        return this.balances[accountId].totalIn === 0 && this.balances[accountId].totalOut === 0;
     }
 
     getAccountById(accountId: string): Account | undefined {
@@ -251,10 +236,31 @@ export class Group {
 
 export const groupConverter: FirestoreDataConverter<Group> = {
     toFirestore(group: Group) {
+
+        const balances = {};
+        group.accounts.forEach((account) => {
+            balances[account.id] = balanceConverter.toFirestore(account.balance);
+        });
+
+        group.sharedAccounts.forEach((account) => {
+            balances[account.id] = balanceConverter.toFirestore(account.balance);
+        });
+
+        const productData = {};
+        group.products.forEach((product) => {
+            productData[product.id] = {
+                stock: product.stock,
+                totalIn: product.totalIn,
+                totalOut: product.totalOut,
+                amountIn: product.amountIn,
+                amountOut: product.amountOut,
+            };
+        });
+
         return {
             createdAt: group.createdAt,
             name: group.name,
-            valuta: group.valuta,
+            currency: group.currency,
             inviteLink: group.inviteLink,
             inviteLinkExpiry: group.inviteLinkExpiry,
             members: group.members,
@@ -263,7 +269,8 @@ export const groupConverter: FirestoreDataConverter<Group> = {
             sharedAccounts: group.sharedAccounts.map((account) => sharedAccountConverter.toFirestore(account)),
             totalIn: group.totalIn,
             totalOut: group.totalOut,
-            balances: group.balances,
+            balances,
+            productData,
         };
     },
     fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Group {
@@ -278,11 +285,30 @@ export function newGroup(id: string, data: { [key: string]: any }): Group {
     const products = [];
     const sharedAccounts = [];
 
-    data.accounts?.forEach((account) => accounts.push(userAccountConverter.newAccount(account)));
-    data.products?.forEach((product) => products.push(productConverter.newProduct(product)));
-    data.sharedAccounts?.forEach((sharedAccount) =>
-        sharedAccounts.push(sharedAccountConverter.newSharedAccount(sharedAccount)));
+    data.accounts?.forEach((account) => {
+        account.balance = data.balances[account.id];
+        accounts.push(userAccountConverter.newAccount(account));
+    });
 
-    return new Group(id, data.createdAt, data.name, data.valuta, data.inviteLink,
-        data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts, data.totalIn, data.totalOut, data.balances);
+    data.sharedAccounts?.forEach((sharedAccount) => {
+        sharedAccount.balance = data.balances[sharedAccount.id];
+        sharedAccounts.push(sharedAccountConverter.newSharedAccount(sharedAccount));
+    });
+
+    data.products?.forEach((product) => {
+        const productData = data.productData[product.id];
+
+        if (productData) {
+            product.totalIn = productData.totalIn;
+            product.totalOut = productData.totalOut;
+            product.amountIn = productData.amountIn;
+            product.amountOut = productData.amountOut;
+        }
+
+        products.push(productConverter.newProduct(product));
+    });
+
+    return new Group(id, data.createdAt, data.name, data.currency, data.inviteLink,
+        data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts, data.totalIn,
+        data.totalOut, data.settledAt, data.isSettling);
 }

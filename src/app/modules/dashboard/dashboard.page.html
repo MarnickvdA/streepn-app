@@ -34,8 +34,8 @@
         <ion-item *ngFor="let group of groups" button (click)="openGroup(group)">
             <ion-label>
                 <h2>{{group.name}}</h2>
-                <p>{{'dashboard.yourBalance' | translate}} <span *ngIf="group?.getAccountBalance(groupAccounts[group.id].id); let balance"
-                                     [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
+                <p>{{'dashboard.yourBalance' | translate}} <span *ngIf="groupAccounts[group.id].balance; let balance"
+                                                                 [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
                 </p>
             </ion-label>
         </ion-item>

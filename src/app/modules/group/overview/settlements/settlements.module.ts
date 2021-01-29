@@ -8,6 +8,7 @@ import { SettlementsPageRoutingModule } from './settlements-routing.module';
 
 import { SettlementsPage } from './settlements.page';
 import {SharedModule} from '@shared/shared.module';
+import {SettleGroupComponent} from '@modules/group/overview/settlements/settle-group/settle-group.component';
 
 @NgModule({
     imports: [
@@ -17,6 +18,9 @@ import {SharedModule} from '@shared/shared.module';
         SettlementsPageRoutingModule,
         SharedModule
     ],
-  declarations: [SettlementsPage]
+  declarations: [
+      SettlementsPage,
+      SettleGroupComponent
+  ]
 })
 export class SettlementsPageModule {}

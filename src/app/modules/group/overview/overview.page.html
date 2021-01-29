@@ -26,17 +26,20 @@
         <!--                    {{'group.overview.preferences.title' | translate:{name: group.name} }}-->
         <!--                </ion-label>-->
         <!--            </ion-item>-->
-        <ion-item class="list-button"  lines="full" (click)="shareGroup()" *ngIf="isAdmin" button detail="false">
-            <fa-duotone-icon slot="start" class="primary large" fixedWidth [icon]="['fad', 'share-alt-square']"></fa-duotone-icon>
+        <ion-item class="list-button" lines="full" (click)="shareGroup()" *ngIf="isAdmin" button detail="false">
+            <fa-duotone-icon slot="start" class="primary large" fixedWidth
+                             [icon]="['fad', 'share-alt-square']"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'group.overview.accounts.inviteLink' | translate}}</h3>
-                <p>
+                <p class="small">
                     {{'group.overview.accounts.' + (inviteLinkExpired ? 'expired' : 'validThrough') | translate}} {{group?.inviteLinkExpiry.toDate().toLocaleString()}}
                 </p>
             </ion-label>
         </ion-item>
-        <ion-item class="list-button"  lines="full" routerLink="settlements" routerDirection="forward" button detail="true">
-            <fa-duotone-icon slot="start" class="primary large" fixedWidth [icon]="['fad', 'calculator-alt']"></fa-duotone-icon>
+        <ion-item class="list-button" lines="full" routerLink="settlements" routerDirection="forward" button
+                  detail="true">
+            <fa-duotone-icon slot="start" class="primary large" fixedWidth
+                             [icon]="['fad', 'calculator-alt']"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'group.overview.settle.group.itemTitle' | translate}}</h3>
             </ion-label>
@@ -59,15 +62,15 @@
 
         <ion-item class="no-min-height" *ngIf="group?.sharedAccounts.length === 0" lines="none">
             <ion-label>
-                <p>
+                <p class="small">
                     {{'group.overview.emptySharedAccounts' | translate}}
                 </p>
             </ion-label>
         </ion-item>
 
         <app-shared-account-item *ngFor="let sharedAccount of group?.sharedAccounts"
-                                 [account]="sharedAccount" [canEditAccount]="isAdmin"
-                                 navLink="group/{{group?.id}}/preferences/shared-accounts/{{sharedAccount.id}}"></app-shared-account-item>
+                                 (clicked)="openAccount(sharedAccount)"
+                                 [account]="sharedAccount"></app-shared-account-item>
         <!-- END ACCOUNTS SECTION -->
 
     </ion-list>
