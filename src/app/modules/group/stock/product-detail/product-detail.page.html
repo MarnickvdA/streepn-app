@@ -39,7 +39,7 @@
             <ion-button (click)="setPrice()"
                         [attr.disabled]="newPrice === product?.price">{{'actions.edit' | translate}}</ion-button>
         </ion-item>
-        <ion-item *ngIf="product?.advisedPrice; let advisedPrice" lines="none">
+        <ion-item class="no-bg" *ngIf="product?.advisedPrice; let advisedPrice" lines="none">
             <ion-label class="ion-text-wrap">
                 <p class="small" [innerHTML]="'group.stock.detail.advisedPrice' | translate:{price: advisedPrice}"></p>
             </ion-label>

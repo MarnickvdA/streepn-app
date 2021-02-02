@@ -70,11 +70,10 @@ export class AnalyticsService {
         });
     }
 
-    logTransaction(uid: string, groupId: string, transactionId: string) {
+    logTransaction(uid: string, groupId: string) {
         this.logEvent('transaction_created', {
             userId: uid,
-            groupId,
-            transactionId
+            groupId
         });
     }
 

@@ -1,11 +1,13 @@
 import {Injectable} from '@angular/core';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import {Group, Transaction, transactionConverter} from '../models';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {map, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, EMPTY, Observable, Subject} from 'rxjs';
+import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {newTransaction, TransactionItem} from '../models/transaction';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {AuthService} from '@core/services/auth.service';
+import {LoggerService} from '@core/services/logger.service';
+import {AnalyticsService} from '@core/services/analytics.service';
 
 export interface TransactionSet {
     [accountId: string]: {
@@ -19,6 +21,7 @@ export interface TransactionSet {
     providedIn: 'root'
 })
 export class TransactionService {
+    private readonly logger = LoggerService.getLogger(TransactionService.name);
 
     private curTransactionId: string;
     private transactionSubject: BehaviorSubject<Transaction> = new BehaviorSubject<Transaction>(undefined);
@@ -28,6 +31,7 @@ export class TransactionService {
 
     constructor(private authService: AuthService,
                 private functions: AngularFireFunctions,
+                private analyticsService: AnalyticsService,
                 private fs: AngularFirestore) {
     }
 
@@ -37,7 +41,7 @@ export class TransactionService {
         this.transactionSubject.next(undefined);
     }
 
-    addTransaction(group: Group, transactionSet: TransactionSet): Observable<Transaction> {
+    addTransaction(group: Group, transactionSet: TransactionSet): Observable<void> {
         const currentUserAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
         const transactionItems: TransactionItem[] = [];
         let totalPrice = 0;
@@ -66,12 +70,17 @@ export class TransactionService {
             groupId: group.id,
             transaction
         }).pipe(
-            map(result => {
-                return newTransaction(result.id, result);
-            }));
+            catchError((err) => {
+                this.logger.error({message: 'addTransaction', error: err});
+                return err;
+            }),
+            tap(() => {
+                this.analyticsService.logTransaction(this.authService.currentUser.uid, group.id);
+            })
+        );
     }
 
-    editTransaction(groupId: string, transaction: Transaction, itemsAmount: number[]): Observable<Transaction> {
+    editTransaction(groupId: string, transaction: Transaction, itemsAmount: number[]): Observable<void> {
         let totalPrice = 0;
         const deltaTransaction = newTransaction(transaction.id, transaction);
         deltaTransaction.items = deltaTransaction.items.filter((item, index) => {
@@ -95,7 +104,12 @@ export class TransactionService {
             groupId,
             deltaTransaction,
             updatedTransaction
-        });
+        }).pipe(
+            catchError((err) => {
+                this.logger.error({message: 'editTransaction', error: err});
+                return err;
+            })
+        );
     }
 
     getTransaction(groupId: string, transactionId: string): Promise<Transaction> {

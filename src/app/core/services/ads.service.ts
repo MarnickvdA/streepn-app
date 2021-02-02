@@ -17,7 +17,7 @@ export class AdsService {
     preparingInterstitial: boolean;
 
     constructor() {
-        this.enabled = Capacitor.isPluginAvailable('AdMob');
+        this.enabled = false; // Capacitor.isPluginAvailable('AdMob');
     }
 
     initialize() {

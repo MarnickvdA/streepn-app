@@ -18,37 +18,59 @@
         </ion-toolbar>
     </ion-header>
 
-    <ion-list *ngIf="groups$ | async; let groups">
+    <ion-list>
         <ion-list-header lines="full">
             <ion-label>{{'dashboard.groups' | translate}}</ion-label>
         </ion-list-header>
 
-        <ion-item *ngIf="groups.length === 0" lines="none">
+        <ng-template [ngIf]="groups && !loading">
+            <ion-item class="group-item" *ngIf="groups.length === 0" lines="none">
+                <ion-label>
+                    <p class="small">
+                        {{'dashboard.emptyGroups' | translate}}
+                    </p>
+                </ion-label>
+            </ion-item>
+
+            <ion-item class="group-item" *ngFor="let group of groups" button (click)="openGroup(group)">
+                <ion-label>
+                    <h2>{{group.name}}</h2>
+                    <p>{{'dashboard.yourBalance' | translate}} <span *ngIf="groupAccounts[group.id].balance; let balance"
+                                                                     [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
+                    </p>
+                </ion-label>
+            </ion-item>
+
+            <ion-item (click)="promptManualGroupJoin()" lines="none" class="no-min-height no-bg" button detail="false">
+                <fa-duotone-icon slot="start" class="medium" fixedWidth
+                                 [icon]="['fad', 'ticket']"></fa-duotone-icon>
+                <ion-label color="medium">
+                    <h3>{{'dashboard.manualGroupJoin' | translate}}</h3>
+                </ion-label>
+            </ion-item>
+        </ng-template>
+
+        <ion-item class="group-item" *ngIf="loading" detail="true">
             <ion-label>
+                <h2>
+                    <ion-skeleton-text animated style="width: 35%"></ion-skeleton-text>
+                </h2>
                 <p>
-                    {{'dashboard.emptyGroups' | translate}}
+                    <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
                 </p>
             </ion-label>
         </ion-item>
 
-        <ion-item *ngFor="let group of groups" button (click)="openGroup(group)">
+        <ion-item *ngIf="!groups && !loading">
             <ion-label>
-                <h2>{{group.name}}</h2>
-                <p>{{'dashboard.yourBalance' | translate}} <span *ngIf="groupAccounts[group.id].balance; let balance"
-                                                                 [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
+                <p class="small ion-text-wrap">
+                    {{'errors.no-connection' | translate}}
                 </p>
-            </ion-label>
-        </ion-item>
-
-        <ion-item (click)="promptManualGroupJoin()" class="manualJoin" lines="none">
-            <ion-icon name="ticket-outline" slot="start"></ion-icon>
-            <ion-label>
-                {{'dashboard.manualGroupJoin' | translate}}
             </ion-label>
         </ion-item>
     </ion-list>
 
-    <ion-fab slot="fixed" horizontal="end" vertical="bottom" [edge]="iOS">
+    <ion-fab slot="fixed" horizontal="center" vertical="bottom" [edge]="iOS">
         <ion-fab-button (click)="addGroup()">
             <fa-icon [icon]="['far', 'plus']"></fa-icon>
         </ion-fab-button>

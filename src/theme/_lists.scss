@@ -1,5 +1,10 @@
 ion-list-header {
-  margin-top: .75rem;
+  padding-top: .75rem;
+
+  &.md {
+    padding-top: 1.5rem;
+    font-size: 1rem;
+  }
 }
 
 ion-item {
@@ -12,10 +17,15 @@ ion-item {
   }
 
   &.top-line {
-    border-top: solid 1px var(--border-color);
+    border-top: 1px solid var(--ion-color-light);
   }
 
   &.margin-top {
     margin-top: 2rem;
   }
+}
+
+ion-list.list-md {
+  padding-top: 0;
+  padding-bottom: 0;
 }

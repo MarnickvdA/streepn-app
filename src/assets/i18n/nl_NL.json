@@ -48,15 +48,20 @@
     "joining": "Aan het deelnemen...",
     "updating": "Aan het bijwerken...",
     "editing": "Aan het bijwerken...",
-    "settling": "Aan het verrekenen..."
+    "settling": "Aan het verrekenen...",
+    "loggingOut": "Uitloggen..."
   },
   "errors": {
     "error": "Foutmelding",
     "warning": "Waarschuwing",
+    "no-connection": "#100 - Geen verbinding met de server kunnen maken",
     "group-not-found": "Groep niet gevonden",
     "group-not-retrieved": "Groep kon niet worden opgehaald",
     "group-invite-expired": "Groepslink verlopen",
-    "group-creation-error": "Er is een fout opgetreden bij het aanmaken van de groep. Probeer het opnieuw."
+    "group-creation-error": "Er is een fout opgetreden bij het aanmaken van de groep. Probeer het opnieuw.",
+    "functions": {
+
+    }
   },
   "login": {
     "name": "Naam",
@@ -87,6 +92,8 @@
     "registerNow": "Registreer je nu"
   },
   "side-menu": {
+    "settings": "Instellingen",
+    "logout.description": "Weet je zeker dat je wil uitloggen?"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -120,7 +127,7 @@
       "navigateGroupOverview": "Naar groepsoverzicht"
     },
     "toggleDarkMode": "Donkere modus",
-    "manualGroupJoin": "Toetreden via groepscode",
+    "manualGroupJoin": "Toetreden met groepscode",
     "groupInvite": {
       "header": "Uitnodiging",
       "question": "Wil je toetreden tot ",
@@ -341,6 +348,10 @@
           "settleUsers": "Verrekenen afronden",
           "settleUsersDescription": "Als alles up-to-date is kun je de verrekening afronden. Let wel op: deze actie is niet terug te draaien!",
           "toOverview": "Verrekening afronden"
+        },
+        "detail": {
+          "createdAt": "Aangemaakt op ",
+          "createdBy": "Door "
         },
         "sharedAccount": {
           "amount": "Te verrekenen bedrag",

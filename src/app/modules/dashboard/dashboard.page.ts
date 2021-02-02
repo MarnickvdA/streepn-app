@@ -5,11 +5,13 @@ import firebase from 'firebase/app';
 import {Group, GroupInvite, UserAccount} from '@core/models';
 import {AdsService, AuthService, EventsService, GroupService, LoggerService, StorageService, UIService, UserService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-import {take} from 'rxjs/operators';
+import {catchError, take} from 'rxjs/operators';
 import {OnboardingComponent} from '@modules/dashboard/onboarding/onboarding.component';
 import {Capacitor} from '@capacitor/core';
 import {NewGroupComponent} from '@modules/dashboard/new-group/new-group.component';
 import User = firebase.User;
+import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
+import {faTicket} from '@fortawesome/pro-duotone-svg-icons';
 
 @Component({
     selector: 'app-dashboard',
@@ -18,8 +20,10 @@ import User = firebase.User;
 })
 export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     user$: Observable<User>;
-    groups$: Observable<Group[]>;
+    private groups$: Observable<Group[]>;
     private groupsSub: Subscription;
+    groups?: Group[];
+    loading: boolean;
     private userSub: Subscription;
     private readonly logger = LoggerService.getLogger(DashboardPage.name);
     private user: User;
@@ -40,8 +44,11 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 private modalController: ModalController,
                 private storage: StorageService,
                 private uiService: UIService,
-                private ads: AdsService) {
+                private ads: AdsService,
+                private iconLibrary: FaIconLibrary) {
+        this.iconLibrary.addIcons(faTicket);
         this.iOS = Capacitor.isNative && Capacitor.platform === 'ios';
+        this.loading = true;
     }
 
     ngOnInit() {
@@ -55,13 +62,17 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             .subscribe(user => {
                 if (user) {
                     this.groups$ = this.groupService.observeGroups(user.uid);
-                    this.groupsSub = this.groups$.subscribe(groups => {
-                        this.groupAccounts = {};
+                    this.groupsSub = this.groups$
+                        .subscribe(groups => {
+                            this.groups = groups;
+                            this.groupAccounts = {};
 
-                        groups.forEach(group => {
-                            this.groupAccounts[group.id] = group.getUserAccountByUserId(user.uid);
+                            groups?.forEach(group => {
+                                this.groupAccounts[group.id] = group.getUserAccountByUserId(user.uid);
+                            });
+
+                            this.loading = false;
                         });
-                    });
                 }
             });
 

@@ -4,7 +4,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Group, Transaction} from '@core/models';
 import {newTransaction, TransactionItem} from '@core/models/transaction';
 import {catchError} from 'rxjs/operators';
-import {EventsService, GroupService, TransactionService} from '@core/services';
+import {EventsService, GroupService, LoggerService, TransactionService} from '@core/services';
 import {LoadingController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {getMoneyString} from '@core/utils/formatting-utils';
@@ -15,7 +15,7 @@ import {getMoneyString} from '@core/utils/formatting-utils';
     styleUrls: ['./transaction-detail.page.scss'],
 })
 export class TransactionDetailPage implements OnInit, OnDestroy {
-
+    private readonly logger = LoggerService.getLogger(TransactionDetailPage.name);
     editing: boolean;
     canEdit = false;
     transactionId?: string;
@@ -122,14 +122,14 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
             .pipe(
                 catchError((err) => {
                     loading.dismiss();
-
+                    this.logger.error({message: err});
                     return EMPTY;
                 })
             )
-            .subscribe((t) => {
+            .subscribe(() => {
                 loading.dismiss();
                 this.navController.pop();
-                this.events.publish('transactions:update', t);
+                this.events.publish('transactions:update');
             });
     }
 

@@ -1,5 +1,5 @@
 :host {
-  height: 100%;
+  height: calc(100% - 3rem - env(safe-area-inset-bottom));
 }
 
 .versionStatement {
@@ -7,7 +7,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  margin-bottom: 3.75rem;
+  margin-bottom: 3rem;
   text-align: center;
   color: var(--ion-color-medium);
   font-size: 0.9rem;

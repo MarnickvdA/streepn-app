@@ -35,7 +35,7 @@
         <ion-button (click)="addProduct()" *ngIf="isAdmin">{{'actions.add' | translate}}</ion-button>
     </ion-list-header>
 
-    <ion-item class="no-min-height" *ngIf="group?.products.length === 0" lines="none">
+    <ion-item class="no-min-height no-bg" *ngIf="group?.products.length === 0" lines="none">
         <ion-label>
             <p class="small">
                 {{'group.overview.emptyProducts' | translate}}
@@ -54,7 +54,7 @@
                     [disabled]="group?.products.length === 0">{{'actions.add' | translate}}</ion-button>
     </ion-list-header>
 
-    <ion-item class="no-min-height" *ngIf="stockProducts?.length === 0 || group?.products.length === 0" lines="none">
+    <ion-item class="no-min-height no-bg" *ngIf="stockProducts?.length === 0 || group?.products.length === 0" lines="none">
         <ion-label>
             <p class="small" *ngIf="stockProducts?.length === 0 && group?.products.length > 0">
                 {{'group.overview.emptyStock' | translate}}

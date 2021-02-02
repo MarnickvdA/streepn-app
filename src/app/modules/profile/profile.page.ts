@@ -29,11 +29,4 @@ export class ProfilePage implements OnInit {
     getReadableTime(time: string) {
         return new Date(Date.parse(time)).toLocaleDateString();
     }
-
-    logout() {
-        this.authService.logout()
-            .then(() => {
-                this.navController.navigateRoot('/login');
-            });
-    }
 }

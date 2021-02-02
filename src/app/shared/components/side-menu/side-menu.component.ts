@@ -3,12 +3,13 @@ import {Observable, Subscription} from 'rxjs';
 import {Group} from '@core/models';
 import {AuthService, EventsService, GroupService, StorageService} from '@core/services';
 import {Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
-import {MenuController} from '@ionic/angular';
+import {AlertController, LoadingController, MenuController, NavController} from '@ionic/angular';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faAdjust, faList, faUserCog} from '@fortawesome/pro-duotone-svg-icons';
+import {faAdjust, faList, faSignOut, faUserCog} from '@fortawesome/pro-duotone-svg-icons';
 import {faStar} from '@fortawesome/pro-light-svg-icons';
 import {faStar as faStarSolid} from '@fortawesome/pro-solid-svg-icons';
 import {environment} from '@env/environment';
+import {TranslateService} from '@ngx-translate/core';
 
 const {StatusBar} = Plugins;
 
@@ -30,9 +31,13 @@ export class SideMenuComponent implements OnInit, OnDestroy {
                 private groupService: GroupService,
                 private storage: StorageService,
                 private events: EventsService,
+                private navController: NavController,
+                private alertController: AlertController,
+                private loadingController: LoadingController,
+                private translate: TranslateService,
                 private menuController: MenuController,
                 private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faList, faUserCog, faAdjust, faStar, faStarSolid);
+        this.iconLibrary.addIcons(faList, faUserCog, faAdjust, faStar, faStarSolid, faSignOut);
     }
 
     ngOnInit() {
@@ -98,5 +103,39 @@ export class SideMenuComponent implements OnInit, OnDestroy {
                 .catch(() => {
                 });
         }
+    }
+
+    async logOut() {
+        const alert = await this.alertController.create({
+            header: this.translate.instant('actions.logout'),
+            message: this.translate.instant('side-menu.logout.description'),
+            buttons: [
+                {
+                    text: this.translate.instant('actions.cancel'),
+                    role: 'cancel'
+                }, {
+                    text: this.translate.instant('actions.yes'),
+                    handler: async () => {
+                        const loading = await this.loadingController.create({
+                            message: this.translate.instant('actions.updating'),
+                            translucent: true,
+                            backdropDismiss: false
+                        });
+
+                        await loading.present();
+
+                        this.authService.logout()
+                            .then(() => {
+                                this.navController.navigateRoot('/login');
+                            })
+                            .finally(() => {
+                                loading.dismiss();
+                            });
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
     }
 }

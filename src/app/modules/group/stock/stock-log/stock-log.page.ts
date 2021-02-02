@@ -108,6 +108,10 @@ export class StockLogPage implements OnInit, OnDestroy {
             ref = ref.startAfter(this.lastSnapshot);
         }
 
+        if (this.group.settledAt) {
+            ref = ref.endBefore(this.group.settledAt);
+        }
+
         return ref.get()
             .then((result) => {
                 if (result.docs.length < this.LIMIT) {

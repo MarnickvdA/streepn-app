@@ -36,6 +36,32 @@ export class Settlement {
     get createdByName(): string {
         return this.accounts[this.createdBy].name;
     }
+
+    owes(accountId: string): { name: string, amount: number }[] {
+        const owes: { name: string, amount: number }[] = [];
+        Object.keys(this.items[accountId].owes)
+            .forEach((oweId) => {
+                owes.push({
+                    name: this.accounts[oweId].name,
+                    amount: this.items[accountId].owes[oweId]
+                });
+            });
+
+        return owes;
+    }
+
+    receives(accountId: string): { name: string, amount: number }[] {
+        const receives: { name: string, amount: number }[] = [];
+        Object.keys(this.items[accountId].receives)
+            .forEach((receiveId) => {
+                receives.push({
+                    name: this.accounts[receiveId].name,
+                    amount: this.items[accountId].receives[receiveId]
+                });
+            });
+
+        return receives;
+    }
 }
 
 export const settlementConverter: FirestoreDataConverter<Settlement> = {

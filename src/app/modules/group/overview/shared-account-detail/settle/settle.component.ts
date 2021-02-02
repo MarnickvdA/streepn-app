@@ -6,6 +6,7 @@ import {GroupService} from '@core/services';
 import {AccountPayout, calculatePayout} from '@core/utils/streepn-logic';
 import {TranslateService} from '@ngx-translate/core';
 import {getMoneyString} from '@core/utils/formatting-utils';
+import {SettlementService} from '@core/services/settlement.service';
 
 @Component({
     selector: 'app-settle',
@@ -32,6 +33,7 @@ export class SettleComponent implements OnInit, OnDestroy {
 
     constructor(private modalController: ModalController,
                 private groupService: GroupService,
+                private settlementService: SettlementService,
                 private alertController: AlertController,
                 private loadingController: LoadingController,
                 private translate: TranslateService) {
@@ -114,7 +116,7 @@ export class SettleComponent implements OnInit, OnDestroy {
 
                         await loading.present();
 
-                        this.groupService.settleSharedAccount(this.group?.id, this.sharedAccount?.id, this.settlement)
+                        this.settlementService.settleSharedAccount(this.group?.id, this.sharedAccount?.id, this.settlement)
                             .subscribe(() => {
                                 loading.dismiss();
                                 this.dismiss();

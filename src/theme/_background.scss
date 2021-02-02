@@ -1,0 +1,49 @@
+ion-content {
+  --padding-bottom: 4.5rem;
+  --background: var(--ion-color-light-tint);
+
+
+  ion-list-header {
+    --background: var(--ion-color-light-tint);
+  }
+
+  ion-item-divider {
+    --background: var(--ion-color-light-tint);
+
+    &.bottom-line {
+      border-bottom: .55px solid var(--ion-color-light-shade);
+    }
+  }
+
+  ion-item {
+    &.no-bg {
+      --background: var(--ion-color-light-tint);
+    }
+  }
+}
+
+:root {
+  --ion-toolbar-background: #fff;
+
+  --ion-item-background: #fff;
+
+  --ion-card-background: #fff;
+
+  ion-toolbar {
+    --background: #fff;
+    background: #fff;
+  }
+}
+
+body.dark {
+  --ion-toolbar-background: var(--ion-background-color);
+
+  --ion-item-background: var(--ion-background-color);
+
+  --ion-card-background: var(--ion-background-color);
+
+  ion-toolbar {
+    --background: var(--ion-background-color);
+    background: var(--ion-background-color);
+  }
+}

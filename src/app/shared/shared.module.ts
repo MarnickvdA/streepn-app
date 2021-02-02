@@ -14,6 +14,8 @@ import {SideMenuComponent} from './components/side-menu/side-menu.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {MoneyPipe} from './pipes/money.pipe';
 import {TransactionItemComponent} from './components/transaction-item/transaction-item.component';
+import {ObsStatusPipe} from './pipes/obs-status.pipe';
+import { AbsPipe } from './pipes/abs.pipe';
 
 export const components = [
     MoneyInputComponent,
@@ -27,6 +29,8 @@ export const components = [
 
 export const pipes = [
     MoneyPipe,
+    ObsStatusPipe,
+    AbsPipe,
 ];
 
 @NgModule({

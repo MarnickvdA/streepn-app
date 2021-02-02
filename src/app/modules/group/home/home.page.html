@@ -19,6 +19,7 @@
     </ion-header>
 
     <ion-list *ngIf="group$ | async; let group">
+        <ion-item-divider class="bottom-line"></ion-item-divider>
         <ion-item>
             <fa-duotone-icon slot="start" class="success" [icon]="['fad', 'plus-circle']"></fa-duotone-icon>
             <ion-label>
@@ -26,7 +27,7 @@
             </ion-label>
             <span slot="end">{{group.totalIn | money}}</span>
         </ion-item>
-        <ion-item>
+        <ion-item lines="full">
             <fa-duotone-icon slot="start" class="danger" [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'group.home.totalOut' | translate}}</h3>

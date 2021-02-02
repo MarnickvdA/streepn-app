@@ -94,23 +94,18 @@ export class AddTransactionComponent implements OnInit {
         this.transactionService.addTransaction(this.group, this.transactions)
             .pipe(
                 catchError(err => {
-                    this.logger.error({message: err});
-                    loading.dismiss(); // TODO Check if this is necessary.
+                    loading.dismiss();
                     return EMPTY;
                 })
             )
-            .subscribe((t) => {
-                if (t) {
-                    this.analyticsService.logTransaction(this.authService.currentUser.uid, this.group.id, t.id);
-                }
-
+            .subscribe(() => {
                 loading.dismiss();
-                this.dismiss(t);
+                this.dismiss(true);
             });
     }
 
-    dismiss(data?: Transaction) {
-        this.modalController.dismiss(data);
+    dismiss(successful?: boolean) {
+        this.modalController.dismiss(successful);
     }
 
     removeItem(account: Account) {

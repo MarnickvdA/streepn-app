@@ -6,6 +6,10 @@ fa-icon, fa-duotone-icon {
   align-items: center;
   justify-content: center;
 
+  &.half-opacity {
+    opacity: .5;
+  }
+
   &.no-width {
     min-width: 0;
   }

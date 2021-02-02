@@ -33,8 +33,8 @@
             <span slot="end"
                   [ngClass]="account?.balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{account?.balance.amount | money}}</span>
         </ion-item>
-
-        <ion-item class="top-line margin-top list-button" lines="full" [disabled]="account?.balance.amount === 0" button
+        <ion-item-divider class="bottom-line"></ion-item-divider>
+        <ion-item class="list-button" lines="full" [disabled]="account?.balance.amount === 0" button
                   (click)="settleSharedAccount(account?.id)">
             <fa-duotone-icon slot="start" class="primary" fixedWidth
                              [icon]="['fad', 'calculator-alt']"></fa-duotone-icon>

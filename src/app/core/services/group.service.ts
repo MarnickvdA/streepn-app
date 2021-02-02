@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Currency, Group, groupConverter, GroupInvite, groupInviteConverter} from '@core/models';
+import {Currency, Group, groupConverter, GroupInvite, groupInviteConverter, UserAccount} from '@core/models';
 import {AuthService} from './auth.service';
 import {EventsService} from './events.service';
 import {AngularFireFunctions} from '@angular/fire/functions';
@@ -12,7 +12,6 @@ import {PermissionType, Plugins} from '@capacitor/core';
 import {PushService, PushTopic} from './push.service';
 import {TranslateService} from '@ngx-translate/core';
 import {LoggerService} from './logger.service';
-import {AccountPayout} from '@core/utils/streepn-logic';
 import User = firebase.User;
 
 const {Permissions} = Plugins;
@@ -185,17 +184,15 @@ export class GroupService {
         callable({
             groupId: groupInvite.groupId,
             inviteLink: groupInvite.inviteLink,
-            user: {
-                displayName: user.displayName,
-                photoURL: user.photoURL
-            }
+            user
         })
-            .pipe(catchError((err) => {
-                this.logger.error({message: 'joinGroup', error: err});
-                this.eventsService.publish('group:joined');
-                return EMPTY;
-            }))
-            .subscribe((account) => {
+            .pipe(
+                catchError((err) => {
+                    this.logger.error({message: 'joinGroup', error: err});
+                    this.eventsService.publish('group:joined');
+                    return err;
+                }))
+            .subscribe((account: UserAccount) => {
                 if (account) {
                     this.analyticsService.logJoinGroup(user.uid, groupInvite.groupId);
 
@@ -218,11 +215,12 @@ export class GroupService {
         callable({
             groupId
         })
-            .pipe(catchError((err) => {
-                this.logger.error({message: 'leaveGroup', error: err});
-                this.eventsService.publish('group:left', false);
-                return EMPTY;
-            }))
+            .pipe(
+                catchError((err) => {
+                    this.logger.error({message: 'leaveGroup', error: err});
+                    this.eventsService.publish('group:left', false);
+                    return EMPTY;
+                }))
             .subscribe((account) => {
                 if (account) {
                     this.analyticsService.logLeaveGroup(userId, groupId);
@@ -260,17 +258,5 @@ export class GroupService {
         ]).then(() => {
             return groupInvite.inviteLink;
         });
-    }
-
-    settleSharedAccount(groupId: string, sharedAccountId: string, settlement: { [id: string]: AccountPayout }) {
-        const callable = this.functions.httpsCallable('settleSharedAccount');
-        return callable({
-            groupId,
-            sharedAccountId,
-            settlement,
-        }).pipe(
-            map(result => {
-                console.log(result);
-            }));
     }
 }

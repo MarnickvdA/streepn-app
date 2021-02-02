@@ -30,7 +30,7 @@
     </ion-refresher>
 
     <ion-list>
-        <ion-item class="no-min-height" *ngIf="transactions?.length === 0" lines="none">
+        <ion-item class="no-min-height no-bg" *ngIf="transactions?.length === 0" lines="none">
             <ion-label>
                 <p class="small">{{'group.transactions.empty' | translate}}</p>
             </ion-label>
@@ -39,7 +39,7 @@
         <app-transaction-item *ngFor="let transaction of transactions"
                               [transaction]="transaction"></app-transaction-item>
 
-        <ion-button (click)="loadNext()" *ngIf="!doneLoading" [disabled]="isLoadingMore" fill="none">
+        <ion-button class="no-bg" (click)="loadNext()" *ngIf="!doneLoading" [disabled]="isLoadingMore" fill="none">
             <ion-label *ngIf="!isLoadingMore" color="primary">{{'actions.loadMore' | translate}}</ion-label>
             <ion-progress-bar *ngIf="isLoadingMore"></ion-progress-bar>
         </ion-button>

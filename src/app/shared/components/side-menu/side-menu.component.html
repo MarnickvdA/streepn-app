@@ -6,8 +6,9 @@
 
 <ion-content>
     <ion-list>
+        <ion-item-divider class="bottom-line"></ion-item-divider>
         <ion-menu-toggle [autoHide]="false">
-            <ion-item routerLink="dashboard" routerDirection="root">
+            <ion-item routerLink="dashboard" routerDirection="root" lines="full">
                 <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'list']"></fa-duotone-icon>
                 <ion-label>
                     {{'dashboard.title' | translate}}
@@ -15,8 +16,32 @@
             </ion-item>
         </ion-menu-toggle>
 
+        <ng-container *ngIf="(groups$ | async); let groups">
+            <ion-list-header *ngIf="groups.length > 0" lines="full">
+                <ion-label>
+                    {{'dashboard.groups' | translate}}
+                </ion-label>
+            </ion-list-header>
+
+            <ion-menu-toggle [autoHide]="false">
+                <ion-item *ngFor="let group of groups" button routerDirection="root"
+                          routerLink="/group/{{group.id}}/home">
+                    <ion-label>{{group.name}}</ion-label>
+                    <fa-icon (click)="toggleFavorite($event, group.id)" slot="end" class="primary"
+                             [ngClass]="this.favorite === group.id ? 'warning' : 'medium half-opacity'" fixedWidth
+                             [icon]="this.favorite === group.id ? ['fas', 'star'] : ['fal', 'star']"></fa-icon>
+                </ion-item>
+            </ion-menu-toggle>
+        </ng-container>
+
+        <ion-list-header lines="full">
+            <ion-label>
+                {{'side-menu.settings' | translate}}
+            </ion-label>
+        </ion-list-header>
+
         <ion-menu-toggle [autoHide]="false">
-            <ion-item routerLink="profile" routerDirection="root">
+            <ion-item routerLink="profile" routerDirection="root" lines="full">
                 <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'user-cog']"></fa-duotone-icon>
                 <ion-label>
                     {{'dashboard.profile' | translate}}
@@ -30,21 +55,14 @@
             <ion-toggle (ionChange)="onClick($event)" checked="{{isDarkMode}}" slot="end"></ion-toggle>
         </ion-item>
 
-        <ng-container *ngIf="(groups$ | async); let groups">
-            <ion-list-header class="ion-margin-top" *ngIf="groups.length > 0" lines="full">
-                {{'dashboard.groups' | translate}}
-            </ion-list-header>
+        <ion-item-divider class="bottom-line"></ion-item-divider>
 
-            <ion-menu-toggle [autoHide]="false">
-                <ion-item *ngFor="let group of groups" button routerDirection="root"
-                          routerLink="/group/{{group.id}}/home">
-                    <ion-label>{{group.name}}</ion-label>
-                    <fa-icon (click)="toggleFavorite($event, group.id)" slot="end" class="primary"
-                             [ngClass]="this.favorite === group.id ? 'warning' : 'medium'" fixedWidth
-                             [icon]="this.favorite === group.id ? ['fas', 'star'] : ['fal', 'star']"></fa-icon>
-                </ion-item>
-            </ion-menu-toggle>
-        </ng-container>
+        <ion-item (click)="logOut()" lines="full">
+            <fa-duotone-icon slot="start" class="danger" fixedWidth [icon]="['fad', 'sign-out']"></fa-duotone-icon>
+            <ion-label>
+                {{'actions.logout' | translate}}
+            </ion-label>
+        </ion-item>
 
     </ion-list>
 

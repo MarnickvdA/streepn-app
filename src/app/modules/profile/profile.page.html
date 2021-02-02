@@ -19,6 +19,7 @@
     </ion-header>
 
     <ion-list *ngIf="user$ | async; let user">
+        <ion-item-divider class="bottom-line"></ion-item-divider>
         <ion-item>
             <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'user']"></fa-duotone-icon>
             <ion-label>
@@ -34,14 +35,11 @@
                 {{'dashboard.emailVerified' | translate}}
             </ion-chip>
         </ion-item>
-        <ion-item>
+        <ion-item lines="full">
             <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'clock']"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'dashboard.memberSince' | translate}} {{getReadableTime(user.metadata.creationTime)}}</h3>
             </ion-label>
         </ion-item>
-        <ion-button (click)="logout()" class="ion-margin" color="danger" expand="block">
-            {{'actions.logout' | translate}}
-        </ion-button>
     </ion-list>
 </ion-content>

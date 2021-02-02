@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Balance, Group, UserAccount, UserRole} from '@core/models';
+import {Group, UserAccount, UserRole} from '@core/models';
 import {Subscription} from 'rxjs';
 import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
@@ -15,7 +15,7 @@ import {
     StorageService
 } from '@core/services';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faBell, faMinusCircle, faPlusCircle, faUser, faUsersCrown, faWallet} from '@fortawesome/pro-duotone-svg-icons';
+import {faBell, faMinusCircle, faPlusCircle, faSignOut, faUser, faUsersCrown, faWallet} from '@fortawesome/pro-duotone-svg-icons';
 
 @Component({
     selector: 'app-account-detail',
@@ -50,7 +50,7 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                 private events: EventsService,
                 private navController: NavController,
                 private iconLibary: FaIconLibrary) {
-        this.iconLibary.addIcons(faUser, faBell, faUsersCrown, faWallet, faPlusCircle, faMinusCircle);
+        this.iconLibary.addIcons(faUser, faBell, faUsersCrown, faWallet, faPlusCircle, faMinusCircle, faSignOut);
 
         this.routeSub = this.route.params.subscribe((params: Params) => {
             this.accountId = params.accountId;
