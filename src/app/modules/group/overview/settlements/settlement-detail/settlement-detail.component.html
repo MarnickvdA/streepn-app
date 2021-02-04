@@ -37,12 +37,12 @@
                 </h3>
                 <div *ngIf="settlement?.items[accountId].settle > 0">
                     <h4 *ngFor="let receive of settlement?.receives(accountId)">
-                        --> {{receive.amount | abs | money}} van {{receive.name}}
+                        > {{receive.amount | abs | money}} van {{receive.name}}
                     </h4>
                 </div>
                 <div *ngIf="settlement?.items[accountId].settle < 0">
                     <h4 *ngFor="let owes of settlement?.owes(accountId)">
-                        --> {{owes.amount | abs | money}} aan {{owes.name}}
+                        > {{owes.amount | abs | money}} aan {{owes.name}}
                     </h4>
                 </div>
             </ion-label>

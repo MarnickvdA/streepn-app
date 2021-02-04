@@ -43,6 +43,9 @@
                 <p class="small" *ngIf="stockItem.writtenOff">
                     {{'group.stock.log.writtenOff' | translate:{name: group.getUserAccountById(stockItem.createdBy)?.name} }}
                 </p>
+                <p class="small">
+                    {{ stockItem.createdAt | moment }}
+                </p>
             </ion-label>
         </ion-item>
         <ion-button class="no-bg" (click)="loadNext()" *ngIf="!doneLoading" [disabled]="isLoadingMore" fill="none">

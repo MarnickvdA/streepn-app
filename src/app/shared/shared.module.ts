@@ -16,6 +16,10 @@ import {MoneyPipe} from './pipes/money.pipe';
 import {TransactionItemComponent} from './components/transaction-item/transaction-item.component';
 import {ObsStatusPipe} from './pipes/obs-status.pipe';
 import { AbsPipe } from './pipes/abs.pipe';
+import { DateTimePipe } from './pipes/date-time.pipe';
+import { MomentPipe } from './pipes/moment.pipe';
+import { DatePipe } from './pipes/date.pipe';
+import { CapitalizePipe } from './pipes/capitalize.pipe';
 
 export const components = [
     MoneyInputComponent,
@@ -31,6 +35,10 @@ export const pipes = [
     MoneyPipe,
     ObsStatusPipe,
     AbsPipe,
+    DateTimePipe,
+    MomentPipe,
+    DatePipe,
+    CapitalizePipe,
 ];
 
 @NgModule({

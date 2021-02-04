@@ -64,4 +64,8 @@ export class SettlementsPage implements OnInit, OnDestroy {
     openSettlement(settlement: Settlement) {
         console.log(settlement);
     }
+
+    canSettle() {
+        return this.group?.members.length > 1 && this.group?.totalOut > 0;
+    }
 }

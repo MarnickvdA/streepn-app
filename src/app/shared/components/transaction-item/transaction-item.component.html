@@ -20,7 +20,7 @@
         </div>
         <p class="small">
             {{'group.transaction.timeline' | translate:{
-            date: transaction.createdAt.toDate().toLocaleString(),
+            date: transaction.createdAt | moment | capitalize,
             accountName: group.getUserAccountById(transaction.createdBy)?.name
         } }}
         </p>

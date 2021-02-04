@@ -32,7 +32,7 @@
             <ion-label>
                 <h3>{{'group.overview.accounts.inviteLink' | translate}}</h3>
                 <p class="small">
-                    {{'group.overview.accounts.' + (inviteLinkExpired ? 'expired' : 'validThrough') | translate}} {{group?.inviteLinkExpiry.toDate().toLocaleString()}}
+                    {{'group.overview.accounts.' + (inviteLinkExpired ? 'expired' : 'validThrough') | translate}} {{group?.inviteLinkExpiry | dateTime}}
                 </p>
             </ion-label>
         </ion-item>

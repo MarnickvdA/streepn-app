@@ -19,7 +19,7 @@
     </ion-header>
 
     <ion-list>
-        <ion-item class="list-button" lines="full" (click)="settleGroup()" button detail="false">
+        <ion-item class="list-button" lines="full" (click)="settleGroup()" [disabled]="!canSettle()" button detail="false">
             <fa-duotone-icon slot="start" class="primary large" fixedWidth
                              [icon]="['fad', 'calculator-alt']"></fa-duotone-icon>
             <ion-label>
@@ -44,7 +44,7 @@
         <ion-item *ngFor="let settlement of settlements" lines="inset" button routerLink="{{settlement.id}}" routerDirection="forward">
             <ion-label>
                 <h3>
-                    Verrekening op {{settlement.createdAt.toDate().toLocaleDateString()}}
+                    Verrekening op {{settlement.createdAt | dateTime}}
                     door {{settlement.createdByName}}
                 </h3>
             </ion-label>

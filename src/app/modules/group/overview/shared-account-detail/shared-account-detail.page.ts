@@ -70,9 +70,6 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
         await loading.present();
 
         this.accountService.updateSharedAccount(this.group, account)
-            .then(() => {
-                this.account = account;
-            })
             .catch(err => {
                 this.logger.error({message: err});
             })

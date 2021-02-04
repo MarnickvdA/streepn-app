@@ -29,7 +29,7 @@
         </ion-avatar>
         <ion-label>
             <h2>{{account.name}}</h2>
-            <p>{{'group.transaction.at' | translate:{date: transaction?.createdAt?.toDate().toLocaleString()} }}</p>
+            <p>{{'group.transaction.at' | translate:{date: transaction?.createdAt | dateTime} }}</p>
             <p *ngIf="!canEdit" class="small"><b>{{'group.transactions.disabledEditing' | translate}}</b></p>
         </ion-label>
     </div>

@@ -108,9 +108,6 @@ export class AccountDetailPage implements OnInit, OnDestroy {
         await loading.present();
 
         this.accountService.updateUserAccount(this.group, account)
-            .then(() => {
-                this.account = account;
-            })
             .catch(err => {
                 this.logger.error({message: err});
             })

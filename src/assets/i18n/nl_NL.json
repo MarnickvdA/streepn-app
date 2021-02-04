@@ -185,7 +185,7 @@
     "transaction": {
       "title": "Transactie",
       "header": "{{amount}}x {{productName}} voor {{accountName}}",
-      "timeline": "Op {{date}} door {{accountName}}",
+      "timeline": "{{date}} door {{accountName}}",
       "for": "Voor {{accountName}}",
       "at": "Op {{date}}"
     },

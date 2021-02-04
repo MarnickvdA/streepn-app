@@ -38,7 +38,7 @@
         <ion-item lines="full">
             <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'clock']"></fa-duotone-icon>
             <ion-label>
-                <h3>{{'dashboard.memberSince' | translate}} {{getReadableTime(user.metadata.creationTime)}}</h3>
+                <h3>{{'dashboard.memberSince' | translate}} {{getTimestamp(user.metadata.creationTime) | date}}</h3>
             </ion-label>
         </ion-item>
     </ion-list>

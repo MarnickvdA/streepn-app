@@ -50,6 +50,7 @@
     "@ngx-translate/http-loader": "^6.0.0",
     "@sentry/browser": "5.29.2",
     "cordova-plugin-googleplus": "^8.5.1",
+    "date-fns": "^2.16.1",
     "firebase": "^7.0 || ^8.0",
     "rxjs": "~6.6.3",
     "scriptjs": "^2.5.9",

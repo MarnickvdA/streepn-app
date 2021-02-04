@@ -24,7 +24,7 @@
         </ion-list-header>
 
         <ng-template [ngIf]="groups && !loading">
-            <ion-item class="group-item" *ngIf="groups.length === 0" lines="none">
+            <ion-item class="no-min-height no-bg" *ngIf="groups.length === 0" lines="none">
                 <ion-label>
                     <p class="small">
                         {{'dashboard.emptyGroups' | translate}}
