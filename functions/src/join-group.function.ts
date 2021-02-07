@@ -38,7 +38,7 @@ export const joinGroup = functions.region('europe-west1').https.onCall((data: Jo
         throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
     }
 
-    if (!data.groupId || !data.user || data.inviteLink) {
+    if (!data.groupId || !data.user || !data.inviteLink) {
         throw new functions.https.HttpsError('failed-precondition', ErrorMessage.INVALID_DATA);
     }
 

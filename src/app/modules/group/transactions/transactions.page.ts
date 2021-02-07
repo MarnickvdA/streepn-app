@@ -53,11 +53,13 @@ export class TransactionsPage implements OnInit, OnDestroy {
             });
 
         this.events.subscribe('transactions:update', this.refreshSub);
+        this.events.subscribe('group:settlement', this.refreshSub);
     }
 
     ngOnDestroy(): void {
         this.groupSub.unsubscribe();
         this.events.unsubscribe('transactions:update', this.refreshSub);
+        this.events.unsubscribe('group:settlement', this.refreshSub);
     }
 
     reset(event?) {

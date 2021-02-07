@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/c
 import {FormBuilder} from '@angular/forms';
 import {Group, Product} from '@core/models';
 import {Subscription} from 'rxjs';
-import {AlertController, LoadingController} from '@ionic/angular';
+import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Location} from '@angular/common';
@@ -36,6 +36,7 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
                 private location: Location,
                 private groupService: GroupService,
                 private alertController: AlertController,
+                private navController: NavController,
                 private iconLibrary: FaIconLibrary) {
         this.iconLibrary.addIcons(faEdit, faTag, faTrashAlt, faBoxFull);
 
@@ -104,6 +105,9 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
                         await loading.present();
 
                         this.productService.removeProduct(this.group, this.product)
+                            .then(() => {
+                                this.navController.pop();
+                            })
                             .finally(() => {
                                 loading.dismiss();
                             });

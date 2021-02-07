@@ -185,27 +185,30 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
 
         this.groupService.getGroupByInviteLink(groupInvite)
             .then(invite => {
-                this.zone.run(() => {
-                    this.alertController.create({
-                        header: this.translate.instant('dashboard.groupInvite.header'),
-                        message: this.translate.instant('dashboard.groupInvite.question') + '<b>' + invite.groupName + '</b>?',
-                        buttons: [
-                            {
-                                text: this.translate.instant('actions.deny'),
-                                role: 'cancel'
-                            }, {
-                                text: this.translate.instant('actions.accept'),
-                                handler: () => {
-                                    this.joinGroup(invite);
+                if (invite) {
+                    this.zone.run(() => {
+                        this.alertController.create({
+                            header: this.translate.instant('dashboard.groupInvite.header'),
+                            message: this.translate.instant('dashboard.groupInvite.question') + '<b>' + invite.groupName + '</b>?',
+                            buttons: [
+                                {
+                                    text: this.translate.instant('actions.deny'),
+                                    role: 'cancel'
+                                }, {
+                                    text: this.translate.instant('actions.accept'),
+                                    handler: () => {
+                                        this.joinGroup(invite);
+                                    }
                                 }
-                            }
-                        ]
-                    }).then(alert => {
-                        return alert.present();
+                            ]
+                        }).then(alert => {
+                            return alert.present();
+                        });
                     });
-                });
+                }
             })
             .catch((err) => {
+                console.error(err);
                 this.logger.error({
                     message: err
                 });

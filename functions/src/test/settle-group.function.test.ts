@@ -4,6 +4,9 @@ import {Group, Settlement} from '../models';
 import {AccountBalanceMap, calculateNewBalance, calculateSettlement, deriveUpdateBatch} from '../helpers/settlement.helper';
 
 const assert = require('assert');
+
+// TODO: Test that the balances and product data (though empty) are still present in the group object.
+
 describe('settle-group.function', () => {
     const group: Group = {
         id: '',

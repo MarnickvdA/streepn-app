@@ -3,7 +3,7 @@ import {Group, Stock, stockConverter} from '@core/models';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {Observable, Subscription} from 'rxjs';
 import {ModalController} from '@ionic/angular';
-import {GroupService} from '@core/services';
+import {EventsService, GroupService} from '@core/services';
 import {EditStockComponent} from '@modules/group/stock/stock-log/edit-stock/edit-stock.component';
 
 @Component({
@@ -21,11 +21,15 @@ export class StockLogPage implements OnInit, OnDestroy {
     stockTransactions: Stock[];
     private LIMIT = 10;
     private lastSnapshot: QueryDocumentSnapshot<Stock>;
-
+    private readonly refreshSub;
 
     constructor(private modalController: ModalController,
                 private groupService: GroupService,
+                private events: EventsService,
                 private fs: AngularFirestore) {
+        this.refreshSub = () => {
+            this.reset();
+        };
     }
 
     ngOnInit() {
@@ -40,10 +44,13 @@ export class StockLogPage implements OnInit, OnDestroy {
                     }
                 }
             });
+
+        this.events.subscribe('group:settlement', this.refreshSub);
     }
 
     ngOnDestroy() {
         this.groupSub.unsubscribe();
+        this.events.unsubscribe('group:settlement', this.refreshSub);
     }
 
     openStockItem(stockItem: Stock) {

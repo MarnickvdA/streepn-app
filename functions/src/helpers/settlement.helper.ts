@@ -191,7 +191,7 @@ export function deriveUpdateBatch(group: Group, newAccountBalances: AccountBalan
     group.accounts.forEach((account: { id: string }) => {
         const balance = newAccountBalances[account.id];
         if (balance) {
-            updateBatch.balances[account.id] = {
+            updateBatch[`balances.${account.id}`] = {
                 totalIn: balance.newBalance,
                 totalOut: 0,
                 products: balance.products,
@@ -199,7 +199,7 @@ export function deriveUpdateBatch(group: Group, newAccountBalances: AccountBalan
 
             updateBatch.totalIn += balance.newBalance;
         } else {
-            updateBatch.balances[account.id] = {
+            updateBatch[`balances.${account.id}`] = {
                 totalIn: 0,
                 totalOut: 0,
             };
@@ -208,9 +208,9 @@ export function deriveUpdateBatch(group: Group, newAccountBalances: AccountBalan
 
     Object.keys(newAccountBalances).forEach((accountId: string) => {
         Object.keys(newAccountBalances[accountId].products).forEach((productId: string) => {
-            if (!updateBatch.productData[productId]) {
+            if (!updateBatch[`productData.${productId}`]) {
                 const pData: ProductData | undefined = group.productData[productId];
-                updateBatch.productData[productId] = {
+                updateBatch[`productData.${productId}`] = {
                     totalIn: 0,
                     totalOut: 0,
                     amountIn: (pData.amountIn - pData.amountOut),
@@ -218,7 +218,7 @@ export function deriveUpdateBatch(group: Group, newAccountBalances: AccountBalan
                 };
             }
 
-            updateBatch.productData[productId].totalIn += newAccountBalances[accountId].products[productId].totalIn;
+            updateBatch[`productData.${productId}`].totalIn += newAccountBalances[accountId].products[productId].totalIn;
         });
     });
 

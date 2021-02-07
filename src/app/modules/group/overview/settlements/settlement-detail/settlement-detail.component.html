@@ -22,7 +22,7 @@
         <ion-item class="list-button" lines="full">
             <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'clock']"></fa-duotone-icon>
             <ion-label>
-                <h3>{{'group.overview.settle.detail.createdAt' | translate}} {{settlement?.createdAt.toDate().toLocaleDateString()}}</h3>
+                <h3>{{'group.overview.settle.detail.createdAt' | translate}} {{settlement?.createdAt | date}}</h3>
                 <h3>{{'group.overview.settle.detail.createdBy' | translate}} {{settlement?.createdByName}}</h3>
             </ion-label>
         </ion-item>

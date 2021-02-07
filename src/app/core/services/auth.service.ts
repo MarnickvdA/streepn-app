@@ -48,23 +48,21 @@ export class AuthService {
             this.analytics.setCurrentUser(user?.uid);
             LoggerService.setUserId(user?.uid);
 
-            if (user) {
-                user.getIdToken(true)
-                    .then(token => {
-                        if (token) {
-                            // Decode base-64 encoded string and parse it to JSON
-                            const payload = JSON.parse(atob(token.split('.')[1]));
+            user?.getIdToken(true)
+                .then(token => {
+                    if (token) {
+                        // Decode base-64 encoded string and parse it to JSON
+                        const payload = JSON.parse(atob(token.split('.')[1]));
 
-                            this.hasAcceptedLegals.next(payload.acceptedTermsAndPrivacy);
-                            this.legalVersion = payload.termsAndPrivacyVersion;
-                        } else {
-                            this.logger.error({message: 'Could not retrieve token'});
-                        }
-                    })
-                    .catch(err => {
-                        this.logger.error({message: 'getIdToken error', error: err});
-                    });
-            }
+                        this.hasAcceptedLegals.next(payload.acceptedTermsAndPrivacy);
+                        this.legalVersion = payload.termsAndPrivacyVersion;
+                    } else {
+                        this.logger.error({message: 'Could not retrieve token'});
+                    }
+                })
+                .catch(err => {
+                    this.logger.error({message: 'getIdToken error', error: err});
+                });
         });
     }
 

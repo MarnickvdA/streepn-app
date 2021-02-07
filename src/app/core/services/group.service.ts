@@ -184,7 +184,7 @@ export class GroupService {
         callable({
             groupId: groupInvite.groupId,
             inviteLink: groupInvite.inviteLink,
-            user
+            user: user.toJSON(),
         })
             .pipe(
                 catchError((err) => {

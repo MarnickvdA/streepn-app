@@ -55,6 +55,7 @@ export class SettlementService {
             .collection('settlements')
             .ref
             .withConverter(settlementConverter)
+            .orderBy('createdAt', 'desc')
             .get()
             .then((querySnapshot) => {
                 this.groupId = groupId;

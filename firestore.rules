@@ -25,6 +25,7 @@ service cloud.firestore {
 
               match /settlements/{settlementId} {
                   allow read: if isSignedIn() && isMemberOfGroup(getGroup(groupId));
+                  allow write: if false;
               }
 
               function getGroup(groupId) {

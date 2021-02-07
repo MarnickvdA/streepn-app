@@ -16,7 +16,21 @@ export class ProductService {
 
         group.products.push(product);
 
-        return this.setProducts(group);
+        const products = group.products.map(p => {
+            return productConverter.toFirestore(p);
+        });
+
+        return this.fs.collection('groups').doc(group.id).set({
+            products,
+            productData: {
+                [`${product.id}`]: {
+                    amountIn: product.amountIn,
+                    amountOut: product.amountOut,
+                    totalIn: product.totalIn,
+                    totalOut: product.totalOut,
+                },
+            },
+        }, {merge: true});
     }
 
     editProduct(group: Group, product: Product) {
@@ -28,23 +42,27 @@ export class ProductService {
             }
         });
 
-        return this.setProducts(group);
-    }
-
-    removeProduct(group: Group, product: Product) {
-        group.products = group.products.filter(obj => obj.id !== product.id);
-
-        return this.setProducts(group);
-    }
-
-    private setProducts(group: Group): Promise<void> {
         const products = group.products.map(p => {
             return productConverter.toFirestore(p);
         });
 
         return this.fs.collection('groups').doc(group.id).set({
-            products
+            products,
         }, {merge: true});
     }
 
+    removeProduct(group: Group, product: Product) {
+        group.products = group.products.filter(obj => obj.id !== product.id);
+
+        const products = group.products.map(p => {
+            return productConverter.toFirestore(p);
+        });
+
+        return this.fs.collection('groups').doc(group.id).set({
+            products,
+            productData: {
+                [`${product.id}`]: firebase.firestore.FieldValue.delete()
+            },
+        }, {merge: true});
+    }
 }

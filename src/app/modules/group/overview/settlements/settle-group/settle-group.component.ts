@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Group, SharedAccount} from '@core/models';
-import {GroupService, LoggerService} from '@core/services';
+import {EventsService, GroupService, LoggerService} from '@core/services';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {SettleComponent} from '@modules/group/overview/shared-account-detail/settle/settle.component';
@@ -28,6 +28,7 @@ export class SettleGroupComponent implements OnInit, OnDestroy {
                 private modalController: ModalController,
                 private loadingController: LoadingController,
                 private translate: TranslateService,
+                private events: EventsService,
                 private iconLibrary: FaIconLibrary) {
         this.iconLibrary.addIcons(faCheckCircle, faTimesCircle, faPlusCircle);
     }
@@ -83,6 +84,7 @@ export class SettleGroupComponent implements OnInit, OnDestroy {
                     })
                 )
                 .subscribe(() => {
+                    this.events.publish('group:settlement');
                     loading.dismiss();
                     this.dismiss();
                 });
