@@ -1,10 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonSlides, LoadingController, ModalController} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Group, GroupInvite} from '@core/models';
+import {HouseInvite} from '@core/models';
 import {environment} from '@env/environment';
 import {Plugins} from '@capacitor/core';
-import {AuthService, EventsService, GroupService, PushService, StorageService, UIService, UserService} from '@core/services';
+import {AuthService, EventsService, HouseService, PushService, StorageService, UIService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 
 const {Browser} = Plugins;
@@ -25,18 +25,17 @@ export class OnboardingComponent implements OnInit {
     name: string;
     nameForm: FormGroup;
     isSubmitted: boolean;
-    groupInvite: GroupInvite;
+    houseInvite: HouseInvite;
     hasAcceptedLegals = false;
 
     constructor(private modalController: ModalController,
                 private pushService: PushService,
-                private userService: UserService,
                 public authService: AuthService,
                 public translate: TranslateService,
                 private formBuilder: FormBuilder,
                 private loadingController: LoadingController,
                 private storage: StorageService,
-                private groupService: GroupService,
+                private houseService: HouseService,
                 private events: EventsService,
                 private uiService: UIService) {
         this.nameForm = this.formBuilder.group({
@@ -50,9 +49,9 @@ export class OnboardingComponent implements OnInit {
             this.name = ' ' + this.authService.currentUser.displayName;
         }
 
-        this.storage.get('groupInvite')
+        this.storage.get('houseInvite')
             .then((invite: string) => {
-                this.checkGroupInvite(invite);
+                this.checkHouseInvite(invite);
             })
             .catch(() => {
             });
@@ -134,7 +133,7 @@ export class OnboardingComponent implements OnInit {
         this.authService.acceptTerms();
     }
 
-    async joinGroup() {
+    async joinHouse() {
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.joining'),
             translucent: true,
@@ -143,14 +142,14 @@ export class OnboardingComponent implements OnInit {
 
         await loading.present();
 
-        const joinedGroupFn = () => {
+        const joinedHouseFn = () => {
             loading.dismiss();
             this.slideNext();
         };
 
-        this.events.subscribe('group:joined', joinedGroupFn);
+        this.events.subscribe('house:joined', joinedHouseFn);
 
-        this.groupService.joinGroup(this.groupInvite, this.authService.currentUser);
+        this.houseService.joinHouse(this.houseInvite, this.authService.currentUser);
     }
 
     openLegalPage() {
@@ -159,13 +158,13 @@ export class OnboardingComponent implements OnInit {
         });
     }
 
-    private checkGroupInvite(groupInvite: string) {
+    private checkHouseInvite(houseInvite: string) {
         // Fuck this item, don't want it more than once.
-        this.storage.delete('groupInvite');
+        this.storage.delete('houseInvite');
 
-        this.groupService.getGroupByInviteLink(groupInvite)
+        this.houseService.getHouseByInviteLink(houseInvite)
             .then(invite => {
-                this.groupInvite = invite;
+                this.houseInvite = invite;
             })
             .catch(err => {
                 this.uiService.showError(this.translate.instant('errors.error'), err);

@@ -1,0 +1,33 @@
+<ion-tabs>
+    <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="home">
+            <fa-duotone-icon class="tab-icon"  [icon]="['fad', 'house']"></fa-duotone-icon>
+            <ion-label>{{'house.home.title' | translate}}</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="transactions">
+            <fa-duotone-icon class="tab-icon"  [icon]="['fad', 'receipt']"></fa-duotone-icon>
+            <ion-label>{{'house.transactions.title' | translate}}</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button disabled="true">
+        </ion-tab-button>
+
+        <ion-tab-button tab="stock">
+            <fa-duotone-icon class="tab-icon" [icon]="['fad', 'inventory']"></fa-duotone-icon>
+            <ion-label>{{'house.stock.tab' | translate}}</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="preferences">
+            <fa-duotone-icon class="tab-icon"  [icon]="['fad', 'cogs']"></fa-duotone-icon>
+            <ion-label>{{'house.overview.title' | translate}}</ion-label>
+        </ion-tab-button>
+    </ion-tab-bar>
+
+    <ion-fab slot="fixed" horizontal="center" vertical="bottom" [edge]="iOS">
+        <ion-fab-button (click)="addTransaction()" [disabled]="!((house$ | async)?.products.length > 0)">
+            <fa-icon [icon]="['far', 'plus']"></fa-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-tabs>
+

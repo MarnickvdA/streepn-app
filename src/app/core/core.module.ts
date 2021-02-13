@@ -7,14 +7,13 @@ import {
     AnalyticsService,
     AuthService,
     EventsService,
-    GroupService,
+    HouseService,
     ProductService,
     PushService,
     StockService,
     StorageService,
     TransactionService,
-    UIService,
-    UserService
+    UIService
 } from '@core/services';
 import {GooglePlus} from '@ionic-native/google-plus/ngx';
 import {AngularFireModule} from '@angular/fire';
@@ -37,9 +36,8 @@ export const services = [
     UIService,
 
     // Model services
-    GroupService,
+    HouseService,
     TransactionService,
-    UserService,
     ProductService,
     StockService,
     SettlementService,

@@ -1,13 +1,13 @@
-import {Group, Stock} from './models';
+import {House, Stock} from './models';
 import * as functions from 'firebase-functions';
 import {ErrorMessage} from './models/error-message';
-import {getDeltaStock, getGroupUpdateDataIn} from './helpers/stock.helper';
+import {getDeltaStock, getHouseUpdateDataIn} from './helpers/stock.helper';
 import * as admin from 'firebase-admin';
 
 const db = admin.firestore();
 
 interface EditStockData {
-    groupId: string;
+    houseId: string;
     updatedStock: Stock;
 }
 
@@ -16,7 +16,7 @@ interface EditStockData {
  *
  * HTTP Trigger function for editing an existing Stock object
  *
- * @var groupId: string
+ * @var houseId: string
  * @var updatedStock: Updated state of the existing Stock Object
  * @var deltaStock: Difference between the old Stock and the new Stock object
  *
@@ -24,9 +24,9 @@ interface EditStockData {
  * @throws UNAUTHENTICATED if the initiator of this call is not authenticated with Firebase Auth
  * @throws PERMISSION_DENIED if this user is not allowed to do operations
  * @throws INTERNAL if something went wrong which we cannot completely explain
- * @throws GROUP_NOT_FOUND if the group with variable groupId was not found
- * @throws NOT_MEMBER_OF_GROUP if the user is not member of this group
- * @throws PRODUCT_NOT_FOUND if the product provided in the stock object was not found in this group
+ * @throws HOUSE_NOT_FOUND if the house with variable houseId was not found
+ * @throws NOT_MEMBER_OF_HOUSE if the user is not member of this house
+ * @throws PRODUCT_NOT_FOUND if the product provided in the stock object was not found in this house
  */
 export const editStock = functions.region('europe-west1').https.onCall((data: EditStockData, context) => {
 
@@ -35,32 +35,32 @@ export const editStock = functions.region('europe-west1').https.onCall((data: Ed
         throw new functions.https.HttpsError('unauthenticated', ErrorMessage.UNAUTHENTICATED);
     }
 
-    if (!data.groupId || !data.updatedStock) {
+    if (!data.houseId || !data.updatedStock) {
         throw new functions.https.HttpsError('failed-precondition', ErrorMessage.INVALID_DATA);
     }
 
-    const groupRef = db.collection('groups').doc(data.groupId);
+    const houseRef = db.collection('houses').doc(data.houseId);
 
     return db.runTransaction(fireTrans => {
-        return fireTrans.get(groupRef)
-            .then(groupDoc => {
-                const group: Group = groupDoc?.data() as Group;
+        return fireTrans.get(houseRef)
+            .then(houseDoc => {
+                const house: House = houseDoc?.data() as House;
 
-                // Check if the group exists
-                if (!groupDoc.exists || !group) {
-                    throw new functions.https.HttpsError('not-found', 'No such group document!');
+                // Check if the house exists
+                if (!houseDoc.exists || !house) {
+                    throw new functions.https.HttpsError('not-found', 'No such house document!');
                 }
 
-                // Check if the user is part of this group
-                if (!group.members.includes(userId)) {
-                    throw new functions.https.HttpsError('permission-denied', 'User not member of group');
+                // Check if the user is part of this house
+                if (!house.members.includes(userId)) {
+                    throw new functions.https.HttpsError('permission-denied', 'User not member of house');
                 }
 
-                return fireTrans.get(groupRef.collection('stock').doc(data.updatedStock.id))
+                return fireTrans.get(houseRef.collection('stock').doc(data.updatedStock.id))
                     .then(originalDoc => {
                         const original: Stock = originalDoc?.data() as Stock;
 
-                        // Check if the group exists
+                        // Check if the house exists
                         if (!originalDoc.exists || !original) {
                             throw new functions.https.HttpsError('not-found', 'No such stock document!');
                         }
@@ -69,11 +69,11 @@ export const editStock = functions.region('europe-west1').https.onCall((data: Ed
 
                         // Update old stock and update stock in firestore
                         if (data.updatedStock.amount === 0) {
-                            fireTrans.update(groupRef.collection('stock').doc(data.updatedStock.id), {
+                            fireTrans.update(houseRef.collection('stock').doc(data.updatedStock.id), {
                                 removed: true,
                             });
                         } else {
-                            fireTrans.update(groupRef.collection('stock').doc(data.updatedStock.id), {
+                            fireTrans.update(houseRef.collection('stock').doc(data.updatedStock.id), {
                                 paidById: data.updatedStock.paidById,
                                 cost: data.updatedStock.cost,
                                 amount: data.updatedStock.amount,
@@ -81,22 +81,22 @@ export const editStock = functions.region('europe-west1').https.onCall((data: Ed
                             });
                         }
 
-                        const groupUpdate: any = getGroupUpdateDataIn(deltaStock);
+                        const houseUpdate: any = getHouseUpdateDataIn(deltaStock);
 
                         if (data.updatedStock.productId !== deltaStock.productId) {
-                            groupUpdate[`productData.${data.updatedStock.productId}.totalIn`]
+                            houseUpdate[`productData.${data.updatedStock.productId}.totalIn`]
                                 = admin.firestore.FieldValue.increment(data.updatedStock.cost);
-                            groupUpdate[`productData.${data.updatedStock.productId}.amountIn`]
+                            houseUpdate[`productData.${data.updatedStock.productId}.amountIn`]
                                 = admin.firestore.FieldValue.increment(data.updatedStock.amount);
-                            groupUpdate[`balances.${data.updatedStock.paidById}.totalIn`]
+                            houseUpdate[`balances.${data.updatedStock.paidById}.totalIn`]
                                 = admin.firestore.FieldValue.increment(data.updatedStock.cost);
-                            groupUpdate[`balances.${data.updatedStock.paidById}.products.${data.updatedStock.productId}.totalIn`]
+                            houseUpdate[`balances.${data.updatedStock.paidById}.products.${data.updatedStock.productId}.totalIn`]
                                 = admin.firestore.FieldValue.increment(data.updatedStock.cost);
-                            groupUpdate[`balances.${data.updatedStock.paidById}.products.${data.updatedStock.productId}.amountIn`]
+                            houseUpdate[`balances.${data.updatedStock.paidById}.products.${data.updatedStock.productId}.amountIn`]
                                 = admin.firestore.FieldValue.increment(data.updatedStock.amount);
                         }
 
-                        fireTrans.update(groupRef, groupUpdate);
+                        fireTrans.update(houseRef, houseUpdate);
 
                         return data.updatedStock;
                     });

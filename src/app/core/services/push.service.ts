@@ -9,7 +9,7 @@ const {PushNotifications} = Plugins;
 const fcm = new FCM();
 
 export enum PushTopic {
-    GROUP_ALL
+    HOUSE_ALL
 }
 
 @Injectable({
@@ -72,8 +72,8 @@ export class PushService {
             .then(() => {
                 let subTopic;
                 switch (topic) {
-                    case PushTopic.GROUP_ALL:
-                        subTopic = 'groups_' + data.groupId + '_all';
+                    case PushTopic.HOUSE_ALL:
+                        subTopic = 'houses_' + data.houseId + '_all';
                 }
 
                 if (subTopic) {
@@ -81,7 +81,7 @@ export class PushService {
                         topic: subTopic
                     }).then(() => {
                         switch (topic) {
-                            case PushTopic.GROUP_ALL:
+                            case PushTopic.HOUSE_ALL:
                                 this.storage.set(`${data.accountId}_enablePush`, true);
                         }
                     }).catch(err => {
@@ -100,8 +100,8 @@ export class PushService {
             .then(() => {
                 let subTopic;
                 switch (topic) {
-                    case PushTopic.GROUP_ALL:
-                        subTopic = 'groups_' + data.groupId + '_all';
+                    case PushTopic.HOUSE_ALL:
+                        subTopic = 'houses_' + data.houseId + '_all';
                 }
 
                 if (subTopic) {
@@ -109,7 +109,7 @@ export class PushService {
                         topic: subTopic
                     }).then(() => {
                         switch (topic) {
-                            case PushTopic.GROUP_ALL:
+                            case PushTopic.HOUSE_ALL:
                                 this.storage.set(`${data.accountId}_enablePush`, false);
                         }
                     }).catch((err) => {

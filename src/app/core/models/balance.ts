@@ -1,7 +1,5 @@
-import {Account} from '@core/models/account';
-
 /**
- * Helper interface for readability of the code within the Group class. Amount is the current balance, based on the totalIn and totalOut.
+ * Helper interface for readability of the code within the House class. Amount is the current balance, based on the totalIn and totalOut.
  */
 export class Balance {
     totalIn: number;

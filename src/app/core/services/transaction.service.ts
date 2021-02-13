@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AngularFireFunctions} from '@angular/fire/functions';
-import {Group, Transaction, transactionConverter} from '../models';
+import {House, Transaction, transactionConverter} from '../models';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {newTransaction, TransactionItem} from '../models/transaction';
@@ -43,14 +43,14 @@ export class TransactionService {
         this.transactionSubject.next(undefined);
     }
 
-    addTransaction(group: Group, transactionSet: TransactionSet): Observable<void> {
-        const currentUserAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
+    addTransaction(house: House, transactionSet: TransactionSet): Observable<void> {
+        const currentUserAccount = house.getUserAccountByUserId(this.authService.currentUser.uid);
         const transactionItems: TransactionItem[] = [];
         let totalPrice = 0;
 
         Object.keys(transactionSet).forEach(accountId => {
             Object.keys(transactionSet[accountId]).forEach(productId => {
-                const product = group.getProductById(productId);
+                const product = house.getProductById(productId);
                 const amount = transactionSet[accountId][productId].amount;
 
                 if (amount > 0) {
@@ -69,7 +69,7 @@ export class TransactionService {
 
         const callable = this.functions.httpsCallable('addTransaction');
         return callable({
-            groupId: group.id,
+            houseId: house.id,
             transaction
         }).pipe(
             trace('addTransaction'),
@@ -78,15 +78,15 @@ export class TransactionService {
                 return err;
             }),
             tap(() => {
-                this.analyticsService.logTransaction(this.authService.currentUser.uid, group.id);
+                this.analyticsService.logTransaction(this.authService.currentUser.uid, house.id);
             })
         );
     }
 
-    editTransaction(groupId: string, updatedTransaction: Transaction): Observable<void> {
+    editTransaction(houseId: string, updatedTransaction: Transaction): Observable<void> {
         const callable = this.functions.httpsCallable('editTransaction');
         return callable({
-            groupId,
+            houseId,
             updatedTransaction
         }).pipe(
             trace('editTransaction'),
@@ -97,21 +97,21 @@ export class TransactionService {
         );
     }
 
-    getTransaction(groupId: string, transactionId: string): Promise<Transaction> {
-        return this.fs.collection('groups').doc(groupId).collection('transactions').doc(transactionId)
+    getTransaction(houseId: string, transactionId: string): Promise<Transaction> {
+        return this.fs.collection('houses').doc(houseId).collection('transactions').doc(transactionId)
             .ref
             .withConverter(transactionConverter)
             .get()
-            .then((group) => {
-                return group.data();
+            .then((house) => {
+                return house.data();
             });
     }
 
-    observeTransaction(groupId: string, transactionId: string) {
+    observeTransaction(houseId: string, transactionId: string) {
         if (!this.transaction$ || transactionId !== this.curTransactionId) {
             this.curTransactionId = transactionId;
 
-            this.initTransactionObserver(groupId, transactionId);
+            this.initTransactionObserver(houseId, transactionId);
 
             this.transaction$ = this.transactionSubject.asObservable()
                 .pipe(
@@ -122,12 +122,12 @@ export class TransactionService {
         return this.transaction$;
     }
 
-    private initTransactionObserver(groupId: string, transactionId: string) {
+    private initTransactionObserver(houseId: string, transactionId: string) {
         if (this.transactionSub) {
             this.transactionSub();
         }
 
-        this.transactionSub = this.fs.collection('groups').doc(groupId).collection('transactions').doc(transactionId)
+        this.transactionSub = this.fs.collection('houses').doc(houseId).collection('transactions').doc(transactionId)
             .ref
             .withConverter(transactionConverter)
             .onSnapshot((snapshot) => {

@@ -1,4 +1,4 @@
-import {Group, Transaction, UserAccount} from './models';
+import {House, Transaction, UserAccount} from './models';
 import * as functions from 'firebase-functions';
 import {ErrorMessage} from './models/error-message';
 import {getTransactionUpdateObject} from './helpers/transaction.helper';
@@ -7,7 +7,7 @@ import * as admin from 'firebase-admin';
 const db = admin.firestore();
 
 interface EditTransactionData {
-    groupId: string;
+    houseId: string;
     updatedTransaction: Transaction;
 }
 
@@ -17,7 +17,7 @@ interface EditTransactionData {
  * HTTP Trigger function for editing an existing transaction and use atomic operations for updating the balances of accounts and updating
  * product data.
  *
- * @var groupId: string
+ * @var houseId: string
  * @var updatedTransaction: Transaction Object
  * @var deltaTransaction: Transaction Object
  *
@@ -25,9 +25,9 @@ interface EditTransactionData {
  * @throws UNAUTHENTICATED if the initiator of this call is not authenticated with Firebase Auth
  * @throws PERMISSION_DENIED if this user is not allowed to do operations
  * @throws INTERNAL if something went wrong which we cannot completely explain
- * @throws GROUP_NOT_FOUND if the group with variable groupId was not found
- * @throws NOT_MEMBER_OF_GROUP if the user is not member of this group
- * @throws USER_ACCOUNT_NOT_FOUND if the account of the user was not found in this group
+ * @throws HOUSE_NOT_FOUND if the house with variable houseId was not found
+ * @throws NOT_MEMBER_OF_HOUSE if the user is not member of this house
+ * @throws USER_ACCOUNT_NOT_FOUND if the account of the user was not found in this house
  */
 export const editTransaction = functions.region('europe-west1').https
     .onCall((data: EditTransactionData, context) => {
@@ -37,38 +37,38 @@ export const editTransaction = functions.region('europe-west1').https
             throw new functions.https.HttpsError('unauthenticated', ErrorMessage.UNAUTHENTICATED);
         }
 
-        if (!data.groupId || !data.updatedTransaction) {
+        if (!data.houseId || !data.updatedTransaction) {
             throw new functions.https.HttpsError('failed-precondition', ErrorMessage.INVALID_DATA);
         }
 
-        const groupRef = db.collection('groups').doc(data.groupId);
+        const houseRef = db.collection('houses').doc(data.houseId);
         return db.runTransaction(fireTrans => {
-            return fireTrans.get(groupRef)
-                .then(groupDoc => {
-                    const group: Group = groupDoc?.data() as Group;
+            return fireTrans.get(houseRef)
+                .then(houseDoc => {
+                    const house: House = houseDoc?.data() as House;
 
-                    // Check if the group exists
-                    if (!groupDoc.exists || !group) {
-                        throw new functions.https.HttpsError('not-found', ErrorMessage.GROUP_NOT_FOUND);
+                    // Check if the house exists
+                    if (!houseDoc.exists || !house) {
+                        throw new functions.https.HttpsError('not-found', ErrorMessage.HOUSE_NOT_FOUND);
                     }
 
-                    // Check if the user is part of this group
-                    if (!group.members.includes(userId)) {
-                        throw new functions.https.HttpsError('permission-denied', ErrorMessage.NOT_MEMBER_OF_GROUP);
+                    // Check if the user is part of this house
+                    if (!house.members.includes(userId)) {
+                        throw new functions.https.HttpsError('permission-denied', ErrorMessage.NOT_MEMBER_OF_HOUSE);
                     }
 
                     const currentAccount: UserAccount | undefined
-                        = group.accounts.find((account: any) => account.userId === context.auth?.uid);
+                        = house.accounts.find((account: any) => account.userId === context.auth?.uid);
 
                     if (!currentAccount) {
                         throw new functions.https.HttpsError('not-found', ErrorMessage.USER_ACCOUNT_NOT_FOUND);
                     }
 
-                    return fireTrans.get(groupRef.collection('transactions').doc(data.updatedTransaction.id))
+                    return fireTrans.get(houseRef.collection('transactions').doc(data.updatedTransaction.id))
                         .then(transactionDoc => {
                             const trans: Transaction = transactionDoc?.data() as Transaction;
 
-                            // Check if the group exists
+                            // Check if the house exists
                             if (!transactionDoc.exists || !trans) {
                                 throw new functions.https.HttpsError('not-found', ErrorMessage.TRANSACTION_NOT_FOUND);
                             }
@@ -84,19 +84,19 @@ export const editTransaction = functions.region('europe-west1').https
 
                             // Update old transaction and add new transaction to firestore
                             if (data.updatedTransaction.items.length === 0) {
-                                fireTrans.update(groupRef.collection('transactions').doc(data.updatedTransaction.id), {
+                                fireTrans.update(houseRef.collection('transactions').doc(data.updatedTransaction.id), {
                                     removed: true,
                                 });
                             } else {
-                                fireTrans.update(groupRef.collection('transactions').doc(data.updatedTransaction.id), {
+                                fireTrans.update(houseRef.collection('transactions').doc(data.updatedTransaction.id), {
                                     items: data.updatedTransaction.items,
                                 });
                             }
 
-                            const updateBatch: any = getTransactionUpdateObject(group, deltaTransaction);
+                            const updateBatch: any = getTransactionUpdateObject(house, deltaTransaction);
 
                             // Update the balance of the accounts
-                            fireTrans.update(groupRef, updateBatch);
+                            fireTrans.update(houseRef, updateBatch);
                         });
                 })
                 .catch(err => {

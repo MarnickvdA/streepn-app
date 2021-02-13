@@ -1,4 +1,4 @@
-import {Balance, Group, Product, ProductData, SettleMap, Settlement, UserAccount} from '../models';
+import {Balance, House, Product, ProductData, SettleMap, Settlement, UserAccount} from '../models';
 import * as functions from 'firebase-functions';
 import {ErrorMessage} from '../models/error-message';
 import * as admin from 'firebase-admin';
@@ -25,12 +25,12 @@ export interface ProductBalanceMap {
 }
 
 
-export function calculateNewBalance(group: Group): AccountBalanceMap {
+export function calculateNewBalance(house: House): AccountBalanceMap {
     const newAccountBalances: AccountBalanceMap = {};
     const newProductBalances: ProductBalanceMap = {};
 
-    group.accounts.forEach((account: UserAccount) => {
-        const accountBalance: Balance = group.balances[account.id];
+    house.accounts.forEach((account: UserAccount) => {
+        const accountBalance: Balance = house.balances[account.id];
 
         const newBalance = {
             newBalance: 0,
@@ -42,8 +42,8 @@ export function calculateNewBalance(group: Group): AccountBalanceMap {
         // Iterate through every product this account has interacted with
         if (accountBalance.products) {
             Object.keys(accountBalance.products).forEach((productId: string) => {
-                const product: Product | undefined = group.products.find((p: any) => p.id === productId);
-                const pData: ProductData | undefined = group.productData[productId];
+                const product: Product | undefined = house.products.find((p: any) => p.id === productId);
+                const pData: ProductData | undefined = house.productData[productId];
 
                 if (!product || !pData) {
                     throw new functions.https.HttpsError('not-found', ErrorMessage.PRODUCT_NOT_FOUND);
@@ -88,8 +88,8 @@ export function calculateNewBalance(group: Group): AccountBalanceMap {
     });
 
     Object.keys(newProductBalances).forEach((productId: string) => {
-        const product: Product | undefined = group.products.find((pr: { id: string }) => pr.id === productId);
-        const pData: ProductData | undefined = group.productData[productId];
+        const product: Product | undefined = house.products.find((pr: { id: string }) => pr.id === productId);
+        const pData: ProductData | undefined = house.productData[productId];
 
         if (!product || !pData) {
             throw new functions.https.HttpsError('not-found', ErrorMessage.PRODUCT_NOT_FOUND);
@@ -180,7 +180,7 @@ export function calculateNewBalance(group: Group): AccountBalanceMap {
     return newAccountBalances;
 }
 
-export function deriveUpdateBatch(group: Group, newAccountBalances: AccountBalanceMap): { [updateKey: string]: unknown } {
+export function deriveUpdateBatch(house: House, newAccountBalances: AccountBalanceMap): { [updateKey: string]: unknown } {
     const updateBatch: any = {
         isSettling: false,
         settledAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -188,7 +188,7 @@ export function deriveUpdateBatch(group: Group, newAccountBalances: AccountBalan
         totalOut: 0,
     };
 
-    group.accounts.forEach((account: { id: string }) => {
+    house.accounts.forEach((account: { id: string }) => {
         const balance = newAccountBalances[account.id];
         if (balance) {
             updateBatch[`balances.${account.id}`] = {
@@ -209,7 +209,7 @@ export function deriveUpdateBatch(group: Group, newAccountBalances: AccountBalan
     Object.keys(newAccountBalances).forEach((accountId: string) => {
         Object.keys(newAccountBalances[accountId].products).forEach((productId: string) => {
             if (!updateBatch[`productData.${productId}`]) {
-                const pData: ProductData | undefined = group.productData[productId];
+                const pData: ProductData | undefined = house.productData[productId];
                 updateBatch[`productData.${productId}`] = {
                     totalIn: 0,
                     totalOut: 0,
@@ -225,7 +225,7 @@ export function deriveUpdateBatch(group: Group, newAccountBalances: AccountBalan
     return updateBatch;
 }
 
-export function calculateSettlement(group: Group, userId: string, newAccountBalances: AccountBalanceMap): Settlement {
+export function calculateSettlement(house: House, userId: string, newAccountBalances: AccountBalanceMap): Settlement {
     let toSettle: {
         accountId: string,
         settle: number,
@@ -276,7 +276,7 @@ export function calculateSettlement(group: Group, userId: string, newAccountBala
     }
 
     const currentAccount: UserAccount | undefined
-        = group.accounts.find((account: UserAccount) => account.userId === userId);
+        = house.accounts.find((account: UserAccount) => account.userId === userId);
 
     if (!currentAccount) {
         throw new functions.https.HttpsError('not-found', ErrorMessage.USER_ACCOUNT_NOT_FOUND);
@@ -289,7 +289,7 @@ export function calculateSettlement(group: Group, userId: string, newAccountBala
         accounts: {},
     };
 
-    group.accounts.forEach((acc: UserAccount) => {
+    house.accounts.forEach((acc: UserAccount) => {
         settlement.accounts[acc.id] = {
             name: acc.name,
         };

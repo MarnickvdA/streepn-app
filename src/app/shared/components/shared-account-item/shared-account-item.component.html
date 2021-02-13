@@ -3,7 +3,7 @@
         <ion-label>
             <h3>{{account.name}}</h3>
             <p>
-                {{'group.overview.account.balanceAmount' | translate }}:
+                {{'house.overview.account.balanceAmount' | translate }}:
                 <span *ngIf="account.balance; let balance"
                       [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
             </p>

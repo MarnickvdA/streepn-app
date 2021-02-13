@@ -14,8 +14,7 @@ export {PushService, PushTopic} from './push.service';
 
 // Model services
 export {TransactionService, TransactionSet} from './transaction.service';
-export {UserService} from './user.service';
 export {AccountService} from './account.service';
 export {StockService} from './stock.service';
 export {ProductService} from './product.service';
-export {GroupService} from './group.service';
+export {HouseService} from './house.service';

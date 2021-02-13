@@ -3,13 +3,13 @@ import {Balance} from '@core/models/balance';
 
 /**
  * The account class is the abstract super class of several types of accounts. It holds the basic information for interacting within a
- * Group. Accounts are meant to serve as (a collection of) users which can do actions in a group. This includes doing transactions, updating
+ * House. Accounts are meant to serve as (a collection of) users which can do actions in a house. This includes doing transactions, updating
  * stock and more. The balance of an account is not handled within the Account class because of a design choice for ACID database operations
  * The balance of an account can only be changed server-side. If we would have implemented it client-side, the whole Account object would
  * need to be updated due to Firestore restrictions. This would yield problematic states, as changing the name of an account would also
  * update the balance. Due to client-2-server latency, this could cause problems in terms of concurrency.
  *
- * The balance of any Account within a group can be gotten from a helper function in Group.
+ * The balance of any Account within a house can be gotten from a helper function in House.
  */
 export abstract class Account {
     id: string;
@@ -19,7 +19,7 @@ export abstract class Account {
     // Filter label for the sub-types of Account. Useful for quick checking which type the account is.
     type: AccountType;
 
-    // This value is retrieved from Group but with Firestore conversion saved to Account object
+    // This value is retrieved from House but with Firestore conversion saved to Account object
     balance: Balance;
 
     // Moment in time when the account was last settled. Transactions until this time cannot be edited for this account.
@@ -38,7 +38,7 @@ export abstract class Account {
         return JSON.parse(JSON.stringify(this));
     }
 
-    get canLeaveGroup(): boolean {
+    get canLeaveHouse(): boolean {
         return this.balance.totalIn === 0 && this.balance.totalOut === 0;
     }
 }

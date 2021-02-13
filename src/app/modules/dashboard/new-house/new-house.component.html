@@ -1,0 +1,69 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{'dashboard.createHouse.title' | translate}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="dismiss()">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
+                                 [icon]="['fad', 'times-circle']"></fa-duotone-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{'dashboard.createHouse.title' | translate}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <div class="form-content">
+        <h5>{{'dashboard.createHouse.step1.title' | translate}}</h5>
+        <p>{{'dashboard.createHouse.step1.description' | translate}}</p>
+        <form (ngSubmit)="setName()" [formGroup]="houseForm">
+            <ion-item class="form-input" lines="none">
+                <ion-icon name="people-outline"></ion-icon>
+                <ion-input [attr.disabled]="houseCreated" autocapitalize="words"
+                           clearInput enterkeyhint="next"
+                           formControlName="name" inputmode="text"
+                           placeholder="{{'dashboard.createHouse.houseName' | translate}}" type="text"></ion-input>
+            </ion-item>
+            <span *ngIf="isSubmitted && form.name.errors?.required" class="form-input-error">
+                {{'dashboard.createHouse.errors.name-required' | translate}}
+            </span>
+            <span *ngIf="isSubmitted && form.name.errors?.length" class="form-input-error">
+                {{'dashboard.createHouse.errors.name-length' | translate}}
+            </span>
+
+            <ion-button [attr.disabled]="houseCreated" [color]="houseCreated && !loading ? 'success' : 'primary'"
+                        class="ion-margin-top"
+                        expand="block" id="name-button"
+                        type="submit">
+                <ion-label *ngIf="!houseCreated">{{'actions.submit' | translate}}</ion-label>
+                <ion-spinner *ngIf="houseCreated && loading"></ion-spinner>
+                <ion-icon *ngIf="houseCreated && !loading" name="checkmark-outline"></ion-icon>
+            </ion-button>
+        </form>
+
+        <hr>
+
+        <div>
+            <h5>{{'dashboard.createHouse.step2.title' | translate}}</h5>
+            <p>{{'dashboard.createHouse.step2.description' | translate}}</p>
+            <ion-button (click)="shareHouse()" [attr.disabled]="!house" expand="block">
+                <ion-label>{{'dashboard.createHouse.shareInvite' | translate}}</ion-label>
+            </ion-button>
+        </div>
+
+        <hr>
+
+        <div>
+            <h5>{{'dashboard.createHouse.step3.title' | translate}}</h5>
+            <p>{{'dashboard.createHouse.step3.description' | translate}}</p>
+            <ion-button (click)="navigateHouseOverview()" [attr.disabled]="!(house && sharedHouse)" expand="block">
+                <ion-label>{{'dashboard.createHouse.navigateHouseOverview' | translate}}</ion-label>
+            </ion-button>
+        </div>
+    </div>
+
+</ion-content>

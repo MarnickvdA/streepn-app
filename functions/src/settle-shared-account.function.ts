@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import {ErrorMessage} from './models/error-message';
-import {Group, SharedAccount} from './models';
+import {House, SharedAccount} from './models';
 const db = admin.firestore();
 
 interface AccountsPayout {
@@ -19,7 +19,7 @@ interface Payout {
 }
 
 interface SettleSharedAccountData {
-    groupId: string;
+    houseId: string;
     sharedAccountId: string;
     settlement: AccountsPayout;
 }
@@ -30,7 +30,7 @@ interface SettleSharedAccountData {
  * HTTP Trigger function for editing an existing transaction and use atomic operations for updating the balances of accounts and updating
  * product data.
  *
- * @var groupId: string
+ * @var houseId: string
  * @var updatedTransaction: Transaction Object
  * @var deltaTransaction: Transaction Object
  *
@@ -38,9 +38,9 @@ interface SettleSharedAccountData {
  * @throws UNAUTHENTICATED if the initiator of this call is not authenticated with Firebase Auth
  * @throws PERMISSION_DENIED if this user is not allowed to do operations
  * @throws INTERNAL if something went wrong which we cannot completely explain
- * @throws GROUP_NOT_FOUND if the group with variable groupId was not found
- * @throws NOT_MEMBER_OF_GROUP if the user is not member of this group
- * @throws USER_ACCOUNT_NOT_FOUND if the account of the user was not found in this group
+ * @throws HOUSE_NOT_FOUND if the house with variable houseId was not found
+ * @throws NOT_MEMBER_OF_HOUSE if the user is not member of this house
+ * @throws USER_ACCOUNT_NOT_FOUND if the account of the user was not found in this house
  */
 export const settleSharedAccount = functions.region('europe-west1').https
     .onCall((data: SettleSharedAccountData, context) => {
@@ -50,28 +50,28 @@ export const settleSharedAccount = functions.region('europe-west1').https
             throw new functions.https.HttpsError('unauthenticated', ErrorMessage.UNAUTHENTICATED);
         }
 
-        if (!data.groupId || !data.sharedAccountId || !data.settlement) {
+        if (!data.houseId || !data.sharedAccountId || !data.settlement) {
             throw new functions.https.HttpsError('failed-precondition', ErrorMessage.INVALID_DATA);
         }
 
-        const groupRef = db.collection('groups').doc(data.groupId);
+        const houseRef = db.collection('houses').doc(data.houseId);
         return db.runTransaction(fireTrans => {
-            return fireTrans.get(groupRef)
-                .then(groupDoc => {
-                    const group: Group = groupDoc?.data() as Group;
+            return fireTrans.get(houseRef)
+                .then(houseDoc => {
+                    const house: House = houseDoc?.data() as House;
 
-                    // Check if the group exists
-                    if (!groupDoc.exists || !group) {
-                        throw new functions.https.HttpsError('not-found', ErrorMessage.GROUP_NOT_FOUND);
+                    // Check if the house exists
+                    if (!houseDoc.exists || !house) {
+                        throw new functions.https.HttpsError('not-found', ErrorMessage.HOUSE_NOT_FOUND);
                     }
 
-                    // Check if the user is part of this group
-                    if (!group.members.includes(userId)) {
-                        throw new functions.https.HttpsError('permission-denied', ErrorMessage.NOT_MEMBER_OF_GROUP);
+                    // Check if the user is part of this house
+                    if (!house.members.includes(userId)) {
+                        throw new functions.https.HttpsError('permission-denied', ErrorMessage.NOT_MEMBER_OF_HOUSE);
                     }
 
-                    // Check if the shared account is part of this group
-                    if (!group.sharedAccounts.find((acc: SharedAccount) => acc.id === data.sharedAccountId)) {
+                    // Check if the shared account is part of this house
+                    if (!house.sharedAccounts.find((acc: SharedAccount) => acc.id === data.sharedAccountId)) {
                         throw new functions.https.HttpsError('not-found', ErrorMessage.SHARED_ACCOUNT_NOT_FOUND);
                     }
 
@@ -82,7 +82,7 @@ export const settleSharedAccount = functions.region('europe-west1').https
                         [`balances.${data.sharedAccountId}.totalIn`]: 0,
                         [`balances.${data.sharedAccountId}.totalOut`]: 0,
                         [`balances.${data.sharedAccountId}.products`]: {},
-                        sharedAccounts: group.sharedAccounts.map((acc: SharedAccount) => {
+                        sharedAccounts: house.sharedAccounts.map((acc: SharedAccount) => {
                             if (acc.id === data.sharedAccountId) {
                                 acc.settledAt = admin.firestore.Timestamp.now();
                             }
@@ -105,8 +105,8 @@ export const settleSharedAccount = functions.region('europe-west1').https
                             });
                     });
 
-                    // Update the group
-                    fireTrans.update(groupRef, updateObject);
+                    // Update the house
+                    fireTrans.update(houseRef, updateObject);
                 })
                 .catch(err => {
                     console.error(err);

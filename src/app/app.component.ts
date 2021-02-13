@@ -51,10 +51,10 @@ export class AppComponent {
             this.zone.run(() => {
                 const slug = data.url.split('streepn.nl').pop();
 
-                if (slug.startsWith('/group-invite/')) {
-                    const groupCode = slug.split('/group-invite/').pop();
+                if (slug.startsWith('/house-invite/')) {
+                    const houseCode = slug.split('/house-invite/').pop();
 
-                    this.storage.set('groupInvite', groupCode);
+                    this.storage.set('houseInvite', houseCode);
                 }
             });
         });
@@ -99,7 +99,7 @@ export class AppComponent {
 
             this.storage.get('favorite')
                 .then((favorite: string) => {
-                    this.navController.navigateRoot('group/' + favorite + '/home');
+                    this.navController.navigateRoot('house/' + favorite + '/home');
                 })
                 .catch(() => {
                 });

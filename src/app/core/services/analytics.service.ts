@@ -49,54 +49,54 @@ export class AnalyticsService {
         });
     }
 
-    logCreateGroup(uid: string, groupId: string) {
-        this.logEvent('group_created', {
+    logCreateHouse(uid: string, houseId: string) {
+        this.logEvent('house_created', {
             userId: uid,
-            groupId
+            houseId
         });
     }
 
-    logJoinGroup(uid: string, groupId: string) {
-        this.logEvent('group_joined', {
+    logJoinHouse(uid: string, houseId: string) {
+        this.logEvent('house_joined', {
             userId: uid,
-            groupId
+            houseId
         });
     }
 
-    logLeaveGroup(userId: string, groupId: string) {
-        this.logEvent('group_left', {
+    logLeaveHouse(userId: string, houseId: string) {
+        this.logEvent('house_left', {
             userId,
-            groupId
+            houseId
         });
     }
 
-    logTransaction(uid: string, groupId: string) {
+    logTransaction(uid: string, houseId: string) {
         this.logEvent('transaction_created', {
             userId: uid,
-            groupId
+            houseId
         });
     }
 
-    logAddStock(uid: string, groupId: string, stockId: string) {
+    logAddStock(uid: string, houseId: string, stockId: string) {
         this.logEvent('stock_created', {
             userId: uid,
-            groupId,
+            houseId,
             stockId
         });
     }
 
-    logEditStock(uid: string, groupId: string, stockId: string) {
+    logEditStock(uid: string, houseId: string, stockId: string) {
         this.logEvent('stock_edited', {
             userId: uid,
-            groupId,
+            houseId,
             stockId
         });
     }
 
-    logRemoveStock(uid: string, groupId: string, stockId: string) {
+    logRemoveStock(uid: string, houseId: string, stockId: string) {
         this.logEvent('stock_removed', {
             userId: uid,
-            groupId,
+            houseId,
             stockId
         });
     }

@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {Group} from '@core/models';
-import {AuthService, EventsService, GroupService, StorageService} from '@core/services';
+import {House} from '@core/models';
+import {AuthService, EventsService, HouseService, StorageService} from '@core/services';
 import {Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
 import {AlertController, LoadingController, MenuController, NavController} from '@ionic/angular';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
@@ -22,13 +22,13 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
     @Input() contentId: string;
     private userSub: Subscription;
-    groups$: Observable<Group[]>;
+    houses$: Observable<House[]>;
     isDarkMode: boolean;
     favorite: string;
     appVersion = environment.version;
 
     constructor(private authService: AuthService,
-                private groupService: GroupService,
+                private houseService: HouseService,
                 private storage: StorageService,
                 private events: EventsService,
                 private navController: NavController,
@@ -58,7 +58,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
         this.userSub = this.authService.user
             .subscribe((user) => {
                 if (user) {
-                    this.groups$ = this.groupService.observeGroups(user.uid);
+                    this.houses$ = this.houseService.observeHouses(user.uid);
                 }
             });
 
@@ -90,16 +90,16 @@ export class SideMenuComponent implements OnInit, OnDestroy {
         }
     }
 
-    toggleFavorite(event: MouseEvent, groupId: string) {
+    toggleFavorite(event: MouseEvent, houseId: string) {
         event.stopPropagation();
         event.preventDefault();
 
-        if (this.favorite === groupId) {
+        if (this.favorite === houseId) {
             this.favorite = undefined;
             this.storage.delete('favorite');
         } else {
-            this.favorite = groupId;
-            this.storage.set('favorite', groupId)
+            this.favorite = houseId;
+            this.storage.set('favorite', houseId)
                 .catch(() => {
                 });
         }

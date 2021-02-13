@@ -20,37 +20,37 @@
 
     <ion-list>
         <ion-list-header lines="full">
-            <ion-label>{{'dashboard.groups' | translate}}</ion-label>
+            <ion-label>{{'dashboard.houses' | translate}}</ion-label>
         </ion-list-header>
 
-        <ng-template [ngIf]="groups && !loading">
-            <ion-item class="no-min-height no-bg" *ngIf="groups.length === 0" lines="none">
+        <ng-template [ngIf]="houses && !loading">
+            <ion-item class="no-min-height no-bg" *ngIf="houses.length === 0" lines="none">
                 <ion-label>
                     <p class="small">
-                        {{'dashboard.emptyGroups' | translate}}
+                        {{'dashboard.emptyHouses' | translate}}
                     </p>
                 </ion-label>
             </ion-item>
 
-            <ion-item class="group-item" *ngFor="let group of groups" button (click)="openGroup(group)">
+            <ion-item class="house-item" *ngFor="let house of houses" button (click)="openHouse(house)">
                 <ion-label>
-                    <h2>{{group.name}}</h2>
-                    <p>{{'dashboard.yourBalance' | translate}} <span *ngIf="groupAccounts[group.id].balance; let balance"
+                    <h2>{{house.name}}</h2>
+                    <p>{{'dashboard.yourBalance' | translate}} <span *ngIf="houseAccounts[house.id].balance; let balance"
                                                                      [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
                     </p>
                 </ion-label>
             </ion-item>
 
-            <ion-item (click)="promptManualGroupJoin()" lines="none" class="no-min-height no-bg" button detail="false">
+            <ion-item (click)="promptManualHouseJoin()" lines="none" class="no-min-height no-bg" button detail="false">
                 <fa-duotone-icon slot="start" class="medium" fixedWidth
                                  [icon]="['fad', 'ticket']"></fa-duotone-icon>
                 <ion-label color="medium">
-                    <h3>{{'dashboard.manualGroupJoin' | translate}}</h3>
+                    <h3>{{'dashboard.manualHouseJoin' | translate}}</h3>
                 </ion-label>
             </ion-item>
         </ng-template>
 
-        <ion-item class="group-item" *ngIf="loading" detail="true">
+        <ion-item class="house-item" *ngIf="loading" detail="true">
             <ion-label>
                 <h2>
                     <ion-skeleton-text animated style="width: 35%"></ion-skeleton-text>
@@ -61,7 +61,7 @@
             </ion-label>
         </ion-item>
 
-        <ion-item *ngIf="!groups && !loading">
+        <ion-item *ngIf="!houses && !loading">
             <ion-label>
                 <p class="small ion-text-wrap">
                     {{'errors.no-connection' | translate}}
@@ -71,7 +71,7 @@
     </ion-list>
 
     <ion-fab slot="fixed" horizontal="center" vertical="bottom" [edge]="iOS">
-        <ion-fab-button (click)="addGroup()">
+        <ion-fab-button (click)="addHouse()">
             <fa-icon [icon]="['far', 'plus']"></fa-icon>
         </ion-fab-button>
     </ion-fab>

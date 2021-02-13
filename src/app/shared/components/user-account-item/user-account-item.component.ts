@@ -1,8 +1,8 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {Group, UserAccount} from '@core/models';
+import {House, UserAccount} from '@core/models';
 import {TranslateService} from '@ngx-translate/core';
 import {NavController} from '@ionic/angular';
-import {AuthService, GroupService} from '@core/services';
+import {AuthService, HouseService} from '@core/services';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -17,24 +17,24 @@ export class UserAccountItemComponent implements OnInit, OnDestroy {
     @Input() canEditAccount = false;
     @Input() navLink?: string;
 
-    group?: Group;
-    private groupSub: Subscription;
+    house?: House;
+    private houseSub: Subscription;
 
     constructor(private translate: TranslateService,
-                private groupService: GroupService,
+                private houseService: HouseService,
                 private authService: AuthService,
                 private navController: NavController) {
     }
 
     ngOnInit() {
-        this.groupSub = this.groupService.observeGroup(this.groupService.currentGroupId)
-            .subscribe((group) => {
-                this.group = group;
+        this.houseSub = this.houseService.observeHouse(this.houseService.currentHouseId)
+            .subscribe((house) => {
+                this.house = house;
             });
     }
 
     ngOnDestroy(): void {
-        this.groupSub.unsubscribe();
+        this.houseSub.unsubscribe();
     }
 
     openAccount() {

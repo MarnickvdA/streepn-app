@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {Group, SharedAccount} from '@core/models';
+import {House, SharedAccount} from '@core/models';
 import {Subscription} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
-import {GroupService} from '@core/services';
+import {HouseService} from '@core/services';
 
 @Component({
     selector: 'app-shared-account-item',
@@ -15,23 +15,23 @@ export class SharedAccountItemComponent implements OnInit, OnDestroy {
     @Input() isButton = true;
     @Output() clicked: EventEmitter<any> = new EventEmitter();
 
-    group?: Group;
+    house?: House;
     hasCallback: boolean;
-    private groupSub: Subscription;
+    private houseSub: Subscription;
 
     constructor(private translate: TranslateService,
-                private groupService: GroupService) {
+                private houseService: HouseService) {
     }
 
     ngOnInit() {
-        this.groupSub = this.groupService.observeGroup(this.groupService.currentGroupId)
-            .subscribe((group) => {
-                this.group = group;
+        this.houseSub = this.houseService.observeHouse(this.houseService.currentHouseId)
+            .subscribe((house) => {
+                this.house = house;
             });
     }
 
     ngOnDestroy(): void {
-        this.groupSub.unsubscribe();
+        this.houseSub.unsubscribe();
     }
 
     onClick() {

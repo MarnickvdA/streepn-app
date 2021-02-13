@@ -22,8 +22,8 @@ const routes: Routes = [
         ...canActivate(redirectLoggedInToDashboard)
     },
     {
-        path: 'group',
-        loadChildren: () => import('./modules/group/group.module').then(m => m.GroupPageModule),
+        path: 'house',
+        loadChildren: () => import('./modules/house/house.module').then(m => m.HousePageModule),
         ...canActivate(redirectUnauthorizedToLogin)
     },
     {

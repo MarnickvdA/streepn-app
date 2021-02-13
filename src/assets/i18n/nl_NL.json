@@ -55,10 +55,10 @@
     "error": "Foutmelding",
     "warning": "Waarschuwing",
     "no-connection": "#100 - Geen verbinding met de server kunnen maken",
-    "group-not-found": "Groep niet gevonden",
-    "group-not-retrieved": "Groep kon niet worden opgehaald",
-    "group-invite-expired": "Groepslink verlopen",
-    "group-creation-error": "Er is een fout opgetreden bij het aanmaken van de groep. Probeer het opnieuw.",
+    "house-not-found": "Huis niet gevonden",
+    "house-not-retrieved": "Huis kon niet worden opgehaald",
+    "house-invite-expired": "Huislink verlopen",
+    "house-creation-error": "Er is een fout opgetreden bij het aanmaken van het huis. Probeer het opnieuw.",
     "functions": {
 
     }
@@ -97,43 +97,43 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "groups": "Groepen",
+    "houses": "Huizen",
     "profile": "Profiel",
     "emailVerified": "Geverifieerd",
     "memberSince": "Gebruiker sinds",
-    "emptyGroups": "Je hebt nog geen groepen.",
+    "emptyHouses": "Je bent dakloos 😢",
     "yourBalance": "Jouw saldo: ",
     "balance": "Saldo: ",
-    "createGroup": {
-      "title": "Nieuwe groep",
-      "groupName": "Groepsnaam",
+    "createHouse": {
+      "title": "Nieuw huis",
+      "houseName": "Huisnaam",
       "step1": {
-        "title": "Stap 1: Groepsnaam bedenken",
-        "description": "Bedenk een toepasselijke groepsnaam voor de groep die je wil aanmaken. Deze naam moet minimaal 3 letters bevatten."
+        "title": "Stap 1: Huisnaam bedenken",
+        "description": "Bedenk een toepasselijke huisnaam voor het huis dat je wil aanmaken. Deze naam moet minimaal 3 letters bevatten."
       },
       "step2": {
         "title": "Stap 2: Deelnemers uitnodigen",
-        "description": "Zonder deelnemers is het natuurlijk een beetje eenzaam in je groep. Deel nu snel de groepslink met degenen die je wil dat je groep deel gaan nemen."
+        "description": "Zonder deelnemers is het natuurlijk een beetje eenzaam in je huis. Deel nu snel de huislink met degenen die je wil laten intrekken in je huis."
       },
       "step3": {
-        "title": "Stap 3: Groep instellen",
-        "description": "Voeg nu producten toe aan je groep en gedeelde potjes. Daarna kun je beginnen met Streepn!"
+        "title": "Stap 3: Huis instellen",
+        "description": "Voeg nu producten en gedeelde potjes toe aan je huis. Daarna kun je beginnen met Streepn!"
       },
       "errors": {
-        "name-length": "Groepsnaam te kort",
-        "name-required": "Vul een groepsnaam in"
+        "name-length": "Huisnaam te kort",
+        "name-required": "Vul een huisnaam in"
       },
-      "shareInvite": "Groepslink delen",
-      "navigateGroupOverview": "Naar groepsoverzicht"
+      "shareInvite": "Huislink delen",
+      "navigateHouseOverview": "Naar huisoverzicht"
     },
     "toggleDarkMode": "Donkere modus",
-    "manualGroupJoin": "Toetreden met groepscode",
-    "groupInvite": {
+    "manualHouseJoin": "Toetreden met huiscode",
+    "houseInvite": {
       "header": "Uitnodiging",
       "question": "Wil je toetreden tot ",
       "manualHeader": "Code invoeren",
-      "code": "Groepscode",
-      "invalidCode": "Ongeldige groepscode"
+      "code": "Huiscode",
+      "invalidCode": "Ongeldige huiscode"
     }
   },
   "onboarding": {
@@ -157,21 +157,21 @@
       "title": "Naam instellen",
       "description": "Je hebt nog geen gebruikersnaam voor de app, laten we dit nu eventjes instellen. Vul hieronder je naam in!"
     },
-    "joinGroup": {
+    "joinHouse": {
       "title": "Je bent uitgenodigd voor",
-      "description": "Je bent hier gekomen door op een invite link te klikken. Wil je aan de groep deelnemen?"
+      "description": "Je bent hier gekomen door op een huislink te klikken. Wil je aan het huis deelnemen?"
     },
     "start": {
       "title": "Let's go!",
-      "description": "Nu we de eerste belangrijke zaken hebben ingesteld kun je beginnen aan het Streepn avontuur! Maak zelf een groep aan of neem deel aan een groep met een groepslink!"
+      "description": "Nu we de eerste belangrijke zaken hebben ingesteld kun je beginnen aan het Streepn avontuur! Maak zelf een huis aan of neem deel aan een huis met een huislink!"
     }
   },
-  "group": {
+  "house": {
     "tabs": {
       "more": "Meer"
     },
     "home": {
-      "title": "Groep",
+      "title": "Huis",
       "totalIn": "Totaal gestort",
       "totalOut": "Totaal uitgegeven"
     },
@@ -251,8 +251,8 @@
       "emptyStock": "Er is nog geen voorraad toegevoegd",
       "disabledStock": "Je kan pas voorraad toevoegen als je minstens één product hebt",
       "refreshLink": {
-        "header": "Groepslink vernieuwen",
-        "message": "Je oude groepslink is verlopen... Wil je deze vernieuwen? De nieuwe link is dan 1 week geldig."
+        "header": "Huislink vernieuwen",
+        "message": "Je oude huislink is verlopen... Wil je deze vernieuwen? De nieuwe link is dan 1 week geldig."
       },
       "preferences": {
         "title": "Voorkeuren voor {{name}}"
@@ -267,9 +267,9 @@
           "message": "Weet je zeker dat je de beheerdersrechten van {{name}} wilt ontnemen?",
           "you": "jezelf"
         },
-        "deletePrecondition": "Om de groep te verlaten moet elke geldstroom op € 0,00 staan.",
+        "deletePrecondition": "Om het huis te verlaten moet elke geldstroom op € 0,00 staan.",
         "deleteAccount": "{{name}} verwijderen",
-        "leaveGroup": "{{groupName}} verlaten",
+        "leaveHouse": "{{houseName}} verlaten",
         "you": "je",
         "balanceAmount": "Saldo",
         "totalIn": "Totaal gestort",
@@ -279,18 +279,18 @@
       "accounts": {
         "title": "Deelnemers",
         "adminTitle": "Deelnemers beheren",
-        "inviteLink": "Deel groepsuitnodiging",
+        "inviteLink": "Deel huisuitnodiging",
         "validThrough": "Geldig t/m",
         "expired": "Verlopen op"
       },
       "addAccount": {
         "header": "Deelnemers toevoegen",
-        "message": "Deel de onderstaande code met toekomstige deelnemers zodat ze deze groep kunnen deelnemen!",
+        "message": "Deel de onderstaande code met toekomstige deelnemers zodat ze het huis kunnen deelnemen!",
         "code": "code"
       },
       "inviteAccount": {
-        "title": "Neem deel aan {{group}}",
-        "description": "De groep {{group}} wacht op je in de Streepn App!",
+        "title": "Neem deel aan {{house}}",
+        "description": "Het huis {{house}} wacht op je in de Streepn App!",
         "dialogTitle": "Deel deze link met je vrienden!"
       },
       "addSharedAccount": {
@@ -332,15 +332,15 @@
         }
       },
       "settle": {
-        "group": {
+        "house": {
           "itemTitle": "Verrekeningen",
           "title": "Verrekeningen",
           "settle": "{{name}} verrekenen",
           "history": "Historie",
           "emptyHistory": "Er zijn nog geen verrekeningen gedaan.",
-          "description": "Voordat je de groep kunt verrekenen, moet de administratie up-to-date zijn. We controleren de gehele administratie stapsgewijs waarna je de groep kunt verrekenen.",
+          "description": "Voordat je het huis kunt verrekenen, moet de administratie up-to-date zijn. We controleren de gehele administratie stapsgewijs waarna je het huis kunt verrekenen.",
           "checkStock": "Voorraad controleren",
-          "stockDescription": "De voorraad van de producten in je administratie moeten minstens 0 zijn. Vul, indien aanwezig, tekorten aan zodat de groep verrekend kan worden.",
+          "stockDescription": "De voorraad van de producten in je administratie moeten minstens 0 zijn. Vul, indien aanwezig, tekorten aan zodat het huis verrekend kan worden.",
           "settleSharedAccounts": "Potjes verrekenen",
           "settleSharedDescription": "Alle potjes moeten verrekend worden voordat een verrekening kan worden gedaan.",
           "sharedCompleted": "Alle potjes zijn verrekend!",

@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
 import {DashboardPage} from './dashboard.page';
-import {NewGroupComponent} from './new-group/new-group.component';
+import {NewHouseComponent} from './new-house/new-house.component';
 
 const routes: Routes = [
     {
@@ -10,8 +10,8 @@ const routes: Routes = [
         component: DashboardPage
     },
     {
-        path: 'new-group',
-        component: NewGroupComponent
+        path: 'new-house',
+        component: NewHouseComponent
     }
 ];
 

@@ -3,7 +3,7 @@ import {AngularFireFunctions} from '@angular/fire/functions';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {Group, Stock, stockConverter} from '../models';
+import {House, Stock, stockConverter} from '../models';
 import {newStock} from '../models/stock';
 import {AuthService} from './auth.service';
 import {AngularFirePerformance, trace} from '@angular/fire/performance';
@@ -19,13 +19,13 @@ export class StockService {
                 private authService: AuthService) {
     }
 
-    addStockItem(group: Group, productId: string, cost: number, amount: number, paidById: string): Observable<Stock> {
-        const currentAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
+    addStockItem(house: House, productId: string, cost: number, amount: number, paidById: string): Observable<Stock> {
+        const currentAccount = house.getUserAccountByUserId(this.authService.currentUser.uid);
         const stock = Stock.new(currentAccount.id, paidById, productId, cost, amount);
 
         const callable = this.functions.httpsCallable('addStock');
         return callable({
-            groupId: group.id,
+            houseId: house.id,
             stock
         }).pipe(
             trace('addStock'),
@@ -34,15 +34,15 @@ export class StockService {
             }));
     }
 
-    removeStockItem(group: Group, productId: string, amount: number) {
-        const currentAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
+    removeStockItem(house: House, productId: string, amount: number) {
+        const currentAccount = house.getUserAccountByUserId(this.authService.currentUser.uid);
 
         const stock = new Stock('', undefined, currentAccount.id, undefined, productId,
             undefined, amount, false, true);
 
         const callable = this.functions.httpsCallable('removeStock');
         return callable({
-            groupId: group.id,
+            houseId: house.id,
             stock,
         }).pipe(
             trace('removeStock'),
@@ -51,25 +51,25 @@ export class StockService {
             }));
     }
 
-    editStockItem(group: Group, original: Stock, productId: string, cost: number, amount: number,
+    editStockItem(house: House, original: Stock, productId: string, cost: number, amount: number,
                   paidById: string): Observable<Stock> {
 
-        const currentAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
+        const currentAccount = house.getUserAccountByUserId(this.authService.currentUser.uid);
 
         const updatedStock = new Stock(original.id, original.createdAt, currentAccount.id, paidById,
             productId, cost, amount, false, false);
 
         const callable = this.functions.httpsCallable('editStock');
         return callable({
-            groupId: group.id,
+            houseId: house.id,
             updatedStock
         }).pipe(
             trace('editStock'),
         );
     }
 
-    getStockItem(groupId: string, stockId: string): Promise<Stock> {
-        return this.fs.collection('groups').doc(groupId).collection('stock').doc(stockId)
+    getStockItem(houseId: string, stockId: string): Promise<Stock> {
+        return this.fs.collection('houses').doc(houseId).collection('stock').doc(stockId)
             .ref
             .withConverter(stockConverter)
             .get()

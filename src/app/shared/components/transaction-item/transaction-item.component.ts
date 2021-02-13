@@ -1,9 +1,9 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {Group, Transaction, UserAccount} from '@core/models';
+import {House, Transaction, UserAccount} from '@core/models';
 import {NavController} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
-import {AuthService, GroupService} from '@core/services';
+import {AuthService, HouseService} from '@core/services';
 
 @Component({
     selector: 'app-transaction-item',
@@ -11,32 +11,32 @@ import {AuthService, GroupService} from '@core/services';
     styleUrls: ['./transaction-item.component.scss'],
 })
 export class TransactionItemComponent implements OnInit, OnDestroy {
-    group?: Group;
+    house?: House;
     account?: UserAccount;
     currentAccount?: UserAccount;
-    private groupSub: Subscription;
-    private group$: Observable<Group>;
+    private houseSub: Subscription;
+    private house$: Observable<House>;
     @Input() transaction: Transaction;
 
     constructor(private navController: NavController,
                 private route: ActivatedRoute,
-                private groupService: GroupService,
+                private houseService: HouseService,
                 private authService: AuthService) {
     }
 
     ngOnInit() {
-        this.group$ = this.groupService.observeGroup(this.groupService.currentGroupId);
-        this.groupSub = this.group$
-            .subscribe((group) => {
-                this.group = group;
+        this.house$ = this.houseService.observeHouse(this.houseService.currentHouseId);
+        this.houseSub = this.house$
+            .subscribe((house) => {
+                this.house = house;
 
-                this.currentAccount = group.getUserAccountByUserId(this.authService.currentUser.uid);
-                this.account = group.getUserAccountById(this.transaction.createdBy);
+                this.currentAccount = house.getUserAccountByUserId(this.authService.currentUser.uid);
+                this.account = house.getUserAccountById(this.transaction.createdBy);
             });
     }
 
     ngOnDestroy() {
-        this.groupSub.unsubscribe();
+        this.houseSub.unsubscribe();
     }
 
 
@@ -47,7 +47,7 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
         this.navController.navigateForward([transaction.id], {
             relativeTo: this.route,
             state: {
-                group: this.group,
+                house: this.house,
                 transaction
             }
         });

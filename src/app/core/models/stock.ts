@@ -1,6 +1,6 @@
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
-import {Group} from '@core/models/group';
+import {House} from '@core/models/house';
 
 export class Stock {
     id: string;
@@ -37,8 +37,8 @@ export class Stock {
         return !this.removed && !this.writtenOff;
     }
 
-    paidByString(group: Group) {
-        return group.getUserAccountById(this.paidById)?.name;
+    paidByString(house: House) {
+        return house.getUserAccountById(this.paidById)?.name;
     }
 
     deepCopy(): Stock {

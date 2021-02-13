@@ -9,8 +9,8 @@ import {DashboardPageRoutingModule} from './dashboard-routing.module';
 import {DashboardPage} from './dashboard.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {OnboardingComponent} from './onboarding/onboarding.component';
-import {NewGroupComponent} from './new-group/new-group.component';
 import {SharedModule} from '@shared/shared.module';
+import {NewHouseComponent} from '@modules/dashboard/new-house/new-house.component';
 
 @NgModule({
     imports: [
@@ -22,7 +22,7 @@ import {SharedModule} from '@shared/shared.module';
         ReactiveFormsModule,
         SharedModule
     ],
-    declarations: [DashboardPage, OnboardingComponent, NewGroupComponent]
+    declarations: [DashboardPage, OnboardingComponent, NewHouseComponent]
 })
 export class DashboardPageModule {
 }

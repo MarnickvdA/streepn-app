@@ -1,0 +1,71 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button mode="ios" fill="none" *ngIf="!editing" routerLink="/house/{{house.id}}/transactions"
+                        routerDirection="back">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
+                                 [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+            </ion-button>
+            <ion-button (click)="toggleEditing()" *ngIf="editing">
+                <ion-label>{{'actions.cancel' | translate}}</ion-label>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button [disabled]="!canEdit" (click)="toggleEditing()" *ngIf="!editing">
+                <ion-label>{{'actions.edit' | translate}}</ion-label>
+            </ion-button>
+            <ion-button (click)="editTransaction()" *ngIf="editing">
+                <ion-label>{{'actions.save' | translate}}</ion-label>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div *ngIf="house?.getUserAccountById(transaction?.createdBy) as account" class="createdBy">
+        <ion-avatar>
+            <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
+            <img *ngIf="!account.photoUrl" alt="" src="assets/svg/avatar.svg">
+        </ion-avatar>
+        <ion-label>
+            <h2>{{account.name}}</h2>
+            <p>{{'house.transaction.at' | translate:{date: transaction?.createdAt | dateTime} }}</p>
+            <p *ngIf="!canEdit" class="small"><b>{{'house.transactions.disabledEditing' | translate}}</b></p>
+        </ion-label>
+    </div>
+    <ion-list *ngIf="transaction?.items">
+        <ion-item *ngFor="let item of transaction.items; index as i">
+            <ion-avatar slot="start" *ngIf="house?.getUserAccountById(item.accountId); let user">
+                <img *ngIf="user.photoUrl" alt="" src="{{user.photoUrl}}">
+                <img *ngIf="!user.photoUrl" alt="" src="assets/svg/avatar.svg">
+            </ion-avatar>
+            <ion-label>
+                <h3>{{'house.transaction.header' | translate:{
+                    amount: item.amount,
+                    productName: house?.getProductById(item.productId)?.name,
+                    accountName: house?.getAccountById(item.accountId)?.name
+                } }}</h3>
+                <p class="small">
+                    {{'house.transaction.for' | translate:{accountName: house?.getAccountById(item.accountId)?.name} }}
+                </p>
+            </ion-label>
+            <ion-fab-button (click)="removeItem(item)" *ngIf="editing && canEditItem(item)"
+                            [attr.disabled]="item.amount === 0"
+                            color="danger" size="small">
+                <ion-icon name="remove-outline"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button (click)="addItem(item)" *ngIf="editing && canEditItem(item)"
+                            [attr.disabled]="item.amount >= itemsAmount[i]"
+                            color="success"
+                            size="small">
+                <ion-icon name="add-outline"></ion-icon>
+            </ion-fab-button>
+        </ion-item>
+    </ion-list>
+
+    <ion-fab *ngIf="editing" horizontal="end" slot="fixed" vertical="bottom">
+        <ion-fab-button (click)="deleteTransaction()" color="danger">
+            <ion-icon name="trash-outline"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-content>

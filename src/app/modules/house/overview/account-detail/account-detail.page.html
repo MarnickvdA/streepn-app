@@ -1,0 +1,87 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button mode="ios" fill="none" [routerLink]="'/house/' + houseId + '/preferences'"
+                        routerDirection="back">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
+                                 [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>{{account?.name}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{account?.name}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <ion-list>
+        <ion-item-divider class="bottom-line"></ion-item-divider>
+        <ion-item lines="inset">
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'user']"></fa-duotone-icon>
+            <ion-input [(ngModel)]="newName" value="{{account?.name}}"></ion-input>
+            <ion-button (click)="setName()"
+                        [attr.disabled]="newName === account?.name || newName?.length < 2">{{'actions.edit' | translate}}</ion-button>
+        </ion-item>
+        <ion-item *ngIf="isSelf">
+            <fa-duotone-icon slot="start" class="primary-reversed" fixedWidth
+                             [icon]="['fad', 'bell']"></fa-duotone-icon>
+            <ion-label>
+                <h3>{{'house.overview.account.enablePush' | translate}}</h3>
+            </ion-label>
+            <ion-toggle (ngModelChange)="togglePush()" [(ngModel)]="enablePush"
+                        slot="end"></ion-toggle>
+        </ion-item>
+        <ion-item lines="full" *ngIf="isAdmin">
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'users-crown']"></fa-duotone-icon>
+            <ion-label>
+                <h3>{{'house.overview.account.enableAdmin' | translate}}</h3>
+            </ion-label>
+            <ion-toggle (ngModelChange)="toggleAdmin()" [(ngModel)]="enableAdmin" [disabled]="!canDisableAdmin"
+                        slot="end"></ion-toggle>
+        </ion-item>
+
+        <ion-list-header lines="full">
+            <ion-label>
+                {{'house.overview.account.balance' | translate}}
+            </ion-label>
+        </ion-list-header>
+        <ion-item>
+            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'wallet']"></fa-duotone-icon>
+            <ion-label>
+                <h3>{{'house.overview.account.balanceAmount' | translate}}</h3>
+            </ion-label>
+            <span slot="end"
+                  [ngClass]="account?.balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{account?.balance.amount | money}}</span>
+        </ion-item>
+        <ion-item>
+            <fa-duotone-icon slot="start" class="success" fixedWidth [icon]="['fad', 'plus-circle']"></fa-duotone-icon>
+            <ion-label>
+                <h3>{{'house.overview.account.totalIn' | translate}}</h3>
+            </ion-label>
+            <span slot="end">{{account?.balance.totalIn | money}}</span>
+        </ion-item>
+        <ion-item lines="full">
+            <fa-duotone-icon slot="start" class="danger" fixedWidth [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
+            <ion-label>
+                <h3>{{'house.overview.account.totalOut' | translate}}</h3>
+            </ion-label>
+            <span slot="end">{{account?.balance.totalOut | money}}</span>
+        </ion-item>
+
+        <ion-item-divider class="bottom-line">
+            <ion-label class="ion-text-wrap" id="explanation" *ngIf="!account?.canLeaveHouse">
+                <p class="small">{{'house.overview.account.deletePrecondition' | translate:{name: isSelf ? ('house.overview.account.you' | translate) : account?.name} }}</p>
+            </ion-label>
+        </ion-item-divider>
+        <ion-item lines="full" (click)="deleteAccount()" button [disabled]="!account?.canLeaveHouse">
+            <fa-duotone-icon slot="start" class="danger" fixedWidth [icon]="['fad', 'sign-out']"></fa-duotone-icon>
+            <ion-label>
+                <h3 *ngIf="isAdmin && !isSelf"> {{'house.overview.account.deleteAccount' | translate:{name: account?.name} }}</h3>
+                <h3 *ngIf="isSelf"> {{'house.overview.account.leaveHouse' | translate:{houseName: house?.name} }}</h3>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+</ion-content>

@@ -2,16 +2,16 @@ import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core
 import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
 import firebase from 'firebase/app';
-import {Group, GroupInvite, UserAccount} from '@core/models';
-import {AdsService, AuthService, EventsService, GroupService, LoggerService, StorageService, UIService, UserService} from '@core/services';
+import {House, HouseInvite, UserAccount} from '@core/models';
+import {AdsService, AuthService, EventsService, HouseService, LoggerService, StorageService, UIService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-import {catchError, take} from 'rxjs/operators';
+import {take} from 'rxjs/operators';
 import {OnboardingComponent} from '@modules/dashboard/onboarding/onboarding.component';
 import {Capacitor} from '@capacitor/core';
-import {NewGroupComponent} from '@modules/dashboard/new-group/new-group.component';
-import User = firebase.User;
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {faTicket} from '@fortawesome/pro-duotone-svg-icons';
+import {NewHouseComponent} from '@modules/dashboard/new-house/new-house.component';
+import User = firebase.User;
 
 @Component({
     selector: 'app-dashboard',
@@ -20,22 +20,21 @@ import {faTicket} from '@fortawesome/pro-duotone-svg-icons';
 })
 export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     user$: Observable<User>;
-    private groups$: Observable<Group[]>;
-    private groupsSub: Subscription;
-    groups?: Group[];
+    private houses$: Observable<House[]>;
+    private housesSub: Subscription;
+    houses?: House[];
     loading: boolean;
     private userSub: Subscription;
     private readonly logger = LoggerService.getLogger(DashboardPage.name);
     private user: User;
-    private loadingGroupJoin?: HTMLIonLoadingElement;
+    private loadingHouseJoin?: HTMLIonLoadingElement;
     private onboarding: boolean;
-    groupAccounts: { [groupId: string]: UserAccount } = {};
+    houseAccounts: { [houseId: string]: UserAccount } = {};
     iOS: boolean;
 
     constructor(private authService: AuthService,
                 private navController: NavController,
-                private groupService: GroupService,
-                private userService: UserService,
+                private houseService: HouseService,
                 private alertController: AlertController,
                 private translate: TranslateService,
                 private zone: NgZone,
@@ -61,14 +60,14 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         this.user$.pipe(take(1))
             .subscribe(user => {
                 if (user) {
-                    this.groups$ = this.groupService.observeGroups(user.uid);
-                    this.groupsSub = this.groups$
-                        .subscribe(groups => {
-                            this.groups = groups;
-                            this.groupAccounts = {};
+                    this.houses$ = this.houseService.observeHouses(user.uid);
+                    this.housesSub = this.houses$
+                        .subscribe(houses => {
+                            this.houses = houses;
+                            this.houseAccounts = {};
 
-                            groups?.forEach(group => {
-                                this.groupAccounts[group.id] = group.getUserAccountByUserId(user.uid);
+                            houses?.forEach(house => {
+                                this.houseAccounts[house.id] = house.getUserAccountByUserId(user.uid);
                             });
 
                             this.loading = false;
@@ -77,15 +76,15 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             });
 
         this.eventsService.subscribe('app:resume', () => {
-            this.checkForGroupInvite();
+            this.checkForHouseInvite();
         });
     }
 
     ngOnDestroy() {
         this.userSub.unsubscribe();
-        this.groupsSub?.unsubscribe();
+        this.housesSub?.unsubscribe();
         this.eventsService.unsubscribe('app:resume', () => {
-            this.checkForGroupInvite();
+            this.checkForHouseInvite();
         });
     }
 
@@ -93,7 +92,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         this.storage.get('hasOnboarded')
             .then((hasOnboarded: boolean) => {
                 if (hasOnboarded) {
-                    this.checkForGroupInvite();
+                    this.checkForHouseInvite();
                 } else {
                     this.launchOnBoarding();
                 }
@@ -113,14 +112,14 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         this.ads.hideBanner();
     }
 
-    async promptManualGroupJoin() {
+    async promptManualHouseJoin() {
         const alert = await this.alertController.create({
-            header: this.translate.instant('dashboard.groupInvite.manualHeader'),
+            header: this.translate.instant('dashboard.houseInvite.manualHeader'),
             inputs: [
                 {
-                    name: 'groupCode',
+                    name: 'houseCode',
                     type: 'text',
-                    placeholder: this.translate.instant('dashboard.groupInvite.code')
+                    placeholder: this.translate.instant('dashboard.houseInvite.code')
                 }
             ],
             buttons: [
@@ -129,13 +128,13 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                     role: 'cancel',
                 }, {
                     text: this.translate.instant('actions.submit'),
-                    handler: (result: { groupCode: string }) => {
-                        if (result.groupCode.length === 8) {
-                            this.promptGroupInvite(result.groupCode);
+                    handler: (result: { houseCode: string }) => {
+                        if (result.houseCode.length === 8) {
+                            this.promptHouseInvite(result.houseCode);
                         } else {
                             this.uiService.showError(
                                 this.translate.instant('errors.error'),
-                                this.translate.instant('dashboard.groupInvite.invalidCode')
+                                this.translate.instant('dashboard.houseInvite.invalidCode')
                             );
                         }
                     }
@@ -165,13 +164,13 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    private checkForGroupInvite() {
-        this.storage.get('groupInvite')
+    private checkForHouseInvite() {
+        this.storage.get('houseInvite')
             .then((invite: string) => {
                 return this.storage.get('hasOnboarded')
                     .then((hasOnboarded: boolean) => {
                         if (hasOnboarded) {
-                            this.promptGroupInvite(invite);
+                            this.promptHouseInvite(invite);
                         }
                     });
             })
@@ -179,17 +178,17 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             });
     }
 
-    private promptGroupInvite(groupInvite: string) {
+    private promptHouseInvite(houseInvite: string) {
         // Fuck this item, don't want it more than once.
-        this.storage.delete('groupInvite');
+        this.storage.delete('houseInvite');
 
-        this.groupService.getGroupByInviteLink(groupInvite)
+        this.houseService.getHouseByInviteLink(houseInvite)
             .then(invite => {
                 if (invite) {
                     this.zone.run(() => {
                         this.alertController.create({
-                            header: this.translate.instant('dashboard.groupInvite.header'),
-                            message: this.translate.instant('dashboard.groupInvite.question') + '<b>' + invite.groupName + '</b>?',
+                            header: this.translate.instant('dashboard.houseInvite.header'),
+                            message: this.translate.instant('dashboard.houseInvite.question') + '<b>' + invite.houseName + '</b>?',
                             buttons: [
                                 {
                                     text: this.translate.instant('actions.deny'),
@@ -197,7 +196,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                                 }, {
                                     text: this.translate.instant('actions.accept'),
                                     handler: () => {
-                                        this.joinGroup(invite);
+                                        this.joinHouse(invite);
                                     }
                                 }
                             ]
@@ -216,44 +215,44 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             });
     }
 
-    private joinGroup(groupInvite: GroupInvite) {
+    private joinHouse(houseInvite: HouseInvite) {
         this.showLoading();
 
-        this.eventsService.subscribe('group:joined', () => {
-            this.loadingGroupJoin?.dismiss();
+        this.eventsService.subscribe('house:joined', () => {
+            this.loadingHouseJoin?.dismiss();
 
-            this.eventsService.unsubscribe('group:joined');
+            this.eventsService.unsubscribe('house:joined');
         });
 
-        this.groupService.joinGroup(groupInvite, this.user);
+        this.houseService.joinHouse(houseInvite, this.user);
     }
 
     private async showLoading() {
-        this.loadingGroupJoin = await this.loadingController.create({
+        this.loadingHouseJoin = await this.loadingController.create({
             message: this.translate.instant('actions.joining'),
             translucent: true,
             backdropDismiss: false
         });
 
-        await this.loadingGroupJoin.present();
+        await this.loadingHouseJoin.present();
 
-        this.loadingGroupJoin.onDidDismiss()
+        this.loadingHouseJoin.onDidDismiss()
             .then(() => {
-                this.loadingGroupJoin = undefined;
+                this.loadingHouseJoin = undefined;
             });
     }
 
-    openGroup(group: Group) {
-        this.navController.navigateRoot(['group', group.id, 'home'], {
+    openHouse(house: House) {
+        this.navController.navigateRoot(['house', house.id, 'home'], {
             animationDirection: 'forward',
         });
     }
 
-    addGroup() {
+    addHouse() {
         this.modalController.create({
             swipeToClose: true,
             backdropDismiss: true,
-            component: NewGroupComponent
+            component: NewHouseComponent
         }).then((modal) => {
             this.zone.run(() => {
                 modal.present();

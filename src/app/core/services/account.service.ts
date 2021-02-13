@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Balance, Group, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from '../models';
+import {Balance, House, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from '../models';
 import {AngularFirestore} from '@angular/fire/firestore';
 
 @Injectable({
@@ -9,8 +9,8 @@ export class AccountService {
     constructor(private fs: AngularFirestore) {
     }
 
-    updateUserAccount(group: Group, account: UserAccount) {
-        group.accounts = group.accounts.map(obj => {
+    updateUserAccount(house: House, account: UserAccount) {
+        house.accounts = house.accounts.map(obj => {
             if (obj.id === account.id) {
                 return account;
             } else {
@@ -18,22 +18,22 @@ export class AccountService {
             }
         });
 
-        return this.setUserAccounts(group);
+        return this.setUserAccounts(house);
     }
 
-    addSharedAccount(group: Group, accountName: string) {
+    addSharedAccount(house: House, accountName: string) {
         const sharedAccount = SharedAccount.new(accountName);
 
-        group.sharedAccounts.push(sharedAccount);
+        house.sharedAccounts.push(sharedAccount);
 
         return Promise.all([
-            this.setSharedAccounts(group),
-            this.addSharedAccountBalance(group.id, sharedAccount.id)
+            this.setSharedAccounts(house),
+            this.addSharedAccountBalance(house.id, sharedAccount.id)
         ]);
     }
 
-    updateSharedAccount(group: Group, account: SharedAccount) {
-        group.sharedAccounts = group.sharedAccounts.map(obj => {
+    updateSharedAccount(house: House, account: SharedAccount) {
+        house.sharedAccounts = house.sharedAccounts.map(obj => {
             if (obj.id === account.id) {
                 return account;
             } else {
@@ -41,29 +41,29 @@ export class AccountService {
             }
         });
 
-        return this.setSharedAccounts(group);
+        return this.setSharedAccounts(house);
     }
 
-    private setUserAccounts(group: Group): Promise<void> {
-        return this.fs.collection('groups').doc(group.id).set({
-            accounts: group.accounts.map(ua => userAccountConverter.toFirestore(ua))
+    private setUserAccounts(house: House): Promise<void> {
+        return this.fs.collection('houses').doc(house.id).set({
+            accounts: house.accounts.map(ua => userAccountConverter.toFirestore(ua))
         }, {merge: true});
     }
 
-    private setSharedAccounts(group: Group): Promise<void> {
-        return this.fs.collection('groups').doc(group.id).set({
-            sharedAccounts: group.sharedAccounts.map(sa => sharedAccountConverter.toFirestore(sa))
+    private setSharedAccounts(house: House): Promise<void> {
+        return this.fs.collection('houses').doc(house.id).set({
+            sharedAccounts: house.sharedAccounts.map(sa => sharedAccountConverter.toFirestore(sa))
         }, {merge: true});
     }
 
-    private addSharedAccountBalance(groupId: string, accountId: string) {
+    private addSharedAccountBalance(houseId: string, accountId: string) {
         const newBalance: Balance = { // not the shoe though lol
             amount: 0,
             totalIn: 0,
             totalOut: 0,
         };
 
-        return this.fs.collection('groups').doc(groupId).update({
+        return this.fs.collection('houses').doc(houseId).update({
             [`balances.${accountId}`]: newBalance
         });
     }

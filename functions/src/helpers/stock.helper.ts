@@ -13,15 +13,15 @@ export function getDeltaStock(originalStock: Stock, updatedStock: Stock) {
     } as Stock;
 }
 
-export function getGroupUpdateDataIn(stock: Stock) {
-    return getGroupUpdateData(stock, 'In');
+export function getHouseUpdateDataIn(stock: Stock) {
+    return getHouseUpdateData(stock, 'In');
 }
 
-export function getGroupUpdateDataOut(stock: Stock) {
-    return getGroupUpdateData(stock, 'Out');
+export function getHouseUpdateDataOut(stock: Stock) {
+    return getHouseUpdateData(stock, 'Out');
 }
 
-function getGroupUpdateData(stock: Stock, direction: 'In' | 'Out') {
+function getHouseUpdateData(stock: Stock, direction: 'In' | 'Out') {
     return {
         totalIn: admin.firestore.FieldValue.increment(stock.cost),
         [`productData.${stock.productId}.total${direction}`]: admin.firestore.FieldValue.increment(stock.cost),

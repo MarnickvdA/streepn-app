@@ -1,9 +1,9 @@
-import {Group, Transaction} from '../models';
+import {House, Transaction} from '../models';
 import * as functions from 'firebase-functions';
 import {ErrorMessage} from '../models/error-message';
 import * as admin from 'firebase-admin';
 
-export function getTransactionUpdateObject(group: Group, transaction: Transaction): {
+export function getTransactionUpdateObject(house: House, transaction: Transaction): {
     [key: string]: unknown;
 } {
     const updateObject: {
@@ -26,10 +26,10 @@ export function getTransactionUpdateObject(group: Group, transaction: Transactio
 
     transaction.items
         .forEach((t: { amount: number, accountId: string, productId: string, productPrice: number }) => {
-            let acc: any = group.accounts.find((account: any) => account.id === t.accountId);
+            let acc: any = house.accounts.find((account: any) => account.id === t.accountId);
 
             if (!acc) {
-                acc = group.sharedAccounts.find((account: any) => account.id === t.accountId);
+                acc = house.sharedAccounts.find((account: any) => account.id === t.accountId);
             }
 
             if (!acc) {

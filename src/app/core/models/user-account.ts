@@ -8,8 +8,8 @@ import TimestampFn = firebase.firestore.Timestamp;
 
 export class UserAccount extends Account {
     userId: string; // UID of the Firebase Auth user associated with this account.
-    photoUrl?: string; // URL for the photo associated with this account in a specific group.
-    roles: UserRole[]; // Permission-system for a group.
+    photoUrl?: string; // URL for the photo associated with this account in a specific house.
+    roles: UserRole[]; // Permission-system for a house.
 
     static new(id: string, userId: string, name: string, roles: UserRole[], photoUrl: string) {
         return new UserAccount(id, userId, TimestampFn.now(), name, roles, photoUrl, Balance.new());

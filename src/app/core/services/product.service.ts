@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Group, Product, productConverter} from '../models';
+import {House, Product, productConverter} from '../models';
 import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
 
@@ -11,16 +11,16 @@ export class ProductService {
     constructor(private fs: AngularFirestore) {
     }
 
-    addProduct(group: Group, name: string, price: number) {
+    addProduct(house: House, name: string, price: number) {
         const product = Product.new(name, price);
 
-        group.products.push(product);
+        house.products.push(product);
 
-        const products = group.products.map(p => {
+        const products = house.products.map(p => {
             return productConverter.toFirestore(p);
         });
 
-        return this.fs.collection('groups').doc(group.id).set({
+        return this.fs.collection('houses').doc(house.id).set({
             products,
             productData: {
                 [`${product.id}`]: {
@@ -33,8 +33,8 @@ export class ProductService {
         }, {merge: true});
     }
 
-    editProduct(group: Group, product: Product) {
-        group.products = group.products.map(obj => {
+    editProduct(house: House, product: Product) {
+        house.products = house.products.map(obj => {
             if (obj.id === product.id) {
                 return product;
             } else {
@@ -42,23 +42,23 @@ export class ProductService {
             }
         });
 
-        const products = group.products.map(p => {
+        const products = house.products.map(p => {
             return productConverter.toFirestore(p);
         });
 
-        return this.fs.collection('groups').doc(group.id).set({
+        return this.fs.collection('houses').doc(house.id).set({
             products,
         }, {merge: true});
     }
 
-    removeProduct(group: Group, product: Product) {
-        group.products = group.products.filter(obj => obj.id !== product.id);
+    removeProduct(house: House, product: Product) {
+        house.products = house.products.filter(obj => obj.id !== product.id);
 
-        const products = group.products.map(p => {
+        const products = house.products.map(p => {
             return productConverter.toFirestore(p);
         });
 
-        return this.fs.collection('groups').doc(group.id).set({
+        return this.fs.collection('houses').doc(house.id).set({
             products,
             productData: {
                 [`${product.id}`]: firebase.firestore.FieldValue.delete()

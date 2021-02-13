@@ -7,6 +7,6 @@
     <ion-chip color="success" style="min-width: 5rem; font-size: .8rem">
         <ion-icon name="pricetag-outline"></ion-icon>
         <ion-label *ngIf="product.price > 0">{{product.price | money}}</ion-label>
-        <ion-label *ngIf="product.price === 0">{{'group.overview.free' | translate}}</ion-label>
+        <ion-label *ngIf="product.price === 0">{{'house.overview.free' | translate}}</ion-label>
     </ion-chip>
 </ion-item>

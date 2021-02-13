@@ -1,14 +1,14 @@
 // const test = require('firebase-functions-test')();
 
-import {Group, Settlement} from '../models';
+import {House, Settlement} from '../models';
 import {AccountBalanceMap, calculateNewBalance, calculateSettlement, deriveUpdateBatch} from '../helpers/settlement.helper';
 
 const assert = require('assert');
 
-// TODO: Test that the balances and product data (though empty) are still present in the group object.
+// TODO: Test that the balances and product data (though empty) are still present in the house object.
 
-describe('settle-group.function', () => {
-    const group: Group = {
+describe('settle-house.function', () => {
+    const house: House = {
         id: '',
         createdAt: undefined,
         name: 'Test',
@@ -107,10 +107,10 @@ describe('settle-group.function', () => {
             },
         },
     };
-    describe('settleGroup()', () => {
-        const newBalances: AccountBalanceMap = calculateNewBalance(group);
-        const updateBatch: any = deriveUpdateBatch(group, newBalances); // Included because it includes side effects for newBalances
-        const settlement: Settlement = calculateSettlement(group, 'user1', newBalances);
+    describe('settleHouse()', () => {
+        const newBalances: AccountBalanceMap = calculateNewBalance(house);
+        const updateBatch: any = deriveUpdateBatch(house, newBalances); // Included because it includes side effects for newBalances
+        const settlement: Settlement = calculateSettlement(house, 'user1', newBalances);
 
         it('should have a settle sum of 0', () => {
             let settleSum = 0;
@@ -121,7 +121,7 @@ describe('settle-group.function', () => {
             assert.strictEqual(settleSum, 0);
         });
 
-        it('should have a group totalIn equal to products totalIn', () => {
+        it('should have a house totalIn equal to products totalIn', () => {
             let totalIn = 0;
             Object.keys(updateBatch.productData).forEach((productId: string) => {
                 totalIn += updateBatch.productData[productId]?.totalIn || 0;

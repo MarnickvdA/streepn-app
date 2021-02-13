@@ -4,44 +4,44 @@ service cloud.firestore {
 
         allow read, write: if false;
 
-        match /groupInvites/{inviteLink} {
+        match /houseInvites/{inviteLink} {
             allow get, create, delete: if isSignedIn();
         }
 
-        match /groups/{groupId} {
-              allow read, update: if isSignedIn() && isMemberOfGroup(existingData());
+        match /houses/{houseId} {
+              allow read, update: if isSignedIn() && isMemberOfHouse(existingData());
               allow create: if isSignedIn();
-              allow delete: if isSignedIn() && isAdminOfGroup(existingData()) && canDeleteGroup(existingData());
+              allow delete: if isSignedIn() && isAdminOfHouse(existingData()) && canDeleteHouse(existingData());
 
               match /stock/{stockId} {
-                  allow read, create, update: if isSignedIn() && isMemberOfGroup(getGroup(groupId));
+                  allow read, create, update: if isSignedIn() && isMemberOfHouse(getHouse(houseId));
                   allow delete: if false;
               }
 
               match /transactions/{transactionId} {
-                  allow read, create, update: if isSignedIn() && isMemberOfGroup(getGroup(groupId));
+                  allow read, create, update: if isSignedIn() && isMemberOfHouse(getHouse(houseId));
                   allow delete: if false;
               }
 
               match /settlements/{settlementId} {
-                  allow read: if isSignedIn() && isMemberOfGroup(getGroup(groupId));
+                  allow read: if isSignedIn() && isMemberOfHouse(getHouse(houseId));
                   allow write: if false;
               }
 
-              function getGroup(groupId) {
-                  return get(/databases/$(database)/documents/groups/$(groupId)).data;
+              function getHouse(houseId) {
+                  return get(/databases/$(database)/documents/houses/$(houseId)).data;
               }
 
-              function isMemberOfGroup(group) {
-                  return request.auth.uid in group.members;
+              function isMemberOfHouse(house) {
+                  return request.auth.uid in house.members;
               }
 
-              function isAdminOfGroup(group) {
-                  return request.auth.uid in group.admins;
+              function isAdminOfHouse(house) {
+                  return request.auth.uid in house.admins;
               }
 
-              function canDeleteGroup(group) {
-                  return group.totalIn == 0 && group.totalOut == 0;
+              function canDeleteHouse(house) {
+                  return house.totalIn == 0 && house.totalOut == 0;
               }
         }
 

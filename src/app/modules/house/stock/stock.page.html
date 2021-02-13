@@ -1,0 +1,72 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-toggle>
+                <ion-button>
+                    <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'bars']"></fa-duotone-icon>
+                </ion-button>
+            </ion-menu-toggle>
+        </ion-buttons>
+        <ion-title>{{'house.stock.title' | translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{'house.stock.title' | translate}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <ion-item class="list-button" lines="full" [disabled]="!(house?.products.length > 0)" routerLink="log" routerDirection="forward" button
+              detail="true">
+        <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'history']"></fa-duotone-icon>
+        <ion-label>
+            <h3>{{'house.stock.log.title' | translate}}</h3>
+            <p class="small ion-text-wrap">
+                {{'house.stock.log.description' | translate}}
+            </p>
+        </ion-label>
+    </ion-item>
+
+    <!-- START PRODUCTS SECTION -->
+    <ion-list-header lines="full">
+        <ion-label>{{'house.overview.products' | translate}}</ion-label>
+        <ion-button (click)="addProduct()" *ngIf="isAdmin">{{'actions.add' | translate}}</ion-button>
+    </ion-list-header>
+
+    <ion-item class="no-min-height no-bg" *ngIf="house?.products.length === 0" lines="none">
+        <ion-label>
+            <p class="small">
+                {{'house.overview.emptyProducts' | translate}}
+            </p>
+        </ion-label>
+    </ion-item>
+
+    <app-product-item *ngFor="let product of house?.products" [canEdit]="isAdmin"
+                      [product]="product"></app-product-item>
+    <!-- END PRODUCTS SECTION -->
+
+    <!-- START SUPPLY SECTION -->
+    <ion-list-header lines="full">
+        <ion-label>{{'house.stock.current' | translate}}</ion-label>
+        <ion-button (click)="addStock()"
+                    [disabled]="house?.products.length === 0">{{'actions.add' | translate}}</ion-button>
+    </ion-list-header>
+
+    <ion-item class="no-min-height no-bg" *ngIf="stockProducts?.length === 0 || house?.products.length === 0" lines="none">
+        <ion-label>
+            <p class="small" *ngIf="stockProducts?.length === 0 && house?.products.length > 0">
+                {{'house.overview.emptyStock' | translate}}
+            </p>
+            <p *ngIf="house?.products.length === 0" class="small ion-text-wrap">
+                {{'house.overview.disabledStock' | translate}}
+            </p>
+        </ion-label>
+    </ion-item>
+
+    <app-product-stock-item *ngFor="let product of stockProducts" [canEdit]="false"
+                            [product]="product"></app-product-stock-item>
+    <!-- END SUPPLY SECTION -->
+
+</ion-content>

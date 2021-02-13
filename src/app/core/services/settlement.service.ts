@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Group, Settlement, settlementConverter} from '@core/models';
+import {House, Settlement, settlementConverter} from '@core/models';
 import {map} from 'rxjs/operators';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import {AngularFirestore} from '@angular/fire/firestore';
@@ -13,17 +13,17 @@ import {AngularFirePerformance, trace} from '@angular/fire/performance';
 export class SettlementService {
     private readonly logger = LoggerService.getLogger(SettlementService.name);
     private settlements?: Settlement[];
-    private groupId: string;
+    private houseId: string;
 
     constructor(private functions: AngularFireFunctions,
                 private performance: AngularFirePerformance,
                 private fs: AngularFirestore) {
     }
 
-    settleSharedAccount(groupId: string, sharedAccountId: string, settlement: { [id: string]: AccountPayout }) {
+    settleSharedAccount(houseId: string, sharedAccountId: string, settlement: { [id: string]: AccountPayout }) {
         const callable = this.functions.httpsCallable('settleSharedAccount');
         return callable({
-            groupId,
+            houseId,
             sharedAccountId,
             settlement,
         }).pipe(
@@ -33,19 +33,19 @@ export class SettlementService {
             }));
     }
 
-    settleGroup(group: Group) {
-        const callable = this.functions.httpsCallable('settleGroup');
+    settleHouse(house: House) {
+        const callable = this.functions.httpsCallable('settleHouse');
         return callable({
-            groupId: group.id,
+            houseId: house.id,
         }).pipe(
-            trace('settleGroup'),
+            trace('settleHouse'),
             map(result => {
                 console.log(result);
             }));
     }
 
-    getSettlement(groupId: string, settlementId: string): Settlement {
-        if (this.groupId === groupId) {
+    getSettlement(houseId: string, settlementId: string): Settlement {
+        if (this.houseId === houseId) {
             return this.settlements?.find((s) => s.id === settlementId);
         } else {
             delete this.settlements;
@@ -53,21 +53,21 @@ export class SettlementService {
         }
     }
 
-    getSettlements(groupId: string): Promise<Settlement[]> {
-        return this.fs.collection('groups')
-            .doc(groupId)
+    getSettlements(houseId: string): Promise<Settlement[]> {
+        return this.fs.collection('houses')
+            .doc(houseId)
             .collection('settlements')
             .ref
             .withConverter(settlementConverter)
             .orderBy('createdAt', 'desc')
             .get()
             .then((querySnapshot) => {
-                this.groupId = groupId;
+                this.houseId = houseId;
                 this.settlements = querySnapshot?.docs?.map(doc => doc.data()) || [];
                 return this.settlements;
             })
             .catch(err => {
-                this.logger.error({message: 'getSettlements', data: {groupId}, error: err});
+                this.logger.error({message: 'getSettlements', data: {houseId}, error: err});
                 return Promise.reject('get settlements failed'); // FIXME Add error.
             });
     }

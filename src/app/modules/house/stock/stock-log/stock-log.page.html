@@ -1,0 +1,56 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button mode="ios" routerLink="/house/{{house?.id}}/stock" routerDirection="back">
+                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
+                                 [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>{{'house.stock.log.title' | translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{'house.stock.log.title' | translate}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <ion-refresher (ionRefresh)="reset($event)" slot="fixed">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list>
+        <ion-item class="no-min-height" *ngIf="stockTransactions?.length === 0" lines="none">
+            <ion-label class="ion-text-wrap">
+                <p>{{'house.stock.empty' | translate}}</p>
+            </ion-label>
+        </ion-item>
+        <ion-item (click)="openStockItem(stockItem)" [button]="stockItem.isMutable" [detail]="stockItem.isMutable"
+                  *ngFor="let stockItem of stockTransactions" [disabled]="stockItem.removed">
+            <ion-label [ngStyle]="stockItem.removed ? {'text-decoration': 'line-through'} : {}">
+                <h3 [ngClass]="stockItem.writtenOff ? 'red-text' : ''">
+                    {{'house.stock.log.stockLog' | translate:{
+                    amount: stockItem.amount,
+                    productName: house.getProductById(stockItem.productId)?.name
+                } }}
+                    <span *ngIf="!stockItem.writtenOff">{{'house.stock.log.stockLogFor' | translate:{cost: (stockItem.cost | money)} }}</span>
+                </h3>
+                <p class="small" *ngIf="!stockItem.writtenOff">
+                    {{'house.stock.log.paidBy' | translate:{name: stockItem.paidByString(house)} }}
+                </p>
+                <p class="small" *ngIf="stockItem.writtenOff">
+                    {{'house.stock.log.writtenOff' | translate:{name: house.getUserAccountById(stockItem.createdBy)?.name} }}
+                </p>
+                <p class="small">
+                    {{ stockItem.createdAt | moment }}
+                </p>
+            </ion-label>
+        </ion-item>
+        <ion-button class="no-bg" (click)="loadNext()" *ngIf="!doneLoading" [disabled]="isLoadingMore" fill="none">
+            <ion-label *ngIf="!isLoadingMore" color="primary">{{'actions.loadMore' | translate}}</ion-label>
+            <ion-progress-bar *ngIf="isLoadingMore"></ion-progress-bar>
+        </ion-button>
+    </ion-list>
+</ion-content>

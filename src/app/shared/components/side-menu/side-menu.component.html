@@ -16,20 +16,20 @@
             </ion-item>
         </ion-menu-toggle>
 
-        <ng-container *ngIf="(groups$ | async); let groups">
-            <ion-list-header *ngIf="groups.length > 0" lines="full">
+        <ng-container *ngIf="(houses$ | async); let houses">
+            <ion-list-header *ngIf="houses.length > 0" lines="full">
                 <ion-label>
-                    {{'dashboard.groups' | translate}}
+                    {{'dashboard.houses' | translate}}
                 </ion-label>
             </ion-list-header>
 
             <ion-menu-toggle [autoHide]="false">
-                <ion-item *ngFor="let group of groups" button routerDirection="root"
-                          routerLink="/group/{{group.id}}/home">
-                    <ion-label>{{group.name}}</ion-label>
-                    <fa-icon (click)="toggleFavorite($event, group.id)" slot="end" class="primary"
-                             [ngClass]="this.favorite === group.id ? 'warning' : 'medium half-opacity'" fixedWidth
-                             [icon]="this.favorite === group.id ? ['fas', 'star'] : ['fal', 'star']"></fa-icon>
+                <ion-item *ngFor="let house of houses" button routerDirection="root"
+                          routerLink="/house/{{house.id}}/home">
+                    <ion-label>{{house.name}}</ion-label>
+                    <fa-icon (click)="toggleFavorite($event, house.id)" slot="end" class="primary"
+                             [ngClass]="this.favorite === house.id ? 'warning' : 'medium half-opacity'" fixedWidth
+                             [icon]="this.favorite === house.id ? ['fas', 'star'] : ['fal', 'star']"></fa-icon>
                 </ion-item>
             </ion-menu-toggle>
         </ng-container>

@@ -1,0 +1,77 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-toggle>
+                <ion-button>
+                    <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'bars']"></fa-duotone-icon>
+                </ion-button>
+            </ion-menu-toggle>
+        </ion-buttons>
+        <ion-title>{{'house.overview.title' | translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{'house.overview.title' | translate}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <ion-list>
+        <!--            <ion-item *ngIf="isAdmin" button class="large-item" detail="true" routerDirection="forward"-->
+        <!--                      routerLink="preferences">-->
+        <!--                <ion-icon name="color-palette-outline" slot="start"></ion-icon>-->
+        <!--                <ion-label>-->
+        <!--                    {{'house.overview.preferences.title' | translate:{name: house.name} }}-->
+        <!--                </ion-label>-->
+        <!--            </ion-item>-->
+        <ion-item class="list-button" lines="full" (click)="shareHouse()" *ngIf="isAdmin" button detail="false">
+            <fa-duotone-icon slot="start" class="primary large" fixedWidth
+                             [icon]="['fad', 'share-alt-square']"></fa-duotone-icon>
+            <ion-label>
+                <h3>{{'house.overview.accounts.inviteLink' | translate}}</h3>
+                <p class="small">
+                    {{'house.overview.accounts.' + (inviteLinkExpired ? 'expired' : 'validThrough') | translate}} {{house?.inviteLinkExpiry | dateTime}}
+                </p>
+            </ion-label>
+        </ion-item>
+        <ion-item class="list-button" lines="full" routerLink="settlements" routerDirection="forward" button
+                  detail="true">
+            <fa-duotone-icon slot="start" class="primary large" fixedWidth
+                             [icon]="['fad', 'calculator-alt']"></fa-duotone-icon>
+            <ion-label>
+                <h3>{{'house.overview.settle.house.itemTitle' | translate}}</h3>
+            </ion-label>
+        </ion-item>
+
+
+        <!-- START ACCOUNTS SECTION -->
+        <ion-list-header lines="full">
+            <ion-label>{{'house.overview.accounts.title' | translate}}</ion-label>
+        </ion-list-header>
+
+        <app-user-account-item *ngFor="let account of house?.accounts" [account]="account"
+                               [canEditAccount]="isAdmin || isAccountOwner(account)"
+                               navLink="house/{{house?.id}}/preferences/accounts/{{account.id}}"></app-user-account-item>
+
+        <ion-list-header lines="full">
+            <ion-label>{{'house.overview.sharedAccounts' | translate}}</ion-label>
+            <ion-button (click)="addSharedAccount()" *ngIf="isAdmin">{{'actions.new' | translate}}</ion-button>
+        </ion-list-header>
+
+        <ion-item class="no-min-height no-bg" *ngIf="house?.sharedAccounts.length === 0" lines="none">
+            <ion-label>
+                <p class="small">
+                    {{'house.overview.emptySharedAccounts' | translate}}
+                </p>
+            </ion-label>
+        </ion-item>
+
+        <app-shared-account-item *ngFor="let sharedAccount of house?.sharedAccounts"
+                                 (clicked)="openAccount(sharedAccount)"
+                                 [account]="sharedAccount"></app-shared-account-item>
+        <!-- END ACCOUNTS SECTION -->
+
+    </ion-list>
+</ion-content>
