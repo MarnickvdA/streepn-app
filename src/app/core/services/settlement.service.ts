@@ -5,6 +5,7 @@ import {AngularFireFunctions} from '@angular/fire/functions';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {LoggerService} from '@core/services/logger.service';
 import {AccountPayout} from '@core/utils/streepn-logic';
+import {AngularFirePerformance, trace} from '@angular/fire/performance';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,7 @@ export class SettlementService {
     private groupId: string;
 
     constructor(private functions: AngularFireFunctions,
+                private performance: AngularFirePerformance,
                 private fs: AngularFirestore) {
     }
 
@@ -25,6 +27,7 @@ export class SettlementService {
             sharedAccountId,
             settlement,
         }).pipe(
+            trace('settleSharedAccount'),
             map(result => {
                 console.log(result);
             }));
@@ -35,6 +38,7 @@ export class SettlementService {
         return callable({
             groupId: group.id,
         }).pipe(
+            trace('settleGroup'),
             map(result => {
                 console.log(result);
             }));

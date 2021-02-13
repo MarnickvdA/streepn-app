@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import {Group, Product, Stock} from './models';
 import {ErrorMessage} from './models/error-message';
-import {getGroupUpdateData} from './helpers/stock.helper';
+import {getGroupUpdateDataIn} from './helpers/stock.helper';
 
 const {v4: uuidv4} = require('uuid');
 const db = admin.firestore();
@@ -76,7 +76,7 @@ export const addStock = functions.region('europe-west1').https.onCall((data: Add
                 // Add the transaction to firestore
                 fireTrans.set(groupRef.collection('stock').doc(uid), newStock);
 
-                fireTrans.update(groupRef, getGroupUpdateData(data.stock));
+                fireTrans.update(groupRef, getGroupUpdateDataIn(data.stock));
 
                 return newStock;
             })

@@ -13,6 +13,7 @@ import {PushService, PushTopic} from './push.service';
 import {TranslateService} from '@ngx-translate/core';
 import {LoggerService} from './logger.service';
 import User = firebase.User;
+import {AngularFirePerformance, trace} from '@angular/fire/performance';
 
 const {Permissions} = Plugins;
 
@@ -30,6 +31,7 @@ export class GroupService {
 
     constructor(private fs: AngularFirestore,
                 private functions: AngularFireFunctions,
+                private performance: AngularFirePerformance,
                 private authService: AuthService,
                 private eventsService: EventsService,
                 private analyticsService: AnalyticsService,
@@ -187,6 +189,7 @@ export class GroupService {
             user: user.toJSON(),
         })
             .pipe(
+                trace('joinGroup'),
                 catchError((err) => {
                     this.logger.error({message: 'joinGroup', error: err});
                     this.eventsService.publish('group:joined');
@@ -216,6 +219,7 @@ export class GroupService {
             groupId
         })
             .pipe(
+                trace('leaveGroup'),
                 catchError((err) => {
                     this.logger.error({message: 'leaveGroup', error: err});
                     this.eventsService.publish('group:left', false);

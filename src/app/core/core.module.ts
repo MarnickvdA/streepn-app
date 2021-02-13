@@ -23,6 +23,7 @@ import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular
 import {AngularFireFunctionsModule, REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR} from '@angular/fire/functions';
 import {SETTINGS, USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/firestore';
 import {SettlementService} from '@core/services/settlement.service';
+import {AngularFirePerformanceModule} from '@angular/fire/performance';
 
 require('./firebase-init');
 
@@ -52,6 +53,7 @@ export const services = [
         AngularFireModule.initializeApp(environment.firebaseConfig),
         AngularFireAuthModule,
         AngularFireFunctionsModule,
+        AngularFirePerformanceModule,
     ],
     providers: [
         // Cordova plugins

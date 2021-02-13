@@ -9,7 +9,7 @@ export function getTransactionUpdateObject(group: Group, transaction: Transactio
     const updateObject: {
         [key: string]: unknown;
     } = {};
-    let totalPrice = 0;
+    let totalOut = 0;
 
     const productData: {
         [id: string]: {
@@ -37,7 +37,7 @@ export function getTransactionUpdateObject(group: Group, transaction: Transactio
             }
 
             const productPrice = t.productPrice * t.amount;
-            totalPrice += productPrice;
+            totalOut += productPrice;
 
             if (!productData[t.productId]) {
                 productData[t.productId] = {
@@ -54,6 +54,7 @@ export function getTransactionUpdateObject(group: Group, transaction: Transactio
 
             productData[t.productId].totalOut += productPrice;
             productData[t.productId].amountOut += t.amount;
+
             accountData[t.accountId].totalOut += productPrice;
 
             updateObject[`balances.${acc.id}.products.${t.productId}.amountOut`]
@@ -75,7 +76,7 @@ export function getTransactionUpdateObject(group: Group, transaction: Transactio
             = admin.firestore.FieldValue.increment(accountData[accountId].totalOut);
     });
 
-    updateObject.totalOut = admin.firestore.FieldValue.increment(totalPrice);
+    updateObject.totalOut = admin.firestore.FieldValue.increment(totalOut);
 
     return updateObject;
 }

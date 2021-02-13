@@ -1,13 +1,14 @@
 import {Injectable} from '@angular/core';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import {Group, Transaction, transactionConverter} from '../models';
-import {BehaviorSubject, EMPTY, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {newTransaction, TransactionItem} from '../models/transaction';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {AuthService} from '@core/services/auth.service';
 import {LoggerService} from '@core/services/logger.service';
 import {AnalyticsService} from '@core/services/analytics.service';
+import {AngularFirePerformance, trace} from '@angular/fire/performance';
 
 export interface TransactionSet {
     [accountId: string]: {
@@ -31,6 +32,7 @@ export class TransactionService {
 
     constructor(private authService: AuthService,
                 private functions: AngularFireFunctions,
+                private performance: AngularFirePerformance,
                 private analyticsService: AnalyticsService,
                 private fs: AngularFirestore) {
     }
@@ -70,6 +72,7 @@ export class TransactionService {
             groupId: group.id,
             transaction
         }).pipe(
+            trace('addTransaction'),
             catchError((err) => {
                 this.logger.error({message: 'addTransaction', error: err});
                 return err;
@@ -80,31 +83,13 @@ export class TransactionService {
         );
     }
 
-    editTransaction(groupId: string, transaction: Transaction, itemsAmount: number[]): Observable<void> {
-        let totalPrice = 0;
-        const deltaTransaction = newTransaction(transaction.id, transaction);
-        deltaTransaction.items = deltaTransaction.items.filter((item, index) => {
-            if (item.amount !== itemsAmount[index]) {
-                item.amount = -(itemsAmount[index] - item.amount);
-                totalPrice += item.amount * item.productPrice;
-                return true;
-            } else {
-                return false;
-            }
-        });
-
-
-        const updatedTransaction = newTransaction(transaction.id, transaction);
-        updatedTransaction.items = updatedTransaction.items.filter((item) => {
-            return item.amount > 0;
-        });
-
+    editTransaction(groupId: string, updatedTransaction: Transaction): Observable<void> {
         const callable = this.functions.httpsCallable('editTransaction');
         return callable({
             groupId,
-            deltaTransaction,
             updatedTransaction
         }).pipe(
+            trace('editTransaction'),
             catchError((err) => {
                 this.logger.error({message: 'editTransaction', error: err});
                 return err;

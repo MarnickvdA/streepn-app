@@ -1,7 +1,7 @@
 import {Group, Stock} from './models';
 import * as functions from 'firebase-functions';
 import {ErrorMessage} from './models/error-message';
-import {getGroupUpdateData} from './helpers/stock.helper';
+import {getDeltaStock, getGroupUpdateDataIn} from './helpers/stock.helper';
 import * as admin from 'firebase-admin';
 
 const db = admin.firestore();
@@ -9,7 +9,6 @@ const db = admin.firestore();
 interface EditStockData {
     groupId: string;
     updatedStock: Stock;
-    deltaStock: Stock;
 }
 
 /**
@@ -36,7 +35,7 @@ export const editStock = functions.region('europe-west1').https.onCall((data: Ed
         throw new functions.https.HttpsError('unauthenticated', ErrorMessage.UNAUTHENTICATED);
     }
 
-    if (!data.groupId || !data.updatedStock || !data.deltaStock) {
+    if (!data.groupId || !data.updatedStock) {
         throw new functions.https.HttpsError('failed-precondition', ErrorMessage.INVALID_DATA);
     }
 
@@ -57,38 +56,50 @@ export const editStock = functions.region('europe-west1').https.onCall((data: Ed
                     throw new functions.https.HttpsError('permission-denied', 'User not member of group');
                 }
 
-                // Update old stock and update stock in firestore
-                if (data.updatedStock.amount === 0) {
-                    fireTrans.update(groupRef.collection('stock').doc(data.updatedStock.id), {
-                        removed: true,
+                return fireTrans.get(groupRef.collection('stock').doc(data.updatedStock.id))
+                    .then(originalDoc => {
+                        const original: Stock = originalDoc?.data() as Stock;
+
+                        // Check if the group exists
+                        if (!originalDoc.exists || !original) {
+                            throw new functions.https.HttpsError('not-found', 'No such stock document!');
+                        }
+
+                        const deltaStock: Stock = getDeltaStock(original, data.updatedStock);
+
+                        // Update old stock and update stock in firestore
+                        if (data.updatedStock.amount === 0) {
+                            fireTrans.update(groupRef.collection('stock').doc(data.updatedStock.id), {
+                                removed: true,
+                            });
+                        } else {
+                            fireTrans.update(groupRef.collection('stock').doc(data.updatedStock.id), {
+                                paidById: data.updatedStock.paidById,
+                                cost: data.updatedStock.cost,
+                                amount: data.updatedStock.amount,
+                                productId: data.updatedStock.productId,
+                            });
+                        }
+
+                        const groupUpdate: any = getGroupUpdateDataIn(deltaStock);
+
+                        if (data.updatedStock.productId !== deltaStock.productId) {
+                            groupUpdate[`productData.${data.updatedStock.productId}.totalIn`]
+                                = admin.firestore.FieldValue.increment(data.updatedStock.cost);
+                            groupUpdate[`productData.${data.updatedStock.productId}.amountIn`]
+                                = admin.firestore.FieldValue.increment(data.updatedStock.amount);
+                            groupUpdate[`balances.${data.updatedStock.paidById}.totalIn`]
+                                = admin.firestore.FieldValue.increment(data.updatedStock.cost);
+                            groupUpdate[`balances.${data.updatedStock.paidById}.products.${data.updatedStock.productId}.totalIn`]
+                                = admin.firestore.FieldValue.increment(data.updatedStock.cost);
+                            groupUpdate[`balances.${data.updatedStock.paidById}.products.${data.updatedStock.productId}.amountIn`]
+                                = admin.firestore.FieldValue.increment(data.updatedStock.amount);
+                        }
+
+                        fireTrans.update(groupRef, groupUpdate);
+
+                        return data.updatedStock;
                     });
-                } else {
-                    fireTrans.update(groupRef.collection('stock').doc(data.updatedStock.id), {
-                        paidById: data.updatedStock.paidById,
-                        cost: data.updatedStock.cost,
-                        amount: data.updatedStock.amount,
-                        productId: data.updatedStock.productId,
-                    });
-                }
-
-                const groupUpdate: any = getGroupUpdateData(data.deltaStock);
-
-                if (data.updatedStock.productId !== data.updatedStock.productId) {
-                    groupUpdate[`productData.${data.updatedStock.productId}.totalIn`]
-                        = admin.firestore.FieldValue.increment(data.updatedStock.cost);
-                    groupUpdate[`productData.${data.updatedStock.productId}.amountIn`]
-                        = admin.firestore.FieldValue.increment(data.updatedStock.amount);
-                    groupUpdate[`balances.${data.updatedStock.paidById}.totalIn`]
-                        = admin.firestore.FieldValue.increment(data.updatedStock.cost);
-                    groupUpdate[`balances.${data.updatedStock.paidById}.products.${data.updatedStock.productId}.totalIn`]
-                        = admin.firestore.FieldValue.increment(data.updatedStock.cost);
-                    groupUpdate[`balances.${data.updatedStock.paidById}.products.${data.updatedStock.productId}.amountIn`]
-                        = admin.firestore.FieldValue.increment(data.updatedStock.amount);
-                }
-
-                fireTrans.update(groupRef, groupUpdate);
-
-                return data.updatedStock;
             })
             .catch(err => {
                 console.error(err);

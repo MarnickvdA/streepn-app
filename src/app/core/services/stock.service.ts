@@ -6,6 +6,7 @@ import {map} from 'rxjs/operators';
 import {Group, Stock, stockConverter} from '../models';
 import {newStock} from '../models/stock';
 import {AuthService} from './auth.service';
+import {AngularFirePerformance, trace} from '@angular/fire/performance';
 
 @Injectable({
     providedIn: 'root'
@@ -14,6 +15,7 @@ export class StockService {
 
     constructor(private functions: AngularFireFunctions,
                 private fs: AngularFirestore,
+                private performance: AngularFirePerformance,
                 private authService: AuthService) {
     }
 
@@ -26,6 +28,7 @@ export class StockService {
             groupId: group.id,
             stock
         }).pipe(
+            trace('addStock'),
             map(result => {
                 return newStock(result.id, result);
             }));
@@ -42,6 +45,7 @@ export class StockService {
             groupId: group.id,
             stock,
         }).pipe(
+            trace('removeStock'),
             map(result => {
                 return newStock(result.id, result);
             }));
@@ -55,16 +59,13 @@ export class StockService {
         const updatedStock = new Stock(original.id, original.createdAt, currentAccount.id, paidById,
             productId, cost, amount, false, false);
 
-        const deltaStock = new Stock(original.id, original.createdAt, currentAccount.id, original.paidById, original.productId,
-            original.paidById !== paidById ? -original.cost : cost - original.cost,
-            original.productId !== productId ? -original.amount : amount - original.amount, false, false);
-
         const callable = this.functions.httpsCallable('editStock');
         return callable({
             groupId: group.id,
-            deltaStock,
             updatedStock
-        });
+        }).pipe(
+            trace('editStock'),
+        );
     }
 
     getStockItem(groupId: string, stockId: string): Promise<Stock> {

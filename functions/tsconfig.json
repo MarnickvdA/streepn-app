@@ -12,7 +12,9 @@
   },
   "compileOnSave": true,
   "include": [
-    "src",
+    "src"
+  ],
+  "exclude": [
     "test"
   ]
 }

@@ -118,7 +118,7 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
 
         await loading.present();
 
-        this.transactionService.editTransaction(this.groupService.currentGroupId, transaction, this.itemsAmount)
+        this.transactionService.editTransaction(this.groupService.currentGroupId, transaction)
             .pipe(
                 catchError((err) => {
                     loading.dismiss();

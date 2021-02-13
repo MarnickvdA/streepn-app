@@ -3,12 +3,12 @@ import * as functions from 'firebase-functions';
 import {ErrorMessage} from './models/error-message';
 import {getTransactionUpdateObject} from './helpers/transaction.helper';
 import * as admin from 'firebase-admin';
+
 const db = admin.firestore();
 
 interface EditTransactionData {
     groupId: string;
     updatedTransaction: Transaction;
-    deltaTransaction: Transaction;
 }
 
 /**
@@ -37,7 +37,7 @@ export const editTransaction = functions.region('europe-west1').https
             throw new functions.https.HttpsError('unauthenticated', ErrorMessage.UNAUTHENTICATED);
         }
 
-        if (!data.groupId || !data.updatedTransaction || !data.deltaTransaction) {
+        if (!data.groupId || !data.updatedTransaction) {
             throw new functions.https.HttpsError('failed-precondition', ErrorMessage.INVALID_DATA);
         }
 
@@ -64,19 +64,40 @@ export const editTransaction = functions.region('europe-west1').https
                         throw new functions.https.HttpsError('not-found', ErrorMessage.USER_ACCOUNT_NOT_FOUND);
                     }
 
-                    // Update old transaction and add new transaction to firestore
-                    if (data.updatedTransaction.items.length === 0) {
-                        fireTrans.update(groupRef.collection('transactions').doc(data.updatedTransaction.id), {
-                            removed: true,
-                        });
-                    } else {
-                        fireTrans.update(groupRef.collection('transactions').doc(data.updatedTransaction.id), {
-                            items: data.updatedTransaction.items,
-                        });
-                    }
+                    return fireTrans.get(groupRef.collection('transactions').doc(data.updatedTransaction.id))
+                        .then(transactionDoc => {
+                            const trans: Transaction = transactionDoc?.data() as Transaction;
 
-                    // Update the balance of the accounts
-                    fireTrans.update(groupRef, getTransactionUpdateObject(group, data.deltaTransaction));
+                            // Check if the group exists
+                            if (!transactionDoc.exists || !trans) {
+                                throw new functions.https.HttpsError('not-found', ErrorMessage.TRANSACTION_NOT_FOUND);
+                            }
+
+                            const deltaTransaction: Transaction = JSON.parse(JSON.stringify(data.updatedTransaction)) as Transaction;
+                            deltaTransaction.items.forEach((item, index) => {
+                                item.amount -= trans.items[index].amount;
+                            });
+
+                            data.updatedTransaction.items = data.updatedTransaction.items.filter((item) => {
+                                return item.amount > 0;
+                            });
+
+                            // Update old transaction and add new transaction to firestore
+                            if (data.updatedTransaction.items.length === 0) {
+                                fireTrans.update(groupRef.collection('transactions').doc(data.updatedTransaction.id), {
+                                    removed: true,
+                                });
+                            } else {
+                                fireTrans.update(groupRef.collection('transactions').doc(data.updatedTransaction.id), {
+                                    items: data.updatedTransaction.items,
+                                });
+                            }
+
+                            const updateBatch: any = getTransactionUpdateObject(group, deltaTransaction);
+
+                            // Update the balance of the accounts
+                            fireTrans.update(groupRef, updateBatch);
+                        });
                 })
                 .catch(err => {
                     console.error(err);
