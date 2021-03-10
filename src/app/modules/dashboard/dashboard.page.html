@@ -8,6 +8,11 @@
             </ion-menu-toggle>
         </ion-buttons>
         <ion-title>{{'dashboard.title' | translate}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button>
+                <fa-duotone-icon (click)="openInfo()" slot="start" class="primary" fixedWidth [icon]="['fad', 'info-circle']"></fa-duotone-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 

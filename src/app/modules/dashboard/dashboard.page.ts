@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core';
-import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
+import {AlertController, IonRouterOutlet, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
 import firebase from 'firebase/app';
 import {House, HouseInvite, UserAccount} from '@core/models';
@@ -12,6 +12,7 @@ import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {faTicket} from '@fortawesome/pro-duotone-svg-icons';
 import {NewHouseComponent} from '@modules/dashboard/new-house/new-house.component';
 import User = firebase.User;
+import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
 
 @Component({
     selector: 'app-dashboard',
@@ -44,7 +45,8 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 private storage: StorageService,
                 private uiService: UIService,
                 private ads: AdsService,
-                private iconLibrary: FaIconLibrary) {
+                private iconLibrary: FaIconLibrary,
+                private routerOutlet: IonRouterOutlet) {
         this.iconLibrary.addIcons(faTicket);
         this.iOS = Capacitor.isNative && Capacitor.platform === 'ios';
         this.loading = true;
@@ -258,5 +260,9 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 modal.present();
             });
         });
+    }
+
+    openInfo() {
+        InfoModalComponent.presentModal(this.modalController, this.routerOutlet, 'information.dashboard.title', 'information.dashboard.content');
     }
 }

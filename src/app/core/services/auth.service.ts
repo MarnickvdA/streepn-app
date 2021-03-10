@@ -3,10 +3,9 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import firebase from 'firebase/app';
 import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
 import {EventsService} from './events.service';
-import {ResponseSignInWithApplePlugin} from '@capacitor-community/apple-sign-in';
+import {SignInWithAppleResponse} from '@capacitor-community/apple-sign-in';
 import {Plugins} from '@capacitor/core';
 import {StorageService} from './storage.service';
-import {GooglePlus} from '@ionic-native/google-plus/ngx';
 import {environment} from '@env/environment';
 import {AnalyticsService} from './analytics.service';
 import {catchError} from 'rxjs/operators';
@@ -29,7 +28,6 @@ export class AuthService {
     constructor(private auth: AngularFireAuth,
                 private eventsService: EventsService,
                 private storage: StorageService,
-                private googlePlus: GooglePlus,
                 private analytics: AnalyticsService,
                 private functions: AngularFireFunctions) {
         this.eventsService.subscribe('auth:login', (userId) => {
@@ -109,8 +107,8 @@ export class AuthService {
     }
 
     loginWithApple(): Promise<void> {
-        return SignInWithApple.Authorize()
-            .then((response: ResponseSignInWithApplePlugin) => {
+        return SignInWithApple.authorize()
+            .then((response: SignInWithAppleResponse) => {
                 const provider = new firebase.auth.OAuthProvider('apple.com');
                 const authCredential = provider.credential({
                     idToken: response.response.identityToken
@@ -135,28 +133,29 @@ export class AuthService {
         // copy the SHA-1 fingerprint of the "App signing certificate", found in the "App signing" section under "Release Management",
         // in Google Play Console. Paste this fingerprint in the Release OAuth client ID in Google Credentials Manager.
 
-        return this.googlePlus.login({
-                webClientId: environment.firebaseConfig.apiKey
-            })
-            .then(res => {
-                const provider = new firebase.auth.OAuthProvider('google.com');
-                const authCredential = provider.credential({
-                    idToken: res.idToken
-                });
-
-                return firebase.auth().signInWithCredential(authCredential)
-                    .then(data => {
-                        const displayName = res.displayName;
-                        const photoUrl = res.imageUrl;
-                        if (displayName) {
-                            this.setUserProfile(data.user, displayName, photoUrl);
-                        }
-
-                        return data.user.uid;
-                    }).then((id) => {
-                        this.eventsService.publish('auth:login', {userId: id});
-                    });
-            });
+        return Promise.reject('Unimplemented');
+        // return this.googlePlus.login({
+        //         webClientId: environment.firebaseConfig.apiKey
+        //     })
+        //     .then(res => {
+        //         const provider = new firebase.auth.OAuthProvider('google.com');
+        //         const authCredential = provider.credential({
+        //             idToken: res.idToken
+        //         });
+        //
+        //         return firebase.auth().signInWithCredential(authCredential)
+        //             .then(data => {
+        //                 const displayName = res.displayName;
+        //                 const photoUrl = res.imageUrl;
+        //                 if (displayName) {
+        //                     this.setUserProfile(data.user, displayName, photoUrl);
+        //                 }
+        //
+        //                 return data.user.uid;
+        //             }).then((id) => {
+        //                 this.eventsService.publish('auth:login', {userId: id});
+        //             });
+        //     });
     }
 
     logout() {

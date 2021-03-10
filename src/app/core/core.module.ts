@@ -15,7 +15,6 @@ import {
     TransactionService,
     UIService
 } from '@core/services';
-import {GooglePlus} from '@ionic-native/google-plus/ngx';
 import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment';
 import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/auth';
@@ -55,7 +54,7 @@ export const services = [
     ],
     providers: [
         // Cordova plugins
-        GooglePlus,
+        // ...
 
         // Core services
         ...services,

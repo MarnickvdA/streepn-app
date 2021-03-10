@@ -9,7 +9,7 @@ import {EventsService} from '@core/services/events.service';
 import {PushService} from '@core/services/push.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faBars, faChevronLeft, faMinusCircle, faTimes, faTimesCircle} from '@fortawesome/pro-duotone-svg-icons';
+import {faBars, faChevronLeft, faInfoCircle, faMinusCircle, faTimes, faTimesCircle} from '@fortawesome/pro-duotone-svg-icons';
 import {faPlus} from '@fortawesome/pro-regular-svg-icons';
 
 const {App, StatusBar, SplashScreen, FirebaseRemoteConfig} = Plugins;
@@ -37,7 +37,7 @@ export class AppComponent {
     ) {
         this.initializeApp();
 
-        this.iconLibrary.addIcons(faBars, faChevronLeft, faTimes, faTimesCircle, faPlus, faMinusCircle);
+        this.iconLibrary.addIcons(faBars, faChevronLeft, faTimes, faTimesCircle, faPlus, faMinusCircle, faInfoCircle);
 
         this.router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {

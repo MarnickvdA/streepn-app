@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{titleId| translate}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
+                         [icon]="['fad', 'times-circle']"></fa-duotone-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{titleId | translate}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="content" [innerHTML]="contentId | translate">
+  </div>
+
+</ion-content>

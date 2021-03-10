@@ -9,7 +9,7 @@ const routes: Routes = [
         component: HousePage,
         children: [
             {
-                path: '',
+                path: 'home',
                 loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
             },
             {

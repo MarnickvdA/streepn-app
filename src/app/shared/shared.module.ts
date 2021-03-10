@@ -20,6 +20,7 @@ import { DateTimePipe } from './pipes/date-time.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { DatePipe } from './pipes/date.pipe';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
+import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
 
 export const components = [
     MoneyInputComponent,
@@ -29,6 +30,7 @@ export const components = [
     ProductStockItemComponent,
     SideMenuComponent,
     TransactionItemComponent,
+    InfoModalComponent,
 ];
 
 export const pipes = [

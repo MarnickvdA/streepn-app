@@ -365,5 +365,11 @@
         }
       }
     }
+  },
+  "information": {
+    "dashboard": {
+      "title": "Dashboardhulp",
+      "content": "<h1>Huizen</h1>\nOp deze pagina wordt een overzicht getoond van de huizen waaraan jij deelneemt.\n\n<h3>Toetreden tot een huis</h3>\nEr zijn twee manieren waarop je kan toetreden tot een huis.\n<br><br>\n<b>1. Met een invite link</b><br>\nEen andere Streepn gebruiker kan een invite linkje naar je sturen waarop je kan klikken.\nAls je op die link klikt wordt je naar Streepn genavigeerd en zul je een pop-up krijgen met de vraag of je dat\ndesbetreffende huis wilt toetreden.\n<br><br>\n<b>2. Met een huiscode</b><br>\nAls een invite link onverhoopt niet werkt kun je ook toetreden tot een huis door een code in te voeren. Hiervoor\nmoet je klikken op 'Toetreden met huiscode'.\n\n<h3>Huis creëren</h3>\nEen huis is erg makkelijk te creëren via ons stappenplan. Op de dashboard pagina kun je onderaan klikken op het + icoontje.\nHierna moet je een huisnaam invoeren en kun je via een social medium naar jouw voorkeur je huisgenoten uitnodigen!\n<br><br>\nVergeet niet om een product toe te voegen aan je huis administratie en de voorraad aan te vullen, daarna kun je aan de slag met Streepn!\n"
+    }
   }
 }
