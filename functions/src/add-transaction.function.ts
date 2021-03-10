@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import {ErrorMessage} from './models/error-message';
 import {House, Transaction, UserAccount} from './models';
 import {getTransactionUpdateObject} from './helpers/transaction.helper';
+import {sendTransactionAdded} from './helpers/message.helper';
 
 const {v4: uuidv4} = require('uuid');
 const db = admin.firestore();
@@ -77,6 +78,8 @@ export const addTransaction = functions.region('europe-west1').https
 
                     // Update the balance of the accounts
                     fireTrans.update(houseRef, getTransactionUpdateObject(house, data.transaction));
+
+                    sendTransactionAdded(house, data.transaction);
                 })
                 .catch(err => {
                     console.error(err);

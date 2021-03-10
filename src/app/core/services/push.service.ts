@@ -73,7 +73,7 @@ export class PushService {
                 let subTopic;
                 switch (topic) {
                     case PushTopic.HOUSE_ALL:
-                        subTopic = 'houses_' + data.houseId + '_all';
+                        subTopic = 'house_' + data.houseId + '_all';
                 }
 
                 if (subTopic) {
@@ -101,7 +101,7 @@ export class PushService {
                 let subTopic;
                 switch (topic) {
                     case PushTopic.HOUSE_ALL:
-                        subTopic = 'houses_' + data.houseId + '_all';
+                        subTopic = 'house_' + data.houseId + '_all';
                 }
 
                 if (subTopic) {
