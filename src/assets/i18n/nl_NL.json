@@ -95,6 +95,13 @@
     "settings": "Instellingen",
     "logout.description": "Weet je zeker dat je wil uitloggen?"
   },
+  "profile": {
+    "edit": {
+      "username": "Naam aanpassen",
+      "email": "Emailadres aanpassen",
+      "password": "Wachtwoord aanpassen"
+    }
+  },
   "dashboard": {
     "title": "Dashboard",
     "houses": "Huizen",
