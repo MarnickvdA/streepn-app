@@ -3,7 +3,6 @@ import {Component, NgZone} from '@angular/core';
 import {MenuController, NavController, Platform} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {AppState, Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
-import {AdsService} from '@core/services/ads.service';
 import {StorageService} from '@core/services/storage.service';
 import {EventsService} from '@core/services/events.service';
 import {PushService} from '@core/services/push.service';
@@ -26,7 +25,6 @@ export class AppComponent {
         private platform: Platform,
         private translate: TranslateService,
         private zone: NgZone,
-        private adsService: AdsService,
         private storage: StorageService,
         private events: EventsService,
         private pushService: PushService,
@@ -92,8 +90,6 @@ export class AppComponent {
                 });
                 FirebaseRemoteConfig.fetchAndActivate();
             }
-
-            this.adsService.initialize();
 
             SplashScreen.hide();
 

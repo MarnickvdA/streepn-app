@@ -9,7 +9,6 @@ export {UIService} from './ui.service';
 // Firebase services
 export {AuthService} from './auth.service';
 export {AnalyticsService} from './analytics.service';
-export {AdsService} from './ads.service';
 export {PushService, PushTopic} from './push.service';
 
 // Model services

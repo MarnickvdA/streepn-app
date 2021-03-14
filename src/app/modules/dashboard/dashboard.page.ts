@@ -3,7 +3,7 @@ import {AlertController, IonRouterOutlet, LoadingController, ModalController, Na
 import {Observable, Subscription} from 'rxjs';
 import firebase from 'firebase/app';
 import {House, HouseInvite, UserAccount} from '@core/models';
-import {AdsService, AuthService, EventsService, HouseService, LoggerService, StorageService, UIService} from '@core/services';
+import {AuthService, EventsService, HouseService, LoggerService, StorageService, UIService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {take} from 'rxjs/operators';
 import {OnboardingComponent} from '@modules/dashboard/onboarding/onboarding.component';
@@ -44,7 +44,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 private modalController: ModalController,
                 private storage: StorageService,
                 private uiService: UIService,
-                private ads: AdsService,
                 private iconLibrary: FaIconLibrary,
                 private routerOutlet: IonRouterOutlet) {
         this.iconLibrary.addIcons(faTicket);
@@ -104,16 +103,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             });
     }
 
-    ionViewDidEnter() {
-        if (!this.onboarding) {
-            this.ads.showBanner();
-        }
-    }
-
-    ionViewWillLeave() {
-        this.ads.hideBanner();
-    }
-
     async promptManualHouseJoin() {
         const alert = await this.alertController.create({
             header: this.translate.instant('dashboard.houseInvite.manualHeader'),
@@ -149,7 +138,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
 
     private launchOnBoarding() {
         this.onboarding = true;
-        this.ads.hideBanner();
         this.modalController.create({
             // swipeToClose: false,
             // backdropDismiss: false,
@@ -159,7 +147,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 modal.onDidDismiss()
                     .then(() => {
                         this.onboarding = false;
-                        this.ads.showBanner();
                     });
                 modal.present();
             });

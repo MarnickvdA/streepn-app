@@ -1,10 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Account, House, Product, Transaction} from '@core/models';
+import {Account, House, Product} from '@core/models';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {Capacitor, HapticsImpactStyle, Plugins} from '@capacitor/core';
 import {catchError} from 'rxjs/operators';
 import {EMPTY, Observable, Subscription} from 'rxjs';
-import {AdsService, AnalyticsService, AuthService, LoggerService, TransactionService, TransactionSet} from '@core/services';
+import {AnalyticsService, AuthService, LoggerService, TransactionService, TransactionSet} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {faShoppingCart} from '@fortawesome/pro-regular-svg-icons';
@@ -31,7 +31,6 @@ export class AddTransactionComponent implements OnInit {
                 private translate: TranslateService,
                 private analyticsService: AnalyticsService,
                 private authService: AuthService,
-                private ads: AdsService,
                 private iconLibrary: FaIconLibrary) {
         this.iconLibrary.addIcons(faShoppingCart);
     }
@@ -44,8 +43,6 @@ export class AddTransactionComponent implements OnInit {
                 this.currentProduct = house.products[0];
             }
         });
-
-        this.ads.preloadInterstitial();
     }
 
     selectProduct($event: CustomEvent) {
@@ -81,7 +78,6 @@ export class AddTransactionComponent implements OnInit {
     }
 
     async checkout() {
-        this.ads.showInterstitial();
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.streeping'),
             translucent: true,

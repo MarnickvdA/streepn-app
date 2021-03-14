@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.community.firebaseanalytics.FirebaseAnalytics;
-//import com.getcapacitor.community.firebaserc.FirebaseRemoteConfig;
 
 import java.util.ArrayList;
 
@@ -19,8 +18,6 @@ public class MainActivity extends BridgeActivity {
       // Additional plugins you've installed go here
       // Ex: add(TotallyAwesomePlugin.class);
       add(FirebaseAnalytics.class);
-      add(com.getcapacitor.community.admob.AdMob.class);
-//      add(FirebaseRemoteConfig.class);
     }});
   }
 }

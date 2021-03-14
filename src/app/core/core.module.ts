@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 import {TranslateModule} from '@ngx-translate/core';
 import {
-    AdsService,
     AnalyticsService,
     AuthService,
     EventsService,
@@ -30,7 +29,6 @@ export const services = [
     EventsService,
     PushService,
     AnalyticsService,
-    AdsService,
     StorageService,
     UIService,
 
