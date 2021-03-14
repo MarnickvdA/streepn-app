@@ -1,11 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {House, Settlement} from '@core/models';
-import {AuthService, HouseService, LoggerService, PushService, StorageService} from '@core/services';
+import {HouseService, LoggerService} from '@core/services';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {SettlementService} from '@core/services/settlement.service';
-import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faClock} from '@fortawesome/pro-duotone-svg-icons';
 
 @Component({
     selector: 'app-settlement-detail',
@@ -27,12 +25,7 @@ export class SettlementDetailComponent implements OnInit, OnDestroy {
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 private houseService: HouseService,
-                private settlementService: SettlementService,
-                private authService: AuthService,
-                private pushService: PushService,
-                private storage: StorageService,
-                private iconLibary: FaIconLibrary) {
-        this.iconLibary.addIcons(faClock);
+                private settlementService: SettlementService) {
 
         this.routeSub = this.route.params.subscribe((params: Params) => {
             this.settlementId = params.settlementId;

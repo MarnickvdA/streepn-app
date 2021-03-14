@@ -3,8 +3,6 @@ import {House, Settlement} from '@core/models';
 import {AuthService, HouseService, LoggerService, PushService, StorageService} from '@core/services';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faCalculatorAlt} from '@fortawesome/pro-duotone-svg-icons';
 import {ModalController} from '@ionic/angular';
 import {SettleHouseComponent} from '@modules/house/overview/settlements/settle-house/settle-house.component';
 import {SettlementService} from '@core/services/settlement.service';
@@ -29,9 +27,7 @@ export class SettlementsPage implements OnInit, OnDestroy {
                 private authService: AuthService,
                 private pushService: PushService,
                 private storage: StorageService,
-                private iconLibary: FaIconLibrary,
                 private modalController: ModalController) {
-        this.iconLibary.addIcons(faCalculatorAlt);
     }
 
     ngOnInit() {

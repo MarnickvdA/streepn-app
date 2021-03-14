@@ -8,8 +8,39 @@ import {EventsService} from '@core/services/events.service';
 import {PushService} from '@core/services/push.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faBars, faChevronLeft, faInfoCircle, faMinusCircle, faTimes, faTimesCircle} from '@fortawesome/pro-duotone-svg-icons';
-import {faPlus} from '@fortawesome/pro-regular-svg-icons';
+import {
+    faAdjust,
+    faAt,
+    faBars,
+    faBell,
+    faBoxFull,
+    faCalculatorAlt,
+    faCheckCircle,
+    faChevronLeft,
+    faClock,
+    faCogs,
+    faEdit,
+    faHistory,
+    faHouse,
+    faInfoCircle,
+    faInventory, faList,
+    faMinusCircle,
+    faPlusCircle,
+    faReceipt,
+    faShareAltSquare,
+    faSignOut,
+    faTag,
+    faTicket,
+    faTimes,
+    faTimesCircle,
+    faTrashAlt,
+    faUser, faUserCog,
+    faUsersCrown,
+    faWallet
+} from '@fortawesome/pro-duotone-svg-icons';
+import {faPlus, faShoppingCart} from '@fortawesome/pro-regular-svg-icons';
+import {faStar} from '@fortawesome/pro-light-svg-icons';
+import {faStar as faStarSolid} from '@fortawesome/pro-solid-svg-icons';
 
 const {App, StatusBar, SplashScreen, FirebaseRemoteConfig} = Plugins;
 
@@ -35,7 +66,7 @@ export class AppComponent {
     ) {
         this.initializeApp();
 
-        this.iconLibrary.addIcons(faBars, faChevronLeft, faTimes, faTimesCircle, faPlus, faMinusCircle, faInfoCircle);
+        this.loadIcons();
 
         this.router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
@@ -117,5 +148,47 @@ export class AppComponent {
                 StatusBar.setBackgroundColor({color: '#FFFFFF'});
             }
         }
+    }
+
+    private loadIcons() {
+        this.iconLibrary.addIcons(
+            faBars,
+            faChevronLeft,
+            faTimes,
+            faTimesCircle,
+            faPlus,
+            faMinusCircle,
+            faInfoCircle,
+            faUser,
+            faBell,
+            faUsersCrown,
+            faWallet,
+            faPlusCircle,
+            faMinusCircle,
+            faSignOut,
+            faCalculatorAlt,
+            faClock,
+            faTicket,
+            faPlus,
+            faHouse,
+            faReceipt,
+            faInventory,
+            faCogs,
+            faShoppingCart,
+            faShareAltSquare,
+            faCheckCircle,
+            faEdit,
+            faHistory,
+            faTag,
+            faTrashAlt,
+            faBoxFull,
+            faUser,
+            faAt,
+            faList,
+            faUserCog,
+            faAdjust,
+            faStar,
+            faStarSolid
+        );
     }
 }

@@ -4,10 +4,6 @@ import {House} from '@core/models';
 import {AuthService, EventsService, HouseService, StorageService} from '@core/services';
 import {Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
 import {AlertController, LoadingController, MenuController, NavController} from '@ionic/angular';
-import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faAdjust, faList, faSignOut, faUserCog} from '@fortawesome/pro-duotone-svg-icons';
-import {faStar} from '@fortawesome/pro-light-svg-icons';
-import {faStar as faStarSolid} from '@fortawesome/pro-solid-svg-icons';
 import {environment} from '@env/environment';
 import {TranslateService} from '@ngx-translate/core';
 
@@ -35,9 +31,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
                 private alertController: AlertController,
                 private loadingController: LoadingController,
                 private translate: TranslateService,
-                private menuController: MenuController,
-                private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faList, faUserCog, faAdjust, faStar, faStarSolid, faSignOut);
+                private menuController: MenuController) {
     }
 
     ngOnInit() {

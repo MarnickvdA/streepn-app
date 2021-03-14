@@ -1,7 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {IonRouterOutlet, ModalController} from '@ionic/angular';
-import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faTimesCircle} from '@fortawesome/pro-duotone-svg-icons';
 
 @Component({
     selector: 'app-info-modal',
@@ -16,9 +14,7 @@ export class InfoModalComponent implements OnInit {
     @Input()
     contentId: string;
 
-    constructor(private modalController: ModalController,
-                private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faTimesCircle);
+    constructor(private modalController: ModalController) {
     }
 
     static async presentModal(modalController: ModalController, routerOutlet: IonRouterOutlet, titleId: string, contentId: string) {

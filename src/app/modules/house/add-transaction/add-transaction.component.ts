@@ -4,10 +4,8 @@ import {LoadingController, ModalController} from '@ionic/angular';
 import {Capacitor, HapticsImpactStyle, Plugins} from '@capacitor/core';
 import {catchError} from 'rxjs/operators';
 import {EMPTY, Observable, Subscription} from 'rxjs';
-import {AnalyticsService, AuthService, LoggerService, TransactionService, TransactionSet} from '@core/services';
+import {LoggerService, TransactionService, TransactionSet} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faShoppingCart} from '@fortawesome/pro-regular-svg-icons';
 
 const {Haptics} = Plugins;
 
@@ -28,11 +26,7 @@ export class AddTransactionComponent implements OnInit {
     constructor(private modalController: ModalController,
                 private transactionService: TransactionService,
                 private loadingController: LoadingController,
-                private translate: TranslateService,
-                private analyticsService: AnalyticsService,
-                private authService: AuthService,
-                private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faShoppingCart);
+                private translate: TranslateService) {
     }
 
     ngOnInit() {

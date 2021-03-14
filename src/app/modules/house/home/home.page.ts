@@ -2,9 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HouseService} from '@core/services';
 import {Observable, Subscription} from 'rxjs';
 import {House} from '@core/models';
-import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faMinusCircle, faPlusCircle} from '@fortawesome/pro-duotone-svg-icons';
-import {AngularFirestore} from '@angular/fire/firestore';
 
 @Component({
     selector: 'app-house-home',
@@ -17,10 +14,7 @@ export class HomePage implements OnInit, OnDestroy {
     house?: House;
     private houseSub: Subscription;
 
-    constructor(private houseService: HouseService,
-                private fs: AngularFirestore,
-                private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faPlusCircle, faMinusCircle);
+    constructor(private houseService: HouseService) {
     }
 
     ngOnInit() {

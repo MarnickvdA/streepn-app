@@ -6,8 +6,6 @@ import {AccountService, HouseService, LoggerService} from '@core/services';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Params} from '@angular/router';
-import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faCalculatorAlt, faEdit, faWallet} from '@fortawesome/pro-duotone-svg-icons';
 import {SettleComponent} from '@modules/house/overview/shared-account-detail/settle/settle.component';
 
 @Component({
@@ -33,9 +31,7 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
                 private loadingController: LoadingController,
                 private modalController: ModalController,
                 private translate: TranslateService,
-                private route: ActivatedRoute,
-                private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faWallet, faEdit, faCalculatorAlt);
+                private route: ActivatedRoute) {
         this.routeSub = this.route.params.subscribe((params: Params) => {
             this.accountId = params.accountId;
         });

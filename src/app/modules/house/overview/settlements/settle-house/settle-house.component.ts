@@ -4,8 +4,6 @@ import {EventsService, HouseService, LoggerService} from '@core/services';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {SettleComponent} from '@modules/house/overview/shared-account-detail/settle/settle.component';
-import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faCheckCircle, faPlusCircle, faTimesCircle} from '@fortawesome/pro-duotone-svg-icons';
 import {AddStockComponent} from '@modules/house/stock/add-stock/add-stock.component';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError} from 'rxjs/operators';
@@ -28,9 +26,7 @@ export class SettleHouseComponent implements OnInit, OnDestroy {
                 private modalController: ModalController,
                 private loadingController: LoadingController,
                 private translate: TranslateService,
-                private events: EventsService,
-                private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faCheckCircle, faTimesCircle, faPlusCircle);
+                private events: EventsService) {
     }
 
     ngOnInit() {

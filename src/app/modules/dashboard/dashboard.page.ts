@@ -8,8 +8,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {take} from 'rxjs/operators';
 import {OnboardingComponent} from '@modules/dashboard/onboarding/onboarding.component';
 import {Capacitor} from '@capacitor/core';
-import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faTicket} from '@fortawesome/pro-duotone-svg-icons';
 import {NewHouseComponent} from '@modules/dashboard/new-house/new-house.component';
 import User = firebase.User;
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
@@ -44,9 +42,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 private modalController: ModalController,
                 private storage: StorageService,
                 private uiService: UIService,
-                private iconLibrary: FaIconLibrary,
                 private routerOutlet: IonRouterOutlet) {
-        this.iconLibrary.addIcons(faTicket);
         this.iOS = Capacitor.isNative && Capacitor.platform === 'ios';
         this.loading = true;
     }

@@ -4,8 +4,6 @@ import {ModalController} from '@ionic/angular';
 import {AuthService, HouseService} from '@core/services';
 import {Observable, Subscription} from 'rxjs';
 import {House, Product} from '@core/models';
-import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faEdit, faHistory} from '@fortawesome/pro-duotone-svg-icons';
 import {NewProductComponent} from '@modules/house/stock/new-product/new-product.component';
 
 @Component({
@@ -23,9 +21,7 @@ export class StockPage implements OnInit, OnDestroy {
 
     constructor(private modalController: ModalController,
                 private houseService: HouseService,
-                private iconLibrary: FaIconLibrary,
                 private authService: AuthService) {
-        this.iconLibrary.addIcons(faEdit, faHistory);
     }
 
     ngOnInit() {

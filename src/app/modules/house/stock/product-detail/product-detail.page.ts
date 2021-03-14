@@ -8,8 +8,6 @@ import {ActivatedRoute, Params} from '@angular/router';
 import {Location} from '@angular/common';
 import {HouseService, ProductService} from '@core/services';
 import {MoneyInputComponent} from '@shared/components/money-input/money-input.component';
-import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faBoxFull, faEdit, faTag, faTrashAlt} from '@fortawesome/pro-duotone-svg-icons';
 
 @Component({
     selector: 'app-product-detail',
@@ -36,10 +34,7 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
                 private location: Location,
                 private houseService: HouseService,
                 private alertController: AlertController,
-                private navController: NavController,
-                private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faEdit, faTag, faTrashAlt, faBoxFull);
-
+                private navController: NavController) {
         this.route.params.subscribe((params: Params) => {
             this.productId = params.productId;
         });

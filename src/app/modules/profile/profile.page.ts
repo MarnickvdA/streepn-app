@@ -3,8 +3,6 @@ import {Observable} from 'rxjs';
 import firebase from 'firebase/app';
 import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {AuthService} from '@core/services';
-import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faAt, faClock, faUser} from '@fortawesome/pro-duotone-svg-icons';
 import {TranslateService} from '@ngx-translate/core';
 import User = firebase.User;
 import Timestamp = firebase.firestore.Timestamp;
@@ -21,9 +19,7 @@ export class ProfilePage implements OnInit {
                 private navController: NavController,
                 private alertController: AlertController,
                 private loadingController: LoadingController,
-                private translate: TranslateService,
-                private iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faUser, faClock, faAt);
+                private translate: TranslateService) {
         this.user$ = this.authService.user;
     }
 
