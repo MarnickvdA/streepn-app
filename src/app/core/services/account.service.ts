@@ -1,12 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Balance, House, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from '../models';
 import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFireStorage} from '@angular/fire/storage';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AccountService {
-    constructor(private fs: AngularFirestore) {
+    constructor(private fs: AngularFirestore,
+                private storage: AngularFireStorage) {
     }
 
     updateUserAccount(house: House, account: UserAccount) {

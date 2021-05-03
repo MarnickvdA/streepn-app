@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Plugins} from '@capacitor/core';
 import {LoggerService} from './logger.service';
 import {EventsService} from './events.service';
+import {AngularFireStorage} from '@angular/fire/storage';
 
 const {Storage} = Plugins;
 
@@ -11,7 +12,8 @@ const {Storage} = Plugins;
 export class StorageService {
     private readonly logger = LoggerService.getLogger(StorageService.name);
 
-    constructor(private events: EventsService) {
+    constructor(private events: EventsService,
+                private storage: AngularFireStorage) {
         this.events.subscribe('auth:logout', () => {
             this.nuke();
         });

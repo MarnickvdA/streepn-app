@@ -51,6 +51,12 @@
             </ion-label>
         </ion-item>
 
+        <ion-item (click)="takePicture(user.uid)" button detail>
+            <ion-label>
+                <h3>{{'profile.edit.picture' | translate}}</h3>
+            </ion-label>
+        </ion-item>
+
 <!--        <ion-item (click)="updateEmail()" button detail>-->
 <!--            <ion-label>-->
 <!--                <h3>{{'profile.edit.email' | translate}}</h3>-->

@@ -30,13 +30,15 @@ import {
     faShareAltSquare,
     faSignOut,
     faTag,
+    faPlus as fadPlus,
     faTicket,
     faTimes,
     faTimesCircle,
     faTrashAlt,
     faUser, faUserCog,
     faUsersCrown,
-    faWallet
+    faWallet,
+    faDollyFlatbedAlt,
 } from '@fortawesome/pro-duotone-svg-icons';
 import {faPlus, faShoppingCart} from '@fortawesome/pro-regular-svg-icons';
 import {faStar} from '@fortawesome/pro-light-svg-icons';
@@ -169,7 +171,6 @@ export class AppComponent {
             faCalculatorAlt,
             faClock,
             faTicket,
-            faPlus,
             faHouse,
             faReceipt,
             faInventory,
@@ -188,7 +189,9 @@ export class AppComponent {
             faUserCog,
             faAdjust,
             faStar,
-            faStarSolid
+            faStarSolid,
+            faDollyFlatbedAlt,
+            fadPlus,
         );
     }
 }

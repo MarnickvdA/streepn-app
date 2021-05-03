@@ -9,8 +9,8 @@ import {take} from 'rxjs/operators';
 import {OnboardingComponent} from '@modules/dashboard/onboarding/onboarding.component';
 import {Capacitor} from '@capacitor/core';
 import {NewHouseComponent} from '@modules/dashboard/new-house/new-house.component';
-import User = firebase.User;
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
+import User = firebase.User;
 
 @Component({
     selector: 'app-dashboard',
@@ -67,7 +67,9 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                                 this.houseAccounts[house.id] = house.getUserAccountByUserId(user.uid);
                             });
 
-                            this.loading = false;
+                            setTimeout(() => {
+                                this.loading = false;
+                            }, 500);
                         });
                 }
             });
@@ -247,5 +249,11 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
 
     openInfo() {
         InfoModalComponent.presentModal(this.modalController, this.routerOutlet, 'information.dashboard.title', 'information.dashboard.content');
+    }
+
+    fakePull($event) {
+        setTimeout(() => {
+            $event.target.complete();
+        }, 350);
     }
 }

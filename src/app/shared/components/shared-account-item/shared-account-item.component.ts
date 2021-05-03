@@ -12,7 +12,7 @@ import {HouseService} from '@core/services';
 export class SharedAccountItemComponent implements OnInit, OnDestroy {
 
     @Input() account: SharedAccount;
-    @Input() isButton = true;
+    @Input() canEditAccount = false;
     @Output() clicked: EventEmitter<any> = new EventEmitter();
 
     house?: House;

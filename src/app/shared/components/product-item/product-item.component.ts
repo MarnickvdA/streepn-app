@@ -24,6 +24,8 @@ export class ProductItemComponent implements OnInit {
     }
 
     editProduct() {
-        this.navController.navigateForward(['products', this.product.id], {relativeTo: this.route});
+        if (this.canEdit) {
+            this.navController.navigateForward(['products', this.product.id], {relativeTo: this.route});
+        }
     }
 }

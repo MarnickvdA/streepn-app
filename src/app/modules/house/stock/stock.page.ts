@@ -64,4 +64,10 @@ export class StockPage implements OnInit, OnDestroy {
             modal.present();
         });
     }
+
+    fakePull($event) {
+        setTimeout(() => {
+            $event.target.complete();
+        }, 350);
+    }
 }

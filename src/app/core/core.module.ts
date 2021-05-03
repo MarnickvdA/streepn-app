@@ -21,6 +21,8 @@ import {AngularFireFunctionsModule, REGION, USE_EMULATOR as USE_FUNCTIONS_EMULAT
 import {SETTINGS, USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/firestore';
 import {SettlementService} from '@core/services/settlement.service';
 import {AngularFirePerformanceModule} from '@angular/fire/performance';
+import {AngularFireStorageModule, BUCKET} from '@angular/fire/storage';
+import {ImageService} from '@core/services/image.service';
 
 require('./firebase-init');
 
@@ -31,6 +33,7 @@ export const services = [
     AnalyticsService,
     StorageService,
     UIService,
+    ImageService,
 
     // Model services
     HouseService,
@@ -49,6 +52,7 @@ export const services = [
         AngularFireAuthModule,
         AngularFireFunctionsModule,
         AngularFirePerformanceModule,
+        AngularFireStorageModule,
     ],
     providers: [
         // Cordova plugins

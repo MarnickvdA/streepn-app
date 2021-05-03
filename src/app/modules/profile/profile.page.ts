@@ -4,6 +4,7 @@ import firebase from 'firebase/app';
 import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {AuthService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
+import {ImageService} from '@core/services/image.service';
 import User = firebase.User;
 import Timestamp = firebase.firestore.Timestamp;
 
@@ -19,7 +20,8 @@ export class ProfilePage implements OnInit {
                 private navController: NavController,
                 private alertController: AlertController,
                 private loadingController: LoadingController,
-                private translate: TranslateService) {
+                private translate: TranslateService,
+                private imageService: ImageService) {
         this.user$ = this.authService.user;
     }
 
@@ -77,5 +79,9 @@ export class ProfilePage implements OnInit {
 
     updatePassword() {
 
+    }
+
+    takePicture(userId: string) {
+        this.imageService.takeProfilePicture(userId);
     }
 }

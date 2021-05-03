@@ -1,0 +1,13 @@
+ion-label.amount {
+  max-width: 2.25rem;
+
+  h3 {
+    width: 100%;
+  }
+
+  color: rgba(var(--ion-color-dark-rgb), .75);
+
+  &.danger {
+    color: rgba(var(--ion-color-danger-rgb), .75);
+  }
+}

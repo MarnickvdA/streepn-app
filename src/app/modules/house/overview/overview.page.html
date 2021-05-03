@@ -12,6 +12,10 @@
 </ion-header>
 
 <ion-content>
+    <ion-refresher (ionRefresh)="fakePull($event)" slot="fixed">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
     <ion-header collapse="condense">
         <ion-toolbar>
             <ion-title size="large">{{'house.overview.title' | translate}}</ion-title>
@@ -69,6 +73,7 @@
         </ion-item>
 
         <app-shared-account-item *ngFor="let sharedAccount of house?.sharedAccounts"
+                                 [canEditAccount]="isAdmin"
                                  (clicked)="openAccount(sharedAccount)"
                                  [account]="sharedAccount"></app-shared-account-item>
         <!-- END ACCOUNTS SECTION -->

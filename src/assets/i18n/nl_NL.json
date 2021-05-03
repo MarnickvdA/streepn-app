@@ -49,7 +49,11 @@
     "updating": "Aan het bijwerken...",
     "editing": "Aan het bijwerken...",
     "settling": "Aan het verrekenen...",
+    "uploading": "Aan het uploaden...",
     "loggingOut": "Uitloggen..."
+  },
+  "date": {
+    "at": "Op {{date}}"
   },
   "errors": {
     "error": "Foutmelding",
@@ -60,7 +64,6 @@
     "house-invite-expired": "Huislink verlopen",
     "house-creation-error": "Er is een fout opgetreden bij het aanmaken van het huis. Probeer het opnieuw.",
     "functions": {
-
     }
   },
   "login": {
@@ -99,7 +102,8 @@
     "edit": {
       "username": "Naam aanpassen",
       "email": "Emailadres aanpassen",
-      "password": "Wachtwoord aanpassen"
+      "password": "Wachtwoord aanpassen",
+      "picture": "Profielfoto aanpassen"
     }
   },
   "dashboard": {
@@ -199,6 +203,8 @@
     "stock": {
       "tab": "Producten",
       "title": "Producten",
+      "add-product": "Product toevoegen",
+      "add-product-desc": "Voeg een nieuw product toe aan het assortiment.",
       "current": "Huidige voorraad",
       "empty": "Er is nog geen voorraad toegevoegd om in het logboek te tonen",
       "log": {
@@ -214,7 +220,7 @@
       },
       "add": {
         "title": "Voorraad aanvullen",
-        "description": "Vul jouw krediet aan door voorraad toe te voegen!",
+        "description": "Vul de voorraad aan van een product.",
         "selectProduct": "Product selecteren",
         "paidByTitle": "Betaler",
         "paidBy": "Betaler selecteren",

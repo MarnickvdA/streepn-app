@@ -2,7 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {House, UserAccount} from '@core/models';
 import {TranslateService} from '@ngx-translate/core';
 import {NavController} from '@ionic/angular';
-import {AuthService, HouseService} from '@core/services';
+import {AccountService, AuthService, HouseService} from '@core/services';
 import {Subscription} from 'rxjs';
 
 @Component({

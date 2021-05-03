@@ -39,7 +39,7 @@
         <app-transaction-item *ngFor="let transaction of transactions"
                               [transaction]="transaction"></app-transaction-item>
 
-        <ion-button class="no-bg" (click)="loadNext()" *ngIf="!doneLoading" [disabled]="isLoadingMore" fill="none">
+        <ion-button class="no-bg" (click)="loadNext()" *ngIf="transactions?.length > 0 && !doneLoading" [disabled]="isLoadingMore" fill="none">
             <ion-label *ngIf="!isLoadingMore" color="primary">{{'actions.loadMore' | translate}}</ion-label>
             <ion-progress-bar *ngIf="isLoadingMore"></ion-progress-bar>
         </ion-button>

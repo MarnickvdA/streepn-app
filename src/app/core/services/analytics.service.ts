@@ -109,4 +109,10 @@ export class AnalyticsService {
             });
         }
     }
+
+    logProfilePhotoChange(userId: string) {
+        this.logEvent('profile_picture_changed', {
+            userId,
+        });
+    }
 }

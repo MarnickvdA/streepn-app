@@ -23,6 +23,10 @@
         </ion-toolbar>
     </ion-header>
 
+    <ion-refresher (ionRefresh)="fakePull($event)" slot="fixed">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
     <ion-list>
         <ion-list-header lines="full">
             <ion-label>{{'dashboard.houses' | translate}}</ion-label>
@@ -49,22 +53,24 @@
             <ion-item (click)="promptManualHouseJoin()" lines="none" class="no-min-height no-bg" button detail="false">
                 <fa-duotone-icon slot="start" class="medium" fixedWidth
                                  [icon]="['fad', 'ticket']"></fa-duotone-icon>
-                <ion-label color="medium">
+                <ion-label style="text-decoration: underline" color="medium">
                     <h3>{{'dashboard.manualHouseJoin' | translate}}</h3>
                 </ion-label>
             </ion-item>
         </ng-template>
 
-        <ion-item class="house-item" *ngIf="loading" detail="true">
-            <ion-label>
-                <h2>
-                    <ion-skeleton-text animated style="width: 35%"></ion-skeleton-text>
-                </h2>
-                <p>
-                    <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
-                </p>
-            </ion-label>
-        </ion-item>
+        <ng-template [ngIf]="loading">
+            <ion-item class="house-item" detail="true">
+                <ion-label>
+                    <h2>
+                        <ion-skeleton-text animated style="width: 35%"></ion-skeleton-text>
+                    </h2>
+                    <p>
+                        <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+                    </p>
+                </ion-label>
+            </ion-item>
+        </ng-template>
 
         <ion-item *ngIf="!houses && !loading">
             <ion-label>

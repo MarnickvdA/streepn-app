@@ -27,4 +27,10 @@ export class HomePage implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.houseSub.unsubscribe();
     }
+
+    fakePull($event) {
+        setTimeout(() => {
+            $event.target.complete();
+        }, 350);
+    }
 }

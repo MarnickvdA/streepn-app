@@ -12,6 +12,10 @@
 </ion-header>
 
 <ion-content>
+    <ion-refresher (ionRefresh)="fakePull($event)" slot="fixed">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
     <ion-header collapse="condense">
         <ion-toolbar>
             <ion-title size="large">{{house?.name}}</ion-title>

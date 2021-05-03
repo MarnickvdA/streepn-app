@@ -146,4 +146,10 @@ export class OverviewPage implements OnInit, OnDestroy {
             });
         }
     }
+
+    fakePull($event) {
+        setTimeout(() => {
+            $event.target.complete();
+        }, 350);
+    }
 }

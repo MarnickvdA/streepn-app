@@ -83,7 +83,7 @@ export const editStock = functions.region('europe-west1').https.onCall((data: Ed
 
                         const houseUpdate: any = getHouseUpdateDataIn(deltaStock);
 
-                        if (data.updatedStock.productId !== deltaStock.productId) {
+                        if (data.updatedStock.productId?.length > 0 && data.updatedStock.productId !== deltaStock.productId) {
                             houseUpdate[`productData.${data.updatedStock.productId}.totalIn`]
                                 = admin.firestore.FieldValue.increment(data.updatedStock.cost);
                             houseUpdate[`productData.${data.updatedStock.productId}.amountIn`]

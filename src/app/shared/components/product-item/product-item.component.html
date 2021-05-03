@@ -1,4 +1,7 @@
 <ion-item (click)="editProduct()" [button]="canEdit" [detail]="canEdit">
+    <ion-label class="amount" [ngClass]="product.stock >= 0 ? '' : 'danger'" slot="start">
+        <h3><b>{{product.stock}}</b></h3>
+    </ion-label>
     <ion-label>
         <h3>
             {{product.name}}

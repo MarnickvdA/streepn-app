@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Currency, House, houseConverter, HouseInvite, UserAccount} from '@core/models';
+import {Currency, House, houseConverter, HouseInvite, houseInviteConverter, UserAccount} from '@core/models';
 import {AuthService} from './auth.service';
 import {EventsService} from './events.service';
 import {AngularFireFunctions} from '@angular/fire/functions';
@@ -13,7 +13,6 @@ import {PushService, PushTopic} from './push.service';
 import {TranslateService} from '@ngx-translate/core';
 import {LoggerService} from './logger.service';
 import {AngularFirePerformance, trace} from '@angular/fire/performance';
-import {houseInviteConverter} from '@core/models/house-invite';
 import User = firebase.User;
 
 const {Permissions} = Plugins;
