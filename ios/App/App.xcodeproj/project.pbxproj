@@ -80,7 +80,6 @@
 			children = (
 				6374EC5F25FEA97A00E8071E /* App.entitlements */,
 				6374EC6025FEA97A00E8071E /* GoogleService-Info.plist */,
-				6374EC5E25FEA97A00E8071E /* set-build-number.sh */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
@@ -88,6 +87,7 @@
 				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
 				504EC3131FED79650016851F /* Info.plist */,
 				2FAD9762203C412B000D30F8 /* config.xml */,
+				6374EC5E25FEA97A00E8071E /* set-build-number.sh */,
 				50B271D01FEDC1A000F3C39B /* public */,
 			);
 			path = App;
@@ -114,6 +114,7 @@
 				504EC3011FED79650016851F /* Frameworks */,
 				504EC3021FED79650016851F /* Resources */,
 				9592DBEFFC6D2A0C8D5DEB22 /* [CP] Embed Pods Frameworks */,
+				633F7361264174B700E0C282 /* Run Set Build Number Script */,
 			);
 			buildRules = (
 			);
@@ -177,6 +178,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		633F7361264174B700E0C282 /* Run Set Build Number Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Set Build Number Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n$SRCROOT/App/set-build-number.sh\n";
+		};
 		6634F4EFEBD30273BCE97C65 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.Plugin;
+import com.getcapacitor.community.fcm.FCMPlugin;
 import com.getcapacitor.community.firebaseanalytics.FirebaseAnalytics;
 import com.getcapacitor.plugin.http.Http;
 
@@ -20,6 +21,7 @@ public class MainActivity extends BridgeActivity {
       // Ex: add(TotallyAwesomePlugin.class);
       add(Http.class);
       add(FirebaseAnalytics.class);
+      add(FCMPlugin.class);
     }});
   }
 }
