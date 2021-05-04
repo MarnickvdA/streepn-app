@@ -15,9 +15,21 @@ ion-content {
     }
   }
 
+  ion-list {
+    &.no-bg {
+      background: var(--ion-color-light-tint);
+    }
+  }
+
   ion-item {
     &.no-bg {
       --background: var(--ion-color-light-tint);
+    }
+  }
+
+  .empty-container {
+    &.no-bg {
+      background: var(--ion-color-light-tint);
     }
   }
 }

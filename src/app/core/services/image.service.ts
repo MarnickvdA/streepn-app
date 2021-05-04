@@ -33,6 +33,7 @@ export class ImageService {
         correctOrientation: true,
         allowEditing: true,
         direction: CameraDirection.Front,
+        presentationStyle: 'popover',
         quality: 100,
         preserveAspectRatio: true,
         width: 256,

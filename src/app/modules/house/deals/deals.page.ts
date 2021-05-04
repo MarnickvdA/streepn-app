@@ -4,11 +4,11 @@ import {Observable, Subscription} from 'rxjs';
 import {House} from '@core/models';
 
 @Component({
-    selector: 'app-house-home',
-    templateUrl: './home.page.html',
-    styleUrls: ['./home.page.scss'],
+    selector: 'app-house-deals',
+    templateUrl: './deals.page.html',
+    styleUrls: ['./deals.page.scss'],
 })
-export class HomePage implements OnInit, OnDestroy {
+export class DealsPage implements OnInit, OnDestroy {
 
     house$: Observable<House>;
     house?: House;

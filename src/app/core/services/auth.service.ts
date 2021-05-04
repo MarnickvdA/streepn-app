@@ -95,13 +95,6 @@ export class AuthService {
             })
             .catch(error => {
                 const errorCode = error.code;
-                const errorMessage = error.message;
-
-                this.logger.error({
-                    message: errorMessage,
-                    error
-                });
-
                 return Promise.reject(errorCode);
             });
     }

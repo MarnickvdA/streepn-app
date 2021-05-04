@@ -72,11 +72,11 @@
         </ion-item>
 
         <ion-item-divider class="bottom-line">
-            <ion-label class="ion-text-wrap" id="explanation" *ngIf="!account?.canLeaveHouse">
+            <ion-label class="ion-text-wrap" id="explanation" *ngIf="!account?.isRemovable">
                 <p class="small">{{'house.overview.account.deletePrecondition' | translate:{name: isSelf ? ('house.overview.account.you' | translate) : account?.name} }}</p>
             </ion-label>
         </ion-item-divider>
-        <ion-item lines="full" (click)="deleteAccount()" button [disabled]="!account?.canLeaveHouse">
+        <ion-item lines="full" (click)="deleteAccount()" button [disabled]="!account?.isRemovable">
             <fa-duotone-icon slot="start" class="danger" fixedWidth [icon]="['fad', 'sign-out']"></fa-duotone-icon>
             <ion-label>
                 <h3 *ngIf="isAdmin && !isSelf"> {{'house.overview.account.deleteAccount' | translate:{name: account?.name} }}</h3>

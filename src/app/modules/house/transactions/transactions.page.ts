@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {House, Transaction, transactionConverter, UserAccount} from '@core/models';
 import {ModalController} from '@ionic/angular';
@@ -29,9 +29,10 @@ export class TransactionsPage implements OnInit, OnDestroy {
                 private transactionService: TransactionService,
                 private fs: AngularFirestore,
                 private modalController: ModalController,
-                private events: EventsService) {
+                private events: EventsService,
+                private zone: NgZone) {
         this.refreshSub = () => {
-            this.reset();
+            this.zone.run(_ => this.reset());
         };
     }
 
@@ -39,15 +40,17 @@ export class TransactionsPage implements OnInit, OnDestroy {
         this.house$ = this.houseService.observeHouse(this.houseService.currentHouseId);
         this.houseSub = this.house$
             .subscribe((house) => {
-                this.house = house;
+                this.zone.run(_ => {
+                    this.house = house;
 
-                if (house) {
-                    this.currentAccount = house.getUserAccountByUserId(this.authService.currentUser.uid);
+                    if (house) {
+                        this.currentAccount = house.getUserAccountByUserId(this.authService.currentUser.uid);
 
-                    if (!this.transactions) {
-                        this.reset();
+                        if (!this.transactions) {
+                            this.reset();
+                        }
                     }
-                }
+                });
             });
 
         this.events.subscribe('transactions:update', this.refreshSub);
@@ -61,23 +64,27 @@ export class TransactionsPage implements OnInit, OnDestroy {
     }
 
     reset(event?) {
-        this.doneLoading = false;
-        this.lastSnapshot = undefined;
+        this.zone.run(_ => {
+            this.doneLoading = false;
+            this.lastSnapshot = undefined;
 
-        this.transactions = [];
-        this.loadTransactions(this.house.id)
-            .finally(() => {
-                if (event) {
-                    event.target.complete();
-                }
-            });
+            this.transactions = [];
+            this.loadTransactions(this.house.id)
+                .finally(() => {
+                    if (event) {
+                        event.target.complete();
+                    }
+                });
+        });
     }
 
     loadNext() {
         this.isLoadingMore = true;
         this.loadTransactions(this.house.id)
             .finally(() => {
-                this.isLoadingMore = false;
+                this.zone.run(_ => {
+                    this.isLoadingMore = false;
+                });
             });
     }
 
@@ -104,17 +111,19 @@ export class TransactionsPage implements OnInit, OnDestroy {
 
         return ref.get()
             .then((result) => {
-                if (result.docs.length < this.LIMIT) {
-                    this.doneLoading = true;
-                }
+                this.zone.run(_ => {
+                    if (result.docs.length < this.LIMIT) {
+                        this.doneLoading = true;
+                    }
 
-                if (result.docs.length > 0) {
-                    this.lastSnapshot = result.docs[result.docs.length - 1];
+                    if (result.docs.length > 0) {
+                        this.lastSnapshot = result.docs[result.docs.length - 1];
 
-                    result.docs.forEach((doc) => {
-                        this.transactions.push(doc.data());
-                    });
-                }
+                        result.docs.forEach((doc) => {
+                            this.transactions.push(doc.data());
+                        });
+                    }
+                });
             });
     }
 }

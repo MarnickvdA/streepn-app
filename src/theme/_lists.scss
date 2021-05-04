@@ -29,3 +29,22 @@ ion-list.list-md {
   padding-top: 0;
   padding-bottom: 0;
 }
+
+.empty-container {
+  display: flex;
+  padding-top: 5rem;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  ion-img {
+    max-width: 300px;
+    margin: 0 4rem;
+  }
+
+  ion-label {
+    margin: 2rem;
+    text-align: center;
+  }
+}
+

@@ -37,6 +37,12 @@ export const setProfilePhoto = functions.region('europe-west1').https.onCall((da
         throw new functions.https.HttpsError('failed-precondition', ErrorMessage.INVALID_DATA);
     }
 
+    admin.auth().updateUser(userId, {
+        photoURL: data.downloadUrl
+    }).catch(err => {
+        console.error(err);
+    });
+
     return db.runTransaction(fireTrans => {
 
         const housesRef = db.collection('houses')

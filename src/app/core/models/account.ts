@@ -38,7 +38,7 @@ export abstract class Account {
         return JSON.parse(JSON.stringify(this));
     }
 
-    get canLeaveHouse(): boolean {
+    get isRemovable(): boolean {
         return this.balance.totalIn === 0 && this.balance.totalOut === 0;
     }
 }

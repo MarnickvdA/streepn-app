@@ -9,12 +9,12 @@ const routes: Routes = [
         component: HousePage,
         children: [
             {
-                path: 'home',
-                loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
-            },
-            {
                 path: 'transactions',
                 loadChildren: () => import('./transactions/transactions.module').then(m => m.TransactionsPageModule)
+            },
+            {
+                path: 'deals',
+                loadChildren: () => import('./deals/deals.module').then(m => m.DealsPageModule)
             },
             {
                 path: 'stock',

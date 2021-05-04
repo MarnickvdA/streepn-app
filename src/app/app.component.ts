@@ -39,6 +39,8 @@ import {
     faUsersCrown,
     faWallet,
     faDollyFlatbedAlt,
+    faGifts,
+    faSack
 } from '@fortawesome/pro-duotone-svg-icons';
 import {faPlus, faShoppingCart} from '@fortawesome/pro-regular-svg-icons';
 import {faStar} from '@fortawesome/pro-light-svg-icons';
@@ -192,6 +194,8 @@ export class AppComponent {
             faStarSolid,
             faDollyFlatbedAlt,
             fadPlus,
+            faGifts,
+            faSack,
         );
     }
 }

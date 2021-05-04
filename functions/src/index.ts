@@ -14,6 +14,8 @@ export {acceptTerms} from './accept-terms.function';
 
 export {setProfilePhoto} from './set-profile-photo.function';
 
+export {removeSharedAccount} from './remove-shared-account.function';
+
 export {joinHouse} from './join-house.function';
 export {leaveHouse} from './leave-house.function';
 

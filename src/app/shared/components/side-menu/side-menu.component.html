@@ -25,7 +25,7 @@
 
             <ion-menu-toggle [autoHide]="false">
                 <ion-item *ngFor="let house of houses" button routerDirection="root"
-                          routerLink="/house/{{house.id}}/home">
+                          routerLink="/house/{{house.id}}/transactions">
                     <ion-label>{{house.name}}</ion-label>
                     <fa-icon (click)="toggleFavorite($event, house.id)" slot="end" class="primary"
                              [ngClass]="this.favorite === house.id ? 'warning' : 'medium half-opacity'" fixedWidth

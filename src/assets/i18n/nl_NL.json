@@ -100,10 +100,13 @@
   },
   "profile": {
     "edit": {
+      "title": "Instellingen",
       "username": "Naam aanpassen",
+      "username-desc": "Je naam zal niet aangepast worden in je huizen.",
       "email": "Emailadres aanpassen",
       "password": "Wachtwoord aanpassen",
-      "picture": "Profielfoto aanpassen"
+      "picture": "Profielfoto aanpassen",
+      "picture-desc": "Je profielfoto is te zien in al je huizen."
     }
   },
   "dashboard": {
@@ -112,7 +115,7 @@
     "profile": "Profiel",
     "emailVerified": "Geverifieerd",
     "memberSince": "Gebruiker sinds",
-    "emptyHouses": "Je bent dakloos 😢",
+    "emptyHouses": "Je bent dakloos",
     "yourBalance": "Jouw saldo: ",
     "balance": "Saldo: ",
     "createHouse": {
@@ -139,6 +142,7 @@
     },
     "toggleDarkMode": "Donkere modus",
     "manualHouseJoin": "Toetreden met huiscode",
+    "manualHouseJoinDesc": "Handmatig een huiscode invoeren",
     "houseInvite": {
       "header": "Uitnodiging",
       "question": "Wil je toetreden tot ",
@@ -181,14 +185,13 @@
     "tabs": {
       "more": "Meer"
     },
-    "home": {
-      "title": "Huis",
-      "totalIn": "Totaal gestort",
-      "totalOut": "Totaal uitgegeven"
+    "deals": {
+      "title": "Deals",
+      "soon-explained": "Binnenkort komen er deals op deze pagina te staan. Deze deals zijn bijvoorbeeld voor aanbiedingen van kratjes bier in jouw regio. We houden je op de hoogte!"
     },
     "transactions": {
       "title": "Transacties",
-      "empty": "Er is nog niks gestreept",
+      "empty": "Nog geen transacties... Tijd om die borrel aan te slingeren!",
       "currentProduct": "Geselecteerd product",
       "allPlusOne": "Allemaal +1",
       "disabledEditing": "Sommige transacties zijn reeds verrekend waardoor je ze niet meer kan bewerken."
@@ -308,6 +311,7 @@
       },
       "addSharedAccount": {
         "title": "Nieuw potje",
+        "desc": "Handig als je kosten wil splitten.",
         "accountName": "Naam van potje",
         "errors": {
           "name-required": "Vul een productnaam in",

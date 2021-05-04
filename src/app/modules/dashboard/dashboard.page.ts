@@ -230,7 +230,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     openHouse(house: House) {
-        this.navController.navigateRoot(['house', house.id, 'home'], {
+        this.navController.navigateRoot(['house', house.id, 'transactions'], {
             animationDirection: 'forward',
         });
     }

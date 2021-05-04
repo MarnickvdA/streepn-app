@@ -1,14 +1,15 @@
 import {Injectable} from '@angular/core';
 import {Balance, House, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from '../models';
 import {AngularFirestore} from '@angular/fire/firestore';
-import {AngularFireStorage} from '@angular/fire/storage';
+import {AngularFireFunctions} from '@angular/fire/functions';
+import {Observable} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AccountService {
     constructor(private fs: AngularFirestore,
-                private storage: AngularFireStorage) {
+                private functions: AngularFireFunctions) {
     }
 
     updateUserAccount(house: House, account: UserAccount) {
@@ -44,6 +45,14 @@ export class AccountService {
         });
 
         return this.setSharedAccounts(house);
+    }
+
+    removeSharedAccount(house: House, account: SharedAccount): Observable<any> {
+        const callable = this.functions.httpsCallable('removeSharedAccount');
+        return callable({
+            houseId: house.id,
+            sharedAccountId: account.id,
+        });
     }
 
     private setUserAccounts(house: House): Promise<void> {

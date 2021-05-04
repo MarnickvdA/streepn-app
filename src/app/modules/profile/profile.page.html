@@ -42,18 +42,25 @@
             </ion-label>
         </ion-item>
 
-        <ion-item-divider class="bottom-line">
-        </ion-item-divider>
+        <ion-list-header lines="full">
+            <ion-label>{{'profile.edit.title' | translate}}</ion-label>
+        </ion-list-header>
 
-        <ion-item (click)="updateName(user.displayName)" button detail lines="full">
+        <ion-item (click)="updateName(user.displayName)" button detail="false" lines="full">
             <ion-label>
                 <h3>{{'profile.edit.username' | translate}}</h3>
+                <p class="small ion-text-wrap">
+                    {{'profile.edit.username-desc' | translate}}
+                </p>
             </ion-label>
         </ion-item>
 
-        <ion-item (click)="takePicture(user.uid)" button detail>
+        <ion-item (click)="takePicture(user.uid)" button detail="false" lines="full">
             <ion-label>
                 <h3>{{'profile.edit.picture' | translate}}</h3>
+                <p class="small ion-text-wrap">
+                    {{'profile.edit.picture-desc' | translate}}
+                </p>
             </ion-label>
         </ion-item>
 

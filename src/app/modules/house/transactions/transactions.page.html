@@ -29,17 +29,21 @@
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
-    <ion-list>
-        <ion-item class="no-min-height no-bg" *ngIf="transactions?.length === 0" lines="none">
-            <ion-label>
-                <p class="small">{{'house.transactions.empty' | translate}}</p>
-            </ion-label>
-        </ion-item>
+    <div class="empty-container" *ngIf="doneLoading && transactions && transactions.length === 0">
+        <ion-img src="assets/svg/no-transactions.svg"></ion-img>
+        <ion-label>
+            <p>
+                {{'house.transactions.empty' | translate}}
+            </p>
+        </ion-label>
+    </div>
 
+    <ion-list class="no-bg">
         <app-transaction-item *ngFor="let transaction of transactions"
                               [transaction]="transaction"></app-transaction-item>
 
-        <ion-button class="no-bg" (click)="loadNext()" *ngIf="transactions?.length > 0 && !doneLoading" [disabled]="isLoadingMore" fill="none">
+        <ion-button class="no-bg" (click)="loadNext()" *ngIf="transactions?.length > 0 && !doneLoading"
+                    [disabled]="isLoadingMore" fill="none">
             <ion-label *ngIf="!isLoadingMore" color="primary">{{'actions.loadMore' | translate}}</ion-label>
             <ion-progress-bar *ngIf="isLoadingMore"></ion-progress-bar>
         </ion-button>

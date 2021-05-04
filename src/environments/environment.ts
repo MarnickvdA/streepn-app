@@ -6,8 +6,8 @@ export const environment = {
         projectId: 'streepn-app',
         storageBucket: 'streepn-app.appspot.com',
         messagingSenderId: '378314194804',
-        appId: '1:378314194804:web:2f9501eb73ef5ceb1d7621',
-        measurementId: 'G-3HNCNE1EFD'
+        appId: '1:378314194804:web:f4c0a7211732be701d7621',
+        measurementId: 'G-6WS0MPPH9D'
     },
     adId: {
         android: {

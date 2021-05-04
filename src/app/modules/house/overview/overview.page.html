@@ -40,6 +40,17 @@
                 </p>
             </ion-label>
         </ion-item>
+        <ion-item class="list-button" lines="full" (click)="addSharedAccount()" *ngIf="isAdmin" button
+                  detail="true">
+            <fa-duotone-icon slot="start" class="primary" fixedWidth
+                             [icon]="['fad', 'sack']"></fa-duotone-icon>
+            <ion-label>
+                <h3>{{'house.overview.addSharedAccount.title' | translate}}</h3>
+                <p class="small ion-text-wrap">
+                    {{'house.overview.addSharedAccount.desc' | translate}}
+                </p>
+            </ion-label>
+        </ion-item>
         <ion-item class="list-button" lines="full" routerLink="settlements" routerDirection="forward" button
                   detail="true">
             <fa-duotone-icon slot="start" class="primary large" fixedWidth
@@ -61,7 +72,6 @@
 
         <ion-list-header lines="full">
             <ion-label>{{'house.overview.sharedAccounts' | translate}}</ion-label>
-            <ion-button (click)="addSharedAccount()" *ngIf="isAdmin">{{'actions.new' | translate}}</ion-button>
         </ion-list-header>
 
         <ion-item class="no-min-height no-bg" *ngIf="house?.sharedAccounts.length === 0" lines="none">

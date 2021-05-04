@@ -130,7 +130,7 @@ export class House {
     }
 
     get isSettleable(): boolean {
-        return !(this.mSharedAccounts.find((acc) => !acc.canLeaveHouse) || this.mProducts.find((product) => product.stock < 0));
+        return !(this.mSharedAccounts.find((acc) => !acc.isRemovable) || this.mProducts.find((product) => product.stock < 0));
     }
 
     isAdmin(userId: string): boolean {

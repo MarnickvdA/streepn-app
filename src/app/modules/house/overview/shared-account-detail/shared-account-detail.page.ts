@@ -1,12 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
-import {Observable, Subscription} from 'rxjs';
+import {EMPTY, Observable, Subscription} from 'rxjs';
 import {House, SharedAccount} from '@core/models';
 import {AccountService, HouseService, LoggerService} from '@core/services';
-import {LoadingController, ModalController} from '@ionic/angular';
+import {LoadingController, ModalController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {SettleComponent} from '@modules/house/overview/shared-account-detail/settle/settle.component';
+import {catchError} from 'rxjs/operators';
 
 @Component({
     selector: 'app-shared-account-detail',
@@ -31,6 +32,7 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
                 private loadingController: LoadingController,
                 private modalController: ModalController,
                 private translate: TranslateService,
+                private navController: NavController,
                 private route: ActivatedRoute) {
         this.routeSub = this.route.params.subscribe((params: Params) => {
             this.accountId = params.accountId;
@@ -43,7 +45,7 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
             if (house) {
                 this.house = house;
                 this.account = house.sharedAccounts.find(acc => acc.id === this.accountId);
-                this.newName = this.account.name;
+                this.newName = this.account?.name;
             }
         }));
     }
@@ -84,6 +86,29 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
         }).then((modal) => {
             modal.present();
         });
+    }
+
+    async removeSharedAccount() {
+        const loading = await this.loadingController.create({
+            message: this.translate.instant('actions.deleting'),
+            translucent: true,
+            backdropDismiss: false
+        });
+
+        await loading.present();
+
+        this.accountService.removeSharedAccount(this.house, this.account)
+            .pipe(
+                catchError((err) => {
+                    loading.dismiss();
+                    this.logger.error({message: err});
+                    return EMPTY;
+                })
+            )
+            .subscribe(() => {
+                loading.dismiss();
+                this.navController.pop();
+            });
     }
 
     dismiss() {

@@ -5,22 +5,22 @@ import {FormsModule} from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
 
 import {TranslateModule} from '@ngx-translate/core';
-import {HomePageRoutingModule} from '@modules/house/home/home-routing.module';
-import {HomePage} from '@modules/house/home/home.page';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {SharedModule} from '@shared/shared.module';
+import {DealsPageRoutingModule} from '@modules/house/deals/deals-routing.module';
+import {DealsPage} from '@modules/house/deals/deals.page';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         IonicModule,
-        HomePageRoutingModule,
+        DealsPageRoutingModule,
         TranslateModule,
         FontAwesomeModule,
         SharedModule
     ],
-    declarations: [HomePage]
+    declarations: [DealsPage]
 })
-export class HomePageModule {
+export class DealsPageModule {
 }
