@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {Camera, CameraDirection, CameraOptions, CameraResultType, CameraSource} from '@capacitor/core';
 import {LoadingController} from '@ionic/angular';
 import {AngularFireStorage} from '@angular/fire/storage';
 import {compressAccurately, dataURLtoFile, EImageType} from 'image-conversion';
@@ -9,6 +8,7 @@ import {catchError, tap} from 'rxjs/operators';
 import {AnalyticsService} from '@core/services/analytics.service';
 import {LoggerService} from '@core/services/logger.service';
 import {TranslateService} from '@ngx-translate/core';
+import {Camera, ImageOptions, CameraSource, CameraResultType, CameraDirection} from '@capacitor/camera';
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +23,7 @@ export class ImageService {
                 private analyticsService: AnalyticsService) {
     }
 
-    private cameraOptions: CameraOptions = {
+    private imageOptions: ImageOptions = {
         source: CameraSource.Prompt,
         promptLabelHeader: 'Kies een optie',
         promptLabelCancel: 'Annuleer',
@@ -42,7 +42,7 @@ export class ImageService {
     };
 
     takeProfilePicture(userId: string) {
-        Camera.getPhoto(this.cameraOptions)
+        Camera.getPhoto(this.imageOptions)
             .then(image => {
                 return this.loadingController.create({
                         message: this.translate.instant('actions.uploading'),

@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
 import '@capacitor-community/firebase-analytics';
 
-import {Capacitor, Plugins} from '@capacitor/core';
+import {Capacitor} from '@capacitor/core';
 import {environment} from '@env/environment';
 import {EventsService} from '@core/services/events.service';
-
-const {FirebaseAnalytics} = Plugins;
+import {FirebaseAnalytics} from '@capacitor-community/firebase-analytics';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +19,7 @@ export class AnalyticsService {
     }
 
     static isAnalyticsAvailable(): boolean {
-        return Capacitor.isPluginAvailable('FirebaseAnalytics') && Capacitor.isNative && environment.production;
+        return Capacitor.isPluginAvailable('FirebaseAnalytics') && Capacitor.isNativePlatform() && environment.production;
     }
 
     setCurrentUser(uid: string) {

@@ -8,14 +8,12 @@ import {AngularFirestore} from '@angular/fire/firestore';
 import {BehaviorSubject, EMPTY, Observable, Subject} from 'rxjs';
 import {catchError, map, take, takeUntil} from 'rxjs/operators';
 import {AnalyticsService} from './analytics.service';
-import {PermissionType, Plugins} from '@capacitor/core';
 import {PushService, PushTopic} from './push.service';
 import {TranslateService} from '@ngx-translate/core';
 import {LoggerService} from './logger.service';
 import {AngularFirePerformance, trace} from '@angular/fire/performance';
 import User = firebase.User;
-
-const {Permissions} = Plugins;
+import {PushNotifications} from '@capacitor/push-notifications';
 
 @Injectable({
     providedIn: 'root'
@@ -200,13 +198,12 @@ export class HouseService {
                     this.analyticsService.logJoinHouse(user.uid, houseInvite.houseId);
 
                     // Enable push messages for this user.
-                    Permissions.query({
-                        name: PermissionType.Notifications
-                    }).then((result) => {
-                        if (result.state === 'granted') {
-                            this.pushService.subscribeTopic(PushTopic.HOUSE_ALL, {houseId: houseInvite.houseId, accountId: account.id});
-                        }
-                    });
+                    PushNotifications.requestPermissions()
+                        .then((result) => {
+                            if (result.receive === 'granted') {
+                                this.pushService.subscribeTopic(PushTopic.HOUSE_ALL, {houseId: houseInvite.houseId, accountId: account.id});
+                            }
+                        });
 
                     this.eventsService.publish('house:joined');
                 }
@@ -232,13 +229,12 @@ export class HouseService {
                     this.eventsService.publish('house:left', true);
 
                     // Enable push messages for this user.
-                    Permissions.query({
-                        name: PermissionType.Notifications
-                    }).then((result) => {
-                        if (result.state === 'granted') {
-                            this.pushService.unsubscribeTopic(PushTopic.HOUSE_ALL, {houseId, accountId: account.id});
-                        }
-                    });
+                    PushNotifications.requestPermissions()
+                        .then((result) => {
+                            if (result.receive === 'granted') {
+                                this.pushService.unsubscribeTopic(PushTopic.HOUSE_ALL, {houseId, accountId: account.id});
+                            }
+                        });
                 }
             });
     }

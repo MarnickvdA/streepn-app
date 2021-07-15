@@ -2,7 +2,6 @@ import {Component, NgZone} from '@angular/core';
 
 import {MenuController, NavController, Platform} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {AppState, Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
 import {StorageService} from '@core/services/storage.service';
 import {EventsService} from '@core/services/events.service';
 import {PushService} from '@core/services/push.service';
@@ -19,34 +18,39 @@ import {
     faChevronLeft,
     faClock,
     faCogs,
+    faDollyFlatbedAlt,
     faEdit,
+    faGifts,
     faHistory,
     faHouse,
     faInfoCircle,
-    faInventory, faList,
+    faInventory,
+    faList,
     faMinusCircle,
+    faPlus as fadPlus,
     faPlusCircle,
     faReceipt,
+    faSack,
     faShareAltSquare,
     faSignOut,
     faTag,
-    faPlus as fadPlus,
     faTicket,
     faTimes,
     faTimesCircle,
     faTrashAlt,
-    faUser, faUserCog,
+    faUser,
+    faUserCog,
     faUsersCrown,
-    faWallet,
-    faDollyFlatbedAlt,
-    faGifts,
-    faSack
+    faWallet
 } from '@fortawesome/pro-duotone-svg-icons';
 import {faPlus, faShoppingCart} from '@fortawesome/pro-regular-svg-icons';
 import {faStar} from '@fortawesome/pro-light-svg-icons';
 import {faStar as faStarSolid} from '@fortawesome/pro-solid-svg-icons';
-
-const {App, StatusBar, SplashScreen, FirebaseRemoteConfig} = Plugins;
+import {App, AppState} from '@capacitor/app';
+import {SplashScreen} from '@capacitor/splash-screen';
+import {StatusBar, Style} from '@capacitor/status-bar';
+import {Storage} from '@capacitor/storage';
+import {Capacitor} from '@capacitor/core';
 
 @Component({
     selector: 'app-root',
@@ -68,6 +72,8 @@ export class AppComponent {
         private iconLibrary: FaIconLibrary,
         private navController: NavController
     ) {
+        Storage.migrate();
+
         this.initializeApp();
 
         this.loadIcons();
@@ -111,6 +117,7 @@ export class AppComponent {
             App.addListener('appStateChange', (state: AppState) => {
                 // state.isActive contains the active state
                 if (state.isActive) {
+                    this.pushService.requestPermissionsIfNotPromptedYet();
                     this.events.publish('app:resume');
                 } else {
                     this.events.publish('app:pause');
@@ -119,12 +126,12 @@ export class AppComponent {
 
             this.pushService.removeNotifications();
 
-            if (Capacitor.isPluginAvailable('FirebaseRemoteConfig')) {
-                FirebaseRemoteConfig.initialize({
-                    minimumFetchIntervalInSeconds: (60 * 12),
-                });
-                FirebaseRemoteConfig.fetchAndActivate();
-            }
+            // if (Capacitor.isPluginAvailable('FirebaseRemoteConfig')) {
+            //     FirebaseRemoteConfig.initialize({
+            //         minimumFetchInterval: (60 * 12),
+            //     });
+            //     FirebaseRemoteConfig.fetchAndActivate();
+            // }
 
             SplashScreen.hide();
 
@@ -143,13 +150,15 @@ export class AppComponent {
 
         if (Capacitor.isPluginAvailable('StatusBar')) {
             StatusBar.setStyle({
-                style: isDarkMode ? StatusBarStyle.Dark : StatusBarStyle.Light
+                style: isDarkMode ? Style.Dark : Style.Light
             });
 
-            if (isDarkMode) {
-                StatusBar.setBackgroundColor({color: '#000000'});
-            } else {
-                StatusBar.setBackgroundColor({color: '#FFFFFF'});
+            if (Capacitor.getPlatform() === 'android') {
+                if (isDarkMode) {
+                    StatusBar.setBackgroundColor({color: '#000000'});
+                } else {
+                    StatusBar.setBackgroundColor({color: '#FFFFFF'});
+                }
             }
         }
     }

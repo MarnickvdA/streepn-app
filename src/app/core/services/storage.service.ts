@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
-import {Plugins} from '@capacitor/core';
 import {LoggerService} from './logger.service';
 import {EventsService} from './events.service';
 import {AngularFireStorage} from '@angular/fire/storage';
-
-const {Storage} = Plugins;
+import {Storage} from '@capacitor/storage';
 
 @Injectable({
     providedIn: 'root'

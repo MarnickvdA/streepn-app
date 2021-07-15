@@ -4,11 +4,10 @@ import {House, SharedAccount, UserAccount} from '@core/models';
 import {ActivatedRoute} from '@angular/router';
 import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {Plugins} from '@capacitor/core';
 import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
 import {AuthService, HouseService, ProductService} from '@core/services';
-
-const {Clipboard, Share} = Plugins;
+import {Share} from '@capacitor/share';
+import {Clipboard} from '@capacitor/clipboard';
 
 @Component({
     selector: 'app-house-overview',

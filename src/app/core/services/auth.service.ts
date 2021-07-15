@@ -3,8 +3,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import firebase from 'firebase/app';
 import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
 import {EventsService} from './events.service';
-import {SignInWithAppleResponse} from '@capacitor-community/apple-sign-in';
-import {Plugins} from '@capacitor/core';
+import {SignInWithApple, SignInWithAppleResponse} from '@capacitor-community/apple-sign-in';
 import {StorageService} from './storage.service';
 import {environment} from '@env/environment';
 import {AnalyticsService} from './analytics.service';
@@ -13,7 +12,6 @@ import {AngularFireFunctions} from '@angular/fire/functions';
 import {LoggerService} from './logger.service';
 import User = firebase.User;
 
-const {SignInWithApple} = Plugins;
 
 @Injectable({
     providedIn: 'root'

@@ -43,7 +43,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 private storage: StorageService,
                 private uiService: UIService,
                 private routerOutlet: IonRouterOutlet) {
-        this.iOS = Capacitor.isNative && Capacitor.platform === 'ios';
+        this.iOS = Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios';
         this.loading = true;
     }
 

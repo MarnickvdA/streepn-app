@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {House} from '@core/models';
-import {PermissionType, Plugins} from '@capacitor/core';
 import {AlertController, ModalController, NavController} from '@ionic/angular';
 import {HouseService, LoggerService, PushService, PushTopic, UIService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-
-const {Clipboard, Share, Permissions} = Plugins;
+import {PushNotifications} from '@capacitor/push-notifications';
+import {Share} from '@capacitor/share';
+import {Clipboard} from '@capacitor/clipboard';
 
 @Component({
     selector: 'app-new-house',
@@ -62,10 +62,9 @@ export class NewHouseComponent implements OnInit {
                     if (house) {
                         this.house = house;
 
-                        Permissions.query({
-                            name: PermissionType.Notifications
-                        }).then((result) => {
-                            if (result.state === 'granted') {
+                        PushNotifications.checkPermissions()
+                            .then((result) => {
+                            if (result.receive === 'granted') {
                                 this.pushService.subscribeTopic(PushTopic.HOUSE_ALL, {houseId: house.id, accountId: house.accounts[0].id});
                             }
                         });

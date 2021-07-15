@@ -1,13 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Account, House, Product} from '@core/models';
 import {LoadingController, ModalController} from '@ionic/angular';
-import {Capacitor, HapticsImpactStyle, Plugins} from '@capacitor/core';
 import {catchError} from 'rxjs/operators';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {LoggerService, TransactionService, TransactionSet} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-
-const {Haptics} = Plugins;
+import {Capacitor} from '@capacitor/core';
+import {Haptics, HapticsImpactStyle, ImpactStyle} from '@capacitor/haptics';
 
 @Component({
     selector: 'app-add-transaction',
@@ -44,9 +43,9 @@ export class AddTransactionComponent implements OnInit {
     }
 
     addItem(account: Account) {
-        if (Capacitor.isNative) {
+        if (Capacitor.isNativePlatform()) {
             Haptics.impact({
-                style: HapticsImpactStyle.Heavy
+                style: ImpactStyle.Heavy
             });
         }
 
@@ -98,9 +97,9 @@ export class AddTransactionComponent implements OnInit {
     }
 
     removeItem(account: Account) {
-        if (Capacitor.isNative) {
+        if (Capacitor.isNativePlatform()) {
             Haptics.impact({
-                style: HapticsImpactStyle.Medium
+                style: ImpactStyle.Medium
             });
         }
 

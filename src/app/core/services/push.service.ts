@@ -1,12 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Capacitor, Plugins, PushNotification, PushNotificationActionPerformed, PushNotificationToken} from '@capacitor/core';
 import {EventsService} from './events.service';
 import {StorageService} from './storage.service';
-import {FCM} from '@capacitor-community/fcm';
 import {LoggerService} from './logger.service';
-
-const {PushNotifications} = Plugins;
-const fcm = new FCM();
+import {Capacitor} from '@capacitor/core';
+import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from '@capacitor/push-notifications';
 
 export enum PushTopic {
     HOUSE_ALL
@@ -24,12 +21,13 @@ export class PushService {
 
     initialize(): Promise<boolean> {
         if (!Capacitor.isPluginAvailable('PushNotifications')) {
+            console.log('We are missing the push plugin!');
             return Promise.resolve(false);
         }
 
         PushNotifications.addListener(
             'registration',
-            (token: PushNotificationToken) => {
+            (token: Token) => {
                 this.storage.set('pushToken', token.value);
             },
         );
@@ -43,14 +41,14 @@ export class PushService {
 
         PushNotifications.addListener(
             'pushNotificationReceived',
-            (notification: PushNotification) => {
+            (notification: PushNotificationSchema) => {
                 this.events.publish('push:received', notification);
             },
         );
 
         PushNotifications.addListener(
             'pushNotificationActionPerformed',
-            (notification: PushNotificationActionPerformed) => {
+            (notification: ActionPerformed) => {
                 this.events.publish('push:action', notification);
             },
         );
@@ -77,16 +75,16 @@ export class PushService {
                 }
 
                 if (subTopic) {
-                    fcm.subscribeTo({
-                        topic: subTopic
-                    }).then(() => {
-                        switch (topic) {
-                            case PushTopic.HOUSE_ALL:
-                                this.storage.set(`${data.accountId}_enablePush`, true);
-                        }
-                    }).catch(err => {
-                        this.logger.error({message: 'subscribeToTopic', error: err});
-                    });
+                    // FCM.subscribeTo({ TODO Readd
+                    //     topic: subTopic
+                    // }).then(() => {
+                    //     switch (topic) {
+                    //         case PushTopic.HOUSE_ALL:
+                    //             this.storage.set(`${data.accountId}_enablePush`, true);
+                    //     }
+                    // }).catch(err => {
+                    //     this.logger.error({message: 'subscribeToTopic', error: err});
+                    // });
                 }
             });
     }
@@ -105,16 +103,16 @@ export class PushService {
                 }
 
                 if (subTopic) {
-                    fcm.unsubscribeFrom({
-                        topic: subTopic
-                    }).then(() => {
-                        switch (topic) {
-                            case PushTopic.HOUSE_ALL:
-                                this.storage.set(`${data.accountId}_enablePush`, false);
-                        }
-                    }).catch((err) => {
-                        this.logger.error({message: 'unsubscribeFromTopic', error: err});
-                    });
+                    // FCM.unsubscribeFrom({ TODO Readd
+                    //     topic: subTopic
+                    // }).then(() => {
+                    //     switch (topic) {
+                    //         case PushTopic.HOUSE_ALL:
+                    //             this.storage.set(`${data.accountId}_enablePush`, false);
+                    //     }
+                    // }).catch((err) => {
+                    //     this.logger.error({message: 'unsubscribeFromTopic', error: err});
+                    // });
                 }
             });
     }
@@ -127,12 +125,20 @@ export class PushService {
         PushNotifications.removeAllDeliveredNotifications();
     }
 
+    requestPermissionsIfNotPromptedYet() {
+        PushNotifications.checkPermissions()
+            .then((result) => {
+                if (result.receive === 'prompt' || result.receive === 'prompt-with-rationale') {
+                    this.requestPushRegister();
+                }
+            });
+    }
+
     private requestPushRegister(): Promise<void> {
-        return PushNotifications.requestPermission().then(result => {
-            if (result.granted) {
+        return PushNotifications.requestPermissions().then((result) => {
+            if (result.receive === 'granted') {
                 // Register with Apple / Google to receive push via APNS/FCM
                 return PushNotifications.register();
-
             } else {
                 // Show some error
                 Promise.reject('No permission');

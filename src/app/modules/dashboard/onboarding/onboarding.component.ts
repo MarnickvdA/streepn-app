@@ -3,11 +3,9 @@ import {IonSlides, LoadingController, ModalController} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HouseInvite} from '@core/models';
 import {environment} from '@env/environment';
-import {Plugins} from '@capacitor/core';
 import {AuthService, EventsService, HouseService, PushService, StorageService, UIService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-
-const {Browser} = Plugins;
+import {Browser} from '@capacitor/browser';
 
 @Component({
     selector: 'app-onboarding',

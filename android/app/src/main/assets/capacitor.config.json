@@ -1,23 +1,23 @@
 {
-  "appId": "nl.strype.streepn",
-  "appName": "Streepn",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www",
-  "plugins": {
-    "SplashScreen": {
-      "launchAutoHide": false
-    },
-    "Keyboard": {
-      "resize": "none"
-    },
-    "PushNotifications": {
-      "presentationOptions": [
-        "badge",
-        "sound",
-        "alert"
-      ]
-    }
-  },
-  "cordova": {}
+	"appId": "nl.strype.streepn",
+	"appName": "Streepn",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "www",
+	"plugins": {
+		"SplashScreen": {
+			"launchAutoHide": false
+		},
+		"Keyboard": {
+			"resize": "none"
+		},
+		"PushNotifications": {
+			"presentationOptions": [
+				"badge",
+				"sound",
+				"alert"
+			]
+		}
+	},
+	"cordova": {}
 }

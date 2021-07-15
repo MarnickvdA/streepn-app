@@ -15,11 +15,11 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {MoneyPipe} from './pipes/money.pipe';
 import {TransactionItemComponent} from './components/transaction-item/transaction-item.component';
 import {ObsStatusPipe} from './pipes/obs-status.pipe';
-import { AbsPipe } from './pipes/abs.pipe';
-import { DateTimePipe } from './pipes/date-time.pipe';
-import { MomentPipe } from './pipes/moment.pipe';
-import { DatePipe } from './pipes/date.pipe';
-import { CapitalizePipe } from './pipes/capitalize.pipe';
+import {AbsPipe} from './pipes/abs.pipe';
+import {DateTimePipe} from './pipes/date-time.pipe';
+import {MomentPipe} from './pipes/moment.pipe';
+import {DatePipe} from './pipes/date.pipe';
+import {CapitalizePipe} from './pipes/capitalize.pipe';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
 
 export const components = [

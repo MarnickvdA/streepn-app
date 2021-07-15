@@ -2,12 +2,11 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {House} from '@core/models';
 import {AuthService, EventsService, HouseService, StorageService} from '@core/services';
-import {Capacitor, Plugins, StatusBarStyle} from '@capacitor/core';
 import {AlertController, LoadingController, MenuController, NavController} from '@ionic/angular';
 import {environment} from '@env/environment';
 import {TranslateService} from '@ngx-translate/core';
-
-const {StatusBar} = Plugins;
+import {Capacitor} from '@capacitor/core';
+import {StatusBar, Style} from '@capacitor/status-bar';
 
 @Component({
     selector: 'app-side-menu',
@@ -73,13 +72,15 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
         if (Capacitor.isPluginAvailable('StatusBar')) {
             StatusBar.setStyle({
-                style: event.detail.checked ? StatusBarStyle.Dark : StatusBarStyle.Light
+                style: event.detail.checked ? Style.Dark : Style.Light
             });
 
-            if (event.detail.checked) {
-                StatusBar.setBackgroundColor({color: '#000000'});
-            } else {
-                StatusBar.setBackgroundColor({color: '#FFFFFF'});
+            if (Capacitor.getPlatform() === 'android') {
+                if (event.detail.checked) {
+                    StatusBar.setBackgroundColor({color: '#000000'});
+                } else {
+                    StatusBar.setBackgroundColor({color: '#FFFFFF'});
+                }
             }
         }
     }
