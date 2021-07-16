@@ -109,6 +109,11 @@
       "picture-desc": "Je profielfoto is te zien in al je huizen."
     }
   },
+  "camera": {
+    "promptHeader": "Kies een optie",
+    "promptPhoto": "Kies uit gallerij",
+    "promptPicture": "Neem foto"
+  },
   "dashboard": {
     "title": "Dashboard",
     "houses": "Huizen",

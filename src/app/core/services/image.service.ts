@@ -17,10 +17,10 @@ export class ImageService {
     private readonly logger = LoggerService.getLogger(ImageService.name);
     private imageOptions: ImageOptions = {
         source: CameraSource.Prompt,
-        promptLabelHeader: 'Kies een optie',
-        promptLabelCancel: 'Annuleer',
-        promptLabelPhoto: 'Neem selfie',
-        promptLabelPicture: 'Kies uit foto\'s',
+        promptLabelHeader: this.translate.instant('camera.promptHeader'),
+        promptLabelCancel: this.translate.instant('actions.cancel'),
+        promptLabelPhoto: this.translate.instant('promptPhoto'),
+        promptLabelPicture: this.translate.instant('promptPicture'),
         resultType: CameraResultType.DataUrl,
         correctOrientation: true,
         allowEditing: true,
