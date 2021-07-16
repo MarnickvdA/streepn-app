@@ -15,12 +15,10 @@ import {catchError} from 'rxjs/operators';
     styleUrls: ['./shared-account-detail.page.scss'],
 })
 export class SharedAccountDetailPage implements OnInit, OnDestroy {
-    private readonly logger = LoggerService.getLogger(SharedAccountDetailPage.name);
-
     newName: string;
     house: House;
     account?: SharedAccount;
-
+    private readonly logger = LoggerService.getLogger(SharedAccountDetailPage.name);
     private house$: Observable<House>;
     private routeSub: Subscription;
     private houseSub: Subscription;

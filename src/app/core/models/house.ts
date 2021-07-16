@@ -32,16 +32,9 @@ export class House {
     inviteLink: string;
     inviteLinkExpiry: Timestamp; // A week after generation.
     members: string[]; // List of user ids which is used for querying the current user's houses.
-
-    // Private arrays for the accounts and products. They need to be in sync with the houseDictionary.
-    private mAccounts: UserAccount[];
-    private mSharedAccounts: SharedAccount[];
-    private mProducts: Product[];
-
     // We use totalIn and totalOut of the whole house to account for the difference that can occur between the stock and the sold products.
     totalIn: number;
     totalOut: number;
-
     // A lookup dictionary for improved performance. Every array is very expensive to search through and maps are more efficient.
     houseDictionary: {
         accounts: {
@@ -54,14 +47,10 @@ export class House {
             [productId: string]: Product
         }
     };
-
-    static new(user: User, name: string, currency: Currency) {
-        const uid = uuid();
-        const account = UserAccount.new(uid, user.uid, user.displayName, [UserRole.ADMIN], user.photoURL);
-
-        return new House(uuid(), TimestampFn.now(), name, currency, undefined, undefined, [user.uid], [account],
-            [], [], 0, 0);
-    }
+    // Private arrays for the accounts and products. They need to be in sync with the houseDictionary.
+    private mAccounts: UserAccount[];
+    private mSharedAccounts: SharedAccount[];
+    private mProducts: Product[];
 
     constructor(id: string,
                 createdAt: Timestamp,
@@ -94,7 +83,6 @@ export class House {
 
         this.setDictionary();
     }
-
 
     get accounts(): UserAccount[] {
         return this.mAccounts;
@@ -133,6 +121,15 @@ export class House {
         return !(this.mSharedAccounts.find((acc) => !acc.isRemovable) || this.mProducts.find((product) => product.stock < 0));
     }
 
+    static new(user: User, name: string, currency: Currency) {
+        const uid = uuid();
+        const hid = uuid();
+        const account = UserAccount.new(uid, user.uid, user.displayName, [UserRole.ADMIN], user.photoURL);
+
+        return new House(hid, TimestampFn.now(), name, currency, undefined, undefined, [user.uid], [account],
+            [], [], 0, 0);
+    }
+
     isAdmin(userId: string): boolean {
         return this.accounts.find(account => account.userId === userId)?.roles.includes(UserRole.ADMIN) || false;
     }
@@ -168,6 +165,14 @@ export class House {
         return this.houseDictionary.products[productId];
     }
 
+    deepCopy(): House {
+        return JSON.parse(JSON.stringify(this));
+    }
+
+    getUserAccountByUserId(uid: string) {
+        return this.accounts.find(acc => acc.userId === uid) as UserAccount;
+    }
+
     private setDictionary() {
         const newDict = {
             accounts: {},
@@ -181,7 +186,6 @@ export class House {
 
         this.houseDictionary = newDict;
     }
-
 
     private setUserAccounts(persist: boolean = true) {
         const newDict = {};
@@ -224,19 +228,10 @@ export class House {
             return newDict;
         }
     }
-
-    deepCopy(): House {
-        return JSON.parse(JSON.stringify(this));
-    }
-
-    getUserAccountByUserId(uid: string) {
-        return this.accounts.find(acc => acc.userId === uid) as UserAccount;
-    }
 }
 
 export const houseConverter: FirestoreDataConverter<House> = {
     toFirestore(house: House) {
-
         const balances = {};
         house.accounts.forEach((account) => {
             balances[account.id] = balanceConverter.toFirestore(account.balance);

@@ -13,15 +13,15 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {SharedModule} from '@shared/shared.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    StockLogPageRoutingModule,
-    TranslateModule,
-    FontAwesomeModule,
-    SharedModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        StockLogPageRoutingModule,
+        TranslateModule,
+        FontAwesomeModule,
+        SharedModule
+    ],
     declarations: [
         StockLogPage,
         EditStockComponent

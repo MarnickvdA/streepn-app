@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {AngularFireFunctions} from '@angular/fire/functions';
-import {House, Transaction, transactionConverter} from '../models';
+import {House, Transaction, transactionConverter} from '../../models';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
-import {newTransaction, TransactionItem} from '../models/transaction';
+import {TransactionItem} from '../../models/transaction';
 import {AngularFirestore} from '@angular/fire/firestore';
-import {AuthService} from '@core/services/auth.service';
+import {AuthService} from '@core/services/firebase/auth.service';
 import {LoggerService} from '@core/services/logger.service';
-import {AnalyticsService} from '@core/services/analytics.service';
+import {AnalyticsService} from '@core/services/firebase/analytics.service';
 import {AngularFirePerformance, trace} from '@angular/fire/performance';
 
 export interface TransactionSet {

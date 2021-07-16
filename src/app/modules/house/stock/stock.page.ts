@@ -14,10 +14,10 @@ import {NewProductComponent} from '@modules/house/stock/new-product/new-product.
 export class StockPage implements OnInit, OnDestroy {
 
     house: House;
-    private house$: Observable<House>;
-    private houseSub: Subscription;
     stockProducts: Product[];
     isAdmin: boolean;
+    private house$: Observable<House>;
+    private houseSub: Subscription;
 
     constructor(private modalController: ModalController,
                 private houseService: HouseService,

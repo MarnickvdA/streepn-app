@@ -14,11 +14,11 @@ import {EditStockComponent} from '@modules/house/stock/stock-log/edit-stock/edit
 export class StockLogPage implements OnInit, OnDestroy {
 
     house: House;
-    private house$: Observable<House>;
-    private houseSub: Subscription;
     doneLoading: boolean;
     isLoadingMore: boolean;
     stockTransactions: Stock[];
+    private house$: Observable<House>;
+    private houseSub: Subscription;
     private LIMIT = 10;
     private lastSnapshot: QueryDocumentSnapshot<Stock>;
     private readonly refreshSub;

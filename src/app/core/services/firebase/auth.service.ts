@@ -2,14 +2,14 @@ import {Injectable} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/auth';
 import firebase from 'firebase/app';
 import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
-import {EventsService} from './events.service';
+import {EventsService} from '../events.service';
 import {SignInWithApple, SignInWithAppleResponse} from '@capacitor-community/apple-sign-in';
-import {StorageService} from './storage.service';
+import {StorageService} from '../storage.service';
 import {environment} from '@env/environment';
 import {AnalyticsService} from './analytics.service';
 import {catchError} from 'rxjs/operators';
 import {AngularFireFunctions} from '@angular/fire/functions';
-import {LoggerService} from './logger.service';
+import {LoggerService} from '../logger.service';
 import User = firebase.User;
 
 

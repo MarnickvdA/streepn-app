@@ -1,8 +1,9 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-button mode="ios" fill="none" [routerLink]="'/login'" routerDirection="back">
-                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+            <ion-button [routerLink]="'/login'" fill="none" mode="ios" routerDirection="back">
+                <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" fixedWidth
+                                 slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
         <ion-title>{{'actions.register' | translate}}</ion-title>

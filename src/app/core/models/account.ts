@@ -34,12 +34,12 @@ export abstract class Account {
         this.settledAt = settledAt;
     }
 
-    deepCopy(): Account {
-        return JSON.parse(JSON.stringify(this));
-    }
-
     get isRemovable(): boolean {
         return this.balance.totalIn === 0 && this.balance.totalOut === 0;
+    }
+
+    deepCopy(): Account {
+        return JSON.parse(JSON.stringify(this));
     }
 }
 

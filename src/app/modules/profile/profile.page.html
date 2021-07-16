@@ -3,7 +3,7 @@
         <ion-buttons slot="start">
             <ion-menu-toggle>
                 <ion-button>
-                    <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'bars']"></fa-duotone-icon>
+                    <fa-duotone-icon [icon]="['fad', 'bars']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
                 </ion-button>
             </ion-menu-toggle>
         </ion-buttons>
@@ -21,13 +21,13 @@
     <ion-list *ngIf="user$ | async; let user">
         <ion-item-divider class="bottom-line"></ion-item-divider>
         <ion-item>
-            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'user']"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'user']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{user.displayName}}</h3>
             </ion-label>
         </ion-item>
         <ion-item>
-            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'at']"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'at']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{user.email}}</h3>
             </ion-label>
@@ -36,7 +36,7 @@
             </ion-chip>
         </ion-item>
         <ion-item lines="full">
-            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'clock']"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'clock']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'dashboard.memberSince' | translate}} {{getTimestamp(user.metadata.creationTime) | date}}</h3>
             </ion-label>
@@ -64,17 +64,17 @@
             </ion-label>
         </ion-item>
 
-<!--        <ion-item (click)="updateEmail()" button detail>-->
-<!--            <ion-label>-->
-<!--                <h3>{{'profile.edit.email' | translate}}</h3>-->
-<!--            </ion-label>-->
-<!--        </ion-item>-->
+        <!--        <ion-item (click)="updateEmail()" button detail>-->
+        <!--            <ion-label>-->
+        <!--                <h3>{{'profile.edit.email' | translate}}</h3>-->
+        <!--            </ion-label>-->
+        <!--        </ion-item>-->
 
-<!--        <ion-item (click)="updatePassword()" button detail lines="full">-->
-<!--            <ion-label>-->
-<!--                <h3>{{'profile.edit.password' | translate}}</h3>-->
-<!--            </ion-label>-->
-<!--        </ion-item>-->
+        <!--        <ion-item (click)="updatePassword()" button detail lines="full">-->
+        <!--            <ion-label>-->
+        <!--                <h3>{{'profile.edit.password' | translate}}</h3>-->
+        <!--            </ion-label>-->
+        <!--        </ion-item>-->
 
     </ion-list>
 </ion-content>

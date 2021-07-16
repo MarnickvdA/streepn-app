@@ -35,6 +35,14 @@ export class Transaction {
         });
     }
 
+    get totalPrice(): number {
+        let totalPrice = 0;
+        this.items.forEach(item => {
+            totalPrice += item.productPrice * item.amount;
+        });
+        return totalPrice;
+    }
+
     priceByAccountId(accountId: string): number {
         const price = this.priceDictionary[accountId];
 
@@ -43,14 +51,6 @@ export class Transaction {
 
     deepCopy(): Transaction {
         return JSON.parse(JSON.stringify(this));
-    }
-
-    get totalPrice(): number {
-        let totalPrice = 0;
-        this.items.forEach(item => {
-            totalPrice += item.productPrice * item.amount;
-        });
-        return totalPrice;
     }
 }
 

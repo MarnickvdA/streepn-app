@@ -5,24 +5,16 @@ import {compressAccurately, dataURLtoFile, EImageType} from 'image-conversion';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import {trace} from '@angular/fire/performance';
 import {catchError, tap} from 'rxjs/operators';
-import {AnalyticsService} from '@core/services/analytics.service';
+import {AnalyticsService} from '@core/services/firebase/analytics.service';
 import {LoggerService} from '@core/services/logger.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Camera, ImageOptions, CameraSource, CameraResultType, CameraDirection} from '@capacitor/camera';
+import {Camera, CameraDirection, CameraResultType, CameraSource, ImageOptions} from '@capacitor/camera';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ImageService {
     private readonly logger = LoggerService.getLogger(ImageService.name);
-
-    constructor(private loadingController: LoadingController,
-                private storage: AngularFireStorage,
-                private functions: AngularFireFunctions,
-                private translate: TranslateService,
-                private analyticsService: AnalyticsService) {
-    }
-
     private imageOptions: ImageOptions = {
         source: CameraSource.Prompt,
         promptLabelHeader: 'Kies een optie',
@@ -40,6 +32,13 @@ export class ImageService {
         height: 256,
         saveToGallery: false,
     };
+
+    constructor(private loadingController: LoadingController,
+                private storage: AngularFireStorage,
+                private functions: AngularFireFunctions,
+                private translate: TranslateService,
+                private analyticsService: AnalyticsService) {
+    }
 
     takeProfilePicture(userId: string) {
         Camera.getPhoto(this.imageOptions)

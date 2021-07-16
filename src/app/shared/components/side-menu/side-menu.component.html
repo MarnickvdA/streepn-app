@@ -8,8 +8,8 @@
     <ion-list>
         <ion-item-divider class="bottom-line"></ion-item-divider>
         <ion-menu-toggle [autoHide]="false">
-            <ion-item routerLink="dashboard" routerDirection="root" lines="full">
-                <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'list']"></fa-duotone-icon>
+            <ion-item lines="full" routerDirection="root" routerLink="dashboard">
+                <fa-duotone-icon [icon]="['fad', 'list']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
                 <ion-label>
                     {{'dashboard.title' | translate}}
                 </ion-label>
@@ -27,9 +27,9 @@
                 <ion-item *ngFor="let house of houses" button routerDirection="root"
                           routerLink="/house/{{house.id}}/transactions">
                     <ion-label>{{house.name}}</ion-label>
-                    <fa-icon (click)="toggleFavorite($event, house.id)" slot="end" class="primary"
-                             [ngClass]="this.favorite === house.id ? 'warning' : 'medium half-opacity'" fixedWidth
-                             [icon]="this.favorite === house.id ? ['fas', 'star'] : ['fal', 'star']"></fa-icon>
+                    <fa-icon (click)="toggleFavorite($event, house.id)" [icon]="this.favorite === house.id ? ['fas', 'star'] : ['fal', 'star']" [ngClass]="this.favorite === house.id ? 'warning' : 'medium half-opacity'"
+                             class="primary" fixedWidth
+                             slot="end"></fa-icon>
                 </ion-item>
             </ion-menu-toggle>
         </ng-container>
@@ -41,8 +41,8 @@
         </ion-list-header>
 
         <ion-menu-toggle [autoHide]="false">
-            <ion-item routerLink="profile" routerDirection="root" lines="full">
-                <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'user-cog']"></fa-duotone-icon>
+            <ion-item lines="full" routerDirection="root" routerLink="profile">
+                <fa-duotone-icon [icon]="['fad', 'user-cog']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
                 <ion-label>
                     {{'dashboard.profile' | translate}}
                 </ion-label>
@@ -50,7 +50,7 @@
         </ion-menu-toggle>
 
         <ion-item lines="full">
-            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'adjust']"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'adjust']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
             <ion-label>{{'dashboard.toggleDarkMode' | translate}}</ion-label>
             <ion-toggle (ionChange)="onClick($event)" checked="{{isDarkMode}}" slot="end"></ion-toggle>
         </ion-item>
@@ -58,7 +58,7 @@
         <ion-item-divider class="bottom-line"></ion-item-divider>
 
         <ion-item (click)="logOut()" lines="full">
-            <fa-duotone-icon slot="start" class="danger" fixedWidth [icon]="['fad', 'sign-out']"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'sign-out']" class="danger" fixedWidth slot="start"></fa-duotone-icon>
             <ion-label>
                 {{'actions.logout' | translate}}
             </ion-label>

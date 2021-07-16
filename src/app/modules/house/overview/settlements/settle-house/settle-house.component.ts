@@ -7,7 +7,7 @@ import {SettleComponent} from '@modules/house/overview/shared-account-detail/set
 import {AddStockComponent} from '@modules/house/stock/add-stock/add-stock.component';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError} from 'rxjs/operators';
-import {SettlementService} from '@core/services/settlement.service';
+import {SettlementService} from '@core/services/api/settlement.service';
 
 @Component({
     selector: 'app-settle-house',
@@ -15,9 +15,8 @@ import {SettlementService} from '@core/services/settlement.service';
     styleUrls: ['./settle-house.component.scss'],
 })
 export class SettleHouseComponent implements OnInit, OnDestroy {
-    private readonly logger = LoggerService.getLogger(SettleHouseComponent.name);
-
     house?: House;
+    private readonly logger = LoggerService.getLogger(SettleHouseComponent.name);
     private houseSub: Subscription;
     private house$: Observable<House>;
 

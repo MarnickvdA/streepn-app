@@ -13,10 +13,6 @@ export class Balance {
         }
     };
 
-    static new() {
-        return new Balance(0, 0);
-    }
-
     constructor(totalIn: number, totalOut: number,
                 products?: { [p: string]: { totalIn: number; totalOut: number; amountIn: number; amountOut: number } }) {
         this.totalIn = totalIn;
@@ -26,6 +22,10 @@ export class Balance {
 
     get amount(): number {
         return this.totalIn - this.totalOut;
+    }
+
+    static new() {
+        return new Balance(0, 0);
     }
 }
 

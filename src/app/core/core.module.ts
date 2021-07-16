@@ -19,23 +19,25 @@ import {environment} from '@env/environment';
 import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/auth';
 import {AngularFireFunctionsModule, REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR} from '@angular/fire/functions';
 import {SETTINGS, USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/firestore';
-import {SettlementService} from '@core/services/settlement.service';
+import {SettlementService} from '@core/services/api/settlement.service';
 import {AngularFirePerformanceModule} from '@angular/fire/performance';
-import {AngularFireStorageModule, BUCKET} from '@angular/fire/storage';
+import {AngularFireStorageModule} from '@angular/fire/storage';
 import {ImageService} from '@core/services/image.service';
 
 require('./firebase-init');
 
 export const services = [
-    AuthService,
     EventsService,
-    PushService,
-    AnalyticsService,
     StorageService,
     UIService,
     ImageService,
 
-    // Model services
+    // Firebase services
+    AuthService,
+    PushService,
+    AnalyticsService,
+
+    // API services
     HouseService,
     TransactionService,
     ProductService,

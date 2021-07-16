@@ -12,13 +12,6 @@ export class HouseInvite {
     houseId: string;
     expiry: Timestamp;
 
-    static generate(houseId: string, houseName: string): HouseInvite {
-        const nextWeek = TimestampFn.fromDate(new Date(new Date().getTime() + (7 * 24 * 60 * 60 * 1000)));
-        const randomLink = uuid().substring(0, 8).toUpperCase();
-
-        return new HouseInvite(randomLink, houseName, houseId, nextWeek);
-    }
-
     constructor(id: string, houseName: string, houseId: string, expiry: Timestamp) {
         this.inviteLink = id;
         this.houseName = houseName;
@@ -28,6 +21,13 @@ export class HouseInvite {
 
     get isExpired(): boolean {
         return this.expiry.toMillis() < new Date().getMilliseconds();
+    }
+
+    static generate(houseId: string, houseName: string): HouseInvite {
+        const nextWeek = TimestampFn.fromDate(new Date(new Date().getTime() + (7 * 24 * 60 * 60 * 1000)));
+        const randomLink = uuid().substring(0, 8).toUpperCase();
+
+        return new HouseInvite(randomLink, houseName, houseId, nextWeek);
     }
 
     deepCopy(): HouseInvite {

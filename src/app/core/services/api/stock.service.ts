@@ -3,9 +3,9 @@ import {AngularFireFunctions} from '@angular/fire/functions';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {House, Stock, stockConverter} from '../models';
-import {newStock} from '../models/stock';
-import {AuthService} from './auth.service';
+import {House, Stock, stockConverter} from '../../models';
+import {newStock} from '../../models/stock';
+import {AuthService} from '../firebase/auth.service';
 import {AngularFirePerformance, trace} from '@angular/fire/performance';
 
 @Injectable({

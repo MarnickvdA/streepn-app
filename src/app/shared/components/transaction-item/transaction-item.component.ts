@@ -14,9 +14,9 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
     house?: House;
     account?: UserAccount;
     currentAccount?: UserAccount;
+    @Input() transaction: Transaction;
     private houseSub: Subscription;
     private house$: Observable<House>;
-    @Input() transaction: Transaction;
 
     constructor(private navController: NavController,
                 private route: ActivatedRoute,

@@ -6,7 +6,7 @@ import {HouseService} from '@core/services';
 import {AccountPayout, calculatePayout} from '@core/utils/streepn-logic';
 import {TranslateService} from '@ngx-translate/core';
 import {getMoneyString} from '@core/utils/formatting-utils';
-import {SettlementService} from '@core/services/settlement.service';
+import {SettlementService} from '@core/services/api/settlement.service';
 
 @Component({
     selector: 'app-settle',
@@ -20,13 +20,13 @@ export class SettleComponent implements OnInit, OnDestroy {
     sharedAccount?: SharedAccount;
     house$: Observable<House>;
     house?: House;
-    private houseSub: Subscription;
     payers: {
         [id: string]: boolean
     } = {};
     payerAmount: {
         [id: string]: number
     } = {};
+    private houseSub: Subscription;
     private settlement: {
         [id: string]: AccountPayout
     };
@@ -73,22 +73,6 @@ export class SettleComponent implements OnInit, OnDestroy {
         this.updateSettle();
     }
 
-    private updateSettle() {
-        const payerKeys: string[] = Object.keys(this.payers).filter(k => this.payers[k]);
-
-        this.settlement = {};
-        calculatePayout(this.sharedAccount?.balance, payerKeys.length).forEach((p, i) => {
-            this.settlement[payerKeys[i]] = p;
-        });
-
-        const newPayerAmount = {};
-        payerKeys.forEach((k) => {
-            newPayerAmount[k] = this.settlement[k]?.totalOut || 0;
-        });
-
-        this.payerAmount = newPayerAmount;
-    }
-
     canSettle(): boolean {
         return Object.values(this.payers).includes(true);
     }
@@ -127,5 +111,21 @@ export class SettleComponent implements OnInit, OnDestroy {
         });
 
         await alert.present();
+    }
+
+    private updateSettle() {
+        const payerKeys: string[] = Object.keys(this.payers).filter(k => this.payers[k]);
+
+        this.settlement = {};
+        calculatePayout(this.sharedAccount?.balance, payerKeys.length).forEach((p, i) => {
+            this.settlement[payerKeys[i]] = p;
+        });
+
+        const newPayerAmount = {};
+        payerKeys.forEach((k) => {
+            newPayerAmount[k] = this.settlement[k]?.totalOut || 0;
+        });
+
+        this.payerAmount = newPayerAmount;
     }
 }

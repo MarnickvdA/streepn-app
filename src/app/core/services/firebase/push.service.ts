@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {EventsService} from './events.service';
-import {StorageService} from './storage.service';
-import {LoggerService} from './logger.service';
+import {EventsService} from '../events.service';
+import {StorageService} from '../storage.service';
+import {LoggerService} from '../logger.service';
 import {Capacitor} from '@capacitor/core';
 import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from '@capacitor/push-notifications';
 
@@ -126,12 +126,14 @@ export class PushService {
     }
 
     requestPermissionsIfNotPromptedYet() {
-        PushNotifications.checkPermissions()
-            .then((result) => {
-                if (result.receive === 'prompt' || result.receive === 'prompt-with-rationale') {
-                    this.requestPushRegister();
-                }
-            });
+        if (Capacitor.isPluginAvailable('PushNotifications')) {
+            PushNotifications.checkPermissions()
+                .then((result) => {
+                    if (result.receive === 'prompt' || result.receive === 'prompt-with-rationale') {
+                        this.requestPushRegister();
+                    }
+                });
+        }
     }
 
     private requestPushRegister(): Promise<void> {

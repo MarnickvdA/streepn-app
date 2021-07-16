@@ -7,13 +7,13 @@ export {StorageService} from './storage.service';
 export {UIService} from './ui.service';
 
 // Firebase services
-export {AuthService} from './auth.service';
-export {AnalyticsService} from './analytics.service';
-export {PushService, PushTopic} from './push.service';
+export {AuthService} from './firebase/auth.service';
+export {AnalyticsService} from './firebase/analytics.service';
+export {PushService, PushTopic} from './firebase/push.service';
 
 // Model services
-export {TransactionService, TransactionSet} from './transaction.service';
-export {AccountService} from './account.service';
-export {StockService} from './stock.service';
-export {ProductService} from './product.service';
-export {HouseService} from './house.service';
+export {TransactionService, TransactionSet} from './api/transaction.service';
+export {AccountService} from './api/account.service';
+export {StockService} from './api/stock.service';
+export {ProductService} from './api/product.service';
+export {HouseService} from './api/house.service';

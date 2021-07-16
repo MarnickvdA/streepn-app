@@ -88,6 +88,8 @@ export class LoggerService {
     }
 
     static setUserId(id: any) {
-        Sentry.setUser({id});
+        if (environment.production) {
+            Sentry.setUser({id});
+        }
     }
 }

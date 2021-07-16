@@ -1,26 +1,22 @@
 import {Injectable} from '@angular/core';
 import {Currency, House, houseConverter, HouseInvite, houseInviteConverter, UserAccount} from '@core/models';
-import {AuthService} from './auth.service';
-import {EventsService} from './events.service';
+import {AnalyticsService, AuthService, EventsService, LoggerService} from '@core/services';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {BehaviorSubject, EMPTY, Observable, Subject} from 'rxjs';
 import {catchError, map, take, takeUntil} from 'rxjs/operators';
-import {AnalyticsService} from './analytics.service';
-import {PushService, PushTopic} from './push.service';
+import {PushService, PushTopic} from '../firebase/push.service';
 import {TranslateService} from '@ngx-translate/core';
-import {LoggerService} from './logger.service';
 import {AngularFirePerformance, trace} from '@angular/fire/performance';
 import User = firebase.User;
-import {PushNotifications} from '@capacitor/push-notifications';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HouseService {
-    private readonly logger = LoggerService.getLogger(HouseService.name);
     currentHouseId: string;
+    private readonly logger = LoggerService.getLogger(HouseService.name);
     private currentUserId: string;
     private housesSubject: BehaviorSubject<House[]> = new BehaviorSubject<House[]>([]);
     private destroyerSubject: Subject<void> = new Subject();
@@ -63,39 +59,6 @@ export class HouseService {
         return this.observeHouses(userId).pipe(
             map(houses => houses.find(g => g.id === houseId)),
         );
-    }
-
-    private initializeHousesObserver(userId: string) {
-        if (this.housesSub) {
-            this.housesSub();
-        }
-
-        this.housesSub = this.fs.collection('houses')
-            .ref
-            .where('members', 'array-contains', userId)
-            .withConverter(houseConverter)
-            .onSnapshot(snapshot => {
-                if (snapshot.empty) {
-                    this.housesSubject.next([]);
-                } else {
-                    this.housesSubject.next(snapshot.docs
-                        .map((doc) => doc.data())
-                        .sort((g1: House, g2: House) => {
-                            const d1 = g1.createdAt.toDate().getTime();
-                            const d2 = g2.createdAt.toDate().getTime();
-
-                            if (d1 === d2) {
-                                return 0;
-                            }
-                            if (d1 > d2) {
-                                return 1;
-                            }
-                            if (d1 < d2) {
-                                return -1;
-                            }
-                        }));
-                }
-            });
     }
 
     unsubscribe() {
@@ -162,7 +125,6 @@ export class HouseService {
         return this.fs.collection('houses')
             .add(houseConverter.toFirestore(house))
             .then(docRef => {
-
                 this.analyticsService.logCreateHouse(this.authService.currentUser.uid, docRef.id);
 
                 return docRef.id;
@@ -196,15 +158,7 @@ export class HouseService {
             .subscribe((account: UserAccount) => {
                 if (account) {
                     this.analyticsService.logJoinHouse(user.uid, houseInvite.houseId);
-
-                    // Enable push messages for this user.
-                    PushNotifications.requestPermissions()
-                        .then((result) => {
-                            if (result.receive === 'granted') {
-                                this.pushService.subscribeTopic(PushTopic.HOUSE_ALL, {houseId: houseInvite.houseId, accountId: account.id});
-                            }
-                        });
-
+                    this.pushService.subscribeTopic(PushTopic.HOUSE_ALL, {houseId: houseInvite.houseId, accountId: account.id});
                     this.eventsService.publish('house:joined');
                 }
             });
@@ -225,16 +179,8 @@ export class HouseService {
             .subscribe((account) => {
                 if (account) {
                     this.analyticsService.logLeaveHouse(userId, houseId);
-
                     this.eventsService.publish('house:left', true);
-
-                    // Enable push messages for this user.
-                    PushNotifications.requestPermissions()
-                        .then((result) => {
-                            if (result.receive === 'granted') {
-                                this.pushService.unsubscribeTopic(PushTopic.HOUSE_ALL, {houseId, accountId: account.id});
-                            }
-                        });
+                    this.pushService.unsubscribeTopic(PushTopic.HOUSE_ALL, {houseId, accountId: account.id});
                 }
             });
     }
@@ -246,17 +192,49 @@ export class HouseService {
             await this.fs.collection('houseInvites').doc(oldInvite).delete();
         }
 
-        return Promise.all([
-            this.fs.collection('houses').doc(houseId)
-                .update({
-                    inviteLink: houseInvite.inviteLink,
-                    inviteLinkExpiry: houseInvite.expiry
-                }),
-            this.fs.collection('houseInvites')
-                .doc(houseInvite.inviteLink)
-                .set(houseInviteConverter.toFirestore(houseInvite))
-        ]).then(() => {
-            return houseInvite.inviteLink;
-        });
+        await this.fs.collection('houseInvites')
+            .doc(houseInvite.inviteLink)
+            .set(houseInviteConverter.toFirestore(houseInvite));
+
+        await this.fs.collection('houses').doc(houseId)
+            .set({
+                inviteLink: houseInvite.inviteLink,
+                inviteLinkExpiry: houseInvite.expiry
+            }, {merge: true});
+
+        return houseInvite.inviteLink;
+    }
+
+    private initializeHousesObserver(userId: string) {
+        if (this.housesSub) {
+            this.housesSub();
+        }
+
+        this.housesSub = this.fs.collection('houses')
+            .ref
+            .where('members', 'array-contains', userId)
+            .withConverter(houseConverter)
+            .onSnapshot(snapshot => {
+                if (snapshot.empty) {
+                    this.housesSubject.next([]);
+                } else {
+                    this.housesSubject.next(snapshot.docs
+                        .map((doc) => doc.data())
+                        .sort((g1: House, g2: House) => {
+                            const d1 = g1.createdAt.toDate().getTime();
+                            const d2 = g2.createdAt.toDate().getTime();
+
+                            if (d1 === d2) {
+                                return 0;
+                            }
+                            if (d1 > d2) {
+                                return 1;
+                            }
+                            if (d1 < d2) {
+                                return -1;
+                            }
+                        }));
+                }
+            });
     }
 }

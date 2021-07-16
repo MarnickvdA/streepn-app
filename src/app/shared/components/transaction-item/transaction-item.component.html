@@ -13,9 +13,9 @@
             accountName: house.getAccountById(item.accountId)?.name
         } }}
         </h3>
-        <div class="transaction-bill" *ngIf="transaction.priceByAccountId(currentAccount.id); let price">
-            <fa-duotone-icon slot="start" class="danger small no-width" fixedWidth
-                             [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
+        <div *ngIf="transaction.priceByAccountId(currentAccount.id); let price" class="transaction-bill">
+            <fa-duotone-icon [icon]="['fad', 'minus-circle']" class="danger small no-width" fixedWidth
+                             slot="start"></fa-duotone-icon>
             <span>{{price | money}}</span>
         </div>
         <p class="small">

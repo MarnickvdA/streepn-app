@@ -11,10 +11,6 @@ export class UserAccount extends Account {
     photoUrl?: string; // URL for the photo associated with this account in a specific house.
     roles: UserRole[]; // Permission-system for a house.
 
-    static new(id: string, userId: string, name: string, roles: UserRole[], photoUrl: string) {
-        return new UserAccount(id, userId, TimestampFn.now(), name, roles, photoUrl, Balance.new());
-    }
-
     constructor(id: string, userId: string, createdAt: Timestamp, name: string, roles: UserRole[],
                 photoUrl: string, balance: Balance, settledAt?: Timestamp) {
         super(id, createdAt, name, AccountType.USER, balance, settledAt);
@@ -25,6 +21,10 @@ export class UserAccount extends Account {
 
     get isAdmin(): boolean {
         return this.roles.includes(UserRole.ADMIN);
+    }
+
+    static new(id: string, userId: string, name: string, roles: UserRole[], photoUrl: string) {
+        return new UserAccount(id, userId, TimestampFn.now(), name, roles, photoUrl, Balance.new());
     }
 
     deepCopy(): UserAccount {

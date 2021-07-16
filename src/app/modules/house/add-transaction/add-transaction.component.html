@@ -8,7 +8,8 @@
         <ion-title>{{house?.name}}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="dismiss()">
-                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth [icon]="['fad', 'times-circle']"></fa-duotone-icon>
+                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" fixedWidth
+                                 slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
     </ion-toolbar>

@@ -4,7 +4,6 @@ import {House} from '@core/models';
 import {AlertController, ModalController, NavController} from '@ionic/angular';
 import {HouseService, LoggerService, PushService, PushTopic, UIService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-import {PushNotifications} from '@capacitor/push-notifications';
 import {Share} from '@capacitor/share';
 import {Clipboard} from '@capacitor/clipboard';
 
@@ -61,13 +60,7 @@ export class NewHouseComponent implements OnInit {
                 .then((house) => {
                     if (house) {
                         this.house = house;
-
-                        PushNotifications.checkPermissions()
-                            .then((result) => {
-                            if (result.receive === 'granted') {
-                                this.pushService.subscribeTopic(PushTopic.HOUSE_ALL, {houseId: house.id, accountId: house.accounts[0].id});
-                            }
-                        });
+                        this.pushService.subscribeTopic(PushTopic.HOUSE_ALL, {houseId: house.id, accountId: house.accounts[0].id});
                     } else {
                         // FIXME
                     }

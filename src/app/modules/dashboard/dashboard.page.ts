@@ -19,17 +19,17 @@ import User = firebase.User;
 })
 export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     user$: Observable<User>;
-    private houses$: Observable<House[]>;
-    private housesSub: Subscription;
     houses?: House[];
     loading: boolean;
+    houseAccounts: { [houseId: string]: UserAccount } = {};
+    iOS: boolean;
+    private houses$: Observable<House[]>;
+    private housesSub: Subscription;
     private userSub: Subscription;
     private readonly logger = LoggerService.getLogger(DashboardPage.name);
     private user: User;
     private loadingHouseJoin?: HTMLIonLoadingElement;
     private onboarding: boolean;
-    houseAccounts: { [houseId: string]: UserAccount } = {};
-    iOS: boolean;
 
     constructor(private authService: AuthService,
                 private navController: NavController,
@@ -134,6 +134,34 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         await alert.present();
     }
 
+    openHouse(house: House) {
+        this.navController.navigateRoot(['house', house.id, 'transactions'], {
+            animationDirection: 'forward',
+        });
+    }
+
+    addHouse() {
+        this.modalController.create({
+            swipeToClose: true,
+            backdropDismiss: true,
+            component: NewHouseComponent
+        }).then((modal) => {
+            this.zone.run(() => {
+                modal.present();
+            });
+        });
+    }
+
+    openInfo() {
+        InfoModalComponent.presentModal(this.modalController, this.routerOutlet, 'information.dashboard.title', 'information.dashboard.content');
+    }
+
+    fakePull($event) {
+        setTimeout(() => {
+            $event.target.complete();
+        }, 350);
+    }
+
     private launchOnBoarding() {
         this.onboarding = true;
         this.modalController.create({
@@ -227,33 +255,5 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.loadingHouseJoin = undefined;
             });
-    }
-
-    openHouse(house: House) {
-        this.navController.navigateRoot(['house', house.id, 'transactions'], {
-            animationDirection: 'forward',
-        });
-    }
-
-    addHouse() {
-        this.modalController.create({
-            swipeToClose: true,
-            backdropDismiss: true,
-            component: NewHouseComponent
-        }).then((modal) => {
-            this.zone.run(() => {
-                modal.present();
-            });
-        });
-    }
-
-    openInfo() {
-        InfoModalComponent.presentModal(this.modalController, this.routerOutlet, 'information.dashboard.title', 'information.dashboard.content');
-    }
-
-    fakePull($event) {
-        setTimeout(() => {
-            $event.target.complete();
-        }, 350);
     }
 }

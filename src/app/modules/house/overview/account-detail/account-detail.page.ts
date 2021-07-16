@@ -14,7 +14,6 @@ import {
     PushTopic,
     StorageService
 } from '@core/services';
-import {ImageService} from '@core/services/image.service';
 
 @Component({
     selector: 'app-account-detail',

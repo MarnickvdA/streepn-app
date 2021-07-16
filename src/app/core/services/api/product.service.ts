@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {House, Product, productConverter} from '../models';
+import {House, Product, productConverter} from '../../models';
 import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
 

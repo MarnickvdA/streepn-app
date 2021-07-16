@@ -3,7 +3,7 @@ import {House, Settlement} from '@core/models';
 import {HouseService, LoggerService} from '@core/services';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {SettlementService} from '@core/services/settlement.service';
+import {SettlementService} from '@core/services/api/settlement.service';
 
 @Component({
     selector: 'app-settlement-detail',
@@ -11,16 +11,14 @@ import {SettlementService} from '@core/services/settlement.service';
     styleUrls: ['./settlement-detail.component.scss'],
 })
 export class SettlementDetailComponent implements OnInit, OnDestroy {
-    private readonly logger = LoggerService.getLogger(SettlementDetailComponent.name);
-
     houseId: string;
     house: House;
-
+    settlement?: Settlement;
+    settleOrder?: string[];
+    private readonly logger = LoggerService.getLogger(SettlementDetailComponent.name);
     private houseSub: Subscription;
     private routeSub: Subscription;
     private settlementId: string;
-    settlement?: Settlement;
-    settleOrder?: string[];
 
     constructor(private router: Router,
                 private route: ActivatedRoute,

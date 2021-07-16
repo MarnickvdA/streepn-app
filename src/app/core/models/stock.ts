@@ -13,10 +13,6 @@ export class Stock {
     removed: boolean; // Describes if the stock transaction was removed (after editing: all items removed)
     writtenOff: boolean; // TODO Add documentation what 'writtenOff' means.
 
-    static new(id: string, paidById: string, productId: string, cost: number, amount: number) {
-        return new Stock(undefined, undefined, id, paidById, productId, cost, amount, false, false);
-    }
-
     constructor(id: string, createdAt: Timestamp, createdById: string, paidById: string,
                 productId: string, cost: number, amount: number, removed: boolean, writtenOff: boolean) {
         this.id = id;
@@ -35,6 +31,10 @@ export class Stock {
      */
     get isMutable(): boolean {
         return !this.removed && !this.writtenOff;
+    }
+
+    static new(id: string, paidById: string, productId: string, cost: number, amount: number) {
+        return new Stock(undefined, undefined, id, paidById, productId, cost, amount, false, false);
     }
 
     paidByString(house: House) {

@@ -4,7 +4,7 @@ import {MenuController, NavController, Platform} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {StorageService} from '@core/services/storage.service';
 import {EventsService} from '@core/services/events.service';
-import {PushService} from '@core/services/push.service';
+import {PushService} from '@core/services/firebase/push.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {

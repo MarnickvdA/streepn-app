@@ -6,7 +6,7 @@ import {EMPTY, Observable, Subscription} from 'rxjs';
 import {LoggerService, TransactionService, TransactionSet} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {Capacitor} from '@capacitor/core';
-import {Haptics, HapticsImpactStyle, ImpactStyle} from '@capacitor/haptics';
+import {Haptics, ImpactStyle} from '@capacitor/haptics';
 
 @Component({
     selector: 'app-add-transaction',

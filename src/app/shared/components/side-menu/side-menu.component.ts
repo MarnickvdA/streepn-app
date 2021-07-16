@@ -16,11 +16,11 @@ import {StatusBar, Style} from '@capacitor/status-bar';
 export class SideMenuComponent implements OnInit, OnDestroy {
 
     @Input() contentId: string;
-    private userSub: Subscription;
     houses$: Observable<House[]>;
     isDarkMode: boolean;
     favorite: string;
     appVersion = environment.version;
+    private userSub: Subscription;
 
     constructor(private authService: AuthService,
                 private houseService: HouseService,

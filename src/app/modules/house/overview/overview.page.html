@@ -3,7 +3,7 @@
         <ion-buttons slot="start">
             <ion-menu-toggle>
                 <ion-button>
-                    <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'bars']"></fa-duotone-icon>
+                    <fa-duotone-icon [icon]="['fad', 'bars']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
                 </ion-button>
             </ion-menu-toggle>
         </ion-buttons>
@@ -30,9 +30,9 @@
         <!--                    {{'house.overview.preferences.title' | translate:{name: house.name} }}-->
         <!--                </ion-label>-->
         <!--            </ion-item>-->
-        <ion-item class="list-button" lines="full" (click)="shareHouse()" *ngIf="isAdmin" button detail="false">
-            <fa-duotone-icon slot="start" class="primary large" fixedWidth
-                             [icon]="['fad', 'share-alt-square']"></fa-duotone-icon>
+        <ion-item (click)="shareHouse()" *ngIf="isAdmin" button class="list-button" detail="false" lines="full">
+            <fa-duotone-icon [icon]="['fad', 'share-alt-square']" class="primary large" fixedWidth
+                             slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'house.overview.accounts.inviteLink' | translate}}</h3>
                 <p class="small">
@@ -40,10 +40,10 @@
                 </p>
             </ion-label>
         </ion-item>
-        <ion-item class="list-button" lines="full" (click)="addSharedAccount()" *ngIf="isAdmin" button
-                  detail="true">
-            <fa-duotone-icon slot="start" class="primary" fixedWidth
-                             [icon]="['fad', 'sack']"></fa-duotone-icon>
+        <ion-item (click)="addSharedAccount()" *ngIf="isAdmin" button class="list-button" detail="true"
+                  lines="full">
+            <fa-duotone-icon [icon]="['fad', 'sack']" class="primary" fixedWidth
+                             slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'house.overview.addSharedAccount.title' | translate}}</h3>
                 <p class="small ion-text-wrap">
@@ -51,10 +51,10 @@
                 </p>
             </ion-label>
         </ion-item>
-        <ion-item class="list-button" lines="full" routerLink="settlements" routerDirection="forward" button
-                  detail="true">
-            <fa-duotone-icon slot="start" class="primary large" fixedWidth
-                             [icon]="['fad', 'calculator-alt']"></fa-duotone-icon>
+        <ion-item button class="list-button" detail="true" lines="full" routerDirection="forward"
+                  routerLink="settlements">
+            <fa-duotone-icon [icon]="['fad', 'calculator-alt']" class="primary large" fixedWidth
+                             slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'house.overview.settle.house.itemTitle' | translate}}</h3>
             </ion-label>
@@ -74,7 +74,7 @@
             <ion-label>{{'house.overview.sharedAccounts' | translate}}</ion-label>
         </ion-list-header>
 
-        <ion-item class="no-min-height no-bg" *ngIf="house?.sharedAccounts.length === 0" lines="none">
+        <ion-item *ngIf="house?.sharedAccounts.length === 0" class="no-min-height no-bg" lines="none">
             <ion-label>
                 <p class="small">
                     {{'house.overview.emptySharedAccounts' | translate}}
@@ -82,10 +82,10 @@
             </ion-label>
         </ion-item>
 
-        <app-shared-account-item *ngFor="let sharedAccount of house?.sharedAccounts"
-                                 [canEditAccount]="isAdmin"
-                                 (clicked)="openAccount(sharedAccount)"
-                                 [account]="sharedAccount"></app-shared-account-item>
+        <app-shared-account-item (clicked)="openAccount(sharedAccount)"
+                                 *ngFor="let sharedAccount of house?.sharedAccounts"
+                                 [account]="sharedAccount"
+                                 [canEditAccount]="isAdmin"></app-shared-account-item>
         <!-- END ACCOUNTS SECTION -->
 
     </ion-list>

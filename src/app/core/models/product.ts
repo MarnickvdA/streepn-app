@@ -1,10 +1,10 @@
 import {Timestamp} from '@firebase/firestore-types';
 import {v4 as uuid} from 'uuid';
 import firebase from 'firebase/app';
+import {getMoneyString} from '@core/utils/formatting-utils';
 
 require('firebase/firestore');
 import TimestampFn = firebase.firestore.Timestamp;
-import {getMoneyString} from '@core/utils/formatting-utils';
 
 export class Product {
     id: string;
@@ -26,14 +26,6 @@ export class Product {
         this.totalOut = totalOut || 0;
         this.amountIn = amountIn || 0;
         this.amountOut = amountOut || 0;
-    }
-
-    static new(name: string, price: number) {
-        return new Product(uuid(), TimestampFn.now(), name, price, 0, 0, 0, 0);
-    }
-
-    deepCopy(): Product {
-        return JSON.parse(JSON.stringify(this));
     }
 
     get stock(): number {
@@ -69,6 +61,14 @@ export class Product {
 
     get restWorth(): number {
         return Math.round((this.worthDifference * this.amountLeftPercentage) + this.maxRevenue);
+    }
+
+    static new(name: string, price: number) {
+        return new Product(uuid(), TimestampFn.now(), name, price, 0, 0, 0, 0);
+    }
+
+    deepCopy(): Product {
+        return JSON.parse(JSON.stringify(this));
     }
 }
 

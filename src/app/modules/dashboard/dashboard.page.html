@@ -3,14 +3,15 @@
         <ion-buttons slot="start">
             <ion-menu-toggle>
                 <ion-button>
-                    <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'bars']"></fa-duotone-icon>
+                    <fa-duotone-icon [icon]="['fad', 'bars']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
                 </ion-button>
             </ion-menu-toggle>
         </ion-buttons>
         <ion-title>{{'dashboard.title' | translate}}</ion-title>
         <ion-buttons slot="end">
             <ion-button>
-                <fa-duotone-icon (click)="openInfo()" slot="start" class="primary" fixedWidth [icon]="['fad', 'info-circle']"></fa-duotone-icon>
+                <fa-duotone-icon (click)="openInfo()" [icon]="['fad', 'info-circle']" class="primary" fixedWidth
+                                 slot="start"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
     </ion-toolbar>
@@ -28,9 +29,9 @@
     </ion-refresher>
 
     <ion-list>
-        <ion-item class="list-button" lines="full" (click)="promptManualHouseJoin()" button detail="false">
-            <fa-duotone-icon slot="start" class="primary" fixedWidth
-                             [icon]="['fad', 'ticket']"></fa-duotone-icon>
+        <ion-item (click)="promptManualHouseJoin()" button class="list-button" detail="false" lines="full">
+            <fa-duotone-icon [icon]="['fad', 'ticket']" class="primary" fixedWidth
+                             slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'dashboard.manualHouseJoin' | translate}}</h3>
                 <p class="small ion-text-wrap">
@@ -44,7 +45,7 @@
         </ion-list-header>
 
         <ng-template [ngIf]="houses && !loading">
-            <div class="empty-container no-bg" *ngIf="houses.length === 0">
+            <div *ngIf="houses.length === 0" class="empty-container no-bg">
                 <ion-img src="assets/svg/no-houses.svg"></ion-img>
                 <ion-label>
                     <p>
@@ -53,11 +54,12 @@
                 </ion-label>
             </div>
 
-            <ion-item class="house-item" *ngFor="let house of houses" button (click)="openHouse(house)">
+            <ion-item (click)="openHouse(house)" *ngFor="let house of houses" button class="house-item">
                 <ion-label>
                     <h2>{{house.name}}</h2>
-                    <p>{{'dashboard.yourBalance' | translate}} <span *ngIf="houseAccounts[house.id].balance; let balance"
-                                                                     [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
+                    <p>{{'dashboard.yourBalance' | translate}} <span
+                            *ngIf="houseAccounts[house.id].balance; let balance"
+                            [ngClass]="balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{balance.amount | money}}</span>
                     </p>
                 </ion-label>
             </ion-item>
@@ -85,7 +87,7 @@
         </ion-item>
     </ion-list>
 
-    <ion-fab slot="fixed" horizontal="center" vertical="bottom" [edge]="iOS">
+    <ion-fab [edge]="iOS" horizontal="center" slot="fixed" vertical="bottom">
         <ion-fab-button (click)="addHouse()">
             <fa-icon [icon]="['far', 'plus']"></fa-icon>
         </ion-fab-button>

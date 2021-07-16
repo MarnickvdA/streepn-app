@@ -1,10 +1,10 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-button mode="ios" fill="none" [routerLink]="'/house/' + houseId + '/preferences/settlements'"
+            <ion-button [routerLink]="'/house/' + houseId + '/preferences/settlements'" fill="none" mode="ios"
                         routerDirection="back">
-                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
-                                 [icon]="['fad', 'chevron-left']"></fa-duotone-icon>
+                <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" fixedWidth
+                                 slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
         <ion-title>{{'house.overview.settle.house.title' | translate}}</ion-title>
@@ -20,7 +20,7 @@
 
     <ion-list>
         <ion-item class="list-button" lines="full">
-            <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'clock']"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'clock']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'house.overview.settle.detail.createdAt' | translate}} {{settlement?.createdAt | date}}</h3>
                 <h3>{{'house.overview.settle.detail.createdBy' | translate}} {{settlement?.createdByName}}</h3>

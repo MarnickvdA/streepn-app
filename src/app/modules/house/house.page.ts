@@ -15,8 +15,8 @@ import {Capacitor} from '@capacitor/core';
 export class HousePage implements OnInit, OnDestroy {
 
     house$: Observable<House>;
-    private routeSub: Subscription;
     iOS: boolean;
+    private routeSub: Subscription;
     private house: House;
     private houseSub: Subscription;
 

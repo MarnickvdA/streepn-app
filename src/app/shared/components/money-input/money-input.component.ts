@@ -57,6 +57,18 @@ export class MoneyInputComponent implements OnInit {
         this.dummyFacade.setFocus();
     }
 
+    setAmount(amount: number) {
+        this.amount = '0';
+        this.amountString = this.formattedAmount;
+        setTimeout(() => {
+            this.handleInput(new CustomEvent('', {
+                detail: {
+                    data: amount
+                }
+            }));
+        });
+    }
+
     private addDigit(key: string) {
         this.amount = this.amount + key;
         this.amountEntered.emit(+this.amount);
@@ -76,18 +88,6 @@ export class MoneyInputComponent implements OnInit {
         // ensures work for browser
         this.dummyFacade.getInputElement().then((native: HTMLInputElement) => {
             native.value = '';
-        });
-    }
-
-    setAmount(amount: number) {
-        this.amount = '0';
-        this.amountString = this.formattedAmount;
-        setTimeout(() => {
-            this.handleInput(new CustomEvent('', {
-                detail: {
-                    data: amount
-                }
-            }));
         });
     }
 }

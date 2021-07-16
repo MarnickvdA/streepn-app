@@ -5,7 +5,7 @@ import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ModalController} from '@ionic/angular';
 import {SettleHouseComponent} from '@modules/house/overview/settlements/settle-house/settle-house.component';
-import {SettlementService} from '@core/services/settlement.service';
+import {SettlementService} from '@core/services/api/settlement.service';
 
 @Component({
     selector: 'app-settlements',
@@ -15,10 +15,9 @@ import {SettlementService} from '@core/services/settlement.service';
 export class SettlementsPage implements OnInit, OnDestroy {
     houseId: string;
     house: House;
-
+    settlements: Settlement[];
     private readonly logger = LoggerService.getLogger(SettlementsPage.name);
     private houseSub: Subscription;
-    settlements: Settlement[];
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
