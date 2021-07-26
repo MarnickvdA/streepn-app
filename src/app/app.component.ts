@@ -58,7 +58,7 @@ import {Capacitor} from '@capacitor/core';
     styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-    showSideMenu = false;
+    hideSideMenu = true;
 
     constructor(
         private platform: Platform,
@@ -80,7 +80,10 @@ export class AppComponent {
 
         this.router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
-                this.showSideMenu = !val.url.startsWith('/login') && !val.url.startsWith('/register');
+                this.hideSideMenu = val.url.startsWith('/login')
+                    || val.url.startsWith('/register')
+                    || val.urlAfterRedirects.startsWith('/login')
+                    || val.urlAfterRedirects.startsWith('/register');
             }
         });
     }

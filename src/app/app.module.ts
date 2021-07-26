@@ -11,20 +11,8 @@ import {CoreModule} from '@core/core.module';
 import {SharedModule} from '@shared/shared.module';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {RouteReuseStrategy} from '@angular/router';
-import {environment} from '@env/environment';
-import * as Sentry from '@sentry/browser';
 import {LoggerService} from '@core/services';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-
-if (environment.production) {
-    Sentry.init({
-        dsn: 'https://898ea0c4100341d581f3a5d645db3c12@o352784.ingest.sentry.io/5178411',
-        debug: !environment.production,
-        release: environment.version,
-        environment: environment.production ? 'prod' : 'debug',
-        tracesSampleRate: 1.0,
-    });
-}
 
 @Injectable({
     providedIn: 'root'
