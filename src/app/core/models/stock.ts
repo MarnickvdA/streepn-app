@@ -47,8 +47,7 @@ export class Stock {
 }
 
 export const stockConverter: FirestoreDataConverter<Stock> = {
-    toFirestore(stock: Stock) {
-        return {
+    toFirestore: (stock: Stock) => ({
             createdAt: stock.createdAt,
             createdBy: stock.createdBy,
             paidById: stock.paidById,
@@ -57,16 +56,13 @@ export const stockConverter: FirestoreDataConverter<Stock> = {
             amount: stock.amount,
             removed: stock.removed,
             writtenOff: stock.writtenOff,
-        };
-    },
-    fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Stock {
+        }),
+    fromFirestore: (snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Stock => {
         const data = snapshot.data(options);
 
         return newStock(snapshot.id, data);
     },
 };
 
-export function newStock(id: string, data: { [key: string]: any }): Stock {
-    return new Stock(id, data.createdAt as Timestamp, data.createdBy, data.paidById, data.productId, data.cost, data.amount,
-        data.removed, data.writtenOff);
-}
+export const newStock = (id: string, data: { [key: string]: any }): Stock => new Stock(id, data.createdAt as Timestamp, data.createdBy,
+    data.paidById, data.productId, data.cost, data.amount, data.removed, data.writtenOff);

@@ -40,7 +40,8 @@
                   slot="end">{{account?.balance.amount | money}}</span>
         </ion-item>
         <ion-item-divider class="bottom-line"></ion-item-divider>
-        <ion-item (click)="settleSharedAccount(account?.id)" [disabled]="account?.balance.amount === 0" button class="list-button"
+        <ion-item (click)="settleSharedAccount(account?.id)" [disabled]="account?.balance.amount === 0" button
+                  class="list-button"
                   lines="full">
             <fa-duotone-icon [icon]="['fad', 'calculator-alt']" class="primary" fixedWidth
                              slot="start"></fa-duotone-icon>

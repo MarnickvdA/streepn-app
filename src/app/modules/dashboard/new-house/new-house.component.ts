@@ -54,13 +54,11 @@ export class NewHouseComponent implements OnInit {
             this.houseCreated = true;
             this.loading = true;
             this.houseService.createHouse(this.name)
-                .then((houseId) => {
-                    return this.houseService.getHouse(houseId);
-                })
+                .then((houseId) => this.houseService.getHouse(houseId))
                 .then((house) => {
                     if (house) {
                         this.house = house;
-                        this.pushService.subscribeTopic(PushTopic.HOUSE_ALL, {houseId: house.id, accountId: house.accounts[0].id});
+                        this.pushService.subscribeTopic(PushTopic.houseAll, {houseId: house.id, accountId: house.accounts[0].id});
                     } else {
                         // FIXME
                     }
@@ -100,6 +98,7 @@ export class NewHouseComponent implements OnInit {
                         text: this.translate.instant('actions.copy') + ' ' + this.translate.instant('house.overview.addAccount.code'),
                         handler: () => {
                             Clipboard.write({
+                                // eslint-disable-next-line id-blacklist
                                 string: this.house.inviteLink
                             });
                         }

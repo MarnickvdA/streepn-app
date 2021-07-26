@@ -7,33 +7,33 @@ export interface LogItem {
     type?: 'default' | 'debug' | 'info' | 'error' | 'navigation' | 'http' | 'ui';
     category?: string;
     eventId?: string;
-    data?: { [key: string]: any; };
+    data?: { [key: string]: any };
     error?: any;
 }
 
 export class Logger {
-    constructor(private LOG_TAG: string) {
+    constructor(private logTag: string) {
     }
 
     info(logItem: LogItem) {
         if (!logItem.type) {
             logItem.type = 'info';
         }
-        LoggerService.log(logItem, Severity.Info, this.LOG_TAG);
+        LoggerService.log(logItem, Severity.Info, this.logTag);
     }
 
     warn(logItem: LogItem) {
         if (!logItem.type) {
             logItem.type = 'default';
         }
-        LoggerService.log(logItem, Severity.Warning, this.LOG_TAG);
+        LoggerService.log(logItem, Severity.Warning, this.logTag);
     }
 
     error(logItem: LogItem) {
         if (!logItem.type) {
             logItem.type = 'error';
         }
-        LoggerService.log(logItem, Severity.Warning, this.LOG_TAG);
+        LoggerService.log(logItem, Severity.Warning, this.logTag);
     }
 }
 
@@ -42,8 +42,8 @@ export class LoggerService {
     constructor() {
     }
 
-    static getLogger(LOG_TAG: string): Logger {
-        return new Logger(LOG_TAG);
+    static getLogger(logTag: string): Logger {
+        return new Logger(logTag);
     }
 
     static handleError(error) {
@@ -73,6 +73,7 @@ export class LoggerService {
                 level: severity,
                 message: `[ ${tag} ]: ${logItem.message}`,
                 category: logItem.category,
+                // eslint-disable-next-line @typescript-eslint/naming-convention
                 event_id: logItem.eventId,
                 data: logItem.data,
                 timestamp: new Date(Date.now()).getTime()

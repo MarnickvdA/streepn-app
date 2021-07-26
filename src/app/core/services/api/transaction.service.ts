@@ -14,7 +14,7 @@ export interface TransactionSet {
     [accountId: string]: {
         [productId: string]: {
             amount: number;
-        }
+        };
     };
 }
 
@@ -102,9 +102,7 @@ export class TransactionService {
             .ref
             .withConverter(transactionConverter)
             .get()
-            .then((house) => {
-                return house.data();
-            });
+            .then((house) => house.data());
     }
 
     observeTransaction(houseId: string, transactionId: string) {

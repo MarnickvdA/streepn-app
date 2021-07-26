@@ -16,12 +16,18 @@ import {MoneyInputComponent} from '@shared/components/money-input/money-input.co
     styleUrls: ['./edit-stock.component.scss', '../../stock.page.scss'],
 })
 export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
+    @Input()
+    house$: Observable<House>;
+
+    @Input()
+    stockItem: Stock;
+
+    @ViewChild(MoneyInputComponent)
+    moneyInput: MoneyInputComponent;
+
     stockForm: FormGroup;
     isSubmitted: boolean;
     paidByTitle: string;
-    @Input() house$: Observable<House>;
-    @Input() stockItem: Stock;
-    @ViewChild(MoneyInputComponent) moneyInput: MoneyInputComponent;
 
     house: House;
     selectedAccount: Account;

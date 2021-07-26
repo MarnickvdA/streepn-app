@@ -12,11 +12,12 @@ import {ProductService} from '@core/services';
     styleUrls: ['./new-product.component.scss'],
 })
 export class NewProductComponent implements OnInit, OnDestroy {
+    @Input()
+    house$: Observable<House>;
+
     productForm: FormGroup;
     isSubmitted: boolean;
     houseCreated: boolean;
-
-    @Input() house$: Observable<House>;
 
     private house: House;
     private houseSub: Subscription;

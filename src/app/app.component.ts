@@ -1,5 +1,4 @@
 import {Component, NgZone} from '@angular/core';
-
 import {MenuController, NavController, Platform} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {StorageService} from '@core/services/storage.service';
@@ -92,6 +91,10 @@ export class AppComponent {
         });
     }
 
+    toggleMenu(isEnabled: boolean) {
+        this.menuCtrl.swipeGesture(isEnabled);
+    }
+
     private initTranslations() {
         this.translate.setDefaultLang('en_GB');
         this.translate.use('nl_NL');
@@ -109,10 +112,6 @@ export class AppComponent {
             .catch(() => {
                 this.toggleDarkTheme(prefersDark.matches);
             });
-    }
-
-    toggleMenu(isEnabled: boolean) {
-        this.menuCtrl.swipeGesture(isEnabled);
     }
 
     private toggleDarkTheme(isDarkMode: boolean) {

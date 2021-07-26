@@ -16,7 +16,7 @@ require('firebase/firestore');
  * List of supported currencies currently available in the application.
  */
 export enum Currency {
-    EURO = 'EUR'
+    euro = 'EUR'
 }
 
 /**
@@ -38,14 +38,14 @@ export class House {
     // A lookup dictionary for improved performance. Every array is very expensive to search through and maps are more efficient.
     houseDictionary: {
         accounts: {
-            [accountId: string]: UserAccount
-        },
+            [accountId: string]: UserAccount;
+        };
         sharedAccounts: {
-            [accountId: string]: SharedAccount
-        },
+            [accountId: string]: SharedAccount;
+        };
         products: {
-            [productId: string]: Product
-        }
+            [productId: string]: Product;
+        };
     };
     // Private arrays for the accounts and products. They need to be in sync with the houseDictionary.
     private mAccounts: UserAccount[];
@@ -94,9 +94,7 @@ export class House {
     }
 
     get settleSharedAccounts(): SharedAccount[] {
-        return this.mSharedAccounts.filter(acc => {
-            return acc.balance.amount !== 0;
-        });
+        return this.mSharedAccounts.filter(acc => acc.balance.amount !== 0);
     }
 
     get sharedAccounts(): SharedAccount[] {
@@ -124,14 +122,14 @@ export class House {
     static new(user: User, name: string, currency: Currency) {
         const uid = uuid();
         const hid = uuid();
-        const account = UserAccount.new(uid, user.uid, user.displayName, [UserRole.ADMIN], user.photoURL);
+        const account = UserAccount.new(uid, user.uid, user.displayName, [UserRole.admin], user.photoURL);
 
         return new House(hid, TimestampFn.now(), name, currency, undefined, undefined, [user.uid], [account],
             [], [], 0, 0);
     }
 
     isAdmin(userId: string): boolean {
-        return this.accounts.find(account => account.userId === userId)?.roles.includes(UserRole.ADMIN) || false;
+        return this.accounts.find(account => account.userId === userId)?.roles.includes(UserRole.admin) || false;
     }
 
     getAccountById(accountId: string): Account | undefined {
@@ -231,7 +229,7 @@ export class House {
 }
 
 export const houseConverter: FirestoreDataConverter<House> = {
-    toFirestore(house: House) {
+    toFirestore: (house: House) => {
         const balances = {};
         house.accounts.forEach((account) => {
             balances[account.id] = balanceConverter.toFirestore(account.balance);
@@ -268,14 +266,14 @@ export const houseConverter: FirestoreDataConverter<House> = {
             productData,
         };
     },
-    fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): House {
+    fromFirestore: (snapshot: DocumentSnapshot<any>, options: SnapshotOptions): House => {
         const data = snapshot.data(options);
 
         return newHouse(snapshot.id, data);
     }
 };
 
-export function newHouse(id: string, data: { [key: string]: any }): House {
+export const newHouse = (id: string, data: { [key: string]: any }): House => {
     const accounts = [];
     const products = [];
     const sharedAccounts = [];
@@ -306,4 +304,4 @@ export function newHouse(id: string, data: { [key: string]: any }): House {
     return new House(id, data.createdAt, data.name, data.currency, data.inviteLink,
         data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts, data.totalIn,
         data.totalOut, data.settledAt, data.isSettling);
-}
+};

@@ -6,7 +6,7 @@ import {Capacitor} from '@capacitor/core';
 import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from '@capacitor/push-notifications';
 
 export enum PushTopic {
-    HOUSE_ALL
+    houseAll
 }
 
 @Injectable({
@@ -70,7 +70,7 @@ export class PushService {
             .then(() => {
                 let subTopic;
                 switch (topic) {
-                    case PushTopic.HOUSE_ALL:
+                    case PushTopic.houseAll:
                         subTopic = 'house_' + data.houseId + '_all';
                 }
 
@@ -98,7 +98,7 @@ export class PushService {
             .then(() => {
                 let subTopic;
                 switch (topic) {
-                    case PushTopic.HOUSE_ALL:
+                    case PushTopic.houseAll:
                         subTopic = 'house_' + data.houseId + '_all';
                 }
 

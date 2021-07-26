@@ -56,7 +56,8 @@
         </ion-list-header>
 
         <ion-item *ngIf="house?.settleSharedAccounts; let accounts" class="list-button" detail="false" lines="full">
-            <fa-duotone-icon [icon]="['fad', accounts.length > 0 ? 'times-circle' : 'check-circle']" [ngClass]="accounts.length > 0 ? 'danger' : 'success'" class="large"
+            <fa-duotone-icon [icon]="['fad', accounts.length > 0 ? 'times-circle' : 'check-circle']"
+                             [ngClass]="accounts.length > 0 ? 'danger' : 'success'" class="large"
                              fixedWidth
                              slot="start"></fa-duotone-icon>
             <ion-label>

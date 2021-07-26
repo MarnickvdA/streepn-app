@@ -12,10 +12,13 @@ import {AccountService} from '@core/services';
     styleUrls: ['./new-shared-account.component.scss'],
 })
 export class NewSharedAccountComponent implements OnInit, OnDestroy {
+
+    @Input()
+    house$: Observable<House>;
+
     accountForm: FormGroup;
     isSubmitted: boolean;
 
-    @Input() house$: Observable<House>;
     private house: House;
     private houseSub: Subscription;
 

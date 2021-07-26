@@ -15,8 +15,8 @@ export const environment = {
             interstitial: 'ca-app-pub-3940256099942544/1033173712',
         },
         ios: {
-          banner: 'ca-app-pub-3940256099942544/2934735716',
-          interstitial: 'ca-app-pub-3940256099942544/1033173712'
+            banner: 'ca-app-pub-3940256099942544/2934735716',
+            interstitial: 'ca-app-pub-3940256099942544/1033173712'
         },
     },
     legalVersion: '1',

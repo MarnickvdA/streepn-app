@@ -44,18 +44,16 @@ export abstract class Account {
 }
 
 export const accountConverter = {
-    toFirestore(account: Account) {
-        return {
+    toFirestore: (account: Account) => ({
             id: account.id,
             createdAt: account.createdAt,
             name: account.name,
             type: account.type,
             settledAt: account.settledAt,
-        };
-    }
+        })
 };
 
 export enum AccountType {
-    USER = 'user',
-    SHARED = 'shared'
+    user = 'user',
+    shared = 'shared'
 }

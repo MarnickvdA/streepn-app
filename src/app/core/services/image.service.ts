@@ -42,36 +42,35 @@ export class ImageService {
 
     takeProfilePicture(userId: string) {
         Camera.getPhoto(this.imageOptions)
-            .then(image => {
-                return this.loadingController.create({
-                        message: this.translate.instant('actions.uploading'),
-                        backdropDismiss: false
-                    })
-                    .then(loading => {
-                        loading.present();
-                        return this.uploadImageToStorage('thumbnails/' + userId + '.jpeg', image.dataUrl)
-                            .then(downloadUrl => {
-                                const callable = this.functions.httpsCallable('setProfilePhoto');
-                                callable({
-                                    downloadUrl
-                                }).pipe(
-                                    trace('setProfilePhoto'),
-                                    catchError((err) => {
-                                        this.logger.error({message: 'setProfilePhoto', error: err});
-                                        return err;
-                                    }),
-                                    tap(() => {
-                                        this.analyticsService.logProfilePhotoChange(userId);
-                                    })
-                                ).subscribe();
-                            })
-                            .finally(() => {
-                                loading.dismiss();
-                            });
-                    });
-            })
+            .then(image => this.loadingController.create({
+                    message: this.translate.instant('actions.uploading'),
+                    backdropDismiss: false
+                })
+                .then(loading => {
+                    loading.present();
+                    return this.uploadImageToStorage('thumbnails/' + userId + '.jpeg', image.dataUrl)
+                        .then(downloadUrl => {
+                            const callable = this.functions.httpsCallable('setProfilePhoto');
+                            callable({
+                                downloadUrl
+                            }).pipe(
+                                trace('setProfilePhoto'),
+                                catchError((err) => {
+                                    this.logger.error({message: 'setProfilePhoto', error: err});
+                                    return err;
+                                }),
+                                tap(() => {
+                                    this.analyticsService.logProfilePhotoChange(userId);
+                                })
+                            ).subscribe();
+                        })
+                        .finally(() => {
+                            loading.dismiss();
+                        });
+                }))
             .catch(err => {
-                if (err.message === 'User denied access to camera' || err.message === 'Unable to access camera, user denied permission request') {
+                if (err.message === 'User denied access to camera'
+                    || err.message === 'Unable to access camera, user denied permission request') {
                     console.error(err);
                 } else if (err.message !== 'User cancelled photos app') {
                     console.error(err);
@@ -83,28 +82,24 @@ export class ImageService {
         const ref = this.storage.ref(url);
 
         return this.compressImage(dataUrl)
-            .then(compressedImage => {
-                return ref.put(compressedImage, {
-                        cacheControl: 'public,max-age=604800'
-                    })
-                    .then((result) => {
-                        console.log(result.metadata);
-                        return ref.getDownloadURL().toPromise();
-                    });
-            });
+            .then(compressedImage => ref.put(compressedImage, {
+                    cacheControl: 'public,max-age=604800'
+                })
+                .then((result) => {
+                    console.log(result.metadata);
+                    return ref.getDownloadURL().toPromise();
+                }));
     }
 
     compressImage(dataUrl: string): Promise<Blob> {
-        return dataURLtoFile(dataUrl, EImageType.JPEG).then(blob => {
-            return compressAccurately(blob, {
-                size: 50,
-                accuracy: 0.95,
-                type: EImageType.JPEG,
-                width: 256,
-                height: 256,
-                orientation: 2,
-                scale: 0.25,
-            });
-        });
+        return dataURLtoFile(dataUrl, EImageType.JPEG).then(blob => compressAccurately(blob, {
+            size: 50,
+            accuracy: 0.95,
+            type: EImageType.JPEG,
+            width: 256,
+            height: 256,
+            orientation: 2,
+            scale: 0.25,
+        }));
     }
 }

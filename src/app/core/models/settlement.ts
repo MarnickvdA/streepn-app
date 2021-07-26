@@ -4,10 +4,10 @@ import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 export interface SettleItem {
     settle: number;
     owes: {
-        [accountId: string]: number,
+        [accountId: string]: number;
     };
     receives: {
-        [accountId: string]: number,
+        [accountId: string]: number;
     };
 }
 
@@ -16,12 +16,12 @@ export class Settlement {
     createdAt: Timestamp;
     createdBy: string;
     items: {
-        [accountId: string]: SettleItem
+        [accountId: string]: SettleItem;
     };
     accounts: {
         [accountId: string]: {
-            name: string,
-        }
+            name: string;
+        };
     };
 
     constructor(id: string, createdAt: Timestamp, createdBy: string, items: { [p: string]: SettleItem },
@@ -37,8 +37,8 @@ export class Settlement {
         return this.accounts[this.createdBy].name;
     }
 
-    owes(accountId: string): { name: string, amount: number }[] {
-        const owes: { name: string, amount: number }[] = [];
+    owes(accountId: string): { name: string; amount: number }[] {
+        const owes: { name: string; amount: number }[] = [];
         Object.keys(this.items[accountId].owes)
             .forEach((oweId) => {
                 owes.push({
@@ -50,8 +50,8 @@ export class Settlement {
         return owes;
     }
 
-    receives(accountId: string): { name: string, amount: number }[] {
-        const receives: { name: string, amount: number }[] = [];
+    receives(accountId: string): { name: string; amount: number }[] {
+        const receives: { name: string; amount: number }[] = [];
         Object.keys(this.items[accountId].receives)
             .forEach((receiveId) => {
                 receives.push({
@@ -65,20 +65,16 @@ export class Settlement {
 }
 
 export const settlementConverter: FirestoreDataConverter<Settlement> = {
-    toFirestore(settlement: Settlement) {
-        return {
+    toFirestore: (settlement: Settlement) => ({
             createdAt: settlement.createdAt,
             createdBy: settlement.createdBy,
             accounts: settlement.accounts,
-        };
-    },
-    fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Settlement {
+        }),
+    fromFirestore: (snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Settlement => {
         const data = snapshot.data(options);
         return newSettlement(snapshot.id, data);
     },
 };
 
-export function newSettlement(id: string, data: { [key: string]: any }): Settlement {
-    return new Settlement(id, data.createdAt as Timestamp, data.createdBy,
-        JSON.parse(JSON.stringify(data.items)), data.accounts);
-}
+export const newSettlement = (id: string, data: { [key: string]: any }): Settlement => new Settlement(id, data.createdAt as Timestamp,
+    data.createdBy, JSON.parse(JSON.stringify(data.items)), data.accounts);

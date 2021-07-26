@@ -51,9 +51,7 @@ export class SettlementsPage implements OnInit, OnDestroy {
     settleHouse() {
         this.modalController.create({
             component: SettleHouseComponent,
-        }).then(modal => {
-            return modal.present();
-        });
+        }).then(modal => modal.present());
     }
 
     openSettlement(settlement: Settlement) {

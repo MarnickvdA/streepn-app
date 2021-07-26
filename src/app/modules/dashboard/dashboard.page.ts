@@ -153,7 +153,12 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     openInfo() {
-        InfoModalComponent.presentModal(this.modalController, this.routerOutlet, 'information.dashboard.title', 'information.dashboard.content');
+        InfoModalComponent.presentModal(
+            this.modalController,
+            this.routerOutlet,
+            'information.dashboard.title',
+            'information.dashboard.content'
+        );
     }
 
     fakePull($event) {
@@ -213,9 +218,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                                     }
                                 }
                             ]
-                        }).then(alert => {
-                            return alert.present();
-                        });
+                        }).then(alert => alert.present());
                     });
                 }
             })

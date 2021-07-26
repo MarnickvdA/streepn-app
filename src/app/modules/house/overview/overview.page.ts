@@ -125,6 +125,7 @@ export class OverviewPage implements OnInit, OnDestroy {
                         text: this.translate.instant('actions.copy') + ' ' + this.translate.instant('house.overview.addAccount.code'),
                         handler: () => {
                             Clipboard.write({
+                                // eslint-disable-next-line id-blacklist
                                 string: this.inviteLink
                             });
                         }

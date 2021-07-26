@@ -55,22 +55,18 @@ export class Transaction {
 }
 
 export const transactionConverter: FirestoreDataConverter<Transaction> = {
-    toFirestore(transaction: Transaction) {
-        return {
-            createdAt: transaction.createdAt,
-            createdBy: transaction.createdBy,
-            items: transaction.items,
-            removed: transaction.removed,
-        };
-    },
-    fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Transaction {
+    toFirestore: (transaction: Transaction) => ({
+        createdAt: transaction.createdAt,
+        createdBy: transaction.createdBy,
+        items: transaction.items,
+        removed: transaction.removed,
+    }),
+    fromFirestore: (snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Transaction => {
         const data = snapshot.data(options);
 
         return newTransaction(snapshot.id, data);
     },
 };
 
-export function newTransaction(id: string, data: { [key: string]: any }): Transaction {
-    return new Transaction(id, data.createdAt as Timestamp, data.createdBy,
-        JSON.parse(JSON.stringify(data.items)), data.removed);
-}
+export const newTransaction = (id: string, data: { [key: string]: any }): Transaction => new Transaction(id, data.createdAt as Timestamp,
+    data.createdBy, JSON.parse(JSON.stringify(data.items)), data.removed);

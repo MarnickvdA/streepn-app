@@ -17,10 +17,11 @@ export class TransactionsPage implements OnInit, OnDestroy {
     transactions: Transaction[];
     doneLoading = false;
     isLoadingMore = false;
-    private LIMIT = 15;
+
     private lastSnapshot: QueryDocumentSnapshot<Transaction>;
     private houseSub: Subscription;
     private house$: Observable<House>;
+    private readonly limit = 15;
     private readonly refreshSub;
 
     constructor(private route: ActivatedRoute,
@@ -99,7 +100,7 @@ export class TransactionsPage implements OnInit, OnDestroy {
             .ref
             .withConverter(transactionConverter)
             .orderBy('createdAt', 'desc')
-            .limit(this.LIMIT);
+            .limit(this.limit);
 
         if (this.lastSnapshot) {
             ref = ref.startAfter(this.lastSnapshot);
@@ -112,7 +113,7 @@ export class TransactionsPage implements OnInit, OnDestroy {
         return ref.get()
             .then((result) => {
                 this.zone.run(_ => {
-                    if (result.docs.length < this.LIMIT) {
+                    if (result.docs.length < this.limit) {
                         this.doneLoading = true;
                     }
 

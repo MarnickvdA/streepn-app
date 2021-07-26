@@ -36,14 +36,12 @@ export class HouseInvite {
 }
 
 export const houseInviteConverter: FirestoreDataConverter<HouseInvite> = {
-    toFirestore(invite: HouseInvite) {
-        return {
-            houseName: invite.houseName,
-            houseId: invite.houseId,
-            expiry: invite.expiry,
-        };
-    },
-    fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): HouseInvite {
+    toFirestore: (invite: HouseInvite) => ({
+        houseName: invite.houseName,
+        houseId: invite.houseId,
+        expiry: invite.expiry,
+    }),
+    fromFirestore: (snapshot: DocumentSnapshot<any>, options: SnapshotOptions): HouseInvite => {
         const data = snapshot.data(options);
 
         return new HouseInvite(snapshot.id, data.houseName, data.houseId, data.expiry);

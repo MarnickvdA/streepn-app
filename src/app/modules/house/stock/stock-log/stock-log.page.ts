@@ -17,10 +17,11 @@ export class StockLogPage implements OnInit, OnDestroy {
     doneLoading: boolean;
     isLoadingMore: boolean;
     stockTransactions: Stock[];
+
     private house$: Observable<House>;
     private houseSub: Subscription;
-    private LIMIT = 10;
     private lastSnapshot: QueryDocumentSnapshot<Stock>;
+    private readonly limit = 10;
     private readonly refreshSub;
 
     constructor(private modalController: ModalController,
@@ -109,7 +110,7 @@ export class StockLogPage implements OnInit, OnDestroy {
             .ref
             .withConverter(stockConverter)
             .orderBy('createdAt', 'desc')
-            .limit(this.LIMIT);
+            .limit(this.limit);
 
         if (this.lastSnapshot) {
             ref = ref.startAfter(this.lastSnapshot);
@@ -121,7 +122,7 @@ export class StockLogPage implements OnInit, OnDestroy {
 
         return ref.get()
             .then((result) => {
-                if (result.docs.length < this.LIMIT) {
+                if (result.docs.length < this.limit) {
                     this.doneLoading = true;
                 }
 

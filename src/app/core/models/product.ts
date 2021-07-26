@@ -73,7 +73,7 @@ export class Product {
 }
 
 export const productConverter = {
-    toFirestore(product: Product) {
+    toFirestore: (product: Product) => {
         const p: any = {
             id: product.id,
             createdAt: product.createdAt,
@@ -83,8 +83,6 @@ export const productConverter = {
 
         return p;
     },
-    newProduct(data: { [key: string]: any }): Product {
-        return new Product(data.id, data.createdAt, data.name, data.price,
-            data.totalIn, data.totalOut, data.amountIn, data.amountOut);
-    }
+    newProduct: (data: { [key: string]: any }): Product => new Product(data.id, data.createdAt, data.name, data.price,
+        data.totalIn, data.totalOut, data.amountIn, data.amountOut)
 };

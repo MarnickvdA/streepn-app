@@ -15,12 +15,15 @@ import {AnalyticsService, AuthService, HouseService, LoggerService, ProductServi
     styleUrls: ['./add-stock.component.scss', '../stock.page.scss'],
 })
 export class AddStockComponent implements OnInit, OnDestroy {
+    @Input()
+    house$: Observable<House>;
+
     stockForm: FormGroup;
     isSubmitted: boolean;
     paidByTitle: string;
-    @Input() house$: Observable<House>;
     house: House;
     selectedName: string;
+
     private readonly logger = LoggerService.getLogger(AddStockComponent.name);
     private houseSub: Subscription;
     private moneyInputInitialized = false;

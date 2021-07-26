@@ -115,12 +115,13 @@ export class HouseService {
 
     /**
      * Create a new house
+     *
      * @param name Name of house
      * @return newly created house's uid
      */
     createHouse(name: string): Promise<string> {
         const user = this.authService.currentUser;
-        const house = House.new(user, name, Currency.EURO);
+        const house = House.new(user, name, Currency.euro);
 
         return this.fs.collection('houses')
             .add(houseConverter.toFirestore(house))
@@ -129,11 +130,7 @@ export class HouseService {
 
                 return docRef.id;
             })
-            .then((houseId: string) => {
-                return this.renewInviteLink(houseId, name).then(() => {
-                    return houseId;
-                });
-            })
+            .then((houseId: string) => this.renewInviteLink(houseId, name).then(() => houseId))
             .catch(err => {
                 this.logger.error({message: 'createHouse', error: err});
 
@@ -158,7 +155,7 @@ export class HouseService {
             .subscribe((account: UserAccount) => {
                 if (account) {
                     this.analyticsService.logJoinHouse(user.uid, houseInvite.houseId);
-                    this.pushService.subscribeTopic(PushTopic.HOUSE_ALL, {houseId: houseInvite.houseId, accountId: account.id});
+                    this.pushService.subscribeTopic(PushTopic.houseAll, {houseId: houseInvite.houseId, accountId: account.id});
                     this.eventsService.publish('house:joined');
                 }
             });
@@ -180,7 +177,7 @@ export class HouseService {
                 if (account) {
                     this.analyticsService.logLeaveHouse(userId, houseId);
                     this.eventsService.publish('house:left', true);
-                    this.pushService.unsubscribeTopic(PushTopic.HOUSE_ALL, {houseId, accountId: account.id});
+                    this.pushService.unsubscribeTopic(PushTopic.houseAll, {houseId, accountId: account.id});
                 }
             });
     }

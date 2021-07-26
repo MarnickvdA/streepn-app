@@ -11,13 +11,13 @@ import {Subscription} from 'rxjs';
     styleUrls: ['./user-account-item.component.scss'],
 })
 export class UserAccountItemComponent implements OnInit, OnDestroy {
-
-    ownsAccount: boolean;
     @Input() account: UserAccount;
     @Input() canEditAccount = false;
     @Input() navLink?: string;
 
+    ownsAccount: boolean;
     house?: House;
+
     private houseSub: Subscription;
 
     constructor(private translate: TranslateService,

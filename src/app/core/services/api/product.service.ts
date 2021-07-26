@@ -16,9 +16,7 @@ export class ProductService {
 
         house.products.push(product);
 
-        const products = house.products.map(p => {
-            return productConverter.toFirestore(p);
-        });
+        const products = house.products.map(p => productConverter.toFirestore(p));
 
         return this.fs.collection('houses').doc(house.id).set({
             products,
@@ -42,9 +40,7 @@ export class ProductService {
             }
         });
 
-        const products = house.products.map(p => {
-            return productConverter.toFirestore(p);
-        });
+        const products = house.products.map(p => productConverter.toFirestore(p));
 
         return this.fs.collection('houses').doc(house.id).set({
             products,
@@ -54,9 +50,7 @@ export class ProductService {
     removeProduct(house: House, product: Product) {
         house.products = house.products.filter(obj => obj.id !== product.id);
 
-        const products = house.products.map(p => {
-            return productConverter.toFirestore(p);
-        });
+        const products = house.products.map(p => productConverter.toFirestore(p));
 
         return this.fs.collection('houses').doc(house.id).set({
             products,

@@ -21,14 +21,14 @@ export class SettleComponent implements OnInit, OnDestroy {
     house$: Observable<House>;
     house?: House;
     payers: {
-        [id: string]: boolean
+        [id: string]: boolean;
     } = {};
     payerAmount: {
-        [id: string]: number
+        [id: string]: number;
     } = {};
     private houseSub: Subscription;
     private settlement: {
-        [id: string]: AccountPayout
+        [id: string]: AccountPayout;
     };
 
     constructor(private modalController: ModalController,

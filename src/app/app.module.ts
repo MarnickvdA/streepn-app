@@ -26,9 +26,7 @@ export class SentryErrorHandler implements ErrorHandler {
     }
 }
 
-export function createTranslateLoader(http: HttpClient) {
-    return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
-}
+export const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoader(http, 'assets/i18n/', '.json');
 
 @NgModule({
     declarations: [

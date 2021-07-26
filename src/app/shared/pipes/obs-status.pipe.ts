@@ -16,13 +16,11 @@ const defaultError = 'Something went wrong';
 export class ObsStatusPipe implements PipeTransform {
     transform<T = any>(val: Observable<T>): Observable<ObsWithStatusResult<T>> {
         return val?.pipe(
-            map((value: any) => {
-                return {
-                    loading: value.type === 'start',
-                    error: value.type === 'error' ? defaultError : '',
-                    value: value.type ? value.value : value,
-                };
-            }),
+            map((value: any) => ({
+                loading: value.type === 'start',
+                error: value.type === 'error' ? defaultError : '',
+                value: value.type ? value.value : value,
+            })),
             startWith({loading: true}),
             catchError(error => of({loading: false, error: typeof error === 'string' ? error : defaultError}))
         );

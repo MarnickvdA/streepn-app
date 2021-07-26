@@ -29,9 +29,7 @@ export class StockService {
             stock
         }).pipe(
             trace('addStock'),
-            map(result => {
-                return newStock(result.id, result);
-            }));
+            map(result => newStock(result.id, result)));
     }
 
     removeStockItem(house: House, productId: string, amount: number) {
@@ -46,9 +44,7 @@ export class StockService {
             stock,
         }).pipe(
             trace('removeStock'),
-            map(result => {
-                return newStock(result.id, result);
-            }));
+            map(result => newStock(result.id, result)));
     }
 
     editStockItem(house: House, original: Stock, productId: string, cost: number, amount: number,
@@ -73,8 +69,6 @@ export class StockService {
             .ref
             .withConverter(stockConverter)
             .get()
-            .then((stock) => {
-                return stock.data();
-            });
+            .then((stock) => stock.data());
     }
 }

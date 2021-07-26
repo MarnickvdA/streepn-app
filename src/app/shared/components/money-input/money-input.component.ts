@@ -9,16 +9,15 @@ import {getMoneyString} from '@core/utils/formatting-utils';
 })
 export class MoneyInputComponent implements OnInit {
 
-    private static BACKSPACE_KEY = 'Backspace';
-    private static BACKSPACE_INPUT_TYPE = 'deleteContentBackward';
     @Input() precision: number;
     @Input() amount: string;
     @Input() icon = 'pricetag-outline';
     @Input() padding: 'none' | undefined = undefined;
     @Input() tabIndex = -1;
     @Output() amountEntered = new EventEmitter<number>();
-    amountString: string;
     @ViewChild('dummyFacade', {static: false}) private dummyFacade: IonInput;
+
+    amountString: string;
 
     constructor() {
     }
@@ -37,7 +36,7 @@ export class MoneyInputComponent implements OnInit {
 
     handleKeyUp(event: KeyboardEvent) {
         // this handles keyboard input for backspace
-        if (event.key === MoneyInputComponent.BACKSPACE_KEY) {
+        if (event.key === 'Backspace') {
             this.delDigit();
         }
     }
@@ -47,7 +46,7 @@ export class MoneyInputComponent implements OnInit {
         // check if digit
         if (event.detail.data && !isNaN(event.detail.data)) {
             this.addDigit(event.detail.data);
-        } else if (event.detail.inputType === MoneyInputComponent.BACKSPACE_INPUT_TYPE) {
+        } else if (event.detail.inputType === 'deleteContentBackward') {
             // this handles numpad input for delete/backspace
             this.delDigit();
         }

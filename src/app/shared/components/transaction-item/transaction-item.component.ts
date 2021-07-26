@@ -11,10 +11,12 @@ import {AuthService, HouseService} from '@core/services';
     styleUrls: ['./transaction-item.component.scss'],
 })
 export class TransactionItemComponent implements OnInit, OnDestroy {
+    @Input() transaction: Transaction;
+
     house?: House;
     account?: UserAccount;
     currentAccount?: UserAccount;
-    @Input() transaction: Transaction;
+
     private houseSub: Subscription;
     private house$: Observable<House>;
 

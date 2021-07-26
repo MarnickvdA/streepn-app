@@ -13,14 +13,14 @@ export class UserAccount extends Account {
 
     constructor(id: string, userId: string, createdAt: Timestamp, name: string, roles: UserRole[],
                 photoUrl: string, balance: Balance, settledAt?: Timestamp) {
-        super(id, createdAt, name, AccountType.USER, balance, settledAt);
+        super(id, createdAt, name, AccountType.user, balance, settledAt);
         this.userId = userId;
         this.roles = roles || [];
         this.photoUrl = photoUrl;
     }
 
     get isAdmin(): boolean {
-        return this.roles.includes(UserRole.ADMIN);
+        return this.roles.includes(UserRole.admin);
     }
 
     static new(id: string, userId: string, name: string, roles: UserRole[], photoUrl: string) {
@@ -33,7 +33,7 @@ export class UserAccount extends Account {
 }
 
 export const userAccountConverter = {
-    toFirestore(userAccount: UserAccount) {
+    toFirestore: (userAccount: UserAccount) => {
         const accountObject = accountConverter.toFirestore(userAccount);
 
         const userAccountObject = {
@@ -44,14 +44,13 @@ export const userAccountConverter = {
 
         return {...accountObject, ...userAccountObject};
     },
-    newAccount(data: { [key: string]: any }): UserAccount {
-        return new UserAccount(data.id, data.userId, data.createdAt, data.name, data.roles, data.photoUrl, data.balance, data.settledAt);
-    }
+    newAccount: (data: { [key: string]: any }): UserAccount => new UserAccount(data.id, data.userId, data.createdAt, data.name, data.roles,
+        data.photoUrl, data.balance, data.settledAt)
 };
 
 /**
  * Enumeration of supported user roles
  */
 export enum UserRole {
-    ADMIN = 'ADMIN'
+    admin = 'admin'
 }

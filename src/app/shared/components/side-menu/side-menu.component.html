@@ -27,7 +27,9 @@
                 <ion-item *ngFor="let house of houses" button routerDirection="root"
                           routerLink="/house/{{house.id}}/transactions">
                     <ion-label>{{house.name}}</ion-label>
-                    <fa-icon (click)="toggleFavorite($event, house.id)" [icon]="this.favorite === house.id ? ['fas', 'star'] : ['fal', 'star']" [ngClass]="this.favorite === house.id ? 'warning' : 'medium half-opacity'"
+                    <fa-icon (click)="toggleFavorite($event, house.id)"
+                             [icon]="this.favorite === house.id ? ['fas', 'star'] : ['fal', 'star']"
+                             [ngClass]="this.favorite === house.id ? 'warning' : 'medium half-opacity'"
                              class="primary" fixedWidth
                              slot="end"></fa-icon>
                 </ion-item>
