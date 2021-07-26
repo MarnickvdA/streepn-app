@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {SettlementDetailComponent} from './settlement-detail.component';
@@ -7,7 +7,7 @@ describe('SettlementDetailComponent', () => {
     let component: SettlementDetailComponent;
     let fixture: ComponentFixture<SettlementDetailComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [SettlementDetailComponent],
             imports: [IonicModule.forRoot()]

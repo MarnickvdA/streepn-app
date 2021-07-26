@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {NewSharedAccountComponent} from './new-shared-account.component';
@@ -7,7 +7,7 @@ describe('NewSharedAccountComponent', () => {
     let component: NewSharedAccountComponent;
     let fixture: ComponentFixture<NewSharedAccountComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [NewSharedAccountComponent],
             imports: [IonicModule.forRoot()]

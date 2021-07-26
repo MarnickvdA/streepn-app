@@ -3,11 +3,13 @@
 	"ignorePatterns": [
 		"projects/**/*",
 		"scripts/**/*",
+		"functions/**/*",
 		"capacitor.config.ts"
 	],
 	"overrides": [
 		{
 			"files": [
+				"*.spec.ts",
 				"*.ts"
 			],
 			"parserOptions": {

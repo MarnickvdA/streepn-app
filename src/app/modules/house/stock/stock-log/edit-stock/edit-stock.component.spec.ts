@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {EditStockComponent} from './edit-stock.component';
@@ -7,7 +7,7 @@ describe('EditStockComponent', () => {
     let component: EditStockComponent;
     let fixture: ComponentFixture<EditStockComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [EditStockComponent],
             imports: [IonicModule.forRoot()]
