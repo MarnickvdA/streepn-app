@@ -179,18 +179,16 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    private checkForHouseInvite() {
-        this.storage.get('houseInvite')
-            .then((invite: string) => {
-                return this.storage.get('hasOnboarded')
-                    .then((hasOnboarded: boolean) => {
-                        if (hasOnboarded) {
-                            this.promptHouseInvite(invite);
-                        }
-                    });
-            })
-            .catch(() => {
-            });
+    private checkForHouseInvite(): void {
+        Promise.all([
+            this.storage.get('houseInvite'),
+            this.storage.get('hasOnboarded')
+        ]).then(([invite, hasOnboarded]) => {
+            if (invite && hasOnboarded) {
+                this.promptHouseInvite(invite as string);
+            }
+        }).catch(() => {
+        });
     }
 
     private promptHouseInvite(houseInvite: string) {

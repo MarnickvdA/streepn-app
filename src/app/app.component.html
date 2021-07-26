@@ -1,7 +1,7 @@
 <ion-app>
     <ion-split-pane [disabled]="hideSideMenu" contentId="main-content">
-        <ion-menu (ionDidClose)="menuCtrl.swipeGesture(false)"
-                  (ionDidOpen)="menuCtrl.swipeGesture(true)"
+        <ion-menu (ionDidClose)="toggleMenu(false)"
+                  (ionDidOpen)="toggleMenu(true)"
                   contentId="main-content" swipeGesture="false" type="push">
             <app-side-menu></app-side-menu>
         </ion-menu>

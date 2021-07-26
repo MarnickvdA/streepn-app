@@ -1,13 +1,48 @@
 @font-face {
   font-family: 'Manrope';
-  src: url('../assets/fonts/Manrope-VariableFont_wght.ttf') format('truetype-variations');
+  src: url('../assets/fonts/Manrope.ttf') format('truetype-variations');
   font-weight: 125 999;
   font-stretch: 75% 125%;
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/fonts/poppins/Poppins-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/fonts/poppins/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/fonts/poppins/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/fonts/poppins/Poppins-Bold.ttf') format('truetype');
+  font-weight: 600 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/fonts/poppins/Poppins-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
 :root {
-  --ion-font-family: Manrope, sans-serif;
+  --ion-font-family: Poppins, sans-serif;
 }
 
 ion-content {
@@ -15,11 +50,10 @@ ion-content {
 
   ion-list-header {
     ion-label {
-      font-weight: 999;
+      font-weight: 800;
     }
   }
 }
-
 
 .red-text {
   color: var(--ion-color-danger);

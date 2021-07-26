@@ -7,45 +7,10 @@ import {EventsService} from '@core/services/events.service';
 import {PushService} from '@core/services/firebase/push.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {
-    faAdjust,
-    faAt,
-    faBars,
-    faBell,
-    faBoxFull,
-    faCalculatorAlt,
-    faCheckCircle,
-    faChevronLeft,
-    faClock,
-    faCogs,
-    faDollyFlatbedAlt,
-    faEdit,
-    faGifts,
-    faHistory,
-    faHouse,
-    faInfoCircle,
-    faInventory,
-    faList,
-    faMinusCircle,
-    faPlus as fadPlus,
-    faPlusCircle,
-    faReceipt,
-    faSack,
-    faShareAltSquare,
-    faSignOut,
-    faTag,
-    faTicket,
-    faTimes,
-    faTimesCircle,
-    faTrashAlt,
-    faUser,
-    faUserCog,
-    faUsersCrown,
-    faWallet
-} from '@fortawesome/pro-duotone-svg-icons';
-import {faPlus, faShoppingCart} from '@fortawesome/pro-regular-svg-icons';
-import {faStar} from '@fortawesome/pro-light-svg-icons';
-import {faStar as faStarSolid} from '@fortawesome/pro-solid-svg-icons';
+import * as DuoIcons from '@fortawesome/pro-duotone-svg-icons';
+import * as RegularIcons from '@fortawesome/pro-regular-svg-icons';
+import * as LightIcons from '@fortawesome/pro-light-svg-icons';
+import * as SolidIcons from '@fortawesome/pro-solid-svg-icons';
 import {App, AppState} from '@capacitor/app';
 import {SplashScreen} from '@capacitor/splash-screen';
 import {StatusBar, Style} from '@capacitor/status-bar';
@@ -102,20 +67,9 @@ export class AppComponent {
         });
 
         this.platform.ready().then(() => {
-            this.translate.setDefaultLang('en_GB');
-            this.translate.use('nl_NL');
-
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-
-            // Listen for changes to the prefers-color-scheme media query
-            prefersDark.addEventListener('change', (mediaQuery: MediaQueryListEvent) => this.toggleDarkTheme(mediaQuery.matches));
-            this.storage.get('darkMode')
-                .then((darkMode: boolean) => {
-                    this.toggleDarkTheme(darkMode);
-                })
-                .catch(() => {
-                    this.toggleDarkTheme(prefersDark.matches);
-                });
+            this.initTranslations();
+            this.initDarkMode();
+            this.pushService.removeNotifications();
 
             App.addListener('appStateChange', (state: AppState) => {
                 // state.isActive contains the active state
@@ -127,24 +81,38 @@ export class AppComponent {
                 }
             });
 
-            this.pushService.removeNotifications();
-
-            // if (Capacitor.isPluginAvailable('FirebaseRemoteConfig')) {
-            //     FirebaseRemoteConfig.initialize({
-            //         minimumFetchInterval: (60 * 12),
-            //     });
-            //     FirebaseRemoteConfig.fetchAndActivate();
-            // }
-
-            SplashScreen.hide();
-
             this.storage.get('favorite')
                 .then((favorite: string) => {
                     this.navController.navigateRoot('house/' + favorite + '/home');
                 })
                 .catch(() => {
                 });
+
+            SplashScreen.hide();
         });
+    }
+
+    private initTranslations() {
+        this.translate.setDefaultLang('en_GB');
+        this.translate.use('nl_NL');
+    }
+
+    private initDarkMode() {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+        // Listen for changes to the prefers-color-scheme media query
+        prefersDark.addEventListener('change', (mediaQuery: MediaQueryListEvent) => this.toggleDarkTheme(mediaQuery.matches));
+        this.storage.get('darkMode')
+            .then((darkMode: boolean) => {
+                this.toggleDarkTheme(darkMode);
+            })
+            .catch(() => {
+                this.toggleDarkTheme(prefersDark.matches);
+            });
+    }
+
+    toggleMenu(isEnabled: boolean) {
+        this.menuCtrl.swipeGesture(isEnabled);
     }
 
     private toggleDarkTheme(isDarkMode: boolean) {
@@ -168,46 +136,46 @@ export class AppComponent {
 
     private loadIcons() {
         this.iconLibrary.addIcons(
-            faBars,
-            faChevronLeft,
-            faTimes,
-            faTimesCircle,
-            faPlus,
-            faMinusCircle,
-            faInfoCircle,
-            faUser,
-            faBell,
-            faUsersCrown,
-            faWallet,
-            faPlusCircle,
-            faMinusCircle,
-            faSignOut,
-            faCalculatorAlt,
-            faClock,
-            faTicket,
-            faHouse,
-            faReceipt,
-            faInventory,
-            faCogs,
-            faShoppingCart,
-            faShareAltSquare,
-            faCheckCircle,
-            faEdit,
-            faHistory,
-            faTag,
-            faTrashAlt,
-            faBoxFull,
-            faUser,
-            faAt,
-            faList,
-            faUserCog,
-            faAdjust,
-            faStar,
-            faStarSolid,
-            faDollyFlatbedAlt,
-            fadPlus,
-            faGifts,
-            faSack,
+            DuoIcons.faBars,
+            DuoIcons.faChevronLeft,
+            DuoIcons.faTimes,
+            DuoIcons.faTimesCircle,
+            RegularIcons.faPlus,
+            DuoIcons.faMinusCircle,
+            DuoIcons.faInfoCircle,
+            DuoIcons.faUser,
+            DuoIcons.faBell,
+            DuoIcons.faUsersCrown,
+            DuoIcons.faWallet,
+            DuoIcons.faPlusCircle,
+            DuoIcons.faMinusCircle,
+            DuoIcons.faSignOut,
+            DuoIcons.faCalculatorAlt,
+            DuoIcons.faClock,
+            DuoIcons.faTicket,
+            DuoIcons.faHouse,
+            DuoIcons.faReceipt,
+            DuoIcons.faInventory,
+            DuoIcons.faCogs,
+            RegularIcons.faShoppingCart,
+            DuoIcons.faShareAltSquare,
+            DuoIcons.faCheckCircle,
+            DuoIcons.faEdit,
+            DuoIcons.faHistory,
+            DuoIcons.faTag,
+            DuoIcons.faTrashAlt,
+            DuoIcons.faBoxFull,
+            DuoIcons.faUser,
+            DuoIcons.faAt,
+            DuoIcons.faList,
+            DuoIcons.faUserCog,
+            DuoIcons.faAdjust,
+            LightIcons.faStar,
+            SolidIcons.faStar,
+            DuoIcons.faDollyFlatbedAlt,
+            DuoIcons.faPlus,
+            DuoIcons.faGifts,
+            DuoIcons.faSack,
         );
     }
 }
