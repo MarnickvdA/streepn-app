@@ -1,6 +1,7 @@
 {
   "appName": "Streepn",
   "version": "Versie: {{version}}",
+  "author": "Marnick van der Arend",
   "actions": {
     "yes": "Ja",
     "no": "Nee",
@@ -63,8 +64,7 @@
     "house-not-retrieved": "Huis kon niet worden opgehaald",
     "house-invite-expired": "Huislink verlopen",
     "house-creation-error": "Er is een fout opgetreden bij het aanmaken van het huis. Probeer het opnieuw.",
-    "functions": {
-    }
+    "functions": {}
   },
   "login": {
     "name": "Naam",
