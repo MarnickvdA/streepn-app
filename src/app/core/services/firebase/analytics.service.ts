@@ -13,7 +13,7 @@ export class AnalyticsService {
 
     constructor(private events: EventsService) {
         this.events.subscribe('auth:logout', (data) => {
-            this.logUserLogout(data.userId);
+            this.logUserLogout(data?.userId || 'unknown_user_id');
             this.setCurrentUser(undefined);
         });
     }
