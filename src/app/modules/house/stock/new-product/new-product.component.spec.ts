@@ -1,7 +1,13 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {NewProductComponent} from './new-product.component';
+import {SharedModule} from '@shared/shared.module';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from '@env/environment.test';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {Observable} from 'rxjs';
+import {TranslationModule} from '../../../../translation.module';
 
 describe('NewProductComponent', () => {
     let component: NewProductComponent;
@@ -10,11 +16,14 @@ describe('NewProductComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [NewProductComponent],
-            imports: [IonicModule.forRoot()]
+            imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(),
+                AngularFireModule.initializeApp(environment.firebaseConfig),],
+            providers: [AngularFirestore]
         }).compileComponents();
 
         fixture = TestBed.createComponent(NewProductComponent);
         component = fixture.componentInstance;
+        component.house$ = new Observable();
         fixture.detectChanges();
     }));
 

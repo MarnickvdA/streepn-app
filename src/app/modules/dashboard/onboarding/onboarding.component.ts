@@ -42,7 +42,7 @@ export class OnboardingComponent implements OnInit {
     }
 
     ngOnInit() {
-        const n = this.authService.currentUser.displayName;
+        const n = this.authService.currentUser?.displayName;
         if (n && n.length > 1) {
             this.name = ' ' + this.authService.currentUser.displayName;
         }

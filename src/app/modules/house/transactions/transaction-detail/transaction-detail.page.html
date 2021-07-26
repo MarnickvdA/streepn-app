@@ -2,7 +2,7 @@
     <ion-toolbar>
         <ion-buttons slot="start">
             <ion-button *ngIf="!editing" fill="none" mode="ios" routerDirection="back"
-                        routerLink="/house/{{house.id}}/transactions">
+                        routerLink="/house/{{house?.id}}/transactions">
                 <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" fixedWidth
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>

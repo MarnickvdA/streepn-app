@@ -16,6 +16,7 @@ export class StockPage implements OnInit, OnDestroy {
     house: House;
     stockProducts: Product[];
     isAdmin: boolean;
+
     private house$: Observable<House>;
     private houseSub: Subscription;
 

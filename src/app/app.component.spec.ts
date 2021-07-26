@@ -3,7 +3,13 @@ import {TestBed, waitForAsync} from '@angular/core/testing';
 
 import {Platform} from '@ionic/angular';
 import {AppComponent} from './app.component';
-import {TranslateModule} from '@ngx-translate/core';
+import {RouterTestingModule} from '@angular/router/testing';
+import {navControllerMock} from '@core/mocks/nav-controller.mock';
+import {TranslationModule} from './translation.module';
+import {SharedModule} from '@shared/shared.module';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from '@env/environment.test';
+import {AngularFireAuth} from '@angular/fire/auth';
 
 describe('AppComponent', () => {
 
@@ -17,11 +23,16 @@ describe('AppComponent', () => {
         TestBed.configureTestingModule({
             declarations: [AppComponent],
             imports: [
-                TranslateModule.forRoot()
+                RouterTestingModule,
+                TranslationModule.forRoot(),
+                SharedModule.forRoot(),
+                AngularFireModule.initializeApp(environment.firebaseConfig)
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 {provide: Platform, useValue: platformSpy},
+                navControllerMock,
+                AngularFireAuth
             ],
         }).compileComponents();
     }));

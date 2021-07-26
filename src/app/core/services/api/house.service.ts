@@ -31,6 +31,7 @@ export class HouseService {
                 private analyticsService: AnalyticsService,
                 private pushService: PushService,
                 private translate: TranslateService) {
+        this.houses$ = new Observable<House[]>();
     }
 
     observeHouses(userId: string): Observable<House[]> {

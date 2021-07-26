@@ -6,10 +6,6 @@ import {EventsService} from '@core/services/events.service';
 import {PushService} from '@core/services/firebase/push.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import * as DuoIcons from '@fortawesome/pro-duotone-svg-icons';
-import * as RegularIcons from '@fortawesome/pro-regular-svg-icons';
-import * as LightIcons from '@fortawesome/pro-light-svg-icons';
-import * as SolidIcons from '@fortawesome/pro-solid-svg-icons';
 import {App, AppState} from '@capacitor/app';
 import {SplashScreen} from '@capacitor/splash-screen';
 import {StatusBar, Style} from '@capacitor/status-bar';
@@ -39,8 +35,6 @@ export class AppComponent {
         Storage.migrate();
 
         this.initializeApp();
-
-        this.loadIcons();
 
         this.router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
@@ -131,50 +125,5 @@ export class AppComponent {
                 }
             }
         }
-    }
-
-    private loadIcons() {
-        this.iconLibrary.addIcons(
-            DuoIcons.faBars,
-            DuoIcons.faChevronLeft,
-            DuoIcons.faTimes,
-            DuoIcons.faTimesCircle,
-            RegularIcons.faPlus,
-            DuoIcons.faMinusCircle,
-            DuoIcons.faInfoCircle,
-            DuoIcons.faUser,
-            DuoIcons.faBell,
-            DuoIcons.faUsersCrown,
-            DuoIcons.faWallet,
-            DuoIcons.faPlusCircle,
-            DuoIcons.faMinusCircle,
-            DuoIcons.faSignOut,
-            DuoIcons.faCalculatorAlt,
-            DuoIcons.faClock,
-            DuoIcons.faTicket,
-            DuoIcons.faHouse,
-            DuoIcons.faReceipt,
-            DuoIcons.faInventory,
-            DuoIcons.faCogs,
-            RegularIcons.faShoppingCart,
-            DuoIcons.faShareAltSquare,
-            DuoIcons.faCheckCircle,
-            DuoIcons.faEdit,
-            DuoIcons.faHistory,
-            DuoIcons.faTag,
-            DuoIcons.faTrashAlt,
-            DuoIcons.faBoxFull,
-            DuoIcons.faUser,
-            DuoIcons.faAt,
-            DuoIcons.faList,
-            DuoIcons.faUserCog,
-            DuoIcons.faAdjust,
-            LightIcons.faStar,
-            SolidIcons.faStar,
-            DuoIcons.faDollyFlatbedAlt,
-            DuoIcons.faPlus,
-            DuoIcons.faGifts,
-            DuoIcons.faSack,
-        );
     }
 }

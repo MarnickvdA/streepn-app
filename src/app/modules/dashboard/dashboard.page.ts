@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core';
-import {AlertController, IonRouterOutlet, LoadingController, ModalController, NavController} from '@ionic/angular';
+import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
 import firebase from 'firebase/app';
 import {House, HouseInvite, UserAccount} from '@core/models';
@@ -23,6 +23,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     loading: boolean;
     houseAccounts: { [houseId: string]: UserAccount } = {};
     iOS: boolean;
+
     private houses$: Observable<House[]>;
     private housesSub: Subscription;
     private userSub: Subscription;
@@ -41,8 +42,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 private loadingController: LoadingController,
                 private modalController: ModalController,
                 private storage: StorageService,
-                private uiService: UIService,
-                private routerOutlet: IonRouterOutlet) {
+                private uiService: UIService) {
         this.iOS = Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios';
         this.loading = true;
     }
@@ -155,7 +155,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     openInfo() {
         InfoModalComponent.presentModal(
             this.modalController,
-            this.routerOutlet,
             'information.dashboard.title',
             'information.dashboard.content'
         );

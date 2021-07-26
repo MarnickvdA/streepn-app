@@ -12,7 +12,8 @@ import {AuthService, EventsService} from '@core/services';
 export class RegisterPage implements OnInit, OnDestroy {
     registerForm: FormGroup;
     isSubmitted: boolean;
-    private registerHandler;
+
+    private readonly registerHandler;
 
     constructor(private authService: AuthService,
                 private navController: NavController,

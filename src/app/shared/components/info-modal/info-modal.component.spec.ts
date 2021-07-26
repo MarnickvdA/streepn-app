@@ -1,7 +1,10 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {InfoModalComponent} from './info-modal.component';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {TranslationModule} from '../../../translation.module';
+import {HttpClientModule} from '@angular/common/http';
 
 describe('InfoModalComponent', () => {
     let component: InfoModalComponent;
@@ -10,7 +13,8 @@ describe('InfoModalComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [InfoModalComponent],
-            imports: [IonicModule.forRoot()]
+            imports: [IonicModule.forRoot(), TranslationModule.forRoot(), HttpClientModule],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA]
         }).compileComponents();
 
         fixture = TestBed.createComponent(InfoModalComponent);

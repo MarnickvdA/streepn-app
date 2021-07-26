@@ -20,10 +20,11 @@ export class NewHouseComponent implements OnInit {
     name: string;
     house: House;
     sharedHouse: boolean;
+
     private readonly logger = LoggerService.getLogger(NewHouseComponent.name);
 
     constructor(private formBuilder: FormBuilder,
-                private houseService: HouseService,
+                public houseService: HouseService,
                 private uiService: UIService,
                 private translate: TranslateService,
                 private alertController: AlertController,

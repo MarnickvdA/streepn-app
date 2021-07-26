@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {IonRouterOutlet, ModalController} from '@ionic/angular';
+import {ModalController} from '@ionic/angular';
 
 @Component({
     selector: 'app-info-modal',
@@ -17,7 +17,7 @@ export class InfoModalComponent implements OnInit {
     constructor(private modalController: ModalController) {
     }
 
-    static async presentModal(modalController: ModalController, routerOutlet: IonRouterOutlet, titleId: string, contentId: string) {
+    static async presentModal(modalController: ModalController, titleId: string, contentId: string) {
         const modal = await modalController.create({
             component: InfoModalComponent,
             componentProps: {
@@ -25,7 +25,6 @@ export class InfoModalComponent implements OnInit {
                 contentId,
             },
             swipeToClose: true,
-            presentingElement: routerOutlet.nativeEl
         });
 
         return await modal.present();

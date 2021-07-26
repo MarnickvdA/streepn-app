@@ -21,6 +21,7 @@ import {MomentPipe} from './pipes/moment.pipe';
 import {DatePipe} from './pipes/date.pipe';
 import {CapitalizePipe} from './pipes/capitalize.pipe';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
+import {IconsModule} from '@shared/icons.module';
 
 export const components = [
     MoneyInputComponent,
@@ -57,6 +58,7 @@ export const pipes = [
         IonicModule,
         RouterModule,
         FontAwesomeModule,
+        IconsModule,
     ],
     providers: [
         CurrencyPipe
@@ -68,6 +70,7 @@ export const pipes = [
         ReactiveFormsModule,
         HttpClientModule,
         FontAwesomeModule,
+        IconsModule,
         ...components,
         ...pipes,
     ]

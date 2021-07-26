@@ -32,8 +32,10 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
             .subscribe((house) => {
                 this.house = house;
 
-                this.currentAccount = house.getUserAccountByUserId(this.authService.currentUser.uid);
-                this.account = house.getUserAccountById(this.transaction.createdBy);
+                if (house) {
+                    this.currentAccount = house.getUserAccountByUserId(this.authService.currentUser.uid);
+                    this.account = house.getUserAccountById(this.transaction.createdBy);
+                }
             });
     }
 

@@ -1,7 +1,8 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {ProductStockItemComponent} from './product-stock-item.component';
+import {Product} from '@core/models';
 
 describe('SupplyItemComponent', () => {
     let component: ProductStockItemComponent;
@@ -15,6 +16,7 @@ describe('SupplyItemComponent', () => {
 
         fixture = TestBed.createComponent(ProductStockItemComponent);
         component = fixture.componentInstance;
+        component.product = Product.new('Beer', 50);
         fixture.detectChanges();
     }));
 

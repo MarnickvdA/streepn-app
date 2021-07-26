@@ -9,11 +9,11 @@
         <h3 *ngFor="let item of transaction.items">
             {{'house.transaction.header' | translate:{
             amount: item.amount,
-            productName: house.getProductById(item.productId)?.name,
-            accountName: house.getAccountById(item.accountId)?.name
+            productName: house?.getProductById(item.productId)?.name,
+            accountName: house?.getAccountById(item.accountId)?.name
         } }}
         </h3>
-        <div *ngIf="transaction.priceByAccountId(currentAccount.id); let price" class="transaction-bill">
+        <div *ngIf="transaction.priceByAccountId(currentAccount?.id); let price" class="transaction-bill">
             <fa-duotone-icon [icon]="['fad', 'minus-circle']" class="danger small no-width" fixedWidth
                              slot="start"></fa-duotone-icon>
             <span>{{price | money}}</span>
@@ -21,7 +21,7 @@
         <p class="small">
             {{'house.transaction.timeline' | translate:{
             date: transaction.createdAt | moment | capitalize,
-            accountName: house.getUserAccountById(transaction.createdBy)?.name
+            accountName: house?.getUserAccountById(transaction.createdBy)?.name
         } }}
         </p>
     </ion-label>

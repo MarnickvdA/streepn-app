@@ -3,7 +3,7 @@ import {Account, House, Product} from '@core/models';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {catchError} from 'rxjs/operators';
 import {EMPTY, Observable, Subscription} from 'rxjs';
-import {LoggerService, TransactionService, TransactionSet} from '@core/services';
+import {TransactionService, TransactionSet} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {Capacitor} from '@capacitor/core';
 import {Haptics, ImpactStyle} from '@capacitor/haptics';
@@ -15,12 +15,13 @@ import {Haptics, ImpactStyle} from '@capacitor/haptics';
 })
 export class AddTransactionComponent implements OnInit {
     @Input() house$: Observable<House>;
+
     transactions: TransactionSet = {};
     house: House;
     currentProduct: Product;
     transactionCount = 0;
+
     private houseSub: Subscription;
-    private readonly logger = LoggerService.getLogger(AddTransactionComponent.name);
 
     constructor(private modalController: ModalController,
                 private transactionService: TransactionService,

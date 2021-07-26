@@ -5,14 +5,13 @@ import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HttpClient} from '@angular/common/http';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateModule} from '@ngx-translate/core';
 import {CoreModule} from '@core/core.module';
 import {SharedModule} from '@shared/shared.module';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {RouteReuseStrategy} from '@angular/router';
 import {LoggerService} from '@core/services';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {TranslationModule} from './translation.module';
 
 @Injectable({
     providedIn: 'root'
@@ -25,8 +24,6 @@ export class SentryErrorHandler implements ErrorHandler {
         LoggerService.handleError(error);
     }
 }
-
-export const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoader(http, 'assets/i18n/', '.json');
 
 @NgModule({
     declarations: [
@@ -41,13 +38,7 @@ export const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoad
             backButtonIcon: 'arrow-back-outline',
             backButtonText: ''
         }),
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: (createTranslateLoader),
-                deps: [HttpClient]
-            }
-        }),
+        TranslationModule.forRoot(),
         AppRoutingModule,
         FontAwesomeModule,
     ],

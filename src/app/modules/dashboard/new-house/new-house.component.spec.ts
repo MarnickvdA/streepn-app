@@ -1,7 +1,13 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {NewHouseComponent} from './new-house.component';
+import {navControllerMock} from '@core/mocks/nav-controller.mock';
+import {SharedModule} from '@shared/shared.module';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from '@env/environment.test';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {TranslationModule} from '../../../translation.module';
 
 describe('NewHouseComponent', () => {
     let component: NewHouseComponent;
@@ -10,7 +16,12 @@ describe('NewHouseComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [NewHouseComponent],
-            imports: [IonicModule.forRoot()]
+            imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(),
+                AngularFireModule.initializeApp(environment.firebaseConfig)],
+            providers: [
+                navControllerMock,
+                AngularFirestore
+            ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(NewHouseComponent);

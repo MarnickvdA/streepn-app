@@ -15,13 +15,14 @@ import {getMoneyString} from '@core/utils/formatting-utils';
     styleUrls: ['./transaction-detail.page.scss'],
 })
 export class TransactionDetailPage implements OnInit, OnDestroy {
-    editing: boolean;
+    editing = false;
     canEdit = false;
     transactionId?: string;
     house?: House;
     transaction?: Transaction;
     itemsAmount: number[] = [];
     interactionCount = 0;
+
     private readonly logger = LoggerService.getLogger(TransactionDetailPage.name);
     private houseSub: Subscription;
     private transactionSub: Subscription;

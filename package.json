@@ -8,7 +8,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
+    "test": "ng test --watch=false --browsers=ChromeHeadless --code-coverage && open -a \"Google Chrome\" coverage/ngv/index.html",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "ios": "ionic capacitor run ios --livereload-url=http://localhost:4200",

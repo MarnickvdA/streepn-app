@@ -1,7 +1,13 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {NewSharedAccountComponent} from './new-shared-account.component';
+import {SharedModule} from '@shared/shared.module';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from '@env/environment.test';
+import {Observable} from 'rxjs';
+import {House} from '@core/models';
+import {TranslationModule} from '../../../../translation.module';
 
 describe('NewSharedAccountComponent', () => {
     let component: NewSharedAccountComponent;
@@ -10,11 +16,13 @@ describe('NewSharedAccountComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [NewSharedAccountComponent],
-            imports: [IonicModule.forRoot()]
+            imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(),
+                AngularFireModule.initializeApp(environment.firebaseConfig),]
         }).compileComponents();
 
         fixture = TestBed.createComponent(NewSharedAccountComponent);
         component = fixture.componentInstance;
+        component.house$ = new Observable<House>();
         fixture.detectChanges();
     }));
 

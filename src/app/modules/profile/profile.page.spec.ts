@@ -1,7 +1,13 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {ProfilePage} from './profile.page';
+import {SharedModule} from '@shared/shared.module';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from '@env/environment.test';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {navControllerMock} from '@core/mocks/nav-controller.mock';
+import {TranslationModule} from '../../translation.module';
 
 describe('ProfilePage', () => {
     let component: ProfilePage;
@@ -10,7 +16,9 @@ describe('ProfilePage', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [ProfilePage],
-            imports: [IonicModule.forRoot()]
+            imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(),
+                AngularFireModule.initializeApp(environment.firebaseConfig),],
+            providers: [AngularFireAuth, navControllerMock]
         }).compileComponents();
 
         fixture = TestBed.createComponent(ProfilePage);

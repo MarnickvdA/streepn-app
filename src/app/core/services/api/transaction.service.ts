@@ -3,7 +3,7 @@ import {AngularFireFunctions} from '@angular/fire/functions';
 import {House, Transaction, transactionConverter} from '../../models';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
-import {TransactionItem} from '../../models/transaction';
+import {TransactionItem} from '@core/models';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {AuthService} from '@core/services/firebase/auth.service';
 import {LoggerService} from '@core/services/logger.service';

@@ -63,7 +63,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.userSub.unsubscribe();
+        this.userSub?.unsubscribe();
     }
 
     onClick(event) {
