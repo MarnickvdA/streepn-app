@@ -4,6 +4,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {NavController} from '@ionic/angular';
 import {AuthService, HouseService} from '@core/services';
 import {Subscription} from 'rxjs';
+import {toHSL} from '@core/utils/string-to-hex';
 
 @Component({
     selector: 'app-user-account-item',
@@ -45,5 +46,9 @@ export class UserAccountItemComponent implements OnInit, OnDestroy {
                 }
             });
         }
+    }
+
+    accountIdToColor(id: string): string {
+        return toHSL(id);
     }
 }

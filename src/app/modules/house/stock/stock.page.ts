@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AddStockComponent} from '@modules/house/stock/add-stock/add-stock.component';
-import {IonRouterOutlet, ModalController} from '@ionic/angular';
+import {ModalController} from '@ionic/angular';
 import {AuthService, HouseService} from '@core/services';
 import {Observable, Subscription} from 'rxjs';
 import {House, Product} from '@core/models';
 import {NewProductComponent} from '@modules/house/stock/new-product/new-product.component';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
-import {dashboardPageGuide, stockPageGuide} from '@shared/app-guides';
+import {stockPageGuide} from '@shared/components/info-modal/info-guides';
 
 @Component({
     selector: 'app-house-stock',

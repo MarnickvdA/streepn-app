@@ -6,11 +6,9 @@ import {navControllerMock} from '@core/mocks/nav-controller.mock';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {TranslationModule} from '../../translation.module';
-import {HttpClientModule} from '@angular/common/http';
 import {SharedModule} from '@shared/shared.module';
 
 describe('RegisterPage', () => {

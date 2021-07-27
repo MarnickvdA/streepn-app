@@ -1,9 +1,6 @@
 <ion-item class="large"  (click)="openTransaction(transaction)"
           [disabled]="transaction.removed" button="{{!transaction.removed}}" detail="{{!transaction.removed}}">
-    <ion-avatar slot="start">
-        <img *ngIf="account?.photoUrl" alt="" src="{{account.photoUrl}}">
-        <img *ngIf="!account?.photoUrl" alt="" src="assets/svg/avatar.svg">
-    </ion-avatar>
+    <app-account-avatar slot="start" size="small" [account]="account"></app-account-avatar>
 
     <ion-label class="description" [ngStyle]="transaction.removed ? {'text-decoration': 'line-through'} : {}">
         <h3 *ngFor="let item of transaction.items">

@@ -17,10 +17,7 @@
     </ion-toolbar>
     <ion-toolbar *ngIf="currentAccount as account">
         <div (dblclick)="content.scrollToTop(500)" class="account-toolbar">
-            <ion-avatar>
-                <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
-                <img *ngIf="!account.photoUrl" alt="" src="assets/svg/avatar.svg">
-            </ion-avatar>
+            <app-account-avatar [account]="account" size="large"></app-account-avatar>
             <ion-label>
                 <h2>{{account.name}}</h2>
                 <p>{{'dashboard.balance' | translate}} <span

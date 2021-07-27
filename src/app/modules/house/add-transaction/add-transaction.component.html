@@ -39,10 +39,7 @@
         </ion-list-header>
 
         <ion-item *ngFor="let account of house.accounts">
-            <ion-avatar slot="start">
-                <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
-                <img *ngIf="!account.photoUrl" alt="" src="assets/svg/avatar.svg">
-            </ion-avatar>
+            <app-account-avatar [account]="account" size="small" slot="start"></app-account-avatar>
             <ion-label>
                 <h3>{{account.name}}</h3>
             </ion-label>
