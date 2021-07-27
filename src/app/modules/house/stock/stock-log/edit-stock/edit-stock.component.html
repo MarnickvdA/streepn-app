@@ -3,7 +3,7 @@
         <ion-title>{{'house.stock.edit.title' | translate}}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="dismiss()">
-                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" fixedWidth
+                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" [fixedWidth]="true"
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
@@ -57,7 +57,7 @@
             <div class="input-field">
                 <ion-label position="stacked">{{'house.stock.add.cost' | translate}}</ion-label>
                 <app-money-input (amountEntered)="amountChanged($event)" [amount]="stockItem.cost + ''" [precision]="2"
-                                 icon="cash-outline" tabIndex="2"></app-money-input>
+                                 icon="cash-outline" [tabIndex]="2"></app-money-input>
             </div>
 
             <span *ngIf="isSubmitted && form.cost.errors?.required" class="form-input-error">

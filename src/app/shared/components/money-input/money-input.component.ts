@@ -41,7 +41,7 @@ export class MoneyInputComponent implements OnInit {
         }
     }
 
-    handleInput(event: CustomEvent) {
+    handleInput(event: any) {
         this.clearInput();
         // check if digit
         if (event.detail.data && !isNaN(event.detail.data)) {

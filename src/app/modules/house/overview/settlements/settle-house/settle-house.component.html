@@ -3,7 +3,7 @@
         <ion-title>{{'house.overview.settle.house.settle' | translate:{name: house?.name} }}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="dismiss()">
-                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" fixedWidth
+                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" [fixedWidth]="true"
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
@@ -39,7 +39,7 @@
 
         <ion-item (click)="addStock()" [disabled]="!(house?.products.length > 0)" button class="list-button"
                   detail="false" lines="full">
-            <fa-duotone-icon [icon]="['fad', 'plus-circle']" class="primary large" fixedWidth
+            <fa-duotone-icon [icon]="['fad', 'plus-circle']" class="primary large" [fixedWidth]="true"
                              slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'house.stock.add.title' | translate}}</h3>
@@ -58,7 +58,7 @@
         <ion-item *ngIf="house?.settleSharedAccounts; let accounts" class="list-button" detail="false" lines="full">
             <fa-duotone-icon [icon]="['fad', accounts.length > 0 ? 'times-circle' : 'check-circle']"
                              [ngClass]="accounts.length > 0 ? 'danger' : 'success'" class="large"
-                             fixedWidth
+                             [fixedWidth]="true"
                              slot="start"></fa-duotone-icon>
             <ion-label>
                 <h4 *ngIf="accounts.length === 0">{{'house.overview.settle.house.sharedCompleted' | translate }}</h4>

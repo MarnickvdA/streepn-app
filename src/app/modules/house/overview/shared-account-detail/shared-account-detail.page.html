@@ -3,14 +3,14 @@
         <ion-buttons slot="start">
             <ion-button [routerLink]="'/house/' + house?.id + '/preferences'" fill="none" mode="ios"
                         routerDirection="back">
-                <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" fixedWidth
+                <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" [fixedWidth]="true"
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
         <ion-title>{{account?.name}}</ion-title>
         <!--        <ion-buttons slot="end">-->
         <!--            <ion-button (click)="removeSharedAccount()" [disabled]="!account?.isRemovable">-->
-        <!--                <fa-duotone-icon slot="icon-only" class="danger" fixedWidth-->
+        <!--                <fa-duotone-icon slot="icon-only" class="danger" [fixedWidth]="true"-->
         <!--                                 [icon]="['fad', 'trash-alt']"></fa-duotone-icon>-->
         <!--            </ion-button>-->
         <!--        </ion-buttons>-->
@@ -26,13 +26,13 @@
 
     <ion-list>
         <ion-item>
-            <fa-duotone-icon [icon]="['fad', 'edit']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'edit']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
             <ion-input [(ngModel)]="newName" value="{{account?.name}}"></ion-input>
             <ion-button (click)="setName()"
                         [attr.disabled]="newName === account?.name || newName?.length < 2">{{'actions.edit' | translate}}</ion-button>
         </ion-item>
         <ion-item lines="full">
-            <fa-duotone-icon [icon]="['fad', 'wallet']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'wallet']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'house.overview.account.balanceAmount' | translate}}</h3>
             </ion-label>
@@ -43,7 +43,7 @@
         <ion-item (click)="settleSharedAccount(account?.id)" [disabled]="account?.balance.amount === 0" button
                   class="list-button"
                   lines="full">
-            <fa-duotone-icon [icon]="['fad', 'calculator-alt']" class="primary" fixedWidth
+            <fa-duotone-icon [icon]="['fad', 'calculator-alt']" class="primary" [fixedWidth]="true"
                              slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'house.overview.account.settle' | translate:{name: account?.name} }}</h3>

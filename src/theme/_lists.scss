@@ -8,8 +8,14 @@ ion-list-header {
 }
 
 ion-item {
+  --min-height: 3rem;
+
+  &.large {
+    --min-height: 4rem;
+  }
+
   &.list-button {
-    --min-height: 3.5rem;
+    //--min-height: 3.5rem;
   }
 
   &.no-min-height {
@@ -48,3 +54,6 @@ ion-list.list-md {
   }
 }
 
+ion-avatar {
+  --border-radius: 0.2rem;
+}

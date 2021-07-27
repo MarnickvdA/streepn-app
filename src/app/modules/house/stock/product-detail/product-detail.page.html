@@ -2,7 +2,7 @@
     <ion-toolbar>
         <ion-buttons slot="start">
             <ion-button mode="ios" routerDirection="back" routerLink="/house/{{houseId}}/stock">
-                <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" fixedWidth
+                <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" [fixedWidth]="true"
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
@@ -11,7 +11,7 @@
 
         <ion-buttons slot="end">
             <ion-button (click)="removeProduct()" [disabled]="!product?.removable">
-                <fa-duotone-icon [icon]="['fad', 'trash-alt']" class="danger" fixedWidth
+                <fa-duotone-icon [icon]="['fad', 'trash-alt']" class="danger" [fixedWidth]="true"
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
@@ -27,13 +27,13 @@
 
     <ion-list>
         <ion-item lines="inset">
-            <fa-duotone-icon [icon]="['fad', 'edit']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'edit']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
             <ion-input [(ngModel)]="newName" value="{{product?.name}}"></ion-input>
             <ion-button (click)="setName()"
                         [attr.disabled]="newName === product?.name || newName?.length < 2 || !uniqueName">{{'actions.edit' | translate}}</ion-button>
         </ion-item>
         <ion-item lines="full">
-            <fa-duotone-icon [icon]="['fad', 'tag']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'tag']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
             <app-money-input (amountEntered)="amountChanged($event)" [amount]="''" [icon]="undefined" [precision]="2"
                              padding="none"></app-money-input>
             <ion-button (click)="setPrice()"

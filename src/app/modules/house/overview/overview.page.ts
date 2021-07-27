@@ -8,6 +8,8 @@ import {NewSharedAccountComponent} from './new-shared-account/new-shared-account
 import {AuthService, HouseService, ProductService} from '@core/services';
 import {Share} from '@capacitor/share';
 import {Clipboard} from '@capacitor/clipboard';
+import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
+import {dashboardPageGuide, overviewPageGuide} from '@shared/app-guides';
 
 @Component({
     selector: 'app-house-overview',
@@ -151,5 +153,13 @@ export class OverviewPage implements OnInit, OnDestroy {
         setTimeout(() => {
             $event.target.complete();
         }, 350);
+    }
+
+    openInfo() {
+        InfoModalComponent.presentModal(
+            this.modalController,
+            'house.overview.title',
+            overviewPageGuide
+        );
     }
 }

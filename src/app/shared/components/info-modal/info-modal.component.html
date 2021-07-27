@@ -3,7 +3,7 @@
         <ion-title>{{titleId| translate}}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="dismiss()">
-                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" fixedWidth
+                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" [fixedWidth]="true"
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
@@ -17,7 +17,7 @@
         </ion-toolbar>
     </ion-header>
 
-    <div [innerHTML]="contentId | translate" class="content">
+    <div [innerHTML]="contentHTML" id="content">
     </div>
 
 </ion-content>

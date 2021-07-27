@@ -159,7 +159,7 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                             await loading.present();
                             const account: UserAccount = this.account.deepCopy();
 
-                            account.roles = account.roles.filter(item => item !== 'admin');
+                            account.roles = account.roles.filter(item => item !== UserRole.admin);
 
                             this.accountService.updateUserAccount(this.house, account)
                                 .finally(() => {

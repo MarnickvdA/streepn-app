@@ -1,15 +1,10 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>{{'appName' | translate}}</ion-title>
-    </ion-toolbar>
-</ion-header>
-
 <ion-content>
+    <div class="padding-top"></div>
     <ion-list>
         <ion-item-divider class="bottom-line"></ion-item-divider>
         <ion-menu-toggle [autoHide]="false">
             <ion-item lines="full" routerDirection="root" routerLink="dashboard">
-                <fa-duotone-icon [icon]="['fad', 'list']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
+                <fa-duotone-icon [icon]="['fad', 'list']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
                 <ion-label>
                     {{'dashboard.title' | translate}}
                 </ion-label>
@@ -30,7 +25,7 @@
                     <fa-icon (click)="toggleFavorite($event, house.id)"
                              [icon]="this.favorite === house.id ? ['fas', 'star'] : ['fal', 'star']"
                              [ngClass]="this.favorite === house.id ? 'warning' : 'medium half-opacity'"
-                             class="primary" fixedWidth
+                             class="primary" [fixedWidth]="true"
                              slot="end"></fa-icon>
                 </ion-item>
             </ion-menu-toggle>
@@ -44,23 +39,23 @@
 
         <ion-menu-toggle [autoHide]="false">
             <ion-item lines="full" routerDirection="root" routerLink="profile">
-                <fa-duotone-icon [icon]="['fad', 'user-cog']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
+                <fa-duotone-icon [icon]="['fad', 'user-cog']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
                 <ion-label>
                     {{'dashboard.profile' | translate}}
                 </ion-label>
             </ion-item>
         </ion-menu-toggle>
 
-        <ion-item lines="full">
-            <fa-duotone-icon [icon]="['fad', 'adjust']" class="primary" fixedWidth slot="start"></fa-duotone-icon>
-            <ion-label>{{'dashboard.toggleDarkMode' | translate}}</ion-label>
-            <ion-toggle (ionChange)="onClick($event)" checked="{{isDarkMode}}" slot="end"></ion-toggle>
-        </ion-item>
+<!--        <ion-item lines="full">-->
+<!--            <fa-duotone-icon [icon]="['fad', 'adjust']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>-->
+<!--            <ion-label>{{'dashboard.toggleDarkMode' | translate}}</ion-label>-->
+<!--            <ion-toggle (ionChange)="onClick($event)" checked="{{isDarkMode}}" slot="end"></ion-toggle>-->
+<!--        </ion-item>-->
 
         <ion-item-divider class="bottom-line"></ion-item-divider>
 
         <ion-item (click)="logOut()" lines="full">
-            <fa-duotone-icon [icon]="['fad', 'sign-out']" class="danger" fixedWidth slot="start"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'sign-out']" class="danger" [fixedWidth]="true" slot="start"></fa-duotone-icon>
             <ion-label>
                 {{'actions.logout' | translate}}
             </ion-label>

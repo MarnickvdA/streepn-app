@@ -52,5 +52,5 @@ export const userAccountConverter = {
  * Enumeration of supported user roles
  */
 export enum UserRole {
-    admin = 'admin'
+    admin = 'ADMIN'
 }

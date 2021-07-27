@@ -8,5 +8,15 @@ div.account-toolbar {
   ion-avatar {
     width: 4rem;
     height: 4rem;
+    margin-bottom: 8px;
+    --border-radius: .4rem;
   }
+}
+
+.more-button {
+  margin-top: 16px;
+}
+
+.download-icon {
+  margin-right: 4px;
 }

@@ -3,7 +3,7 @@
         <ion-title>{{sharedAccount?.name}}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="dismiss()">
-                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" fixedWidth
+                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" [fixedWidth]="true"
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
@@ -35,8 +35,9 @@
             <ion-label>
                 {{'house.overview.settle.sharedAccount.select-payers' | translate}}
             </ion-label>
+            <ion-button (click)="selectAll()">{{'house.overview.settle.sharedAccount.select-all' | translate}}</ion-button>
         </ion-list-header>
-        <ion-item *ngFor="let account of house?.accounts" class="account-item">
+        <ion-item *ngFor="let account of house?.accounts; let i = index" class="account-item">
             <ion-avatar slot="start">
                 <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
                 <img *ngIf="!account.photoUrl" alt=""
@@ -53,7 +54,7 @@
                     </p>
                 </ion-label>
             </div>
-            <ion-checkbox (ionChange)="toggleAccount($event, account)" slot="end"></ion-checkbox>
+            <ion-checkbox (ionChange)="updateSettle()" [(ngModel)]="payers[account.id]" slot="end"></ion-checkbox>
         </ion-item>
     </ion-list>
 

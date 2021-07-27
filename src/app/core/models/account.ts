@@ -54,6 +54,6 @@ export const accountConverter = {
 };
 
 export enum AccountType {
-    user = 'user',
-    shared = 'shared'
+    user = 'USER',
+    shared = 'SHARED'
 }

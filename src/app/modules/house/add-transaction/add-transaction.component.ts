@@ -7,6 +7,8 @@ import {TransactionService, TransactionSet} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {Capacitor} from '@capacitor/core';
 import {Haptics, ImpactStyle} from '@capacitor/haptics';
+import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
+import {addTransactionGuide} from '@shared/app-guides';
 
 @Component({
     selector: 'app-add-transaction',
@@ -39,7 +41,7 @@ export class AddTransactionComponent implements OnInit {
         });
     }
 
-    selectProduct($event: CustomEvent) {
+    selectProduct($event: any) {
         this.currentProduct = this.house.products.find(p => p.id === $event.detail.value);
     }
 
@@ -111,5 +113,13 @@ export class AddTransactionComponent implements OnInit {
     reset() {
         this.transactions = {};
         this.transactionCount = 0;
+    }
+
+    openInfo() {
+        InfoModalComponent.presentModal(
+            this.modalController,
+            'house.transactions.add',
+            addTransactionGuide
+        );
     }
 }

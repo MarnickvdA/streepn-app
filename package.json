@@ -32,7 +32,6 @@
     "@angular/router": "^12.1.2",
     "@capacitor-community/apple-sign-in": "^0.1.2",
     "@capacitor-community/firebase-analytics": "^1.0.0",
-    "@capacitor-community/http": "^1.0.0",
     "@capacitor/android": "^3.1.1",
     "@capacitor/app": "^1.0.2",
     "@capacitor/browser": "^1.0.2",

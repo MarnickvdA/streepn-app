@@ -1,4 +1,4 @@
-<ion-tabs>
+<ion-tabs (ionTabsWillChange)="tabsChange($event)">
     <ion-tab-bar slot="bottom">
         <ion-tab-button tab="transactions">
             <fa-duotone-icon [icon]="['fad', 'receipt']" class="tab-icon"></fa-duotone-icon>

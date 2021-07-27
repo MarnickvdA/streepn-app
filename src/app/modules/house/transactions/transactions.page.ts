@@ -5,6 +5,8 @@ import {ModalController} from '@ionic/angular';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {Observable, Subscription} from 'rxjs';
 import {AuthService, EventsService, HouseService, TransactionService} from '@core/services';
+import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
+import {dashboardPageGuide, transactionsPageGuide} from '@shared/app-guides';
 
 @Component({
     selector: 'app-transactions',
@@ -126,5 +128,13 @@ export class TransactionsPage implements OnInit, OnDestroy {
                     }
                 });
             });
+    }
+
+    openInfo() {
+        InfoModalComponent.presentModal(
+            this.modalController,
+            'house.transactions.title',
+            transactionsPageGuide
+        );
     }
 }

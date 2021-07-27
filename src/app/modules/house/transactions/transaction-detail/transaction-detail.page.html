@@ -3,7 +3,7 @@
         <ion-buttons slot="start">
             <ion-button *ngIf="!editing" fill="none" mode="ios" routerDirection="back"
                         routerLink="/house/{{house?.id}}/transactions">
-                <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" fixedWidth
+                <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" [fixedWidth]="true"
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>
             <ion-button (click)="toggleEditing()" *ngIf="editing">
@@ -29,7 +29,7 @@
         </ion-avatar>
         <ion-label>
             <h2>{{account.name}}</h2>
-            <p>{{'house.transaction.at' | translate:{date: transaction?.createdAt | dateTime} }}</p>
+            <p class="small">{{'house.transaction.at' | translate:{date: transaction?.createdAt | dateTime} }}</p>
             <p *ngIf="!canEdit" class="small"><b>{{'house.transactions.disabledEditing' | translate}}</b></p>
         </ion-label>
     </div>

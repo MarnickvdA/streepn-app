@@ -116,6 +116,7 @@
   },
   "dashboard": {
     "title": "",
+    "welcome": "Hey {{name}}!",
     "houses": "",
     "profile": "",
     "emailVerified": "",
@@ -357,6 +358,7 @@
         "house": {
           "itemTitle": "",
           "title": "",
+          "description-short": "",
           "settle": "",
           "history": "",
           "emptyHistory": "",
@@ -378,6 +380,7 @@
         "sharedAccount": {
           "amount": "",
           "select-payers": "",
+          "select-all": "",
           "settle": "",
           "balance": "",
           "header": "",
@@ -386,12 +389,6 @@
           "description-alert": ""
         }
       }
-    }
-  },
-  "information": {
-    "dashboard": {
-      "title": "",
-      "content": ""
     }
   }
 }

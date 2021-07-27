@@ -3,7 +3,7 @@
         <ion-buttons slot="start">
             <ion-button [routerLink]="'/house/' + houseId + '/preferences'" fill="none" mode="ios"
                         routerDirection="back">
-                <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" fixedWidth
+                <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" [fixedWidth]="true"
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
@@ -21,7 +21,7 @@
     <ion-list>
         <ion-item (click)="settleHouse()" [disabled]="!canSettle()" button class="list-button" detail="false"
                   lines="full">
-            <fa-duotone-icon [icon]="['fad', 'calculator-alt']" class="primary large" fixedWidth
+            <fa-duotone-icon [icon]="['fad', 'calculator-alt']" class="primary large" [fixedWidth]="true"
                              slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'house.overview.settle.house.settle' | translate:{name: house?.name} }}</h3>
@@ -36,7 +36,7 @@
 
         <ion-item *ngIf="!settlements || settlements?.length === 0" class="no-min-height no-bg" lines="none">
             <ion-label>
-                <p class="small">
+                <p>
                     {{'house.overview.settle.house.emptyHistory' | translate}}
                 </p>
             </ion-label>

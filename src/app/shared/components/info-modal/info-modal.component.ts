@@ -1,10 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {ModalController} from '@ionic/angular';
 
 @Component({
     selector: 'app-info-modal',
     templateUrl: './info-modal.component.html',
     styleUrls: ['./info-modal.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class InfoModalComponent implements OnInit {
 
@@ -12,17 +13,17 @@ export class InfoModalComponent implements OnInit {
     titleId: string;
 
     @Input()
-    contentId: string;
+    contentHTML: string;
 
     constructor(private modalController: ModalController) {
     }
 
-    static async presentModal(modalController: ModalController, titleId: string, contentId: string) {
+    static async presentModal(modalController: ModalController, titleId: string, contentHTML: string) {
         const modal = await modalController.create({
             component: InfoModalComponent,
             componentProps: {
                 titleId,
-                contentId,
+                contentHTML,
             },
             swipeToClose: true,
         });

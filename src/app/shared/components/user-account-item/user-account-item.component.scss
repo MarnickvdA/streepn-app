@@ -1,8 +1,10 @@
-ion-item {
-  --min-height: 3.5rem;
-}
-
 .content {
   display: flex;
   flex-direction: column;
+}
+
+ion-thumbnail {
+  --border-radius: .2rem;
+  height: 52px;
+  width: 52px;
 }

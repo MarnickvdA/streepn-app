@@ -8,6 +8,7 @@ import {LoginPageRoutingModule} from './login-routing.module';
 
 import {LoginPage} from './login.page';
 import {TranslateModule} from '@ngx-translate/core';
+import {IconsModule} from '@shared/icons.module';
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import {TranslateModule} from '@ngx-translate/core';
         LoginPageRoutingModule,
         ReactiveFormsModule,
         TranslateModule,
+        IconsModule,
     ],
     declarations: [LoginPage]
 })

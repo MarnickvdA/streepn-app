@@ -62,4 +62,8 @@ export class HousePage implements OnInit, OnDestroy {
                 });
         });
     }
+
+    tabsChange($event: { tab: string }) {
+        this.navController.navigateRoot(['house', this.house?.id, $event.tab]);
+    }
 }

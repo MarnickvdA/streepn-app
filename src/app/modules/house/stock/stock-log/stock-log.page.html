@@ -2,7 +2,7 @@
     <ion-toolbar>
         <ion-buttons slot="start">
             <ion-button mode="ios" routerDirection="back" routerLink="/house/{{house?.id}}/stock">
-                <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" fixedWidth
+                <fa-duotone-icon [icon]="['fad', 'chevron-left']" class="primary" [fixedWidth]="true"
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
@@ -22,7 +22,7 @@
     </ion-refresher>
 
     <ion-list class="no-bg">
-        <ion-item *ngIf="stockTransactions?.length === 0" class="no-min-height" lines="none">
+        <ion-item *ngIf="stockTransactions?.length === 0" class="no-bg no-min-height" lines="none">
             <ion-label class="ion-text-wrap">
                 <p>{{'house.stock.empty' | translate}}</p>
             </ion-label>

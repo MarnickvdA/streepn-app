@@ -18,7 +18,7 @@ import {Capacitor} from '@capacitor/core';
     styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-    hideSideMenu = true;
+    hideSideMenu = false;
 
     constructor(
         private platform: Platform,
@@ -38,9 +38,7 @@ export class AppComponent {
 
         this.router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
-                this.hideSideMenu = val.url.startsWith('/login')
-                    || val.url.startsWith('/register')
-                    || val.urlAfterRedirects.startsWith('/login')
+                this.hideSideMenu = val.urlAfterRedirects.startsWith('/login')
                     || val.urlAfterRedirects.startsWith('/register');
             }
         });
@@ -61,7 +59,7 @@ export class AppComponent {
 
         this.platform.ready().then(() => {
             this.initTranslations();
-            this.initDarkMode();
+            // this.initDarkMode();
             this.pushService.removeNotifications();
 
             App.addListener('appStateChange', (state: AppState) => {

@@ -11,6 +11,7 @@ import {Capacitor} from '@capacitor/core';
 import {NewHouseComponent} from '@modules/dashboard/new-house/new-house.component';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
 import User = firebase.User;
+import {dashboardPageGuide} from '@shared/app-guides';
 
 @Component({
     selector: 'app-dashboard',
@@ -67,9 +68,9 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                                 this.houseAccounts[house.id] = house.getUserAccountByUserId(user.uid);
                             });
 
-                            setTimeout(() => {
+                            this.zone.run(() => setTimeout(() => {
                                 this.loading = false;
-                            }, 500);
+                            }, 500));
                         });
                 }
             });
@@ -155,8 +156,8 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     openInfo() {
         InfoModalComponent.presentModal(
             this.modalController,
-            'information.dashboard.title',
-            'information.dashboard.content'
+            'dashboard.title',
+            dashboardPageGuide
         );
     }
 

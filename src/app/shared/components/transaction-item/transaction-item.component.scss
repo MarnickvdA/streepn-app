@@ -5,12 +5,15 @@
   color: var(--ion-color-danger);
   font-size: 1rem;
 
-  span {
-    font-size: 0.9rem;
-    padding-left: .2rem;
+  p {
+    padding-left: 8px;
   }
 
-  padding-bottom: .4rem;
+  padding-bottom: 4px;
+}
+
+.description {
+  margin: 4px;
 }
 
 ion-avatar {

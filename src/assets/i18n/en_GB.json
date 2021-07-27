@@ -1,397 +1,394 @@
 {
-  "appName": "",
-  "version": "",
+  "appName": "TRANSLATE: ",
+  "version": "TRANSLATE: ",
   "author": "Marnick van der Arend",
   "actions": {
-    "yes": "",
-    "no": "",
-    "ok": "",
-    "close": "",
-    "skip": "",
-    "accept": "",
-    "deny": "",
-    "go": "",
-    "back": "",
-    "proceed": "",
-    "join": "",
-    "stop": "",
-    "start": "",
-    "login": "",
-    "logout": "",
-    "register": "",
-    "create": "",
-    "delete": "",
-    "edit": "",
-    "all": "",
-    "save": "",
-    "cancel": "",
-    "new": "",
-    "add": "",
-    "next": "",
-    "previous": "",
-    "seeAll": "",
-    "refresh": "",
-    "reset": "",
-    "copy": "",
-    "import": "",
-    "export": "",
-    "invite": "",
-    "admin": "",
-    "submit": "",
-    "complete": "",
-    "loadMore": "",
-    "saving": "",
-    "loading": "",
-    "deleting": "",
-    "removing": "",
-    "adding": "",
-    "streeping": "",
-    "joining": "",
-    "updating": "",
-    "editing": "",
-    "settling": "",
-    "uploading": "",
-    "loggingOut": ""
+    "yes": "TRANSLATE: ",
+    "no": "TRANSLATE: ",
+    "ok": "TRANSLATE: ",
+    "close": "TRANSLATE: ",
+    "skip": "TRANSLATE: ",
+    "accept": "TRANSLATE: ",
+    "deny": "TRANSLATE: ",
+    "go": "TRANSLATE: ",
+    "back": "TRANSLATE: ",
+    "proceed": "TRANSLATE: ",
+    "join": "TRANSLATE: ",
+    "stop": "TRANSLATE: ",
+    "start": "TRANSLATE: ",
+    "login": "TRANSLATE: ",
+    "logout": "TRANSLATE: ",
+    "register": "TRANSLATE: ",
+    "create": "TRANSLATE: ",
+    "delete": "TRANSLATE: ",
+    "edit": "TRANSLATE: ",
+    "all": "TRANSLATE: ",
+    "save": "TRANSLATE: ",
+    "cancel": "TRANSLATE: ",
+    "new": "TRANSLATE: ",
+    "add": "TRANSLATE: ",
+    "next": "TRANSLATE: ",
+    "previous": "TRANSLATE: ",
+    "seeAll": "TRANSLATE: ",
+    "refresh": "TRANSLATE: ",
+    "reset": "TRANSLATE: ",
+    "copy": "TRANSLATE: ",
+    "import": "TRANSLATE: ",
+    "export": "TRANSLATE: ",
+    "invite": "TRANSLATE: ",
+    "admin": "TRANSLATE: ",
+    "submit": "TRANSLATE: ",
+    "complete": "TRANSLATE: ",
+    "loadMore": "TRANSLATE: ",
+    "saving": "TRANSLATE: ",
+    "loading": "TRANSLATE: ",
+    "deleting": "TRANSLATE: ",
+    "removing": "TRANSLATE: ",
+    "adding": "TRANSLATE: ",
+    "streeping": "TRANSLATE: ",
+    "joining": "TRANSLATE: ",
+    "updating": "TRANSLATE: ",
+    "editing": "TRANSLATE: ",
+    "settling": "TRANSLATE: ",
+    "uploading": "TRANSLATE: ",
+    "loggingOut": "TRANSLATE: "
   },
   "date": {
-    "at": ""
+    "at": "TRANSLATE: "
   },
   "errors": {
-    "error": "",
-    "warning": "",
-    "no-connection": "",
-    "house-not-found": "",
-    "house-not-retrieved": "",
-    "house-invite-expired": "",
-    "house-creation-error": "",
+    "error": "TRANSLATE: ",
+    "warning": "TRANSLATE: ",
+    "no-connection": "TRANSLATE: ",
+    "house-not-found": "TRANSLATE: ",
+    "house-not-retrieved": "TRANSLATE: ",
+    "house-invite-expired": "TRANSLATE: ",
+    "house-creation-error": "TRANSLATE: ",
     "functions": {}
   },
   "login": {
-    "name": "",
-    "email": "",
-    "password": "",
-    "termsAndConditions": "",
-    "privacyStatement": "",
-    "registerAcceptance": "",
-    "registerAcceptanceAnd": "",
+    "name": "TRANSLATE: ",
+    "email": "TRANSLATE: ",
+    "password": "TRANSLATE: ",
+    "termsAndConditions": "TRANSLATE: ",
+    "privacyStatement": "TRANSLATE: ",
+    "registerAcceptance": "TRANSLATE: ",
+    "registerAcceptanceAnd": "TRANSLATE: ",
     "errors": {
-      "email-required": "",
-      "password-required": "",
-      "name-required": "",
-      "email-already-in-use": "",
-      "invalid-email": "",
-      "weak-password": "",
-      "operation-not-allowed": "",
-      "user-disabled": "",
-      "user-not-found": "",
-      "wrong-password": "",
-      "unknown-login": "",
-      "unknown-register": ""
+      "email-required": "TRANSLATE: ",
+      "password-required": "TRANSLATE: ",
+      "name-required": "TRANSLATE: ",
+      "email-already-in-use": "TRANSLATE: ",
+      "invalid-email": "TRANSLATE: ",
+      "weak-password": "TRANSLATE: ",
+      "operation-not-allowed": "TRANSLATE: ",
+      "user-disabled": "TRANSLATE: ",
+      "user-not-found": "TRANSLATE: ",
+      "wrong-password": "TRANSLATE: ",
+      "unknown-login": "TRANSLATE: ",
+      "unknown-register": "TRANSLATE: "
     },
-    "or": "",
-    "loginWithApple": "",
-    "loginWithGoogle": "",
-    "registerQuestion": "",
-    "registerNow": ""
+    "or": "TRANSLATE: ",
+    "loginWithApple": "TRANSLATE: ",
+    "loginWithGoogle": "TRANSLATE: ",
+    "registerQuestion": "TRANSLATE: ",
+    "registerNow": "TRANSLATE: "
   },
   "side-menu": {
-    "settings": "",
-    "logout.description": ""
+    "settings": "TRANSLATE: ",
+    "logout.description": "TRANSLATE: "
   },
   "profile": {
     "edit": {
-      "title": "",
-      "username": "",
-      "username-desc": "",
-      "email": "",
-      "password": "",
-      "picture": "",
-      "picture-desc": ""
+      "title": "TRANSLATE: ",
+      "username": "TRANSLATE: ",
+      "username-desc": "TRANSLATE: ",
+      "email": "TRANSLATE: ",
+      "password": "TRANSLATE: ",
+      "picture": "TRANSLATE: ",
+      "picture-desc": "TRANSLATE: "
     }
   },
   "camera": {
-    "promptHeader": "",
-    "promptPhoto": "",
-    "promptPicture": ""
+    "promptHeader": "TRANSLATE: ",
+    "promptPhoto": "TRANSLATE: ",
+    "promptPicture": "TRANSLATE: "
   },
   "dashboard": {
-    "title": "",
-    "houses": "",
-    "profile": "",
-    "emailVerified": "",
-    "memberSince": "",
-    "emptyHouses": "",
-    "yourBalance": "",
-    "balance": "",
+    "title": "TRANSLATE: ",
+    "welcome": "TRANSLATE: Hey {{name}}!",
+    "houses": "TRANSLATE: ",
+    "profile": "TRANSLATE: ",
+    "emailVerified": "TRANSLATE: ",
+    "memberSince": "TRANSLATE: ",
+    "emptyHouses": "TRANSLATE: ",
+    "yourBalance": "TRANSLATE: ",
+    "balance": "TRANSLATE: ",
     "createHouse": {
-      "title": "",
-      "houseName": "",
+      "title": "TRANSLATE: ",
+      "houseName": "TRANSLATE: ",
       "step1": {
-        "title": "",
-        "description": ""
+        "title": "TRANSLATE: ",
+        "description": "TRANSLATE: "
       },
       "step2": {
-        "title": "",
-        "description": ""
+        "title": "TRANSLATE: ",
+        "description": "TRANSLATE: "
       },
       "step3": {
-        "title": "",
-        "description": ""
+        "title": "TRANSLATE: ",
+        "description": "TRANSLATE: "
       },
       "errors": {
-        "name-length": "",
-        "name-required": ""
+        "name-length": "TRANSLATE: ",
+        "name-required": "TRANSLATE: "
       },
-      "shareInvite": "",
-      "navigateHouseOverview": ""
+      "shareInvite": "TRANSLATE: ",
+      "navigateHouseOverview": "TRANSLATE: "
     },
-    "toggleDarkMode": "",
-    "manualHouseJoin": "",
-    "manualHouseJoinDesc": "",
+    "toggleDarkMode": "TRANSLATE: ",
+    "manualHouseJoin": "TRANSLATE: ",
+    "manualHouseJoinDesc": "TRANSLATE: ",
     "houseInvite": {
-      "header": "",
-      "question": "",
-      "manualHeader": "",
-      "code": "",
-      "invalidCode": ""
+      "header": "TRANSLATE: ",
+      "question": "TRANSLATE: ",
+      "manualHeader": "TRANSLATE: ",
+      "code": "TRANSLATE: ",
+      "invalidCode": "TRANSLATE: "
     }
   },
   "onboarding": {
     "welcome": {
-      "title": "",
-      "description": ""
+      "title": "TRANSLATE: ",
+      "description": "TRANSLATE: "
     },
     "legal": {
-      "title": "",
-      "description1": "",
-      "description2": "",
-      "description3": "",
-      "error": ""
+      "title": "TRANSLATE: ",
+      "description1": "TRANSLATE: ",
+      "description2": "TRANSLATE: ",
+      "description3": "TRANSLATE: ",
+      "error": "TRANSLATE: "
     },
     "push": {
-      "title": "",
-      "description": "",
-      "enable": ""
+      "title": "TRANSLATE: ",
+      "description": "TRANSLATE: ",
+      "enable": "TRANSLATE: "
     },
     "setName": {
-      "title": "",
-      "description": ""
+      "title": "TRANSLATE: ",
+      "description": "TRANSLATE: "
     },
     "joinHouse": {
-      "title": "",
-      "description": ""
+      "title": "TRANSLATE: ",
+      "description": "TRANSLATE: "
     },
     "start": {
-      "title": "",
-      "description": ""
+      "title": "TRANSLATE: ",
+      "description": "TRANSLATE: "
     }
   },
   "house": {
     "tabs": {
-      "more": ""
+      "more": "TRANSLATE: "
     },
     "deals": {
-      "title": "",
-      "soon-explained": ""
+      "title": "TRANSLATE: ",
+      "soon-explained": "TRANSLATE: "
     },
     "transactions": {
-      "title": "",
-      "empty": "",
-      "currentProduct": "",
-      "allPlusOne": "",
-      "disabledEditing": ""
+      "title": "TRANSLATE: ",
+      "empty": "TRANSLATE: ",
+      "currentProduct": "TRANSLATE: ",
+      "allPlusOne": "TRANSLATE: ",
+      "disabledEditing": "TRANSLATE: "
     },
     "transaction": {
-      "title": "",
-      "header": "",
-      "timeline": "",
-      "for": "",
-      "at": ""
+      "title": "TRANSLATE: ",
+      "header": "TRANSLATE: ",
+      "timeline": "TRANSLATE: ",
+      "for": "TRANSLATE: ",
+      "at": "TRANSLATE: "
     },
     "stock": {
-      "tab": "",
-      "title": "",
-      "add-product": "",
-      "add-product-desc": "",
-      "current": "",
-      "empty": "",
+      "tab": "TRANSLATE: ",
+      "title": "TRANSLATE: ",
+      "add-product": "TRANSLATE: ",
+      "add-product-desc": "TRANSLATE: ",
+      "current": "TRANSLATE: ",
+      "empty": "TRANSLATE: ",
       "log": {
-        "title": "",
-        "description": "",
-        "paidBy": "",
-        "writtenOff": "",
-        "stockLog": "",
-        "stockLogFor": ""
+        "title": "TRANSLATE: ",
+        "description": "TRANSLATE: ",
+        "paidBy": "TRANSLATE: ",
+        "writtenOff": "TRANSLATE: ",
+        "stockLog": "TRANSLATE: ",
+        "stockLogFor": "TRANSLATE: "
       },
       "detail": {
-        "advisedPrice": ""
+        "advisedPrice": "TRANSLATE: "
       },
       "add": {
-        "title": "",
-        "description": "",
-        "selectProduct": "",
-        "paidByTitle": "",
-        "paidBy": "",
-        "amount": "",
-        "cost": "",
+        "title": "TRANSLATE: ",
+        "description": "TRANSLATE: ",
+        "selectProduct": "TRANSLATE: ",
+        "paidByTitle": "TRANSLATE: ",
+        "paidBy": "TRANSLATE: ",
+        "amount": "TRANSLATE: ",
+        "cost": "TRANSLATE: ",
         "errors": {
-          "product-required": "",
-          "amount-required": "",
-          "amount-min": "",
-          "amount-max": "",
-          "cost-required": "",
-          "cost-min": "",
-          "cost-max": "",
-          "paidBy-required": ""
+          "product-required": "TRANSLATE: ",
+          "amount-required": "TRANSLATE: ",
+          "amount-min": "TRANSLATE: ",
+          "amount-max": "TRANSLATE: ",
+          "cost-required": "TRANSLATE: ",
+          "cost-min": "TRANSLATE: ",
+          "cost-max": "TRANSLATE: ",
+          "paidBy-required": "TRANSLATE: "
         }
       },
       "edit": {
-        "title": "",
-        "description": "",
+        "title": "TRANSLATE: ",
+        "description": "TRANSLATE: ",
         "errors": {
-          "product-required": "",
-          "amount-required": "",
-          "amount-min": "",
-          "amount-max": "",
-          "cost-required": "",
-          "cost-min": "",
-          "cost-max": "",
-          "paidBy-required": ""
+          "product-required": "TRANSLATE: ",
+          "amount-required": "TRANSLATE: ",
+          "amount-min": "TRANSLATE: ",
+          "amount-max": "TRANSLATE: ",
+          "cost-required": "TRANSLATE: ",
+          "cost-min": "TRANSLATE: ",
+          "cost-max": "TRANSLATE: ",
+          "paidBy-required": "TRANSLATE: "
         }
       }
     },
     "overview": {
-      "title": "",
-      "admin": "",
-      "sharedAccounts": "",
-      "emptySharedAccounts": "",
-      "products": "",
-      "free": "",
-      "emptyProducts": "",
-      "stock": "",
-      "emptyStock": "",
-      "disabledStock": "",
+      "title": "TRANSLATE: ",
+      "admin": "TRANSLATE: ",
+      "sharedAccounts": "TRANSLATE: ",
+      "emptySharedAccounts": "TRANSLATE: ",
+      "products": "TRANSLATE: ",
+      "free": "TRANSLATE: ",
+      "emptyProducts": "TRANSLATE: ",
+      "stock": "TRANSLATE: ",
+      "emptyStock": "TRANSLATE: ",
+      "disabledStock": "TRANSLATE: ",
       "refreshLink": {
-        "header": "",
-        "message": ""
+        "header": "TRANSLATE: ",
+        "message": "TRANSLATE: "
       },
       "preferences": {
-        "title": ""
+        "title": "TRANSLATE: "
       },
       "account": {
-        "preferences": "",
-        "balance": "",
-        "enablePush": "",
-        "enableAdmin": "",
+        "preferences": "TRANSLATE: ",
+        "balance": "TRANSLATE: ",
+        "enablePush": "TRANSLATE: ",
+        "enableAdmin": "TRANSLATE: ",
         "disableAdmin": {
-          "header": "",
-          "message": "",
-          "you": ""
+          "header": "TRANSLATE: ",
+          "message": "TRANSLATE: ",
+          "you": "TRANSLATE: "
         },
-        "deletePrecondition": "",
-        "deleteAccount": "",
-        "leaveHouse": "",
-        "you": "",
-        "balanceAmount": "",
-        "totalIn": "",
-        "totalOut": "",
-        "settle": ""
+        "deletePrecondition": "TRANSLATE: ",
+        "deleteAccount": "TRANSLATE: ",
+        "leaveHouse": "TRANSLATE: ",
+        "you": "TRANSLATE: ",
+        "balanceAmount": "TRANSLATE: ",
+        "totalIn": "TRANSLATE: ",
+        "totalOut": "TRANSLATE: ",
+        "settle": "TRANSLATE: "
       },
       "accounts": {
-        "title": "",
-        "adminTitle": "",
-        "inviteLink": "",
-        "validThrough": "",
-        "expired": ""
+        "title": "TRANSLATE: ",
+        "adminTitle": "TRANSLATE: ",
+        "inviteLink": "TRANSLATE: ",
+        "validThrough": "TRANSLATE: ",
+        "expired": "TRANSLATE: "
       },
       "addAccount": {
-        "header": "",
-        "message": "",
-        "code": ""
+        "header": "TRANSLATE: ",
+        "message": "TRANSLATE: ",
+        "code": "TRANSLATE: "
       },
       "inviteAccount": {
-        "title": "",
-        "description": "",
-        "dialogTitle": ""
+        "title": "TRANSLATE: ",
+        "description": "TRANSLATE: ",
+        "dialogTitle": "TRANSLATE: "
       },
       "addSharedAccount": {
-        "title": "",
-        "desc": "",
-        "accountName": "",
+        "title": "TRANSLATE: ",
+        "desc": "TRANSLATE: ",
+        "accountName": "TRANSLATE: ",
         "errors": {
-          "name-required": "",
-          "name-length": "",
-          "name-conflict": ""
+          "name-required": "TRANSLATE: ",
+          "name-length": "TRANSLATE: ",
+          "name-conflict": "TRANSLATE: "
         }
       },
       "addProduct": {
-        "title": "",
-        "productName": "",
-        "productPrice": "",
+        "title": "TRANSLATE: ",
+        "productName": "TRANSLATE: ",
+        "productPrice": "TRANSLATE: ",
         "errors": {
-          "name-required": "",
-          "name-length": "",
-          "name-conflict": "",
-          "price-required": "",
-          "price-min": "",
-          "price-max": ""
+          "name-required": "TRANSLATE: ",
+          "name-length": "TRANSLATE: ",
+          "name-conflict": "TRANSLATE: ",
+          "price-required": "TRANSLATE: ",
+          "price-min": "TRANSLATE: ",
+          "price-max": "TRANSLATE: "
         }
       },
       "editProduct": {
-        "productName": "",
-        "productPrice": "",
+        "productName": "TRANSLATE: ",
+        "productPrice": "TRANSLATE: ",
         "errors": {
-          "name-required": "",
-          "name-length": "",
-          "name-conflict": "",
-          "price-required": "",
-          "price-min": "",
-          "price-max": ""
+          "name-required": "TRANSLATE: ",
+          "name-length": "TRANSLATE: ",
+          "name-conflict": "TRANSLATE: ",
+          "price-required": "TRANSLATE: ",
+          "price-min": "TRANSLATE: ",
+          "price-max": "TRANSLATE: "
         },
         "deleteWarning": {
-          "header": "",
-          "message": ""
+          "header": "TRANSLATE: ",
+          "message": "TRANSLATE: "
         }
       },
       "settle": {
         "house": {
-          "itemTitle": "",
-          "title": "",
-          "settle": "",
-          "history": "",
-          "emptyHistory": "",
-          "description": "",
-          "checkStock": "",
-          "stockDescription": "",
-          "settleSharedAccounts": "",
-          "settleSharedDescription": "",
-          "sharedCompleted": "",
-          "sharedIncomplete": "",
-          "settleUsers": "",
-          "settleUsersDescription": "",
-          "toOverview": ""
+          "itemTitle": "TRANSLATE: ",
+          "title": "TRANSLATE: ",
+          "description-short": "TRANSLATE: ",
+          "settle": "TRANSLATE: ",
+          "history": "TRANSLATE: ",
+          "emptyHistory": "TRANSLATE: ",
+          "description": "TRANSLATE: ",
+          "checkStock": "TRANSLATE: ",
+          "stockDescription": "TRANSLATE: ",
+          "settleSharedAccounts": "TRANSLATE: ",
+          "settleSharedDescription": "TRANSLATE: ",
+          "sharedCompleted": "TRANSLATE: ",
+          "sharedIncomplete": "TRANSLATE: ",
+          "settleUsers": "TRANSLATE: ",
+          "settleUsersDescription": "TRANSLATE: ",
+          "toOverview": "TRANSLATE: "
         },
         "detail": {
-          "createdAt": "",
-          "createdBy": ""
+          "createdAt": "TRANSLATE: ",
+          "createdBy": "TRANSLATE: "
         },
         "sharedAccount": {
-          "amount": "",
-          "select-payers": "",
-          "settle": "",
-          "balance": "",
-          "header": "",
-          "message": "",
-          "description": "",
-          "description-alert": ""
+          "amount": "TRANSLATE: ",
+          "select-payers": "TRANSLATE: ",
+          "select-all": "TRANSLATE: ",
+          "settle": "TRANSLATE: ",
+          "balance": "TRANSLATE: ",
+          "header": "TRANSLATE: ",
+          "message": "TRANSLATE: ",
+          "description": "TRANSLATE: ",
+          "description-alert": "TRANSLATE: "
         }
       }
-    }
-  },
-  "information": {
-    "dashboard": {
-      "title": "",
-      "content": ""
     }
   }
 }

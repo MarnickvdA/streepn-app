@@ -5,6 +5,8 @@ import {AuthService, HouseService} from '@core/services';
 import {Observable, Subscription} from 'rxjs';
 import {House, Product} from '@core/models';
 import {NewProductComponent} from '@modules/house/stock/new-product/new-product.component';
+import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
+import {dashboardPageGuide, stockPageGuide} from '@shared/app-guides';
 
 @Component({
     selector: 'app-house-stock',
@@ -70,5 +72,13 @@ export class StockPage implements OnInit, OnDestroy {
         setTimeout(() => {
             $event.target.complete();
         }, 350);
+    }
+
+    openInfo() {
+        InfoModalComponent.presentModal(
+            this.modalController,
+            'house.stock.title',
+            stockPageGuide
+        );
     }
 }

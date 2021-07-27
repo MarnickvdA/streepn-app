@@ -7,8 +7,13 @@
         </ion-buttons>
         <ion-title>{{house?.name}}</ion-title>
         <ion-buttons slot="end">
+            <ion-button>
+                <fa-duotone-icon (click)="openInfo()" [icon]="['fad', 'info-circle']" class="primary"
+                                 [fixedWidth]="true"
+                                 slot="start"></fa-duotone-icon>
+            </ion-button>
             <ion-button (click)="dismiss()">
-                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" fixedWidth
+                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" [fixedWidth]="true"
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
