@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Account, House, Product} from '@core/models';
-import {LoadingController, ModalController} from '@ionic/angular';
+import {IonRouterOutlet, LoadingController, ModalController} from '@ionic/angular';
 import {catchError} from 'rxjs/operators';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {TransactionService, TransactionSet} from '@core/services';

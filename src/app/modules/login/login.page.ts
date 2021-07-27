@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LoadingController, ModalController, NavController} from '@ionic/angular';
+import {IonRouterOutlet, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Capacitor} from '@capacitor/core';
 import {TranslateService} from '@ngx-translate/core';

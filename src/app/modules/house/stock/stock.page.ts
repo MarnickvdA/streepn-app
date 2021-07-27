@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AddStockComponent} from '@modules/house/stock/add-stock/add-stock.component';
-import {ModalController} from '@ionic/angular';
+import {IonRouterOutlet, ModalController} from '@ionic/angular';
 import {AuthService, HouseService} from '@core/services';
 import {Observable, Subscription} from 'rxjs';
 import {House, Product} from '@core/models';

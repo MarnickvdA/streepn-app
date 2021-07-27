@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {House, SharedAccount, UserAccount} from '@core/models';
 import {ActivatedRoute} from '@angular/router';
-import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
+import {AlertController, IonRouterOutlet, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
 import {AuthService, HouseService, ProductService} from '@core/services';

@@ -49,9 +49,12 @@
                 </p>
             </ion-label>
         </ion-item>
-        <ion-button (click)="loadNext()" *ngIf="!doneLoading" [disabled]="isLoadingMore" class="no-bg" fill="none">
+        <ion-button (click)="loadNext()" *ngIf="!doneLoading" [disabled]="isLoadingMore"
+                    class="no-bg more-button" expand="block" fill="clear">
+            <fa-duotone-icon [icon]="['fad', 'arrow-alt-circle-down']" class="primary download-icon" [fixedWidth]="true"
+                             slot="start"></fa-duotone-icon>
             <ion-label *ngIf="!isLoadingMore" color="primary">{{'actions.loadMore' | translate}}</ion-label>
-            <ion-progress-bar *ngIf="isLoadingMore"></ion-progress-bar>
+            <ion-progress-bar *ngIf="isLoadingMore" type="indeterminate"></ion-progress-bar>
         </ion-button>
     </ion-list>
 </ion-content>

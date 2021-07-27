@@ -25,7 +25,7 @@ export class InfoModalComponent implements OnInit {
                 titleId,
                 contentHTML,
             },
-            swipeToClose: true,
+            swipeToClose: true
         });
 
         return await modal.present();
