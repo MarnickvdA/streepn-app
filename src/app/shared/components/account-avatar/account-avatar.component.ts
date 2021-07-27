@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {toHSL} from '@core/utils/string-to-hex';
+import {toPastelColor} from '@core/utils/string-to-hsl';
 import {UserAccount} from '@core/models';
 
 @Component({
@@ -22,6 +22,6 @@ export class AccountAvatarComponent implements OnInit {
     }
 
     accountIdToColor(id) {
-        return toHSL(id);
+        return toPastelColor(id);
     }
 }

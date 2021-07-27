@@ -7,7 +7,7 @@ import {Observable, Subscription} from 'rxjs';
 import {AuthService, EventsService, HouseService, TransactionService} from '@core/services';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
 import {transactionsPageGuide} from '@shared/components/info-modal/info-guides';
-import {toHSL} from '@core/utils/string-to-hex';
+import {toPastelColor} from '@core/utils/string-to-hsl';
 
 @Component({
     selector: 'app-transactions',
@@ -140,6 +140,6 @@ export class TransactionsPage implements OnInit, OnDestroy {
     }
 
     accountIdToColor(id: string) {
-        return toHSL(id);
+        return toPastelColor(id);
     }
 }
