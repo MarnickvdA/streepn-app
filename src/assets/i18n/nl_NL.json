@@ -1,6 +1,7 @@
 {
   "appName": "Streepn",
   "version": "Versie: {{version}}",
+  "author": "Marnick van der Arend",
   "actions": {
     "yes": "Ja",
     "no": "Nee",
@@ -63,8 +64,7 @@
     "house-not-retrieved": "Huis kon niet worden opgehaald",
     "house-invite-expired": "Huislink verlopen",
     "house-creation-error": "Er is een fout opgetreden bij het aanmaken van het huis. Probeer het opnieuw.",
-    "functions": {
-    }
+    "functions": {}
   },
   "login": {
     "name": "Naam",
@@ -109,8 +109,14 @@
       "picture-desc": "Je profielfoto is te zien in al je huizen."
     }
   },
+  "camera": {
+    "promptHeader": "Kies een optie",
+    "promptPhoto": "Kies uit gallerij",
+    "promptPicture": "Neem foto"
+  },
   "dashboard": {
     "title": "Dashboard",
+    "welcome": "Hey {{name}}!",
     "houses": "Huizen",
     "profile": "Profiel",
     "emailVerified": "Geverifieerd",
@@ -191,6 +197,7 @@
     },
     "transactions": {
       "title": "Transacties",
+      "add": "Nieuwe transactie",
       "empty": "Nog geen transacties... Tijd om die borrel aan te slingeren!",
       "currentProduct": "Geselecteerd product",
       "allPlusOne": "Allemaal +1",
@@ -352,6 +359,7 @@
         "house": {
           "itemTitle": "Verrekeningen",
           "title": "Verrekeningen",
+          "description-short": "Kosten verrekenen met huisgenoten.",
           "settle": "{{name}} verrekenen",
           "history": "Historie",
           "emptyHistory": "Er zijn nog geen verrekeningen gedaan.",
@@ -373,6 +381,7 @@
         "sharedAccount": {
           "amount": "Te verrekenen bedrag",
           "select-payers": "Betalers",
+          "select-all": "Allen selecteren",
           "settle": "Verrekenen",
           "balance": "Saldo:",
           "header": "Pas op!",
@@ -381,12 +390,6 @@
           "description-alert": "Pas op: deze handeling is niet terug te draaien!"
         }
       }
-    }
-  },
-  "information": {
-    "dashboard": {
-      "title": "Dashboardhulp",
-      "content": "<h1>Huizen</h1>\nOp deze pagina wordt een overzicht getoond van de huizen waaraan jij deelneemt.\n\n<h3>Toetreden tot een huis</h3>\nEr zijn twee manieren waarop je kan toetreden tot een huis.\n<br><br>\n<b>1. Met een invite link</b><br>\nEen andere Streepn gebruiker kan een invite linkje naar je sturen waarop je kan klikken.\nAls je op die link klikt wordt je naar Streepn genavigeerd en zul je een pop-up krijgen met de vraag of je dat\ndesbetreffende huis wilt toetreden.\n<br><br>\n<b>2. Met een huiscode</b><br>\nAls een invite link onverhoopt niet werkt kun je ook toetreden tot een huis door een code in te voeren. Hiervoor\nmoet je klikken op 'Toetreden met huiscode'.\n\n<h3>Huis creëren</h3>\nEen huis is erg makkelijk te creëren via ons stappenplan. Op de dashboard pagina kun je onderaan klikken op het + icoontje.\nHierna moet je een huisnaam invoeren en kun je via een social medium naar jouw voorkeur je huisgenoten uitnodigen!\n<br><br>\nVergeet niet om een product toe te voegen aan je huis administratie en de voorraad aan te vullen, daarna kun je aan de slag met Streepn!\n"
     }
   }
 }

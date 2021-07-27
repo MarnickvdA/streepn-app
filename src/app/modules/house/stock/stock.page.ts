@@ -1,10 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AddStockComponent} from '@modules/house/stock/add-stock/add-stock.component';
-import {ModalController} from '@ionic/angular';
+import {IonRouterOutlet, ModalController} from '@ionic/angular';
 import {AuthService, HouseService} from '@core/services';
 import {Observable, Subscription} from 'rxjs';
 import {House, Product} from '@core/models';
 import {NewProductComponent} from '@modules/house/stock/new-product/new-product.component';
+import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
+import {dashboardPageGuide, stockPageGuide} from '@shared/app-guides';
 
 @Component({
     selector: 'app-house-stock',
@@ -14,10 +16,11 @@ import {NewProductComponent} from '@modules/house/stock/new-product/new-product.
 export class StockPage implements OnInit, OnDestroy {
 
     house: House;
-    private house$: Observable<House>;
-    private houseSub: Subscription;
     stockProducts: Product[];
     isAdmin: boolean;
+
+    private house$: Observable<House>;
+    private houseSub: Subscription;
 
     constructor(private modalController: ModalController,
                 private houseService: HouseService,
@@ -69,5 +72,13 @@ export class StockPage implements OnInit, OnDestroy {
         setTimeout(() => {
             $event.target.complete();
         }, 350);
+    }
+
+    openInfo() {
+        InfoModalComponent.presentModal(
+            this.modalController,
+            'house.stock.title',
+            stockPageGuide
+        );
     }
 }

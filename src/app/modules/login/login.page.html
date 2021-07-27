@@ -1,6 +1,12 @@
 <ion-header>
     <ion-toolbar>
         <ion-title>{{'actions.login' | translate}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button>
+                <fa-duotone-icon (click)="openInfo()" [icon]="['fad', 'info-circle']" class="primary" [fixedWidth]="true"
+                                 slot="start"></fa-duotone-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
@@ -48,16 +54,16 @@
             </ion-button>
         </form>
 
-        <div class="horizontal-or" *ngIf="isIos">
+        <div *ngIf="isIos" class="horizontal-or">
             <hr>
             <span>{{'login.or' | translate}}</span>
             <hr>
         </div>
 
-<!--        <ion-button (click)="loginWithGoogle()" class="google-login" color="dark" expand="block" fill="outline">-->
-<!--            <ion-icon slot="start" src="assets/svg/google-logo.svg"></ion-icon>-->
-<!--            {{'login.loginWithGoogle' | translate}}-->
-<!--        </ion-button>-->
+        <!--        <ion-button (click)="loginWithGoogle()" class="google-login" color="dark" expand="block" fill="outline">-->
+        <!--            <ion-icon slot="start" src="assets/svg/google-logo.svg"></ion-icon>-->
+        <!--            {{'login.loginWithGoogle' | translate}}-->
+        <!--        </ion-button>-->
 
         <ion-button (click)="loginWithApple()" *ngIf="isIos" class="apple-login" color="dark" expand="block">
             <ion-icon name="logo-apple" slot="start"></ion-icon>

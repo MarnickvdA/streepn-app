@@ -34,28 +34,26 @@ export abstract class Account {
         this.settledAt = settledAt;
     }
 
-    deepCopy(): Account {
-        return JSON.parse(JSON.stringify(this));
-    }
-
     get isRemovable(): boolean {
         return this.balance.totalIn === 0 && this.balance.totalOut === 0;
+    }
+
+    deepCopy(): Account {
+        return JSON.parse(JSON.stringify(this));
     }
 }
 
 export const accountConverter = {
-    toFirestore(account: Account) {
-        return {
+    toFirestore: (account: Account) => ({
             id: account.id,
             createdAt: account.createdAt,
             name: account.name,
             type: account.type,
             settledAt: account.settledAt,
-        };
-    }
+        })
 };
 
 export enum AccountType {
-    USER = 'user',
-    SHARED = 'shared'
+    user = 'USER',
+    shared = 'SHARED'
 }

@@ -1,6 +1,6 @@
-import {Balance, House, Product, UserAccount} from '@core/models';
+import {Balance} from '@core/models';
 
-export function shuffle(array: any[]) {
+export const shuffle = (array: any[]) => {
     let currentIndex = array.length;
     let temporaryValue;
     let randomIndex;
@@ -19,24 +19,25 @@ export function shuffle(array: any[]) {
     }
 
     return array;
-}
+};
 
 export interface AccountPayout {
     totalOut: number;
     products: {
         [productId: string]: {
-            totalOut: number,
-            amountOut: number,
-        }
+            totalOut: number;
+            amountOut: number;
+        };
     };
 }
 
 /**
  * Calculate how the shared account should be splitted
+ *
  * @param balance balance of the shared Account
  * @param count amount of payers
  */
-export function calculatePayout(balance: Balance, count: number): AccountPayout[] {
+export const calculatePayout = (balance: Balance, count: number): AccountPayout[] => {
     let payout: AccountPayout[] = [];
 
     // Fill the payout object
@@ -59,8 +60,8 @@ export function calculatePayout(balance: Balance, count: number): AccountPayout[
     if (balance.products && count > 0) {
         Object.keys(balance.products).forEach((productId) => {
             const productPayout: {
-                totalOut: number,
-                amountOut: number,
+                totalOut: number;
+                amountOut: number;
             }[] = [];
 
             // Fill the product payout object
@@ -117,4 +118,4 @@ export function calculatePayout(balance: Balance, count: number): AccountPayout[
 
     // Add randomness to avoid that the first person in the list is always paying most.
     return shuffle(payout);
-}
+};

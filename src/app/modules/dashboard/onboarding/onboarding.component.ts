@@ -3,11 +3,9 @@ import {IonSlides, LoadingController, ModalController} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HouseInvite} from '@core/models';
 import {environment} from '@env/environment';
-import {Plugins} from '@capacitor/core';
 import {AuthService, EventsService, HouseService, PushService, StorageService, UIService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-
-const {Browser} = Plugins;
+import {Browser} from '@capacitor/browser';
 
 @Component({
     selector: 'app-onboarding',
@@ -44,7 +42,7 @@ export class OnboardingComponent implements OnInit {
     }
 
     ngOnInit() {
-        const n = this.authService.currentUser.displayName;
+        const n = this.authService.currentUser?.displayName;
         if (n && n.length > 1) {
             this.name = ' ' + this.authService.currentUser.displayName;
         }

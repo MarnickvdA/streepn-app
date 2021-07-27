@@ -14,7 +14,6 @@ import {
     PushTopic,
     StorageService
 } from '@core/services';
-import {ImageService} from '@core/services/image.service';
 
 @Component({
     selector: 'app-account-detail',
@@ -86,9 +85,9 @@ export class AccountDetailPage implements OnInit, OnDestroy {
 
     togglePush() {
         if (this.enablePush) {
-            this.pushService.unsubscribeTopic(PushTopic.HOUSE_ALL, {houseId: this.houseId, accountId: this.account.id});
+            this.pushService.unsubscribeTopic(PushTopic.houseAll, {houseId: this.houseId, accountId: this.account.id});
         } else {
-            this.pushService.subscribeTopic(PushTopic.HOUSE_ALL, {houseId: this.houseId, accountId: this.account.id});
+            this.pushService.subscribeTopic(PushTopic.houseAll, {houseId: this.houseId, accountId: this.account.id});
         }
     }
 
@@ -160,7 +159,7 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                             await loading.present();
                             const account: UserAccount = this.account.deepCopy();
 
-                            account.roles = account.roles.filter(item => item !== 'ADMIN');
+                            account.roles = account.roles.filter(item => item !== UserRole.admin);
 
                             this.accountService.updateUserAccount(this.house, account)
                                 .finally(() => {
@@ -182,7 +181,7 @@ export class AccountDetailPage implements OnInit, OnDestroy {
             await loading.present();
             const account: UserAccount = this.account.deepCopy();
 
-            account.roles.push(UserRole.ADMIN);
+            account.roles.push(UserRole.admin);
 
             this.accountService.updateUserAccount(this.house, account)
                 .finally(() => {

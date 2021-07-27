@@ -3,13 +3,20 @@
         <ion-buttons slot="start">
             <ion-menu-toggle>
                 <ion-button>
-                    <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'bars']"></fa-duotone-icon>
+                    <fa-duotone-icon [icon]="['fad', 'bars']" class="primary" [fixedWidth]="true"
+                                     slot="start"></fa-duotone-icon>
                 </ion-button>
             </ion-menu-toggle>
         </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button>
+                <fa-duotone-icon (click)="openInfo()" [icon]="['fad', 'info-circle']" class="primary" [fixedWidth]="true"
+                                 slot="start"></fa-duotone-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
     <ion-toolbar *ngIf="currentAccount as account">
-        <div class="account-toolbar" (dblclick)="content.scrollToTop(500)">
+        <div (dblclick)="content.scrollToTop(500)" class="account-toolbar">
             <ion-avatar>
                 <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
                 <img *ngIf="!account.photoUrl" alt="" src="assets/svg/avatar.svg">
@@ -29,7 +36,7 @@
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
-    <div class="empty-container" *ngIf="doneLoading && transactions && transactions.length === 0">
+    <div *ngIf="doneLoading && transactions && transactions.length === 0" class="empty-container">
         <ion-img src="assets/svg/no-transactions.svg"></ion-img>
         <ion-label>
             <p>
@@ -42,10 +49,12 @@
         <app-transaction-item *ngFor="let transaction of transactions"
                               [transaction]="transaction"></app-transaction-item>
 
-        <ion-button class="no-bg" (click)="loadNext()" *ngIf="transactions?.length > 0 && !doneLoading"
-                    [disabled]="isLoadingMore" fill="none">
+        <ion-button (click)="loadNext()" class="no-bg more-button" expand="block" fill="clear"
+                    *ngIf="transactions?.length > 0 && !doneLoading" [disabled]="isLoadingMore">
+            <fa-duotone-icon [icon]="['fad', 'arrow-alt-circle-down']" class="primary download-icon" [fixedWidth]="true"
+                             slot="start"></fa-duotone-icon>
             <ion-label *ngIf="!isLoadingMore" color="primary">{{'actions.loadMore' | translate}}</ion-label>
-            <ion-progress-bar *ngIf="isLoadingMore"></ion-progress-bar>
+            <ion-progress-bar *ngIf="isLoadingMore" type="indeterminate"></ion-progress-bar>
         </ion-button>
     </ion-list>
 </ion-content>

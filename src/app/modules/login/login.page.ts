@@ -1,9 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LoadingController, NavController} from '@ionic/angular';
+import {IonRouterOutlet, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Capacitor} from '@capacitor/core';
 import {TranslateService} from '@ngx-translate/core';
 import {AuthService, EventsService, LoggerService, StorageService, UIService} from '@core/services';
+import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
+import {loginPageGuide} from '@shared/app-guides';
 
 @Component({
     selector: 'app-login',
@@ -24,7 +26,8 @@ export class LoginPage implements OnInit, OnDestroy {
                 private translate: TranslateService,
                 private loadingController: LoadingController,
                 private uiService: UIService,
-                private storage: StorageService) {
+                private storage: StorageService,
+                private modalController: ModalController) {
         this.loginForm = this.formBuilder.group({
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required]]
@@ -134,5 +137,13 @@ export class LoginPage implements OnInit, OnDestroy {
             .finally(() => {
                 loading.dismiss();
             });
+    }
+
+    openInfo() {
+        InfoModalComponent.presentModal(
+            this.modalController,
+            'login.title',
+            loginPageGuide
+        );
     }
 }

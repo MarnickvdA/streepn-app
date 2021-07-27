@@ -1,0 +1,394 @@
+{
+  "appName": "",
+  "version": "",
+  "author": "Marnick van der Arend",
+  "actions": {
+    "yes": "",
+    "no": "",
+    "ok": "",
+    "close": "",
+    "skip": "",
+    "accept": "",
+    "deny": "",
+    "go": "",
+    "back": "",
+    "proceed": "",
+    "join": "",
+    "stop": "",
+    "start": "",
+    "login": "",
+    "logout": "",
+    "register": "",
+    "create": "",
+    "delete": "",
+    "edit": "",
+    "all": "",
+    "save": "",
+    "cancel": "",
+    "new": "",
+    "add": "",
+    "next": "",
+    "previous": "",
+    "seeAll": "",
+    "refresh": "",
+    "reset": "",
+    "copy": "",
+    "import": "",
+    "export": "",
+    "invite": "",
+    "admin": "",
+    "submit": "",
+    "complete": "",
+    "loadMore": "",
+    "saving": "",
+    "loading": "",
+    "deleting": "",
+    "removing": "",
+    "adding": "",
+    "streeping": "",
+    "joining": "",
+    "updating": "",
+    "editing": "",
+    "settling": "",
+    "uploading": "",
+    "loggingOut": ""
+  },
+  "date": {
+    "at": ""
+  },
+  "errors": {
+    "error": "",
+    "warning": "",
+    "no-connection": "",
+    "house-not-found": "",
+    "house-not-retrieved": "",
+    "house-invite-expired": "",
+    "house-creation-error": "",
+    "functions": {}
+  },
+  "login": {
+    "name": "",
+    "email": "",
+    "password": "",
+    "termsAndConditions": "",
+    "privacyStatement": "",
+    "registerAcceptance": "",
+    "registerAcceptanceAnd": "",
+    "errors": {
+      "email-required": "",
+      "password-required": "",
+      "name-required": "",
+      "email-already-in-use": "",
+      "invalid-email": "",
+      "weak-password": "",
+      "operation-not-allowed": "",
+      "user-disabled": "",
+      "user-not-found": "",
+      "wrong-password": "",
+      "unknown-login": "",
+      "unknown-register": ""
+    },
+    "or": "",
+    "loginWithApple": "",
+    "loginWithGoogle": "",
+    "registerQuestion": "",
+    "registerNow": ""
+  },
+  "side-menu": {
+    "settings": "",
+    "logout.description": ""
+  },
+  "profile": {
+    "edit": {
+      "title": "",
+      "username": "",
+      "username-desc": "",
+      "email": "",
+      "password": "",
+      "picture": "",
+      "picture-desc": ""
+    }
+  },
+  "camera": {
+    "promptHeader": "",
+    "promptPhoto": "",
+    "promptPicture": ""
+  },
+  "dashboard": {
+    "title": "",
+    "welcome": "Hey {{name}}!",
+    "houses": "",
+    "profile": "",
+    "emailVerified": "",
+    "memberSince": "",
+    "emptyHouses": "",
+    "yourBalance": "",
+    "balance": "",
+    "createHouse": {
+      "title": "",
+      "houseName": "",
+      "step1": {
+        "title": "",
+        "description": ""
+      },
+      "step2": {
+        "title": "",
+        "description": ""
+      },
+      "step3": {
+        "title": "",
+        "description": ""
+      },
+      "errors": {
+        "name-length": "",
+        "name-required": ""
+      },
+      "shareInvite": "",
+      "navigateHouseOverview": ""
+    },
+    "toggleDarkMode": "",
+    "manualHouseJoin": "",
+    "manualHouseJoinDesc": "",
+    "houseInvite": {
+      "header": "",
+      "question": "",
+      "manualHeader": "",
+      "code": "",
+      "invalidCode": ""
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "",
+      "description": ""
+    },
+    "legal": {
+      "title": "",
+      "description1": "",
+      "description2": "",
+      "description3": "",
+      "error": ""
+    },
+    "push": {
+      "title": "",
+      "description": "",
+      "enable": ""
+    },
+    "setName": {
+      "title": "",
+      "description": ""
+    },
+    "joinHouse": {
+      "title": "",
+      "description": ""
+    },
+    "start": {
+      "title": "",
+      "description": ""
+    }
+  },
+  "house": {
+    "tabs": {
+      "more": ""
+    },
+    "deals": {
+      "title": "",
+      "soon-explained": ""
+    },
+    "transactions": {
+      "title": "",
+      "empty": "",
+      "currentProduct": "",
+      "allPlusOne": "",
+      "disabledEditing": ""
+    },
+    "transaction": {
+      "title": "",
+      "header": "",
+      "timeline": "",
+      "for": "",
+      "at": ""
+    },
+    "stock": {
+      "tab": "",
+      "title": "",
+      "add-product": "",
+      "add-product-desc": "",
+      "current": "",
+      "empty": "",
+      "log": {
+        "title": "",
+        "description": "",
+        "paidBy": "",
+        "writtenOff": "",
+        "stockLog": "",
+        "stockLogFor": ""
+      },
+      "detail": {
+        "advisedPrice": ""
+      },
+      "add": {
+        "title": "",
+        "description": "",
+        "selectProduct": "",
+        "paidByTitle": "",
+        "paidBy": "",
+        "amount": "",
+        "cost": "",
+        "errors": {
+          "product-required": "",
+          "amount-required": "",
+          "amount-min": "",
+          "amount-max": "",
+          "cost-required": "",
+          "cost-min": "",
+          "cost-max": "",
+          "paidBy-required": ""
+        }
+      },
+      "edit": {
+        "title": "",
+        "description": "",
+        "errors": {
+          "product-required": "",
+          "amount-required": "",
+          "amount-min": "",
+          "amount-max": "",
+          "cost-required": "",
+          "cost-min": "",
+          "cost-max": "",
+          "paidBy-required": ""
+        }
+      }
+    },
+    "overview": {
+      "title": "",
+      "admin": "",
+      "sharedAccounts": "",
+      "emptySharedAccounts": "",
+      "products": "",
+      "free": "",
+      "emptyProducts": "",
+      "stock": "",
+      "emptyStock": "",
+      "disabledStock": "",
+      "refreshLink": {
+        "header": "",
+        "message": ""
+      },
+      "preferences": {
+        "title": ""
+      },
+      "account": {
+        "preferences": "",
+        "balance": "",
+        "enablePush": "",
+        "enableAdmin": "",
+        "disableAdmin": {
+          "header": "",
+          "message": "",
+          "you": ""
+        },
+        "deletePrecondition": "",
+        "deleteAccount": "",
+        "leaveHouse": "",
+        "you": "",
+        "balanceAmount": "",
+        "totalIn": "",
+        "totalOut": "",
+        "settle": ""
+      },
+      "accounts": {
+        "title": "",
+        "adminTitle": "",
+        "inviteLink": "",
+        "validThrough": "",
+        "expired": ""
+      },
+      "addAccount": {
+        "header": "",
+        "message": "",
+        "code": ""
+      },
+      "inviteAccount": {
+        "title": "",
+        "description": "",
+        "dialogTitle": ""
+      },
+      "addSharedAccount": {
+        "title": "",
+        "desc": "",
+        "accountName": "",
+        "errors": {
+          "name-required": "",
+          "name-length": "",
+          "name-conflict": ""
+        }
+      },
+      "addProduct": {
+        "title": "",
+        "productName": "",
+        "productPrice": "",
+        "errors": {
+          "name-required": "",
+          "name-length": "",
+          "name-conflict": "",
+          "price-required": "",
+          "price-min": "",
+          "price-max": ""
+        }
+      },
+      "editProduct": {
+        "productName": "",
+        "productPrice": "",
+        "errors": {
+          "name-required": "",
+          "name-length": "",
+          "name-conflict": "",
+          "price-required": "",
+          "price-min": "",
+          "price-max": ""
+        },
+        "deleteWarning": {
+          "header": "",
+          "message": ""
+        }
+      },
+      "settle": {
+        "house": {
+          "itemTitle": "",
+          "title": "",
+          "description-short": "",
+          "settle": "",
+          "history": "",
+          "emptyHistory": "",
+          "description": "",
+          "checkStock": "",
+          "stockDescription": "",
+          "settleSharedAccounts": "",
+          "settleSharedDescription": "",
+          "sharedCompleted": "",
+          "sharedIncomplete": "",
+          "settleUsers": "",
+          "settleUsersDescription": "",
+          "toOverview": ""
+        },
+        "detail": {
+          "createdAt": "",
+          "createdBy": ""
+        },
+        "sharedAccount": {
+          "amount": "",
+          "select-payers": "",
+          "select-all": "",
+          "settle": "",
+          "balance": "",
+          "header": "",
+          "message": "",
+          "description": "",
+          "description-alert": ""
+        }
+      }
+    }
+  }
+}

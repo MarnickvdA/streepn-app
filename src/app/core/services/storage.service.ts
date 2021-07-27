@@ -1,19 +1,12 @@
 import {Injectable} from '@angular/core';
-import {Plugins} from '@capacitor/core';
-import {LoggerService} from './logger.service';
 import {EventsService} from './events.service';
-import {AngularFireStorage} from '@angular/fire/storage';
-
-const {Storage} = Plugins;
+import {Storage} from '@capacitor/storage';
 
 @Injectable({
     providedIn: 'root'
 })
 export class StorageService {
-    private readonly logger = LoggerService.getLogger(StorageService.name);
-
-    constructor(private events: EventsService,
-                private storage: AngularFireStorage) {
+    constructor(private events: EventsService) {
         this.events.subscribe('auth:logout', () => {
             this.nuke();
         });
@@ -25,7 +18,6 @@ export class StorageService {
                 if (data?.value) {
                     return JSON.parse(data.value);
                 } else {
-                    this.logger.warn({message: 'key ' + key + ' not found in storage'});
                     return Promise.reject(key + ' not found in storage');
                 }
             });

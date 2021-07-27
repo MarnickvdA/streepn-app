@@ -6,16 +6,12 @@ export class Balance {
     totalOut: number;
     products?: {
         [productId: string]: {
-            totalIn: number,
-            totalOut: number,
-            amountIn: number,
-            amountOut: number,
-        }
+            totalIn: number;
+            totalOut: number;
+            amountIn: number;
+            amountOut: number;
+        };
     };
-
-    static new() {
-        return new Balance(0, 0);
-    }
 
     constructor(totalIn: number, totalOut: number,
                 products?: { [p: string]: { totalIn: number; totalOut: number; amountIn: number; amountOut: number } }) {
@@ -27,14 +23,16 @@ export class Balance {
     get amount(): number {
         return this.totalIn - this.totalOut;
     }
+
+    static new() {
+        return new Balance(0, 0);
+    }
 }
 
 export const balanceConverter = {
-    toFirestore(balance: Balance) {
-        return {
-            totalIn: balance.totalIn,
-            totalOut: balance.totalOut,
-            products: balance.products,
-        };
-    }
+    toFirestore: (balance: Balance) => ({
+        totalIn: balance.totalIn,
+        totalOut: balance.totalOut,
+        products: balance.products,
+    })
 };

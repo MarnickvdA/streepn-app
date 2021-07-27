@@ -1,13 +1,14 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Account, House, Product} from '@core/models';
-import {LoadingController, ModalController} from '@ionic/angular';
-import {Capacitor, HapticsImpactStyle, Plugins} from '@capacitor/core';
+import {IonRouterOutlet, LoadingController, ModalController} from '@ionic/angular';
 import {catchError} from 'rxjs/operators';
 import {EMPTY, Observable, Subscription} from 'rxjs';
-import {LoggerService, TransactionService, TransactionSet} from '@core/services';
+import {TransactionService, TransactionSet} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-
-const {Haptics} = Plugins;
+import {Capacitor} from '@capacitor/core';
+import {Haptics, ImpactStyle} from '@capacitor/haptics';
+import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
+import {addTransactionGuide} from '@shared/app-guides';
 
 @Component({
     selector: 'app-add-transaction',
@@ -16,12 +17,13 @@ const {Haptics} = Plugins;
 })
 export class AddTransactionComponent implements OnInit {
     @Input() house$: Observable<House>;
+
     transactions: TransactionSet = {};
     house: House;
     currentProduct: Product;
     transactionCount = 0;
+
     private houseSub: Subscription;
-    private readonly logger = LoggerService.getLogger(AddTransactionComponent.name);
 
     constructor(private modalController: ModalController,
                 private transactionService: TransactionService,
@@ -39,14 +41,14 @@ export class AddTransactionComponent implements OnInit {
         });
     }
 
-    selectProduct($event: CustomEvent) {
+    selectProduct($event: any) {
         this.currentProduct = this.house.products.find(p => p.id === $event.detail.value);
     }
 
     addItem(account: Account) {
-        if (Capacitor.isNative) {
+        if (Capacitor.isNativePlatform()) {
             Haptics.impact({
-                style: HapticsImpactStyle.Heavy
+                style: ImpactStyle.Heavy
             });
         }
 
@@ -98,9 +100,9 @@ export class AddTransactionComponent implements OnInit {
     }
 
     removeItem(account: Account) {
-        if (Capacitor.isNative) {
+        if (Capacitor.isNativePlatform()) {
             Haptics.impact({
-                style: HapticsImpactStyle.Medium
+                style: ImpactStyle.Medium
             });
         }
 
@@ -111,5 +113,13 @@ export class AddTransactionComponent implements OnInit {
     reset() {
         this.transactions = {};
         this.transactionCount = 0;
+    }
+
+    openInfo() {
+        InfoModalComponent.presentModal(
+            this.modalController,
+            'house.transactions.add',
+            addTransactionGuide
+        );
     }
 }

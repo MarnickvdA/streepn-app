@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {House} from '@core/models';
-import {PermissionType, Plugins} from '@capacitor/core';
 import {AlertController, ModalController, NavController} from '@ionic/angular';
 import {HouseService, LoggerService, PushService, PushTopic, UIService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
-
-const {Clipboard, Share, Permissions} = Plugins;
+import {Share} from '@capacitor/share';
+import {Clipboard} from '@capacitor/clipboard';
 
 @Component({
     selector: 'app-new-house',
@@ -21,10 +20,11 @@ export class NewHouseComponent implements OnInit {
     name: string;
     house: House;
     sharedHouse: boolean;
+
     private readonly logger = LoggerService.getLogger(NewHouseComponent.name);
 
     constructor(private formBuilder: FormBuilder,
-                private houseService: HouseService,
+                public houseService: HouseService,
                 private uiService: UIService,
                 private translate: TranslateService,
                 private alertController: AlertController,
@@ -55,20 +55,11 @@ export class NewHouseComponent implements OnInit {
             this.houseCreated = true;
             this.loading = true;
             this.houseService.createHouse(this.name)
-                .then((houseId) => {
-                    return this.houseService.getHouse(houseId);
-                })
+                .then((houseId) => this.houseService.getHouse(houseId))
                 .then((house) => {
                     if (house) {
                         this.house = house;
-
-                        Permissions.query({
-                            name: PermissionType.Notifications
-                        }).then((result) => {
-                            if (result.state === 'granted') {
-                                this.pushService.subscribeTopic(PushTopic.HOUSE_ALL, {houseId: house.id, accountId: house.accounts[0].id});
-                            }
-                        });
+                        this.pushService.subscribeTopic(PushTopic.houseAll, {houseId: house.id, accountId: house.accounts[0].id});
                     } else {
                         // FIXME
                     }
@@ -108,6 +99,7 @@ export class NewHouseComponent implements OnInit {
                         text: this.translate.instant('actions.copy') + ' ' + this.translate.instant('house.overview.addAccount.code'),
                         handler: () => {
                             Clipboard.write({
+                                // eslint-disable-next-line id-blacklist
                                 string: this.house.inviteLink
                             });
                         }

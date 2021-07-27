@@ -1,12 +1,12 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
-import {House, SharedAccount, UserAccount} from '@core/models';
+import {House, SharedAccount} from '@core/models';
 import {HouseService} from '@core/services';
 import {AccountPayout, calculatePayout} from '@core/utils/streepn-logic';
 import {TranslateService} from '@ngx-translate/core';
 import {getMoneyString} from '@core/utils/formatting-utils';
-import {SettlementService} from '@core/services/settlement.service';
+import {SettlementService} from '@core/services/api/settlement.service';
 
 @Component({
     selector: 'app-settle',
@@ -20,15 +20,16 @@ export class SettleComponent implements OnInit, OnDestroy {
     sharedAccount?: SharedAccount;
     house$: Observable<House>;
     house?: House;
-    private houseSub: Subscription;
     payers: {
-        [id: string]: boolean
+        [id: string]: boolean;
     } = {};
     payerAmount: {
-        [id: string]: number
+        [id: string]: number;
     } = {};
+
+    private houseSub: Subscription;
     private settlement: {
-        [id: string]: AccountPayout
+        [id: string]: AccountPayout;
     };
 
     constructor(private modalController: ModalController,
@@ -36,7 +37,8 @@ export class SettleComponent implements OnInit, OnDestroy {
                 private settlementService: SettlementService,
                 private alertController: AlertController,
                 private loadingController: LoadingController,
-                private translate: TranslateService) {
+                private translate: TranslateService,
+                private zone: NgZone) {
     }
 
     ngOnInit() {
@@ -44,6 +46,10 @@ export class SettleComponent implements OnInit, OnDestroy {
         this.houseSub = this.house$.subscribe((house => {
             this.house = house;
             this.sharedAccount = house?.getSharedAccountById(this.sharedAccountId);
+
+            if (house) {
+                this.reset();
+            }
         }));
     }
 
@@ -56,37 +62,19 @@ export class SettleComponent implements OnInit, OnDestroy {
     }
 
     reset() {
-        this.payers = {};
+        this.zone.run(_ => {
+            this.house?.accounts.forEach((acc) => {
+                this.payers[acc.id] = false;
+            });
+        });
     }
 
-    toggleAll() {
-        this.house?.accounts.forEach((acc) => {
+    selectAll() {
+        this.house?.accounts.forEach((acc, i) => {
             this.payers[acc.id] = true;
         });
 
         this.updateSettle();
-    }
-
-    toggleAccount($event: any, account: UserAccount) {
-        this.payers[account.id] = !this.payers[account.id];
-
-        this.updateSettle();
-    }
-
-    private updateSettle() {
-        const payerKeys: string[] = Object.keys(this.payers).filter(k => this.payers[k]);
-
-        this.settlement = {};
-        calculatePayout(this.sharedAccount?.balance, payerKeys.length).forEach((p, i) => {
-            this.settlement[payerKeys[i]] = p;
-        });
-
-        const newPayerAmount = {};
-        payerKeys.forEach((k) => {
-            newPayerAmount[k] = this.settlement[k]?.totalOut || 0;
-        });
-
-        this.payerAmount = newPayerAmount;
     }
 
     canSettle(): boolean {
@@ -127,5 +115,21 @@ export class SettleComponent implements OnInit, OnDestroy {
         });
 
         await alert.present();
+    }
+
+    updateSettle() {
+        const payerKeys: string[] = Object.keys(this.payers).filter(k => this.payers[k]);
+
+        this.settlement = {};
+        calculatePayout(this.sharedAccount?.balance, payerKeys.length).forEach((p, i) => {
+            this.settlement[payerKeys[i]] = p;
+        });
+
+        const newPayerAmount = {};
+        payerKeys.forEach((k) => {
+            newPayerAmount[k] = this.settlement[k]?.totalOut || 0;
+        });
+
+        this.payerAmount = newPayerAmount;
     }
 }

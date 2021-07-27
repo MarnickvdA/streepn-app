@@ -3,8 +3,8 @@
         <ion-title>{{sharedAccount?.name}}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="dismiss()">
-                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth
-                                 [icon]="['fad', 'times-circle']"></fa-duotone-icon>
+                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" [fixedWidth]="true"
+                                 slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
     </ion-toolbar>
@@ -21,8 +21,8 @@
         <ion-label>
             <h3>{{'house.overview.settle.sharedAccount.amount' | translate}}</h3>
         </ion-label>
-        <span slot="end"
-              [ngClass]="sharedAccount?.balance.amount >= 0 ? 'positive-amount' : 'negative-amount'">{{sharedAccount?.balance.amount | money}}</span>
+        <span [ngClass]="sharedAccount?.balance.amount >= 0 ? 'positive-amount' : 'negative-amount'"
+              slot="end">{{sharedAccount?.balance.amount | money}}</span>
     </ion-item>
 
     <p class="description ion-text-wrap">
@@ -35,8 +35,9 @@
             <ion-label>
                 {{'house.overview.settle.sharedAccount.select-payers' | translate}}
             </ion-label>
+            <ion-button (click)="selectAll()">{{'house.overview.settle.sharedAccount.select-all' | translate}}</ion-button>
         </ion-list-header>
-        <ion-item class="account-item" *ngFor="let account of house?.accounts">
+        <ion-item *ngFor="let account of house?.accounts; let i = index" class="account-item">
             <ion-avatar slot="start">
                 <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
                 <img *ngIf="!account.photoUrl" alt=""
@@ -53,11 +54,11 @@
                     </p>
                 </ion-label>
             </div>
-            <ion-checkbox slot="end" (ionChange)="toggleAccount($event, account)"></ion-checkbox>
+            <ion-checkbox (ionChange)="updateSettle()" [(ngModel)]="payers[account.id]" slot="end"></ion-checkbox>
         </ion-item>
     </ion-list>
 
-    <ion-button [disabled]="!canSettle()" (click)="settleAccount()" class="settle" expand="block">
+    <ion-button (click)="settleAccount()" [disabled]="!canSettle()" class="settle" expand="block">
         <ion-label>{{'house.overview.settle.sharedAccount.settle' | translate}}</ion-label>
     </ion-button>
 </ion-content>

@@ -1,12 +1,10 @@
 <ion-app>
-    <ion-split-pane [disabled]="!showSideMenu" contentId="main-content">
-        <ion-menu (ionDidOpen)="menuCtrl.swipeGesture(true)"
-                  (ionDidClose)="menuCtrl.swipeGesture(false)"
-                  swipeGesture="false" type="push" contentId="main-content">
+    <ion-split-pane [disabled]="hideSideMenu" contentId="main">
+        <ion-menu (ionDidClose)="toggleMenu(false)"
+                  (ionDidOpen)="toggleMenu(true)"
+                  contentId="main" swipeGesture="false" type="push">
             <app-side-menu></app-side-menu>
         </ion-menu>
-
-        <ion-router-outlet id="main-content"></ion-router-outlet>
-
+        <ion-router-outlet id="main"></ion-router-outlet>
     </ion-split-pane>
 </ion-app>

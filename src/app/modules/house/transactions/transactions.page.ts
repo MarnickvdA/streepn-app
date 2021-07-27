@@ -1,10 +1,12 @@
 import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {House, Transaction, transactionConverter, UserAccount} from '@core/models';
-import {ModalController} from '@ionic/angular';
+import {IonRouterOutlet, ModalController} from '@ionic/angular';
 import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {Observable, Subscription} from 'rxjs';
 import {AuthService, EventsService, HouseService, TransactionService} from '@core/services';
+import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
+import {transactionsPageGuide} from '@shared/app-guides';
 
 @Component({
     selector: 'app-transactions',
@@ -17,10 +19,11 @@ export class TransactionsPage implements OnInit, OnDestroy {
     transactions: Transaction[];
     doneLoading = false;
     isLoadingMore = false;
-    private LIMIT = 15;
+
     private lastSnapshot: QueryDocumentSnapshot<Transaction>;
     private houseSub: Subscription;
     private house$: Observable<House>;
+    private readonly limit = 15;
     private readonly refreshSub;
 
     constructor(private route: ActivatedRoute,
@@ -99,7 +102,7 @@ export class TransactionsPage implements OnInit, OnDestroy {
             .ref
             .withConverter(transactionConverter)
             .orderBy('createdAt', 'desc')
-            .limit(this.LIMIT);
+            .limit(this.limit);
 
         if (this.lastSnapshot) {
             ref = ref.startAfter(this.lastSnapshot);
@@ -112,7 +115,7 @@ export class TransactionsPage implements OnInit, OnDestroy {
         return ref.get()
             .then((result) => {
                 this.zone.run(_ => {
-                    if (result.docs.length < this.LIMIT) {
+                    if (result.docs.length < this.limit) {
                         this.doneLoading = true;
                     }
 
@@ -125,5 +128,13 @@ export class TransactionsPage implements OnInit, OnDestroy {
                     }
                 });
             });
+    }
+
+    openInfo() {
+        InfoModalComponent.presentModal(
+            this.modalController,
+            'house.transactions.title',
+            transactionsPageGuide
+        );
     }
 }

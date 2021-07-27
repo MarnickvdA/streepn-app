@@ -3,11 +3,17 @@
         <ion-buttons slot="start">
             <ion-menu-toggle>
                 <ion-button>
-                    <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'bars']"></fa-duotone-icon>
+                    <fa-duotone-icon [icon]="['fad', 'bars']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
                 </ion-button>
             </ion-menu-toggle>
         </ion-buttons>
         <ion-title>{{'house.stock.title' | translate}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button>
+                <fa-duotone-icon (click)="openInfo()" [icon]="['fad', 'info-circle']" class="primary" [fixedWidth]="true"
+                                 slot="start"></fa-duotone-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
@@ -22,8 +28,8 @@
         </ion-toolbar>
     </ion-header>
 
-    <ion-item class="list-button" lines="full" (click)="addProduct()" button>
-        <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'plus']"></fa-duotone-icon>
+    <ion-item (click)="addProduct()" button class="list-button" lines="full">
+        <fa-duotone-icon [icon]="['fad', 'plus']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
         <ion-label>
             <h3>{{'house.stock.add-product' | translate}}</h3>
             <p class="small ion-text-wrap">
@@ -32,8 +38,9 @@
         </ion-label>
     </ion-item>
 
-    <ion-item class="list-button" lines="full" (click)="addStock()" [disabled]="house?.products.length === 0" button>
-        <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'dolly-flatbed-alt']"></fa-duotone-icon>
+    <ion-item (click)="addStock()" [disabled]="house?.products.length === 0" button class="list-button" lines="full">
+        <fa-duotone-icon [icon]="['fad', 'dolly-flatbed-alt']" class="primary" [fixedWidth]="true"
+                         slot="start"></fa-duotone-icon>
         <ion-label>
             <h3>{{'house.stock.add.title' | translate}}</h3>
             <p class="small ion-text-wrap">
@@ -42,9 +49,9 @@
         </ion-label>
     </ion-item>
 
-    <ion-item class="list-button" lines="full" [disabled]="!(house?.products.length > 0)" routerLink="log"
-              routerDirection="forward" button>
-        <fa-duotone-icon slot="start" class="primary" fixedWidth [icon]="['fad', 'history']"></fa-duotone-icon>
+    <ion-item [disabled]="!(house?.products.length > 0)" button class="list-button" lines="full"
+              routerDirection="forward" routerLink="log">
+        <fa-duotone-icon [icon]="['fad', 'history']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
         <ion-label>
             <h3>{{'house.stock.log.title' | translate}}</h3>
             <p class="small ion-text-wrap">
@@ -58,9 +65,9 @@
         <ion-label>{{'house.overview.products' | translate}}</ion-label>
     </ion-list-header>
 
-    <ion-item class="no-min-height no-bg" *ngIf="house?.products.length === 0" lines="none">
+    <ion-item *ngIf="house?.products.length === 0" class="no-min-height no-bg" lines="none">
         <ion-label>
-            <p class="small">
+            <p>
                 {{'house.overview.emptyProducts' | translate}}
             </p>
         </ion-label>

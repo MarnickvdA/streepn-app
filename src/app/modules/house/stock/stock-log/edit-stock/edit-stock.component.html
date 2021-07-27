@@ -3,7 +3,8 @@
         <ion-title>{{'house.stock.edit.title' | translate}}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="dismiss()">
-                <fa-duotone-icon slot="icon-only" class="primary" fixedWidth [icon]="['fad', 'times-circle']"></fa-duotone-icon>
+                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" [fixedWidth]="true"
+                                 slot="icon-only"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>
     </ion-toolbar>
@@ -56,7 +57,7 @@
             <div class="input-field">
                 <ion-label position="stacked">{{'house.stock.add.cost' | translate}}</ion-label>
                 <app-money-input (amountEntered)="amountChanged($event)" [amount]="stockItem.cost + ''" [precision]="2"
-                                 icon="cash-outline" tabIndex="2"></app-money-input>
+                                 icon="cash-outline" [tabIndex]="2"></app-money-input>
             </div>
 
             <span *ngIf="isSubmitted && form.cost.errors?.required" class="form-input-error">
@@ -96,11 +97,12 @@
                 {{'house.stock.edit.errors.paidBy-required' | translate}}
             </span>
 
-            <ion-button [disabled]="stockForm.invalid" class="ion-margin-top" expand="block" id="name-button" type="submit">
+            <ion-button [disabled]="stockForm.invalid" class="ion-margin-top" expand="block" id="name-button"
+                        type="submit">
                 <ion-label>{{'actions.edit' | translate}}</ion-label>
             </ion-button>
         </form>
-        <ion-button class="ion-margin-top" expand="block" color="danger" (click)="removeStock()">
+        <ion-button (click)="removeStock()" class="ion-margin-top" color="danger" expand="block">
             <ion-label>{{'actions.delete' | translate}}</ion-label>
         </ion-button>
     </div>

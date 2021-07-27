@@ -11,12 +11,14 @@ import {AuthService, HouseService} from '@core/services';
     styleUrls: ['./transaction-item.component.scss'],
 })
 export class TransactionItemComponent implements OnInit, OnDestroy {
+    @Input() transaction: Transaction;
+
     house?: House;
     account?: UserAccount;
     currentAccount?: UserAccount;
+
     private houseSub: Subscription;
     private house$: Observable<House>;
-    @Input() transaction: Transaction;
 
     constructor(private navController: NavController,
                 private route: ActivatedRoute,
@@ -30,8 +32,10 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
             .subscribe((house) => {
                 this.house = house;
 
-                this.currentAccount = house.getUserAccountByUserId(this.authService.currentUser.uid);
-                this.account = house.getUserAccountById(this.transaction.createdBy);
+                if (house) {
+                    this.currentAccount = house.getUserAccountByUserId(this.authService.currentUser.uid);
+                    this.account = house.getUserAccountById(this.transaction.createdBy);
+                }
             });
     }
 

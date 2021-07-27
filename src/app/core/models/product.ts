@@ -1,10 +1,10 @@
 import {Timestamp} from '@firebase/firestore-types';
 import {v4 as uuid} from 'uuid';
 import firebase from 'firebase/app';
+import {getMoneyString} from '@core/utils/formatting-utils';
 
 require('firebase/firestore');
 import TimestampFn = firebase.firestore.Timestamp;
-import {getMoneyString} from '@core/utils/formatting-utils';
 
 export class Product {
     id: string;
@@ -26,14 +26,6 @@ export class Product {
         this.totalOut = totalOut || 0;
         this.amountIn = amountIn || 0;
         this.amountOut = amountOut || 0;
-    }
-
-    static new(name: string, price: number) {
-        return new Product(uuid(), TimestampFn.now(), name, price, 0, 0, 0, 0);
-    }
-
-    deepCopy(): Product {
-        return JSON.parse(JSON.stringify(this));
     }
 
     get stock(): number {
@@ -70,10 +62,18 @@ export class Product {
     get restWorth(): number {
         return Math.round((this.worthDifference * this.amountLeftPercentage) + this.maxRevenue);
     }
+
+    static new(name: string, price: number) {
+        return new Product(uuid(), TimestampFn.now(), name, price, 0, 0, 0, 0);
+    }
+
+    deepCopy(): Product {
+        return JSON.parse(JSON.stringify(this));
+    }
 }
 
 export const productConverter = {
-    toFirestore(product: Product) {
+    toFirestore: (product: Product) => {
         const p: any = {
             id: product.id,
             createdAt: product.createdAt,
@@ -83,8 +83,6 @@ export const productConverter = {
 
         return p;
     },
-    newProduct(data: { [key: string]: any }): Product {
-        return new Product(data.id, data.createdAt, data.name, data.price,
-            data.totalIn, data.totalOut, data.amountIn, data.amountOut);
-    }
+    newProduct: (data: { [key: string]: any }): Product => new Product(data.id, data.createdAt, data.name, data.price,
+        data.totalIn, data.totalOut, data.amountIn, data.amountOut)
 };

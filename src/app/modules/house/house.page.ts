@@ -6,7 +6,6 @@ import {House} from '@core/models';
 import {AddTransactionComponent} from '@modules/house/add-transaction/add-transaction.component';
 import {ModalController, NavController} from '@ionic/angular';
 import {Capacitor} from '@capacitor/core';
-import {faPlus} from '@fortawesome/pro-regular-svg-icons';
 
 @Component({
     selector: 'app-house',
@@ -16,8 +15,8 @@ import {faPlus} from '@fortawesome/pro-regular-svg-icons';
 export class HousePage implements OnInit, OnDestroy {
 
     house$: Observable<House>;
-    private routeSub: Subscription;
     iOS: boolean;
+    private routeSub: Subscription;
     private house: House;
     private houseSub: Subscription;
 
@@ -26,7 +25,7 @@ export class HousePage implements OnInit, OnDestroy {
                 private modalController: ModalController,
                 private events: EventsService,
                 private navController: NavController) {
-        this.iOS = Capacitor.isNative && Capacitor.platform === 'ios';
+        this.iOS = Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios';
     }
 
     ngOnInit() {
@@ -62,5 +61,9 @@ export class HousePage implements OnInit, OnDestroy {
                     }
                 });
         });
+    }
+
+    tabsChange($event: { tab: string }) {
+        this.navController.navigateRoot(['house', this.house?.id, $event.tab]);
     }
 }

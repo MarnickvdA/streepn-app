@@ -16,7 +16,7 @@ require('firebase/firestore');
  * List of supported currencies currently available in the application.
  */
 export enum Currency {
-    EURO = 'EUR'
+    euro = 'EUR'
 }
 
 /**
@@ -32,36 +32,25 @@ export class House {
     inviteLink: string;
     inviteLinkExpiry: Timestamp; // A week after generation.
     members: string[]; // List of user ids which is used for querying the current user's houses.
-
+    // We use totalIn and totalOut of the whole house to account for the difference that can occur between the stock and the sold products.
+    totalIn: number;
+    totalOut: number;
+    // A lookup dictionary for improved performance. Every array is very expensive to search through and maps are more efficient.
+    houseDictionary: {
+        accounts: {
+            [accountId: string]: UserAccount;
+        };
+        sharedAccounts: {
+            [accountId: string]: SharedAccount;
+        };
+        products: {
+            [productId: string]: Product;
+        };
+    };
     // Private arrays for the accounts and products. They need to be in sync with the houseDictionary.
     private mAccounts: UserAccount[];
     private mSharedAccounts: SharedAccount[];
     private mProducts: Product[];
-
-    // We use totalIn and totalOut of the whole house to account for the difference that can occur between the stock and the sold products.
-    totalIn: number;
-    totalOut: number;
-
-    // A lookup dictionary for improved performance. Every array is very expensive to search through and maps are more efficient.
-    houseDictionary: {
-        accounts: {
-            [accountId: string]: UserAccount
-        },
-        sharedAccounts: {
-            [accountId: string]: SharedAccount
-        },
-        products: {
-            [productId: string]: Product
-        }
-    };
-
-    static new(user: User, name: string, currency: Currency) {
-        const uid = uuid();
-        const account = UserAccount.new(uid, user.uid, user.displayName, [UserRole.ADMIN], user.photoURL);
-
-        return new House(uuid(), TimestampFn.now(), name, currency, undefined, undefined, [user.uid], [account],
-            [], [], 0, 0);
-    }
 
     constructor(id: string,
                 createdAt: Timestamp,
@@ -95,7 +84,6 @@ export class House {
         this.setDictionary();
     }
 
-
     get accounts(): UserAccount[] {
         return this.mAccounts;
     }
@@ -106,9 +94,7 @@ export class House {
     }
 
     get settleSharedAccounts(): SharedAccount[] {
-        return this.mSharedAccounts.filter(acc => {
-            return acc.balance.amount !== 0;
-        });
+        return this.mSharedAccounts.filter(acc => acc.balance.amount !== 0);
     }
 
     get sharedAccounts(): SharedAccount[] {
@@ -133,8 +119,17 @@ export class House {
         return !(this.mSharedAccounts.find((acc) => !acc.isRemovable) || this.mProducts.find((product) => product.stock < 0));
     }
 
+    static new(user: User, name: string, currency: Currency) {
+        const uid = uuid();
+        const hid = uuid();
+        const account = UserAccount.new(uid, user.uid, user.displayName, [UserRole.admin], user.photoURL);
+
+        return new House(hid, TimestampFn.now(), name, currency, undefined, undefined, [user.uid], [account],
+            [], [], 0, 0);
+    }
+
     isAdmin(userId: string): boolean {
-        return this.accounts.find(account => account.userId === userId)?.roles.includes(UserRole.ADMIN) || false;
+        return this.accounts.find(account => account.userId === userId)?.roles.includes(UserRole.admin) || false;
     }
 
     getAccountById(accountId: string): Account | undefined {
@@ -168,6 +163,14 @@ export class House {
         return this.houseDictionary.products[productId];
     }
 
+    deepCopy(): House {
+        return JSON.parse(JSON.stringify(this));
+    }
+
+    getUserAccountByUserId(uid: string) {
+        return this.accounts.find(acc => acc.userId === uid) as UserAccount;
+    }
+
     private setDictionary() {
         const newDict = {
             accounts: {},
@@ -181,7 +184,6 @@ export class House {
 
         this.houseDictionary = newDict;
     }
-
 
     private setUserAccounts(persist: boolean = true) {
         const newDict = {};
@@ -224,19 +226,10 @@ export class House {
             return newDict;
         }
     }
-
-    deepCopy(): House {
-        return JSON.parse(JSON.stringify(this));
-    }
-
-    getUserAccountByUserId(uid: string) {
-        return this.accounts.find(acc => acc.userId === uid) as UserAccount;
-    }
 }
 
 export const houseConverter: FirestoreDataConverter<House> = {
-    toFirestore(house: House) {
-
+    toFirestore: (house: House) => {
         const balances = {};
         house.accounts.forEach((account) => {
             balances[account.id] = balanceConverter.toFirestore(account.balance);
@@ -273,14 +266,14 @@ export const houseConverter: FirestoreDataConverter<House> = {
             productData,
         };
     },
-    fromFirestore(snapshot: DocumentSnapshot<any>, options: SnapshotOptions): House {
+    fromFirestore: (snapshot: DocumentSnapshot<any>, options: SnapshotOptions): House => {
         const data = snapshot.data(options);
 
         return newHouse(snapshot.id, data);
     }
 };
 
-export function newHouse(id: string, data: { [key: string]: any }): House {
+export const newHouse = (id: string, data: { [key: string]: any }): House => {
     const accounts = [];
     const products = [];
     const sharedAccounts = [];
@@ -311,4 +304,4 @@ export function newHouse(id: string, data: { [key: string]: any }): House {
     return new House(id, data.createdAt, data.name, data.currency, data.inviteLink,
         data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts, data.totalIn,
         data.totalOut, data.settledAt, data.isSettling);
-}
+};

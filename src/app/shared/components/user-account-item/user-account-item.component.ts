@@ -2,7 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {House, UserAccount} from '@core/models';
 import {TranslateService} from '@ngx-translate/core';
 import {NavController} from '@ionic/angular';
-import {AccountService, AuthService, HouseService} from '@core/services';
+import {AuthService, HouseService} from '@core/services';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -11,13 +11,13 @@ import {Subscription} from 'rxjs';
     styleUrls: ['./user-account-item.component.scss'],
 })
 export class UserAccountItemComponent implements OnInit, OnDestroy {
-
-    ownsAccount: boolean;
     @Input() account: UserAccount;
     @Input() canEditAccount = false;
     @Input() navLink?: string;
 
+    ownsAccount: boolean;
     house?: House;
+
     private houseSub: Subscription;
 
     constructor(private translate: TranslateService,

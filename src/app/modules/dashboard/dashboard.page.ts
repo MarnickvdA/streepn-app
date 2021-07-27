@@ -11,6 +11,7 @@ import {Capacitor} from '@capacitor/core';
 import {NewHouseComponent} from '@modules/dashboard/new-house/new-house.component';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
 import User = firebase.User;
+import {dashboardPageGuide} from '@shared/app-guides';
 
 @Component({
     selector: 'app-dashboard',
@@ -19,17 +20,18 @@ import User = firebase.User;
 })
 export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     user$: Observable<User>;
-    private houses$: Observable<House[]>;
-    private housesSub: Subscription;
     houses?: House[];
     loading: boolean;
+    houseAccounts: { [houseId: string]: UserAccount } = {};
+    iOS: boolean;
+
+    private houses$: Observable<House[]>;
+    private housesSub: Subscription;
     private userSub: Subscription;
     private readonly logger = LoggerService.getLogger(DashboardPage.name);
     private user: User;
     private loadingHouseJoin?: HTMLIonLoadingElement;
     private onboarding: boolean;
-    houseAccounts: { [houseId: string]: UserAccount } = {};
-    iOS: boolean;
 
     constructor(private authService: AuthService,
                 private navController: NavController,
@@ -41,9 +43,8 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 private loadingController: LoadingController,
                 private modalController: ModalController,
                 private storage: StorageService,
-                private uiService: UIService,
-                private routerOutlet: IonRouterOutlet) {
-        this.iOS = Capacitor.isNative && Capacitor.platform === 'ios';
+                private uiService: UIService) {
+        this.iOS = Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios';
         this.loading = true;
     }
 
@@ -67,9 +68,9 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                                 this.houseAccounts[house.id] = house.getUserAccountByUserId(user.uid);
                             });
 
-                            setTimeout(() => {
+                            this.zone.run(() => setTimeout(() => {
                                 this.loading = false;
-                            }, 500);
+                            }, 500));
                         });
                 }
             });
@@ -134,6 +135,38 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         await alert.present();
     }
 
+    openHouse(house: House) {
+        this.navController.navigateRoot(['house', house.id, 'transactions'], {
+            animationDirection: 'forward',
+        });
+    }
+
+    addHouse() {
+        this.modalController.create({
+            swipeToClose: true,
+            backdropDismiss: true,
+            component: NewHouseComponent
+        }).then((modal) => {
+            this.zone.run(() => {
+                modal.present();
+            });
+        });
+    }
+
+    openInfo() {
+        InfoModalComponent.presentModal(
+            this.modalController,
+            'dashboard.title',
+            dashboardPageGuide
+        );
+    }
+
+    fakePull($event) {
+        setTimeout(() => {
+            $event.target.complete();
+        }, 350);
+    }
+
     private launchOnBoarding() {
         this.onboarding = true;
         this.modalController.create({
@@ -151,18 +184,16 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    private checkForHouseInvite() {
-        this.storage.get('houseInvite')
-            .then((invite: string) => {
-                return this.storage.get('hasOnboarded')
-                    .then((hasOnboarded: boolean) => {
-                        if (hasOnboarded) {
-                            this.promptHouseInvite(invite);
-                        }
-                    });
-            })
-            .catch(() => {
-            });
+    private checkForHouseInvite(): void {
+        Promise.all([
+            this.storage.get('houseInvite'),
+            this.storage.get('hasOnboarded')
+        ]).then(([invite, hasOnboarded]) => {
+            if (invite && hasOnboarded) {
+                this.promptHouseInvite(invite as string);
+            }
+        }).catch(() => {
+        });
     }
 
     private promptHouseInvite(houseInvite: string) {
@@ -187,9 +218,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                                     }
                                 }
                             ]
-                        }).then(alert => {
-                            return alert.present();
-                        });
+                        }).then(alert => alert.present());
                     });
                 }
             })
@@ -227,33 +256,5 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.loadingHouseJoin = undefined;
             });
-    }
-
-    openHouse(house: House) {
-        this.navController.navigateRoot(['house', house.id, 'transactions'], {
-            animationDirection: 'forward',
-        });
-    }
-
-    addHouse() {
-        this.modalController.create({
-            swipeToClose: true,
-            backdropDismiss: true,
-            component: NewHouseComponent
-        }).then((modal) => {
-            this.zone.run(() => {
-                modal.present();
-            });
-        });
-    }
-
-    openInfo() {
-        InfoModalComponent.presentModal(this.modalController, this.routerOutlet, 'information.dashboard.title', 'information.dashboard.content');
-    }
-
-    fakePull($event) {
-        setTimeout(() => {
-            $event.target.complete();
-        }, 350);
     }
 }

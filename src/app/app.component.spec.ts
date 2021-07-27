@@ -1,32 +1,38 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {async, TestBed} from '@angular/core/testing';
+import {TestBed, waitForAsync} from '@angular/core/testing';
 
 import {Platform} from '@ionic/angular';
-import {SplashScreen} from '@ionic-native/splash-screen/ngx';
-import {StatusBar} from '@ionic-native/status-bar/ngx';
-
 import {AppComponent} from './app.component';
+import {RouterTestingModule} from '@angular/router/testing';
+import {navControllerMock} from '@core/mocks/nav-controller.mock';
+import {TranslationModule} from './translation.module';
+import {SharedModule} from '@shared/shared.module';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from '@env/environment.test';
+import {AngularFireAuth} from '@angular/fire/auth';
 
 describe('AppComponent', () => {
 
-    let statusBarSpy;
-    let splashScreenSpy;
     let platformReadySpy;
     let platformSpy;
 
-    beforeEach(async(() => {
-        statusBarSpy = jasmine.createSpyObj('StatusBar', ['styleDefault']);
-        splashScreenSpy = jasmine.createSpyObj('SplashScreen', ['hide']);
+    beforeEach(waitForAsync(() => {
         platformReadySpy = Promise.resolve();
         platformSpy = jasmine.createSpyObj('Platform', {ready: platformReadySpy});
 
         TestBed.configureTestingModule({
             declarations: [AppComponent],
+            imports: [
+                RouterTestingModule,
+                TranslationModule.forRoot(),
+                SharedModule.forRoot(),
+                AngularFireModule.initializeApp(environment.firebaseConfig)
+            ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                {provide: StatusBar, useValue: statusBarSpy},
-                {provide: SplashScreen, useValue: splashScreenSpy},
                 {provide: Platform, useValue: platformSpy},
+                navControllerMock,
+                AngularFireAuth
             ],
         }).compileComponents();
     }));
@@ -41,7 +47,5 @@ describe('AppComponent', () => {
         TestBed.createComponent(AppComponent);
         expect(platformSpy.ready).toHaveBeenCalled();
         await platformReadySpy;
-        expect(statusBarSpy.styleDefault).toHaveBeenCalled();
-        expect(splashScreenSpy.hide).toHaveBeenCalled();
     });
 });

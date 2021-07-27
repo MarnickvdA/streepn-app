@@ -1,27 +1,27 @@
-<ion-item (click)="openTransaction(transaction)"
+<ion-item class="large"  (click)="openTransaction(transaction)"
           [disabled]="transaction.removed" button="{{!transaction.removed}}" detail="{{!transaction.removed}}">
     <ion-avatar slot="start">
         <img *ngIf="account?.photoUrl" alt="" src="{{account.photoUrl}}">
         <img *ngIf="!account?.photoUrl" alt="" src="assets/svg/avatar.svg">
     </ion-avatar>
 
-    <ion-label [ngStyle]="transaction.removed ? {'text-decoration': 'line-through'} : {}">
+    <ion-label class="description" [ngStyle]="transaction.removed ? {'text-decoration': 'line-through'} : {}">
         <h3 *ngFor="let item of transaction.items">
             {{'house.transaction.header' | translate:{
             amount: item.amount,
-            productName: house.getProductById(item.productId)?.name,
-            accountName: house.getAccountById(item.accountId)?.name
+            productName: house?.getProductById(item.productId)?.name,
+            accountName: house?.getAccountById(item.accountId)?.name
         } }}
         </h3>
-        <div class="transaction-bill" *ngIf="transaction.priceByAccountId(currentAccount.id); let price">
-            <fa-duotone-icon slot="start" class="danger small no-width" fixedWidth
-                             [icon]="['fad', 'minus-circle']"></fa-duotone-icon>
-            <span>{{price | money}}</span>
+        <div *ngIf="transaction.priceByAccountId(currentAccount?.id); let price" class="transaction-bill">
+            <fa-duotone-icon [icon]="['fad', 'minus-circle']" class="danger small no-width" [fixedWidth]="true"
+                             slot="start"></fa-duotone-icon>
+            <p>{{price | money}}</p>
         </div>
         <p class="small">
             {{'house.transaction.timeline' | translate:{
             date: transaction.createdAt | moment | capitalize,
-            accountName: house.getUserAccountById(transaction.createdBy)?.name
+            accountName: house?.getUserAccountById(transaction.createdBy)?.name
         } }}
         </p>
     </ion-label>

@@ -40,6 +40,10 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
+    get uniqueName() {
+        return this.house.products.find(p => p.name === this.newName) === undefined;
+    }
+
     ngOnInit() {
         this.houseId = this.houseService.currentHouseId;
         this.houseSub = this.houseService.observeHouse(this.houseId)
@@ -63,22 +67,6 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.moneyInput?.setAmount(this.product?.price);
-    }
-
-    private async editProduct(product: Product) {
-        const loading = await this.loadingController.create({
-            message: this.translate.instant('actions.updating'),
-            translucent: true,
-            backdropDismiss: false
-        });
-
-        await loading.present();
-
-        this.productService
-            .editProduct(this.house, product)
-            .finally(() => {
-                loading.dismiss();
-            });
     }
 
     async removeProduct() {
@@ -114,10 +102,6 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
         await alert.present();
     }
 
-    get uniqueName() {
-        return this.house.products.find(p => p.name === this.newName) === undefined;
-    }
-
     async setName() {
         const product = this.product.deepCopy();
         product.name = this.newName;
@@ -134,6 +118,22 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
 
     amountChanged($event: number) {
         this.newPrice = $event;
+    }
+
+    private async editProduct(product: Product) {
+        const loading = await this.loadingController.create({
+            message: this.translate.instant('actions.updating'),
+            translucent: true,
+            backdropDismiss: false
+        });
+
+        await loading.present();
+
+        this.productService
+            .editProduct(this.house, product)
+            .finally(() => {
+                loading.dismiss();
+            });
     }
 }
 

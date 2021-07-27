@@ -15,14 +15,15 @@ import {getMoneyString} from '@core/utils/formatting-utils';
     styleUrls: ['./transaction-detail.page.scss'],
 })
 export class TransactionDetailPage implements OnInit, OnDestroy {
-    private readonly logger = LoggerService.getLogger(TransactionDetailPage.name);
-    editing: boolean;
+    editing = false;
     canEdit = false;
     transactionId?: string;
     house?: House;
     transaction?: Transaction;
     itemsAmount: number[] = [];
     interactionCount = 0;
+
+    private readonly logger = LoggerService.getLogger(TransactionDetailPage.name);
     private houseSub: Subscription;
     private transactionSub: Subscription;
     private routeSub: Subscription;
@@ -109,6 +110,26 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
         await this.submitForm(this.transaction);
     }
 
+    removeItem(item: TransactionItem) {
+        item.amount--;
+        this.interactionCount++;
+    }
+
+    addItem(item: TransactionItem) {
+        item.amount++;
+        this.interactionCount--;
+    }
+
+    canEditItem(item: TransactionItem) {
+        // If this account was settled after this transaction was created, we cannot edit this transaction item.
+        const settleTimestamp = this.house?.getAccountById(item.accountId)?.settledAt;
+        if (settleTimestamp) {
+            return this.transaction.createdAt > settleTimestamp;
+        } else {
+            return true;
+        }
+    }
+
     private async submitForm(transaction: Transaction) {
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.updating'),
@@ -131,25 +152,5 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
                 this.navController.pop();
                 this.events.publish('transactions:update');
             });
-    }
-
-    removeItem(item: TransactionItem) {
-        item.amount--;
-        this.interactionCount++;
-    }
-
-    addItem(item: TransactionItem) {
-        item.amount++;
-        this.interactionCount--;
-    }
-
-    canEditItem(item: TransactionItem) {
-        // If this account was settled after this transaction was created, we cannot edit this transaction item.
-        const settleTimestamp = this.house?.getAccountById(item.accountId)?.settledAt;
-        if (settleTimestamp) {
-            return this.transaction.createdAt > settleTimestamp;
-        } else {
-            return true;
-        }
     }
 }

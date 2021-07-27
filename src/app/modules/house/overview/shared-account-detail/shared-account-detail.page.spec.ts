@@ -1,24 +1,34 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
 
-import { SharedAccountDetailPage } from './shared-account-detail.page';
+import {SharedAccountDetailPage} from './shared-account-detail.page';
+import {SharedModule} from '@shared/shared.module';
+import {navControllerMock} from '@core/mocks/nav-controller.mock';
+import {RouterTestingModule} from '@angular/router/testing';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from '@env/environment.test';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {TranslationModule} from '../../../../translation.module';
+import {AngularFireFunctions} from '@angular/fire/functions';
 
 describe('SharedAccountDetailPage', () => {
-  let component: SharedAccountDetailPage;
-  let fixture: ComponentFixture<SharedAccountDetailPage>;
+    let component: SharedAccountDetailPage;
+    let fixture: ComponentFixture<SharedAccountDetailPage>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SharedAccountDetailPage ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [SharedAccountDetailPage],
+            imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(), RouterTestingModule,
+                AngularFireModule.initializeApp(environment.firebaseConfig)],
+            providers: [navControllerMock, AngularFirestore, AngularFireFunctions]
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(SharedAccountDetailPage);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+        fixture = TestBed.createComponent(SharedAccountDetailPage);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

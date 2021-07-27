@@ -1,5 +1,22 @@
 :host {
-  height: calc(100% - 3rem - env(safe-area-inset-bottom));
+  height: 100vh;
+}
+
+.padding-top {
+  height: calc(3rem + env(safe-area-inset-top));
+}
+
+ion-item {
+  ion-label {
+    font-size: 16px;
+  }
+}
+
+ion-list-header {
+  ion-label {
+    font-size: 16px;
+    color: rgba(var(--ion-color-dark-rgb), .75)
+  }
 }
 
 .versionStatement {
