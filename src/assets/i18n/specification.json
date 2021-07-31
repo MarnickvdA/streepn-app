@@ -67,6 +67,7 @@
     "functions": {}
   },
   "login": {
+    "title": "Welkom!",
     "name": "",
     "email": "",
     "password": "",

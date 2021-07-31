@@ -67,6 +67,7 @@
     "functions": {}
   },
   "login": {
+    "title": "Welkom!",
     "name": "Naam",
     "email": "E-mailadres",
     "password": "Wachtwoord",
@@ -197,7 +198,6 @@
     },
     "transactions": {
       "title": "Transacties",
-      "add": "Nieuwe transactie",
       "empty": "Nog geen transacties... Tijd om die borrel aan te slingeren!",
       "currentProduct": "Geselecteerd product",
       "allPlusOne": "Allemaal +1",
