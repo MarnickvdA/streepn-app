@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Observable, Subscription} from 'rxjs';
-import {EventsService, HouseService} from '@core/services';
+import {EventsService, HouseService, PushService} from '@core/services';
 import {House} from '@core/models';
 import {AddTransactionComponent} from '@modules/house/add-transaction/add-transaction.component';
 import {ModalController, NavController} from '@ionic/angular';

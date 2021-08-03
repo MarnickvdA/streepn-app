@@ -65,7 +65,6 @@ export class AppComponent {
             App.addListener('appStateChange', (state: AppState) => {
                 // state.isActive contains the active state
                 if (state.isActive) {
-                    this.pushService.requestPermissionsIfNotPromptedYet();
                     this.events.publish('app:resume');
                 } else {
                     this.events.publish('app:pause');

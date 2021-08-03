@@ -132,7 +132,13 @@ export class PushService {
                     if (result.receive === 'prompt' || result.receive === 'prompt-with-rationale') {
                         this.requestPushRegister();
                     }
-                });
+                })
+                .catch((err) => {
+                    this.logger.warn({
+                        message: 'requestPermissionsIfNotPromptedYet',
+                        error: err
+                    });
+                })
         }
     }
 
