@@ -11,10 +11,9 @@
     "test": "ng test --watch=false --browsers=ChromeHeadless --code-coverage && open -a \"Google Chrome\" coverage/ngv/index.html",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "ios": "ionic capacitor run ios --livereload-url=http://localhost:4200",
-    "android": "ionic capacitor run android --livereload-url=http://localhost:4200",
-    "prod": "npm install && ng build --prod && npx cap sync",
-    "emulator": "firebase emulators:start --import ./data --export-on-exit=./data",
+    "ios": "ionic cap run ios --livereload-url=http://localhost:4200",
+    "android": "ionic cap run android --livereload-url=http://localhost:4200",
+    "prod": "npm install && ng build -c production && npx cap sync",
     "resources": "cordova-res ios && cordova-res android && node scripts/resources.js",
     "translate": "node ./scripts/copy-translations.js"
   },
