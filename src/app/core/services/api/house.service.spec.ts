@@ -8,7 +8,6 @@ import {AngularFireFunctions} from '@angular/fire/functions';
 import {AngularFirePerformance} from '@angular/fire/performance';
 import {IonicModule} from '@ionic/angular';
 import {TranslationModule} from '../../../translation.module';
-import {TranslateModule} from '@ngx-translate/core';
 import {HttpClientModule} from '@angular/common/http';
 
 describe('HouseService', () => {

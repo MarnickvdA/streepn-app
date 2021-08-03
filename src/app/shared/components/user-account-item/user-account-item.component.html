@@ -1,8 +1,6 @@
 <ion-item class="large" (click)="openAccount()" [button]="canEditAccount" [detail]="canEditAccount">
-    <ion-thumbnail slot="start">
-        <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
-        <img *ngIf="!account.photoUrl" alt="" src="assets/svg/avatar.svg">
-    </ion-thumbnail>
+    <app-account-avatar slot="start" [account]="account"></app-account-avatar>
+
     <div class="content">
         <ion-label>
             <h3>{{account.name}}</h3>

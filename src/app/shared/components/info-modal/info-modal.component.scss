@@ -1,7 +1,7 @@
 #content {
   padding: 8px 20px;
   font-size: 14px;
-  line-height: 1.25em;
+  line-height: 1.33em;
   letter-spacing: 0.02em;
   color: var(--color-neutral-700);
 
@@ -82,11 +82,15 @@
   ul, ol {
     margin-top: 0;
     margin-bottom: 10px;
-    padding-left: 40px;
+    padding-left: 20px;
   }
 
   li {
     margin-bottom: 16px;
+
+    &.less-margin {
+      margin-bottom: 8px;
+    }
   }
 
   img {
@@ -99,6 +103,10 @@
     margin-bottom: 8px;
     color: var(--color-neutral-800);
     font-weight: 500;
+
+    &.no-margin {
+      margin-bottom: 0;
+    }
   }
 
   strong {

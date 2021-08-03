@@ -8,6 +8,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {AddTransactionComponent} from '@modules/house/add-transaction/add-transaction.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {HousePageRoutingModule} from '@modules/house/house-routing.module';
+import {SharedModule} from '@shared/shared.module';
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import {HousePageRoutingModule} from '@modules/house/house-routing.module';
         IonicModule,
         HousePageRoutingModule,
         TranslateModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        SharedModule
     ],
     declarations: [
         HousePage,

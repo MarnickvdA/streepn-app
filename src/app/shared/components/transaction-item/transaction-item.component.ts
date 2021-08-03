@@ -4,6 +4,7 @@ import {House, Transaction, UserAccount} from '@core/models';
 import {NavController} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
 import {AuthService, HouseService} from '@core/services';
+import {toPastelColor} from '@core/utils/string-to-hsl';
 
 @Component({
     selector: 'app-transaction-item',
@@ -57,4 +58,7 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
         });
     }
 
+    accountIdToColor(id: string) {
+        return toPastelColor(id);
+    }
 }

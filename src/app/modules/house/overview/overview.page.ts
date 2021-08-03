@@ -2,14 +2,14 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {House, SharedAccount, UserAccount} from '@core/models';
 import {ActivatedRoute} from '@angular/router';
-import {AlertController, IonRouterOutlet, LoadingController, ModalController, NavController} from '@ionic/angular';
+import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {NewSharedAccountComponent} from './new-shared-account/new-shared-account.component';
 import {AuthService, HouseService, ProductService} from '@core/services';
 import {Share} from '@capacitor/share';
 import {Clipboard} from '@capacitor/clipboard';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
-import {dashboardPageGuide, overviewPageGuide} from '@shared/app-guides';
+import {overviewPageGuide} from '@shared/components/info-modal/info-guides';
 
 @Component({
     selector: 'app-house-overview',

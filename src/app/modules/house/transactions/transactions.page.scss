@@ -5,11 +5,8 @@ div.account-toolbar {
   text-align: center;
   padding-bottom: 0.5rem;
 
-  ion-avatar {
-    width: 4rem;
-    height: 4rem;
+  app-account-avatar {
     margin-bottom: 8px;
-    --border-radius: .4rem;
   }
 }
 

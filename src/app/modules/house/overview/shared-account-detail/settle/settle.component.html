@@ -35,14 +35,11 @@
             <ion-label>
                 {{'house.overview.settle.sharedAccount.select-payers' | translate}}
             </ion-label>
-            <ion-button (click)="selectAll()">{{'house.overview.settle.sharedAccount.select-all' | translate}}</ion-button>
+            <ion-button
+                    (click)="selectAll()">{{'house.overview.settle.sharedAccount.select-all' | translate}}</ion-button>
         </ion-list-header>
         <ion-item *ngFor="let account of house?.accounts; let i = index" class="account-item">
-            <ion-avatar slot="start">
-                <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
-                <img *ngIf="!account.photoUrl" alt=""
-                     src="assets/svg/avatar.svg">
-            </ion-avatar>
+            <app-account-avatar [account]="account" size="small" slot="start"></app-account-avatar>
             <div class="content">
                 <ion-label>
                     <h3>{{account.name}}</h3>

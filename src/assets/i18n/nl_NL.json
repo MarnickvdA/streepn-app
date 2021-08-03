@@ -67,6 +67,7 @@
     "functions": {}
   },
   "login": {
+    "title": "Welkom!",
     "name": "Naam",
     "email": "E-mailadres",
     "password": "Wachtwoord",
@@ -196,8 +197,8 @@
       "soon-explained": "Binnenkort komen er deals op deze pagina te staan. Deze deals zijn bijvoorbeeld voor aanbiedingen van kratjes bier in jouw regio. We houden je op de hoogte!"
     },
     "transactions": {
-      "title": "Transacties",
       "add": "Nieuwe transactie",
+      "title": "Transacties",
       "empty": "Nog geen transacties... Tijd om die borrel aan te slingeren!",
       "currentProduct": "Geselecteerd product",
       "allPlusOne": "Allemaal +1",

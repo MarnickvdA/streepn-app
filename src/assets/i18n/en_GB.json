@@ -67,6 +67,7 @@
     "functions": {}
   },
   "login": {
+    "title": "TRANSLATE: Welkom!",
     "name": "TRANSLATE: ",
     "email": "TRANSLATE: ",
     "password": "TRANSLATE: ",

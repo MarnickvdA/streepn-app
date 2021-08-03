@@ -23,10 +23,7 @@
 
 <ion-content>
     <div *ngIf="house?.getUserAccountById(transaction?.createdBy) as account" class="createdBy">
-        <ion-avatar>
-            <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
-            <img *ngIf="!account.photoUrl" alt="" src="assets/svg/avatar.svg">
-        </ion-avatar>
+        <app-account-avatar [account]="account" size="large"></app-account-avatar>
         <ion-label>
             <h2>{{account.name}}</h2>
             <p class="small">{{'house.transaction.at' | translate:{date: transaction?.createdAt | dateTime} }}</p>
@@ -35,10 +32,9 @@
     </div>
     <ion-list *ngIf="transaction?.items">
         <ion-item *ngFor="let item of transaction.items; index as i">
-            <ion-avatar *ngIf="house?.getUserAccountById(item.accountId); let user" slot="start">
-                <img *ngIf="user.photoUrl" alt="" src="{{user.photoUrl}}">
-                <img *ngIf="!user.photoUrl" alt="" src="assets/svg/avatar.svg">
-            </ion-avatar>
+            <app-account-avatar *ngIf="house?.getUserAccountById(item.accountId); let user"
+                                [account]="user" size="small">
+            </app-account-avatar>
             <ion-label>
                 <h3>{{'house.transaction.header' | translate:{
                     amount: item.amount,

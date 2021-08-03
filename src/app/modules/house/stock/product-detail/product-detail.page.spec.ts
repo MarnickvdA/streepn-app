@@ -8,7 +8,6 @@ import {environment} from '@env/environment.test';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslationModule} from '../../../../translation.module';
-import {AngularFireAuth} from '@angular/fire/auth';
 import {AngularFireFunctions} from '@angular/fire/functions';
 
 describe('ProductDetailPage', () => {

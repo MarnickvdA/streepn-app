@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {IonRouterOutlet, LoadingController, ModalController, NavController} from '@ionic/angular';
+import {LoadingController, ModalController, NavController} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Capacitor} from '@capacitor/core';
 import {TranslateService} from '@ngx-translate/core';
 import {AuthService, EventsService, LoggerService, StorageService, UIService} from '@core/services';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
-import {loginPageGuide} from '@shared/app-guides';
+import {loginPageGuide} from '@shared/components/info-modal/info-guides';
 
 @Component({
     selector: 'app-login',

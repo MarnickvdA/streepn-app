@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core';
-import {AlertController, IonRouterOutlet, LoadingController, ModalController, NavController} from '@ionic/angular';
+import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
 import firebase from 'firebase/app';
 import {House, HouseInvite, UserAccount} from '@core/models';
@@ -10,8 +10,8 @@ import {OnboardingComponent} from '@modules/dashboard/onboarding/onboarding.comp
 import {Capacitor} from '@capacitor/core';
 import {NewHouseComponent} from '@modules/dashboard/new-house/new-house.component';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
+import {dashboardPageGuide} from '@shared/components/info-modal/info-guides';
 import User = firebase.User;
-import {dashboardPageGuide} from '@shared/app-guides';
 
 @Component({
     selector: 'app-dashboard',

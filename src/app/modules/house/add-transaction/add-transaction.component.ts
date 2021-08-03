@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Account, House, Product} from '@core/models';
-import {IonRouterOutlet, LoadingController, ModalController} from '@ionic/angular';
+import {LoadingController, ModalController} from '@ionic/angular';
 import {catchError} from 'rxjs/operators';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {TransactionService, TransactionSet} from '@core/services';
@@ -8,7 +8,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Capacitor} from '@capacitor/core';
 import {Haptics, ImpactStyle} from '@capacitor/haptics';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
-import {addTransactionGuide} from '@shared/app-guides';
+import {addTransactionGuide} from '@shared/components/info-modal/info-guides';
 
 @Component({
     selector: 'app-add-transaction',

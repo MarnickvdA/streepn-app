@@ -39,6 +39,14 @@
                 "input": "src/global.scss"
               }
             ],
+            "allowedCommonJsDependencies": [
+              "random",
+              "seedrandom",
+              "date-fns",
+              "uuid",
+              "firebase",
+              "image-conversion"
+            ],
             "scripts": [],
             "aot": false,
             "vendorChunk": true,

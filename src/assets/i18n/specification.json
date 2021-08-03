@@ -67,6 +67,7 @@
     "functions": {}
   },
   "login": {
+    "title": "Welkom!",
     "name": "",
     "email": "",
     "password": "",
@@ -196,6 +197,7 @@
       "soon-explained": ""
     },
     "transactions": {
+      "add": "",
       "title": "",
       "empty": "",
       "currentProduct": "",
