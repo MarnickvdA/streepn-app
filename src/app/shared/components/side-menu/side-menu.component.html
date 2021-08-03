@@ -46,7 +46,7 @@
             </ion-item>
         </ion-menu-toggle>
 
-        <ion-item lines="full" button (click)="openSupport()">
+        <ion-item lines="full" button (click)="openSupport()" [detail]="false">
             <fa-duotone-icon [icon]="['fad', 'headset']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
             <ion-label>
                 {{'side-menu.mail-support' | translate}}
