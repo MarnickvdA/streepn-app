@@ -97,7 +97,8 @@
   },
   "side-menu": {
     "settings": "TRANSLATE: ",
-    "logout.description": "TRANSLATE: "
+    "logout.description": "TRANSLATE: ",
+    "mail-support": "TRANSLATE: "
   },
   "profile": {
     "edit": {
@@ -197,6 +198,7 @@
       "soon-explained": "TRANSLATE: "
     },
     "transactions": {
+      "add": "TRANSLATE: ",
       "title": "TRANSLATE: ",
       "empty": "TRANSLATE: ",
       "currentProduct": "TRANSLATE: ",

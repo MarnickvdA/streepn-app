@@ -52,7 +52,9 @@ export class IconsModule {
             DuoIcons.faPlus,
             DuoIcons.faGifts,
             DuoIcons.faSack,
-            DuoIcons.faArrowAltCircleDown
+            DuoIcons.faArrowAltCircleDown,
+            DuoIcons.faHeadset,
+            DuoIcons.faExternalLink
         );
     }
 }

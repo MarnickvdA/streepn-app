@@ -7,6 +7,7 @@ import {environment} from '@env/environment';
 import {TranslateService} from '@ngx-translate/core';
 import {Capacitor} from '@capacitor/core';
 import {StatusBar, Style} from '@capacitor/status-bar';
+import { AppLauncher } from '@capacitor/app-launcher';
 
 @Component({
     selector: 'app-side-menu',
@@ -132,5 +133,9 @@ export class SideMenuComponent implements OnInit, OnDestroy {
         });
 
         await alert.present();
+    }
+
+    async openSupport() {
+        await AppLauncher.openUrl({ url: 'mailto:support@streepn.nl'});
     }
 }

@@ -46,6 +46,14 @@
             </ion-item>
         </ion-menu-toggle>
 
+        <ion-item lines="full" button (click)="openSupport()">
+            <fa-duotone-icon [icon]="['fad', 'headset']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
+            <ion-label>
+                {{'side-menu.mail-support' | translate}}
+            </ion-label>
+            <fa-duotone-icon [icon]="['fad', 'external-link']" class="primary" [fixedWidth]="true" slot="end"></fa-duotone-icon>
+        </ion-item>
+
 <!--        <ion-item lines="full">-->
 <!--            <fa-duotone-icon [icon]="['fad', 'adjust']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>-->
 <!--            <ion-label>{{'dashboard.toggleDarkMode' | translate}}</ion-label>-->
