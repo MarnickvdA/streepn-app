@@ -33,7 +33,7 @@
     <ion-list *ngIf="transaction?.items">
         <ion-item *ngFor="let item of transaction.items; index as i">
             <app-account-avatar *ngIf="house?.getUserAccountById(item.accountId); let user"
-                                [account]="user" size="small">
+                                [account]="user" size="small" class="ion-margin-end">
             </app-account-avatar>
             <ion-label>
                 <h3>{{'house.transaction.header' | translate:{

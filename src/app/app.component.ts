@@ -71,13 +71,6 @@ export class AppComponent {
                 }
             });
 
-            this.storage.get('favorite')
-                .then((favorite: string) => {
-                    this.navController.navigateRoot('house/' + favorite + '/home');
-                })
-                .catch(() => {
-                });
-
             SplashScreen.hide();
         });
     }

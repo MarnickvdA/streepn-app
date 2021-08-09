@@ -1,4 +1,4 @@
-<ion-item (click)="editProduct()" [button]="canEdit" [detail]="canEdit">
+<ion-item (click)="editProduct()" button>
     <ion-label [ngClass]="product.stock >= 0 ? '' : 'danger'" class="amount" slot="start">
         <h3><b>{{product.stock}}</b></h3>
     </ion-label>
@@ -7,9 +7,8 @@
             {{product.name}}
         </h3>
     </ion-label>
-    <ion-chip color="success" style="min-width: 5rem; font-size: .8rem">
+    <ion-chip *ngIf="product.price > 0" color="success" style="min-width: 5rem; font-size: .8rem">
         <ion-icon name="pricetag-outline"></ion-icon>
-        <ion-label *ngIf="product.price > 0">{{product.price | money}}</ion-label>
-        <ion-label *ngIf="product.price === 0">{{'house.overview.free' | translate}}</ion-label>
+        <ion-label>{{product.price | money}}</ion-label>
     </ion-chip>
 </ion-item>

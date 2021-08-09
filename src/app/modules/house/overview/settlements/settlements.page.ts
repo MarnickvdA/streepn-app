@@ -16,6 +16,7 @@ export class SettlementsPage implements OnInit, OnDestroy {
     houseId: string;
     house: House;
     settlements: Settlement[];
+    isAdmin: boolean;
     private readonly logger = LoggerService.getLogger(SettlementsPage.name);
     private houseSub: Subscription;
 
@@ -40,6 +41,7 @@ export class SettlementsPage implements OnInit, OnDestroy {
                         .then(settlements => {
                             this.settlements = settlements;
                         });
+                    this.isAdmin = house.isAdmin(this.authService.currentUser.uid);
                 }
             });
     }

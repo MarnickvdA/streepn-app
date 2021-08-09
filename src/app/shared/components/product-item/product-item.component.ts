@@ -12,7 +12,6 @@ import {NavController} from '@ionic/angular';
 export class ProductItemComponent implements OnInit {
 
     @Input() product: Product;
-    @Input() canEdit = false;
 
     constructor(private formBuilder: FormBuilder,
                 private router: Router,
@@ -24,8 +23,6 @@ export class ProductItemComponent implements OnInit {
     }
 
     editProduct() {
-        if (this.canEdit) {
-            this.navController.navigateForward(['products', this.product.id], {relativeTo: this.route});
-        }
+        this.navController.navigateForward(['products', this.product.id], {relativeTo: this.route});
     }
 }

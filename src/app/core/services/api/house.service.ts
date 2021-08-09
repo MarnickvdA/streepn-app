@@ -69,6 +69,10 @@ export class HouseService {
         this.housesSubject.next(undefined);
     }
 
+    getLatestHouseValue(houseId: string): House | undefined {
+        return this.housesSubject.getValue().find(h => h.id === houseId);
+    }
+
     getHouse(id: string): Promise<House | undefined> {
         return this.fs.collection('houses')
             .doc(id)
@@ -163,8 +167,34 @@ export class HouseService {
     }
 
     leaveHouse(houseId: string, userId: string) {
+        const house = this.housesSubject.getValue().find(h => h.id === houseId);
+        if (!house) {
+            // TODO: Throw some error
+            console.error('leaveHouse: House not found');
+            return;
+        }
+
+        const userAccount = house.getUserAccountByUserId(userId);
+        if (!userAccount) {
+            // TODO: Throw some error
+            console.error('leaveHouse: User account not found');
+            return;
+        }
+
+        if (!userAccount.isRemovable) {
+            // TODO: Throw some error
+            console.error('leaveHouse: User account is not removable at the moment');
+            return;
+        }
+
+        if (this.currentUserId !== userId && !this.authService.currentUserIsAdmin(house)) {
+            // TODO: Throw some error
+            console.error('leaveHouse: Only admins can remove other users from a house');
+            return;
+        }
+
         const callable = this.functions.httpsCallable('leaveHouse');
-        callable({
+        return callable({
             houseId
         })
             .pipe(
@@ -184,6 +214,15 @@ export class HouseService {
     }
 
     async renewInviteLink(houseId: string, houseName: string, oldInvite?: string): Promise<string> {
+        const house = this.housesSubject.getValue().find(h => h.id === houseId);
+        if (!house) {
+            return Promise.reject('renewInviteLink: House not found');
+        }
+
+        if (!this.authService.currentUserIsAdmin(house)) {
+            return Promise.reject('renewInviteLink: Only admins can remove other users from a house');
+        }
+
         const houseInvite: HouseInvite = HouseInvite.generate(houseId, houseName);
 
         if (oldInvite) {

@@ -10,7 +10,7 @@
         <ion-title>{{product?.name}}</ion-title>
 
         <ion-buttons slot="end">
-            <ion-button (click)="removeProduct()" [disabled]="!product?.removable">
+            <ion-button *ngIf="isAdmin" (click)="removeProduct()" [disabled]="!product?.removable">
                 <fa-duotone-icon [icon]="['fad', 'trash-alt']" class="danger" [fixedWidth]="true"
                                  slot="icon-only"></fa-duotone-icon>
             </ion-button>
@@ -34,9 +34,9 @@
         </ion-item>
         <ion-item lines="full">
             <fa-duotone-icon [icon]="['fad', 'tag']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
-            <app-money-input (amountEntered)="amountChanged($event)" [amount]="''" [icon]="undefined" [precision]="2"
+            <app-money-input [enabled]="isAdmin" (amountEntered)="amountChanged($event)" [amount]="''" [icon]="undefined" [precision]="2"
                              padding="none"></app-money-input>
-            <ion-button (click)="setPrice()"
+            <ion-button *ngIf="isAdmin" (click)="setPrice()"
                         [attr.disabled]="newPrice === product?.price">{{'actions.edit' | translate}}</ion-button>
         </ion-item>
         <ion-item *ngIf="product?.advisedPrice; let advisedPrice" class="no-bg" lines="none">

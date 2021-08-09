@@ -14,6 +14,7 @@ export class MoneyInputComponent implements OnInit {
     @Input() icon = 'pricetag-outline';
     @Input() padding: 'none' | undefined = undefined;
     @Input() tabIndex = -1;
+    @Input() enabled = true;
     @Output() amountEntered = new EventEmitter<number>();
     @ViewChild('dummyFacade', {static: false}) private dummyFacade: IonInput;
 

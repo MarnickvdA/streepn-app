@@ -23,6 +23,7 @@ import {CapitalizePipe} from './pipes/capitalize.pipe';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
 import {IconsModule} from '@shared/icons.module';
 import {AccountAvatarComponent} from '@shared/components/account-avatar/account-avatar.component';
+import {SettlementItemComponent} from '@shared/components/settlement-item/settlement-item.component';
 
 export const components = [
     MoneyInputComponent,
@@ -33,7 +34,8 @@ export const components = [
     SideMenuComponent,
     TransactionItemComponent,
     InfoModalComponent,
-    AccountAvatarComponent
+    AccountAvatarComponent,
+    SettlementItemComponent,
 ];
 
 export const pipes = [

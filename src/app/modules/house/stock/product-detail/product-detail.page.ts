@@ -6,7 +6,7 @@ import {AlertController, LoadingController, NavController} from '@ionic/angular'
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Location} from '@angular/common';
-import {HouseService, ProductService} from '@core/services';
+import {AuthService, HouseService, ProductService} from '@core/services';
 import {MoneyInputComponent} from '@shared/components/money-input/money-input.component';
 
 @Component({
@@ -23,6 +23,7 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
     houseId: string;
     productId: string;
     product: Product;
+    isAdmin: boolean;
     private house: House;
     private houseSub: Subscription;
 
@@ -34,6 +35,7 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
                 private location: Location,
                 private houseService: HouseService,
                 private alertController: AlertController,
+                private authService: AuthService,
                 private navController: NavController) {
         this.route.params.subscribe((params: Params) => {
             this.productId = params.productId;
@@ -56,6 +58,7 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
                         this.product = product;
                         this.newName = this.product.name;
                         this.moneyInput?.setAmount(this.product?.price);
+                        this.isAdmin = house.isAdmin(this.authService.currentUser.uid);
                     }
                 }
             });

@@ -27,6 +27,7 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
     private houseSub: Subscription;
     private transactionSub: Subscription;
     private routeSub: Subscription;
+    private transactionObject?: Transaction;
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
@@ -45,6 +46,7 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
         this.houseSub = this.houseService.observeHouse(this.houseService.currentHouseId)
             .subscribe((house) => {
                 this.house = house;
+                this.toggleEditing(false);
             });
 
         this.transactionSub = this.transactionService.observeTransaction(this.houseService.currentHouseId, this.transactionId)
@@ -63,10 +65,13 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
     }
 
     setTransaction(transaction: Transaction) {
+        this.itemsAmount = [];
+
         transaction?.items.forEach((item, index) => {
             this.itemsAmount.push(item.amount);
         });
 
+        this.transactionObject = transaction;
         this.transaction = newTransaction(transaction.id, transaction);
 
         for (const item of this.transaction.items) {
@@ -84,8 +89,12 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
         return getMoneyString(price);
     }
 
-    toggleEditing() {
-        this.editing = !this.editing;
+    toggleEditing(force?: boolean) {
+        this.editing = force ?? !this.editing;
+
+        if (!this.editing && this.transactionObject) {
+            this.setTransaction(this.transactionObject);
+        }
     }
 
     async deleteTransaction() {

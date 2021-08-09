@@ -7,7 +7,7 @@
                 </ion-button>
             </ion-menu-toggle>
         </ion-buttons>
-        <ion-title>{{(house$ | async).name}}</ion-title>
+        <ion-title>{{(house$ | async)?.name}}</ion-title>
         <ion-buttons slot="end">
             <ion-button>
                 <fa-duotone-icon (click)="openInfo()" [icon]="['fad', 'info-circle']" class="primary" [fixedWidth]="true"
@@ -24,7 +24,7 @@
 
     <ion-header collapse="condense">
         <ion-toolbar>
-            <ion-title size="large">{{(house$ | async).name}}</ion-title>
+            <ion-title size="large">{{(house$ | async)?.name}}</ion-title>
         </ion-toolbar>
     </ion-header>
 

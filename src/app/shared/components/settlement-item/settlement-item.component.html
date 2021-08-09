@@ -1,0 +1,8 @@
+<ion-item class="large" button lines="inset" routerDirection="forward"
+          routerLink="{{settlement.id}}">
+  <fa-duotone-icon [icon]="['fad', 'clock']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
+  <ion-label>
+    <h3>{{'house.overview.settle.detail.createdAt' | translate:{date: settlement?.createdAt | date} }}</h3>
+    <h3>{{'house.overview.settle.detail.createdBy' | translate:{name: settlement?.createdByName} }}</h3>
+  </ion-label>
+</ion-item>

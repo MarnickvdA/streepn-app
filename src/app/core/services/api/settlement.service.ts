@@ -6,6 +6,8 @@ import {AngularFirestore} from '@angular/fire/firestore';
 import {LoggerService} from '@core/services/logger.service';
 import {AccountPayout} from '@core/utils/streepn-logic';
 import {AngularFirePerformance, trace} from '@angular/fire/performance';
+import {HouseService} from '@core/services';
+import {Observable, throwError} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -15,12 +17,26 @@ export class SettlementService {
     private settlements?: Settlement[];
     private houseId: string;
 
-    constructor(private functions: AngularFireFunctions,
+    constructor(private houseService: HouseService,
+                private functions: AngularFireFunctions,
                 private performance: AngularFirePerformance,
                 private fs: AngularFirestore) {
     }
 
-    settleSharedAccount(houseId: string, sharedAccountId: string, settlement: { [id: string]: AccountPayout }) {
+    settleSharedAccount(houseId: string, sharedAccountId: string, settlement: { [id: string]: AccountPayout }): Observable<any> {
+        const house = this.houseService.getLatestHouseValue(houseId);
+        if (!house) {
+            return throwError('House not found');
+        }
+
+        if (house.isSettling) {
+            return throwError('House is being settled');
+        }
+
+        if (!house.getSharedAccountById(sharedAccountId)) {
+            return throwError('Shared account not found');
+        }
+
         const callable = this.functions.httpsCallable('settleSharedAccount');
         return callable({
             houseId,
@@ -33,7 +49,11 @@ export class SettlementService {
             }));
     }
 
-    settleHouse(house: House) {
+    settleHouse(house: House): Observable<any> {
+        if (!house.isSettleable) {
+            return throwError('House is not settleable');
+        }
+
         const callable = this.functions.httpsCallable('settleHouse');
         return callable({
             houseId: house.id,

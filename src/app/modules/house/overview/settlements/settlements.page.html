@@ -19,7 +19,7 @@
     </ion-header>
 
     <ion-list>
-        <ion-item (click)="settleHouse()" [disabled]="!canSettle()" button class="list-button" detail="false"
+        <ion-item *ngIf="isAdmin" (click)="settleHouse()" [disabled]="!canSettle()" button class="list-button" detail="false"
                   lines="full">
             <fa-duotone-icon [icon]="['fad', 'calculator-alt']" class="primary large" [fixedWidth]="true"
                              slot="start"></fa-duotone-icon>
@@ -42,14 +42,7 @@
             </ion-label>
         </ion-item>
 
-        <ion-item *ngFor="let settlement of settlements" button lines="inset" routerDirection="forward"
-                  routerLink="{{settlement.id}}">
-            <ion-label>
-                <h3>
-                    Verrekening op {{settlement.createdAt | dateTime}}
-                    door {{settlement.createdByName}}
-                </h3>
-            </ion-label>
-        </ion-item>
+        <app-settlement-item *ngFor="let settlement of settlements" [settlement]="settlement">
+        </app-settlement-item>
     </ion-list>
 </ion-content>

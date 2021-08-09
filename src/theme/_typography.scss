@@ -199,3 +199,11 @@ p.small {
 ion-label {
   --color: var(--color-neutral-600);
 }
+
+span.negative-amount {
+  color: var(--ion-color-danger);
+}
+
+span.positive-amount {
+  color: var(--ion-color-dark);
+}

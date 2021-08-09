@@ -10,6 +10,7 @@ import {AnalyticsService} from './analytics.service';
 import {catchError} from 'rxjs/operators';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import {LoggerService} from '../logger.service';
+import {House} from '@core/models';
 import User = firebase.User;
 
 
@@ -180,6 +181,14 @@ export class AuthService {
                     this.eventsService.publish('legal:result', false);
                 }
             });
+    }
+
+    currentUserIsAdmin(house: House) {
+        if (!house || !this.currentUser) {
+            return false;
+        }
+
+        return house.getUserAccountByUserId(this.currentUser.uid).isAdmin;
     }
 
     private setUserProfile(user: User, displayName: string, photoUrl?: string): Promise<void> {

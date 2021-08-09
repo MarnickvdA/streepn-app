@@ -2,17 +2,23 @@ import {Injectable} from '@angular/core';
 import {Balance, House, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from '../../models';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {AngularFireFunctions} from '@angular/fire/functions';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
+import {AuthService} from '@core/services';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AccountService {
-    constructor(private fs: AngularFirestore,
+    constructor(private authService: AuthService,
+                private fs: AngularFirestore,
                 private functions: AngularFireFunctions) {
     }
 
     updateUserAccount(house: House, account: UserAccount) {
+        if (!this.authService.currentUserIsAdmin(house)) {
+            return Promise.reject('Permission denied');
+        }
+
         house.accounts = house.accounts.map(obj => {
             if (obj.id === account.id) {
                 return account;
@@ -24,7 +30,11 @@ export class AccountService {
         return this.setUserAccounts(house);
     }
 
-    addSharedAccount(house: House, accountName: string) {
+    addSharedAccount(house: House, accountName: string): Promise<void[]> {
+        if (!this.authService.currentUserIsAdmin(house)) {
+            return Promise.reject('Permission denied');
+        }
+
         const sharedAccount = SharedAccount.new(accountName);
 
         house.sharedAccounts.push(sharedAccount);
@@ -36,6 +46,10 @@ export class AccountService {
     }
 
     updateSharedAccount(house: House, account: SharedAccount) {
+        if (!this.authService.currentUserIsAdmin(house)) {
+            return Promise.reject('Permission denied');
+        }
+
         house.sharedAccounts = house.sharedAccounts.map(obj => {
             if (obj.id === account.id) {
                 return account;
@@ -48,6 +62,22 @@ export class AccountService {
     }
 
     removeSharedAccount(house: House, account: SharedAccount): Observable<any> {
+        if (!this.authService.currentUserIsAdmin(house)) {
+            return throwError('Permission denied');
+        }
+
+        if (house.isSettling) {
+            return throwError('Cannot remove shared account while settling the house');
+        }
+        const sharedAccount = house.getSharedAccountById(account.id);
+        if (!sharedAccount) {
+            return throwError('Shared account not found');
+        }
+
+        if (!sharedAccount.isRemovable) {
+            return throwError('Shared account cannot be removed');
+        }
+
         const callable = this.functions.httpsCallable('removeSharedAccount');
         return callable({
             houseId: house.id,

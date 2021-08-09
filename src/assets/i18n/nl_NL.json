@@ -377,8 +377,8 @@
           "toOverview": "Verrekening afronden"
         },
         "detail": {
-          "createdAt": "Aangemaakt op ",
-          "createdBy": "Door "
+          "createdAt": "Verrekening op {{date}}",
+          "createdBy": "Door {{name}}"
         },
         "sharedAccount": {
           "amount": "Te verrekenen bedrag",

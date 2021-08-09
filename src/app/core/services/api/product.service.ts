@@ -2,13 +2,15 @@ import {Injectable} from '@angular/core';
 import {House, Product, productConverter} from '../../models';
 import firebase from 'firebase/app';
 import {AngularFirestore} from '@angular/fire/firestore';
+import {AuthService} from '@core/services';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ProductService {
 
-    constructor(private fs: AngularFirestore) {
+    constructor(private fs: AngularFirestore,
+                private authService: AuthService) {
     }
 
     addProduct(house: House, name: string, price: number) {
@@ -31,7 +33,16 @@ export class ProductService {
         }, {merge: true});
     }
 
-    editProduct(house: House, product: Product) {
+    editProduct(house: House, product: Product): Promise<void> {
+        if (house.isSettling) {
+            return Promise.reject('Permission denied: House is being settled');
+        }
+
+        const oldProduct = house.getProductById(product.id);
+        if (oldProduct.price !== product.price && !this.authService.currentUserIsAdmin(house)) {
+            return Promise.reject('Permission denied: User is not administrator');
+        }
+
         house.products = house.products.map(obj => {
             if (obj.id === product.id) {
                 return product;
@@ -48,8 +59,20 @@ export class ProductService {
     }
 
     removeProduct(house: House, product: Product) {
-        house.products = house.products.filter(obj => obj.id !== product.id);
+        if (house.isSettling) {
+            return Promise.reject('Permission denied: House is being settled');
+        }
 
+        const oldProduct = house.getProductById(product.id);
+        if (oldProduct.price !== product.price && !this.authService.currentUserIsAdmin(house)) {
+            return Promise.reject('Permission denied: User is not administrator');
+        }
+
+        if (!product.removable) {
+            return Promise.reject('Permission denied: Product is not removable');
+        }
+
+        house.products = house.products.filter(obj => obj.id !== product.id);
         const products = house.products.map(p => productConverter.toFirestore(p));
 
         return this.fs.collection('houses').doc(house.id).set({

@@ -22,11 +22,11 @@
                 <ion-item *ngFor="let house of houses" button routerDirection="root"
                           routerLink="/house/{{house.id}}/transactions">
                     <ion-label>{{house.name}}</ion-label>
-                    <fa-icon (click)="toggleFavorite($event, house.id)"
-                             [icon]="this.favorite === house.id ? ['fas', 'star'] : ['fal', 'star']"
-                             [ngClass]="this.favorite === house.id ? 'warning' : 'medium half-opacity'"
-                             class="primary" [fixedWidth]="true"
-                             slot="end"></fa-icon>
+<!--                    <fa-icon (click)="toggleFavorite($event, house.id)"-->
+<!--                             [icon]="this.favorite === house.id ? ['fas', 'star'] : ['fal', 'star']"-->
+<!--                             [ngClass]="this.favorite === house.id ? 'warning' : 'medium half-opacity'"-->
+<!--                             class="primary" [fixedWidth]="true"-->
+<!--                             slot="end"></fa-icon>-->
                 </ion-item>
             </ion-menu-toggle>
         </ng-container>

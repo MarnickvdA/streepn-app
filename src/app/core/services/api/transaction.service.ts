@@ -9,6 +9,7 @@ import {AuthService} from '@core/services/firebase/auth.service';
 import {LoggerService} from '@core/services/logger.service';
 import {AnalyticsService} from '@core/services/firebase/analytics.service';
 import {AngularFirePerformance, trace} from '@angular/fire/performance';
+import {HouseService} from '@core/services';
 
 export interface TransactionSet {
     [accountId: string]: {
@@ -31,6 +32,7 @@ export class TransactionService {
     private destroyerSubject: Subject<void> = new Subject();
 
     constructor(private authService: AuthService,
+                private houseService: HouseService,
                 private functions: AngularFireFunctions,
                 private performance: AngularFirePerformance,
                 private analyticsService: AnalyticsService,
