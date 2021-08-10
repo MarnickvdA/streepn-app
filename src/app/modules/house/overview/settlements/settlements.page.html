@@ -42,7 +42,11 @@
             </ion-label>
         </ion-item>
 
-        <app-settlement-item *ngFor="let settlement of settlements" [settlement]="settlement">
-        </app-settlement-item>
+        <div *ngFor="let settlement of settlements" [ngSwitch]="settlement.type">
+            <app-house-settlement-item *ngSwitchCase="'house'"  [settlement]="settlement">
+            </app-house-settlement-item>
+            <app-shared-account-settlement-item *ngSwitchCase="'sharedAccount'" [settlement]="settlement">
+            </app-shared-account-settlement-item>
+        </div>
     </ion-list>
 </ion-content>

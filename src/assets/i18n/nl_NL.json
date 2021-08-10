@@ -374,11 +374,12 @@
           "sharedIncomplete": "Nog niet alle potjes zijn verrekend!",
           "settleUsers": "Verrekenen afronden",
           "settleUsersDescription": "Als alles up-to-date is kun je de verrekening afronden. Let wel op: deze actie is niet terug te draaien!",
-          "toOverview": "Verrekening afronden"
-        },
-        "detail": {
-          "createdAt": "Verrekening op {{date}}",
-          "createdBy": "Door {{name}}"
+          "toOverview": "Verrekening afronden",
+          "detail": {
+            "title": "Huis verrekening",
+            "settlement": "Huis verrekend",
+            "createdAt": "Op {{date}} door {{name}}"
+          }
         },
         "sharedAccount": {
           "amount": "Te verrekenen bedrag",
@@ -389,7 +390,11 @@
           "header": "Pas op!",
           "message": "Weet je zeker dat je dit potje wil verrekenen? Deze actie is namelijk niet terug te draaien.",
           "description": "Het bovenstaande bedrag wordt verrekend over de personen die je selecteert.",
-          "description-alert": "Pas op: deze handeling is niet terug te draaien!"
+          "description-alert": "Pas op: deze handeling is niet terug te draaien!",
+          "detail": {
+            "settlement": "Potje {{name}} verrekend",
+            "createdAt": "Op {{date}} door {{name}}"
+          }
         }
       }
     }

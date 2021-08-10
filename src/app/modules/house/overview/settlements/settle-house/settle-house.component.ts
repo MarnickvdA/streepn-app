@@ -3,11 +3,11 @@ import {House, SharedAccount} from '@core/models';
 import {EventsService, HouseService, LoggerService} from '@core/services';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {LoadingController, ModalController} from '@ionic/angular';
-import {SettleComponent} from '@modules/house/overview/shared-account-detail/settle/settle.component';
 import {AddStockComponent} from '@modules/house/stock/add-stock/add-stock.component';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError} from 'rxjs/operators';
 import {SettlementService} from '@core/services/api/settlement.service';
+import {SettleSharedAccountComponent} from '@modules/house/overview/settlements/settle-shared-account/settle-shared-account.component';
 
 @Component({
     selector: 'app-settle-house',
@@ -42,7 +42,7 @@ export class SettleHouseComponent implements OnInit, OnDestroy {
 
     settleSharedAccount(account: SharedAccount) {
         this.modalController.create({
-            component: SettleComponent,
+            component: SettleSharedAccountComponent,
             componentProps: {
                 sharedAccountId: account.id
             },

@@ -4,10 +4,10 @@ import {map} from 'rxjs/operators';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {LoggerService} from '@core/services/logger.service';
-import {AccountPayout} from '@core/utils/streepn-logic';
 import {AngularFirePerformance, trace} from '@angular/fire/performance';
 import {HouseService} from '@core/services';
 import {Observable, throwError} from 'rxjs';
+import {AccountSettlement, HouseSettlement} from '@core/models/settlement';
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +23,7 @@ export class SettlementService {
                 private fs: AngularFirestore) {
     }
 
-    settleSharedAccount(houseId: string, sharedAccountId: string, settlement: { [id: string]: AccountPayout }): Observable<any> {
+    settleSharedAccount(houseId: string, sharedAccountId: string, settlement: AccountSettlement): Observable<any> {
         const house = this.houseService.getLatestHouseValue(houseId);
         if (!house) {
             return throwError('House not found');
@@ -64,9 +64,10 @@ export class SettlementService {
             }));
     }
 
-    getSettlement(houseId: string, settlementId: string): Settlement {
+    getSettlement(houseId: string, settlementId: string): HouseSettlement {
         if (this.houseId === houseId) {
-            return this.settlements?.find((s) => s.id === settlementId);
+            return this.settlements?.filter((s) => s.type === 'house')
+                .find((s) => s.id === settlementId) as HouseSettlement;
         } else {
             delete this.settlements;
             return undefined;

@@ -1,4 +1,4 @@
-import {Balance} from '@core/models';
+import {AccountPayout, Balance} from '@core/models';
 
 export const shuffle = (array: any[]) => {
     let currentIndex = array.length;
@@ -20,16 +20,6 @@ export const shuffle = (array: any[]) => {
 
     return array;
 };
-
-export interface AccountPayout {
-    totalOut: number;
-    products: {
-        [productId: string]: {
-            totalOut: number;
-            amountOut: number;
-        };
-    };
-}
 
 /**
  * Calculate how the shared account should be splitted

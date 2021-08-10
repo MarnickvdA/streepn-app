@@ -9,7 +9,6 @@ import {SharedAccountDetailPageRoutingModule} from './shared-account-detail-rout
 import {SharedAccountDetailPage} from './shared-account-detail.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {SharedModule} from '@shared/shared.module';
-import {SettleComponent} from '@modules/house/overview/shared-account-detail/settle/settle.component';
 
 @NgModule({
     imports: [
@@ -21,7 +20,7 @@ import {SettleComponent} from '@modules/house/overview/shared-account-detail/set
         ReactiveFormsModule,
         SharedModule
     ],
-    declarations: [SharedAccountDetailPage, SettleComponent]
+    declarations: [SharedAccountDetailPage]
 })
 export class SharedAccountDetailPageModule {
 }

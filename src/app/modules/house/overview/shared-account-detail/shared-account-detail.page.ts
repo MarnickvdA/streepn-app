@@ -6,8 +6,8 @@ import {AccountService, HouseService, LoggerService} from '@core/services';
 import {LoadingController, ModalController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Params} from '@angular/router';
-import {SettleComponent} from '@modules/house/overview/shared-account-detail/settle/settle.component';
 import {catchError} from 'rxjs/operators';
+import {SettleSharedAccountComponent} from '@modules/house/overview/settlements/settle-shared-account/settle-shared-account.component';
 
 @Component({
     selector: 'app-shared-account-detail',
@@ -76,7 +76,7 @@ export class SharedAccountDetailPage implements OnInit, OnDestroy {
 
     settleSharedAccount(sharedAccountId: string) {
         this.modalController.create({
-            component: SettleComponent,
+            component: SettleSharedAccountComponent,
             componentProps: {
                 sharedAccountId
             },

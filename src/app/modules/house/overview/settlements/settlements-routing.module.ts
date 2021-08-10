@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
 import {SettlementsPage} from './settlements.page';
-import {SettlementDetailComponent} from '@modules/house/overview/settlements/settlement-detail/settlement-detail.component';
+import {HouseSettlementDetailComponent} from '@modules/house/overview/settlements/house-settlement-detail/house-settlement-detail.component';
 
 const routes: Routes = [
     {
@@ -11,8 +11,8 @@ const routes: Routes = [
         component: SettlementsPage
     },
     {
-        path: ':settlementId',
-        component: SettlementDetailComponent
+        path: 'house/:settlementId',
+        component: HouseSettlementDetailComponent
     }
 ];
 

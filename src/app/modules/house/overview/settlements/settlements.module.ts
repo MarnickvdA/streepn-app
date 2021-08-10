@@ -9,7 +9,9 @@ import {SettlementsPageRoutingModule} from './settlements-routing.module';
 import {SettlementsPage} from './settlements.page';
 import {SharedModule} from '@shared/shared.module';
 import {SettleHouseComponent} from '@modules/house/overview/settlements/settle-house/settle-house.component';
-import {SettlementDetailComponent} from '@modules/house/overview/settlements/settlement-detail/settlement-detail.component';
+// eslint-disable-next-line max-len
+import {HouseSettlementDetailComponent} from '@modules/house/overview/settlements/house-settlement-detail/house-settlement-detail.component';
+import {SettleSharedAccountComponent} from '@modules/house/overview/settlements/settle-shared-account/settle-shared-account.component';
 
 @NgModule({
     imports: [
@@ -22,7 +24,8 @@ import {SettlementDetailComponent} from '@modules/house/overview/settlements/set
     declarations: [
         SettlementsPage,
         SettleHouseComponent,
-        SettlementDetailComponent,
+        HouseSettlementDetailComponent,
+        SettleSharedAccountComponent,
     ]
 })
 export class SettlementsPageModule {

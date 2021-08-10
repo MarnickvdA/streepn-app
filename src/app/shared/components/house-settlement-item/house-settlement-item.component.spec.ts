@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { SettlementItemComponent } from './settlement-item.component';
+import { HouseSettlementItemComponent } from './house-settlement-item.component';
 
 describe('SettlementItemComponent', () => {
-  let component: SettlementItemComponent;
-  let fixture: ComponentFixture<SettlementItemComponent>;
+  let component: HouseSettlementItemComponent;
+  let fixture: ComponentFixture<HouseSettlementItemComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SettlementItemComponent ],
+      declarations: [ HouseSettlementItemComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SettlementItemComponent);
+    fixture = TestBed.createComponent(HouseSettlementItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

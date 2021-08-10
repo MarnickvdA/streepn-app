@@ -1,19 +1,19 @@
 import {Component, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
-import {House, SharedAccount} from '@core/models';
+import {AccountSettlement, House, SharedAccount} from '@core/models';
 import {HouseService} from '@core/services';
-import {AccountPayout, calculatePayout} from '@core/utils/streepn-logic';
+import {calculatePayout} from '@core/utils/streepn-logic';
 import {TranslateService} from '@ngx-translate/core';
 import {getMoneyString} from '@core/utils/formatting-utils';
 import {SettlementService} from '@core/services/api/settlement.service';
 
 @Component({
-    selector: 'app-settle',
-    templateUrl: './settle.component.html',
-    styleUrls: ['./settle.component.scss'],
+    selector: 'app-settle-shared-account',
+    templateUrl: './settle-shared-account.component.html',
+    styleUrls: ['./settle-shared-account.component.scss'],
 })
-export class SettleComponent implements OnInit, OnDestroy {
+export class SettleSharedAccountComponent implements OnInit, OnDestroy {
 
     @Input() sharedAccountId: string;
 
@@ -28,9 +28,7 @@ export class SettleComponent implements OnInit, OnDestroy {
     } = {};
 
     private houseSub: Subscription;
-    private settlement: {
-        [id: string]: AccountPayout;
-    };
+    private settlement: AccountSettlement;
 
     constructor(private modalController: ModalController,
                 private houseService: HouseService,

@@ -4,18 +4,19 @@ import {HouseService, LoggerService} from '@core/services';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {SettlementService} from '@core/services/api/settlement.service';
+import {HouseSettlement} from '@core/models/settlement';
 
 @Component({
-    selector: 'app-settlement-detail',
-    templateUrl: './settlement-detail.component.html',
-    styleUrls: ['./settlement-detail.component.scss'],
+    selector: 'app-house-settlement-detail',
+    templateUrl: './house-settlement-detail.component.html',
+    styleUrls: ['./house-settlement-detail.component.scss'],
 })
-export class SettlementDetailComponent implements OnInit, OnDestroy {
+export class HouseSettlementDetailComponent implements OnInit, OnDestroy {
     houseId: string;
     house: House;
-    settlement?: Settlement;
+    settlement?: HouseSettlement;
     settleOrder?: string[];
-    private readonly logger = LoggerService.getLogger(SettlementDetailComponent.name);
+    private readonly logger = LoggerService.getLogger(HouseSettlementDetailComponent.name);
     private houseSub: Subscription;
     private routeSub: Subscription;
     private settlementId: string;
