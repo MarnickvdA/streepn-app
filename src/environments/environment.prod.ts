@@ -20,6 +20,7 @@ export const environment = {
         },
     },
     legalVersion: '1',
-    legalUrl: 'https://streepn.nl/legal?version=1',
+    legalUrl: 'https://streepn.nl/legal',
+    privacyUrl: 'https://streepn.nl/privacy',
     version: require('../../package.json').version,
 };

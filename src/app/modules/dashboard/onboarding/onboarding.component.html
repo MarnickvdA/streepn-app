@@ -18,7 +18,9 @@
                 <p>
                     {{'onboarding.legal.description1' | translate}}
                     <span (click)="openLegalPage()" class="link">{{'onboarding.legal.description2' | translate}}</span>
-                    {{'onboarding.legal.description3' | translate}}
+                    &
+                    <span (click)="openPrivacyPage()" class="link">{{'onboarding.legal.description3' | translate}}</span>
+                    {{'onboarding.legal.description4' | translate}}
                 </p>
             </div>
             <ion-button (click)="acceptTerms()" expand="block">

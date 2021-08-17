@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IonSlides, LoadingController, ModalController} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HouseInvite} from '@core/models';
@@ -6,13 +6,14 @@ import {environment} from '@env/environment';
 import {AuthService, EventsService, HouseService, PushService, StorageService, UIService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {Browser} from '@capacitor/browser';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-onboarding',
     templateUrl: './onboarding.component.html',
     styleUrls: ['./onboarding.component.scss'],
 })
-export class OnboardingComponent implements OnInit {
+export class OnboardingComponent implements OnInit, OnDestroy {
     @ViewChild(IonSlides) slides: IonSlides;
     slideOpts = {
         initialSlide: 0,
@@ -25,6 +26,7 @@ export class OnboardingComponent implements OnInit {
     isSubmitted: boolean;
     houseInvite: HouseInvite;
     hasAcceptedLegals = false;
+    private legalsSubscription: Subscription;
 
     constructor(private modalController: ModalController,
                 private pushService: PushService,
@@ -45,6 +47,7 @@ export class OnboardingComponent implements OnInit {
         const n = this.authService.currentUser?.displayName;
         if (n && n.length > 1) {
             this.name = ' ' + this.authService.currentUser.displayName;
+            this.slides?.update();
         }
 
         this.storage.get('houseInvite')
@@ -54,9 +57,14 @@ export class OnboardingComponent implements OnInit {
             .catch(() => {
             });
 
-        this.authService.hasAcceptedLegals.subscribe(accepted => {
+        this.legalsSubscription = this.authService.hasAcceptedLegals.subscribe(accepted => {
             this.hasAcceptedLegals = accepted;
+            this.slides?.update();
         });
+    }
+
+    ngOnDestroy(): void {
+        this.legalsSubscription.unsubscribe();
     }
 
     initPushNotifications() {
@@ -156,6 +164,12 @@ export class OnboardingComponent implements OnInit {
         });
     }
 
+    openPrivacyPage() {
+        Browser.open({
+            url: environment.privacyUrl
+        });
+    }
+
     private checkHouseInvite(houseInvite: string) {
         // Fuck this item, don't want it more than once.
         this.storage.delete('houseInvite');
@@ -163,6 +177,7 @@ export class OnboardingComponent implements OnInit {
         this.houseService.getHouseByInviteLink(houseInvite)
             .then(invite => {
                 this.houseInvite = invite;
+                this.slides?.update();
             })
             .catch(err => {
                 this.uiService.showError(this.translate.instant('errors.error'), err);

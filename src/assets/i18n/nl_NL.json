@@ -167,8 +167,9 @@
     "legal": {
       "title": "Algemene voorwaarden & Privacyverklaring",
       "description1": "Om gebruik te maken van onze diensten moet je de ",
-      "description2": "algemene voorwaarden & privacyverklaring",
-      "description3": " accepteren. Daarna kunnen we aan de slag!",
+      "description2": "algemene voorwaarden",
+      "description3": "privacyverklaring",
+      "description4": " accepteren. Daarna kunnen we aan de slag!",
       "error": "Het is niet gelukt om je voorkeur op te slaan. Probeer het nogmaals."
     },
     "push": {
