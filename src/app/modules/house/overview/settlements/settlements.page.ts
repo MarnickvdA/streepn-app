@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ModalController} from '@ionic/angular';
 import {SettleHouseComponent} from '@modules/house/overview/settlements/settle-house/settle-house.component';
 import {SettlementService} from '@core/services/api/settlement.service';
+import {HouseSettlement, SharedAccountSettlement} from '@core/models/settlement';
 
 @Component({
     selector: 'app-settlements',
@@ -62,5 +63,13 @@ export class SettlementsPage implements OnInit, OnDestroy {
 
     canSettle() {
         return this.house?.members.length > 1 && this.house?.totalOut > 0;
+    }
+
+    getHouseSettlement(settlement: Settlement): HouseSettlement {
+        return settlement as HouseSettlement;
+    }
+
+    getSharedAccountSettlement(settlement: Settlement): SharedAccountSettlement {
+        return settlement as SharedAccountSettlement;
     }
 }

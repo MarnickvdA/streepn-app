@@ -19,7 +19,8 @@
     </ion-header>
 
     <ion-list>
-        <ion-item *ngIf="isAdmin" (click)="settleHouse()" [disabled]="!canSettle()" button class="list-button" detail="false"
+        <ion-item *ngIf="isAdmin" (click)="settleHouse()" [disabled]="!canSettle()" button class="list-button"
+                  detail="false"
                   lines="full">
             <fa-duotone-icon [icon]="['fad', 'calculator-alt']" class="primary large" [fixedWidth]="true"
                              slot="start"></fa-duotone-icon>
@@ -43,9 +44,11 @@
         </ion-item>
 
         <div *ngFor="let settlement of settlements" [ngSwitch]="settlement.type">
-            <app-house-settlement-item *ngSwitchCase="'house'"  [settlement]="settlement">
+            <app-house-settlement-item *ngSwitchCase="'house'"
+                                       [settlement]="getHouseSettlement(settlement)">
             </app-house-settlement-item>
-            <app-shared-account-settlement-item *ngSwitchCase="'sharedAccount'" [settlement]="settlement">
+            <app-shared-account-settlement-item *ngSwitchCase="'sharedAccount'"
+                                                [settlement]="getSharedAccountSettlement(settlement)">
             </app-shared-account-settlement-item>
         </div>
     </ion-list>

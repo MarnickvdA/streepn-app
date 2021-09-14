@@ -66,6 +66,13 @@ export class AddTransactionComponent implements OnInit {
 
     selectProduct(product: Product) {
         this.currentProduct = product;
+
+        if (Capacitor.isNativePlatform()) {
+            Haptics.impact({
+                style: ImpactStyle.Medium
+            });
+        }
+
         this.house.allAccounts.forEach((acc) => {
             if (this.transactions[acc.id] && this.transactions[acc.id][this.currentProduct.id]?.amount) {
                 this.accountQuantityInput[acc.id].set.next(this.transactions[acc.id][this.currentProduct.id]?.amount);
