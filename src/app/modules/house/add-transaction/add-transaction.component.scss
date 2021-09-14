@@ -1,3 +1,84 @@
 ion-fab-button {
   --border-radius: 50%;
 }
+
+.account-item {
+  .account-name {
+    flex-grow: 3;
+  }
+}
+
+.reduced-top-spacing {
+  padding-top: 0;
+
+  ion-label, ion-button {
+    margin-top: 12px;
+  }
+}
+
+#productsContent {
+  display: flex;
+  max-height: 100px;
+}
+
+.products-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100px;
+
+
+}
+
+.horizontal-spacing {
+  --spacing: 12px;
+  height: 100%;
+
+  &.left {
+    min-width: calc(var(--spacing) + var(--ion-safe-area-left));
+  }
+
+  &.right {
+    min-width: calc(var(--spacing) + var(--ion-safe-area-right));
+  }
+}
+
+.product-card {
+  padding: 8px;
+  margin-right: 16px;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  height: 72px;
+
+  background-color: white;
+
+  border: .25px solid rgba(0, 0, 0, 0.02);
+  box-shadow: rgba(0, 0, 0, 0.24) 0 1.5px 4px;
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+
+  &.active {
+    border: .25px solid rgba(var(--ion-color-primary-rgb), .5);
+    background-color: rgba(var(--ion-color-primary-rgb), .05);
+  }
+
+  .name {
+    padding: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    min-width: 80px;
+    line-height: 20px;
+  }
+
+  .amount {
+    line-height: 12px;
+    font-size: 12px;
+  }
+}

@@ -9,6 +9,7 @@ import {AddTransactionComponent} from '@modules/house/add-transaction/add-transa
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {HousePageRoutingModule} from '@modules/house/house-routing.module';
 import {SharedModule} from '@shared/shared.module';
+import {QuantityInputComponent} from '@modules/house/add-transaction/quantity-input/quantity-input.component';
 
 @NgModule({
     imports: [
@@ -22,7 +23,8 @@ import {SharedModule} from '@shared/shared.module';
     ],
     declarations: [
         HousePage,
-        AddTransactionComponent
+        AddTransactionComponent,
+        QuantityInputComponent
     ]
 })
 export class HousePageModule {

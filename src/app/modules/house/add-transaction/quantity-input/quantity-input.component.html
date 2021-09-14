@@ -1,0 +1,19 @@
+<div class="quantity-input">
+    <div class="button remove" (mousedown)="$event.preventDefault()" (click)="decrement(1)">
+        <ion-icon name="remove-outline"></ion-icon>
+    </div>
+    <span class="vertical-line"></span>
+    <ion-input #input
+               [(ngModel)]="currentValue"
+               onkeydown="return event.keyCode !== 69 && event.keyCode !== 189"
+               (ionChange)="onInputChanged($event)"
+               (focusout)="onFocusOut($event)"
+               min="0"
+               inputmode="numeric"
+               type="number">
+    </ion-input>
+    <span class="vertical-line"></span>
+    <div class="button add" (mousedown)="$event.preventDefault()" (click)="increment(1)">
+        <ion-icon name="add-outline"></ion-icon>
+    </div>
+</div>

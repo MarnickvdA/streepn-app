@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Account, House, Product} from '@core/models';
 import {LoadingController, ModalController} from '@ionic/angular';
 import {catchError} from 'rxjs/operators';
-import {EMPTY, Observable, Subscription} from 'rxjs';
+import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
 import {TransactionService, TransactionSet} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {Capacitor} from '@capacitor/core';
@@ -19,6 +19,16 @@ export class AddTransactionComponent implements OnInit {
     @Input() house$: Observable<House>;
 
     transactions: TransactionSet = {};
+    productTotals: {
+        [productId: string]: number;
+    };
+    accountQuantityInput: {
+        [accountId: string]: {
+            set: Subject<number>;
+            add: Subject<number>;
+            reset: Subject<void>;
+        };
+    };
     house: House;
     currentProduct: Product;
     transactionCount = 0;
@@ -37,15 +47,35 @@ export class AddTransactionComponent implements OnInit {
 
             if (house) {
                 this.currentProduct = house.products[0];
+
+                this.productTotals = {};
+                this.house.products.forEach(product => this.productTotals[product.id] = 0);
+
+                this.accountQuantityInput = {};
+                this.house.allAccounts.forEach((acc) => {
+                    this.accountQuantityInput[acc.id] = {
+                        set: new Subject<number>(),
+                        add: new Subject<number>(),
+                        reset: new Subject<void>(),
+                    };
+                });
+
             }
         });
     }
 
-    selectProduct($event: any) {
-        this.currentProduct = this.house.products.find(p => p.id === $event.detail.value);
+    selectProduct(product: Product) {
+        this.currentProduct = product;
+        this.house.allAccounts.forEach((acc) => {
+            if (this.transactions[acc.id] && this.transactions[acc.id][this.currentProduct.id]?.amount) {
+                this.accountQuantityInput[acc.id].set.next(this.transactions[acc.id][this.currentProduct.id]?.amount);
+            } else {
+                this.accountQuantityInput[acc.id].set.next(0);
+            }
+        });
     }
 
-    addItem(account: Account) {
+    addItem(account: Account, by = 1) {
         if (Capacitor.isNativePlatform()) {
             Haptics.impact({
                 style: ImpactStyle.Heavy
@@ -62,14 +92,14 @@ export class AddTransactionComponent implements OnInit {
             };
         }
 
-        this.transactions[account.id][this.currentProduct.id].amount++;
-
+        this.transactions[account.id][this.currentProduct.id].amount += by;
+        this.productTotals[this.currentProduct.id] += by;
         this.transactionCount++;
     }
 
     addOneForAll() {
         this.house.accounts.forEach(acc => {
-            this.addItem(acc);
+            this.accountQuantityInput[acc.id].add.next(1);
         });
     }
 
@@ -99,19 +129,25 @@ export class AddTransactionComponent implements OnInit {
         this.modalController.dismiss(successful);
     }
 
-    removeItem(account: Account) {
+    removeItem(account: Account, by = 1) {
         if (Capacitor.isNativePlatform()) {
             Haptics.impact({
                 style: ImpactStyle.Medium
             });
         }
 
-        this.transactions[account.id][this.currentProduct.id].amount -= 1;
+        this.transactions[account.id][this.currentProduct.id].amount -= by;
+        this.productTotals[this.currentProduct.id] -= by;
         this.transactionCount -= 1;
     }
 
     reset() {
+        this.house.allAccounts.forEach(acc => {
+            this.accountQuantityInput[acc.id].set.next(0);
+        });
+
         this.transactions = {};
+        Object.keys(this.productTotals).forEach(key => this.productTotals[key] = 0);
         this.transactionCount = 0;
     }
 
@@ -121,5 +157,17 @@ export class AddTransactionComponent implements OnInit {
             'house.transactions.add',
             addTransactionGuide
         );
+    }
+
+    onValueChange(account: Account, $event: number) {
+        if (!this.transactions[account.id] || !this.transactions[account.id][this.currentProduct.id]?.amount) {
+            this.addItem(account, $event);
+        }
+
+        if (this.transactions[account.id][this.currentProduct.id].amount < $event) {
+            this.addItem(account, $event - this.transactions[account.id][this.currentProduct.id].amount);
+        } else if (this.transactions[account.id][this.currentProduct.id].amount > $event) {
+            this.removeItem(account, this.transactions[account.id][this.currentProduct.id].amount - $event);
+        }
     }
 }

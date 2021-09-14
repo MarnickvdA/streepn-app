@@ -8,15 +8,13 @@ import TimestampFn = firebase.firestore.Timestamp;
 
 export class UserAccount extends Account {
     userId: string; // UID of the Firebase Auth user associated with this account.
-    photoUrl?: string; // URL for the photo associated with this account in a specific house.
     roles: UserRole[]; // Permission-system for a house.
 
     constructor(id: string, userId: string, createdAt: Timestamp, name: string, roles: UserRole[],
                 photoUrl: string, balance: Balance, settledAt?: Timestamp) {
-        super(id, createdAt, name, AccountType.user, balance, settledAt);
+        super(id, createdAt, name, AccountType.user, balance, settledAt, photoUrl);
         this.userId = userId;
         this.roles = roles || [];
-        this.photoUrl = photoUrl;
     }
 
     get isAdmin(): boolean {
@@ -38,8 +36,7 @@ export const userAccountConverter = {
 
         const userAccountObject = {
             userId: userAccount.userId,
-            roles: userAccount.roles,
-            photoUrl: userAccount.photoUrl,
+            roles: userAccount.roles
         };
 
         return {...accountObject, ...userAccountObject};

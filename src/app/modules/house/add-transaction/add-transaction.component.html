@@ -21,39 +21,33 @@
 </ion-header>
 
 <ion-content *ngIf="house">
-    <ion-item lines="full">
-        <ion-label>
-            <h3>{{'house.transactions.currentProduct' | translate}}</h3>
-        </ion-label>
-        <ion-select (ionChange)="selectProduct($event)" interface="popover" value="{{house.products[0].id}}">
-            <ion-select-option *ngFor="let product of house.products" value="{{product.id}}">
-                {{product.name}}
-            </ion-select-option>
-        </ion-select>
-    </ion-item>
+    <ion-content id="productsContent" forceOverscroll="true" scrollY="false" scrollX="true">
+        <div class="products-wrapper">
+            <div class="horizontal-spacing left"></div>
+            <div class="product-card"
+                 *ngFor="let product of house.products"
+                 [ngClass]="currentProduct.id === product.id ? 'active' : ''"
+                 (click)="selectProduct(product)">
+                <span class="name">{{product.name}}</span>
+                <span class="amount">{{productTotals[product.id]}}</span>
+            </div>
+            <div class="horizontal-spacing right"></div>
+        </div>
+    </ion-content>
 
     <ion-list>
-        <ion-list-header lines="full">
+        <ion-list-header class="reduced-top-spacing" lines="full">
             <ion-label>{{'house.overview.accounts.title' | translate}}</ion-label>
             <ion-button (click)="addOneForAll()">{{'house.transactions.allPlusOne' | translate}}</ion-button>
         </ion-list-header>
 
-        <ion-item *ngFor="let account of house.accounts">
+        <ion-item class="account-item" *ngFor="let account of house.accounts">
             <app-account-avatar [account]="account" size="small" slot="start"></app-account-avatar>
-            <ion-label>
+            <ion-label class="account-name">
                 <h3>{{account.name}}</h3>
             </ion-label>
-            <ion-chip
-                    *ngIf="transactions[account.id] && transactions[account.id][currentProduct.id] && transactions[account.id][currentProduct.id].amount > 0">
-                <ion-label>{{transactions[account.id][currentProduct.id].amount}}</ion-label>
-            </ion-chip>
-            <ion-fab-button (click)="removeItem(account)" [attr.disabled]="!transactions[account.id] || !transactions[account.id][currentProduct.id]
-            || transactions[account.id][currentProduct.id].amount === 0" color="danger" size="small">
-                <ion-icon name="remove-outline"></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button (click)="addItem(account)" color="success" size="small">
-                <ion-icon name="add-outline"></ion-icon>
-            </ion-fab-button>
+            <app-quantity-input [actions]="this.accountQuantityInput[account.id]"
+                                (valueChange)="onValueChange(account, $event)"></app-quantity-input>
         </ion-item>
 
         <ng-container *ngIf="house.sharedAccounts.length > 0">
@@ -61,21 +55,13 @@
                 <ion-label>{{'house.overview.sharedAccounts' | translate}}</ion-label>
             </ion-list-header>
 
-            <ion-item *ngFor="let account of house.sharedAccounts">
-                <ion-label>
+            <ion-item class="account-item" *ngFor="let account of house.sharedAccounts">
+                <app-account-avatar [account]="account" size="small" slot="start"></app-account-avatar>
+                <ion-label class="account-name">
                     <h3>{{account.name}}</h3>
                 </ion-label>
-                <ion-chip
-                        *ngIf="transactions[account.id] && transactions[account.id][currentProduct.id] && transactions[account.id][currentProduct.id].amount > 0">
-                    <ion-label>{{transactions[account.id][currentProduct.id].amount}}</ion-label>
-                </ion-chip>
-                <ion-fab-button (click)="removeItem(account)" [attr.disabled]="!transactions[account.id] || !transactions[account.id][currentProduct.id]
-            || transactions[account.id][currentProduct.id].amount === 0" color="danger" size="small">
-                    <ion-icon name="remove-outline"></ion-icon>
-                </ion-fab-button>
-                <ion-fab-button (click)="addItem(account)" color="success" size="small">
-                    <ion-icon name="add-outline"></ion-icon>
-                </ion-fab-button>
+                <app-quantity-input [actions]="this.accountQuantityInput[account.id]"
+                                    (valueChange)="onValueChange(account, $event)"></app-quantity-input>
             </ion-item>
         </ng-container>
     </ion-list>

@@ -15,6 +15,7 @@ export abstract class Account {
     id: string;
     createdAt: Timestamp;
     name: string;
+    photoUrl?: string;
 
     // Filter label for the sub-types of Account. Useful for quick checking which type the account is.
     type: AccountType;
@@ -25,13 +26,14 @@ export abstract class Account {
     // Moment in time when the account was last settled. Transactions until this time cannot be edited for this account.
     settledAt: Timestamp;
 
-    protected constructor(id: string, createdAt: Timestamp, name: string, type: AccountType, balance: Balance, settledAt?: Timestamp) {
+    protected constructor(id: string, createdAt: Timestamp, name: string, type: AccountType, balance: Balance, settledAt?: Timestamp, photoUrl?: string) {
         this.id = id;
         this.createdAt = createdAt;
         this.name = name;
         this.type = type;
         this.balance = new Balance(balance?.totalIn, balance?.totalOut, balance?.products);
         this.settledAt = settledAt;
+        this.photoUrl = photoUrl;
     }
 
     get isRemovable(): boolean {
@@ -50,6 +52,7 @@ export const accountConverter = {
             name: account.name,
             type: account.type,
             settledAt: account.settledAt,
+            photoUrl: account.photoUrl
         })
 };
 

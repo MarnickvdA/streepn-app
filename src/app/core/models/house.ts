@@ -84,6 +84,13 @@ export class House {
         this.setDictionary();
     }
 
+    get allAccounts(): Account[] {
+        return [
+            ...this.mAccounts,
+            ...this.mSharedAccounts
+        ];
+    }
+
     get accounts(): UserAccount[] {
         return this.mAccounts;
     }
