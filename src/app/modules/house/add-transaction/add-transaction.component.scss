@@ -2,12 +2,6 @@ ion-fab-button {
   --border-radius: 50%;
 }
 
-.account-item {
-  .account-name {
-    flex-grow: 3;
-  }
-}
-
 .reduced-top-spacing {
   padding-top: 0;
 
@@ -30,8 +24,6 @@ ion-fab-button {
   flex-direction: row;
   align-items: center;
   height: 100px;
-
-
 }
 
 .horizontal-spacing {

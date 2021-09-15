@@ -5,14 +5,16 @@ export const addTransactionGuide = `
 
 <h4>Product selecteren</h4>
 <p>
-    Standaard staat je eerste product in de lijst ingesteld als het geselecteerde product. Je kunt op de balk met 'Geselecteerd product' 
-    klikken om de lijst met andere producten te openen en daaruit een product te selecteren.
+    Standaard staat je eerste product in de lijst ingesteld als het geselecteerde product. Je kunt horizontaal door de lisjt met producten 
+    scrollen en andere producten selecteren. Het getal onder het product beschrijft hoe veel van het product in deze transactie is
+    gestreept.
 </p>
 
 <h4>Streepjes zetten</h4>
 <p>
     Je kunt voor je geselecteerde product op dat moment op de <strong>+</strong> en <strong>-</strong> knoppen drukken zodat je streepjes
-    kan toevoegen voor een gebruiker. 
+    kan toevoegen voor een gebruiker. Daarnaast kun je gelijk grotere aantallen van het product toevoegen door op het productaantal te 
+    klikken.
 </p>
 <h6>Allemaal +1</h6>
 <p>

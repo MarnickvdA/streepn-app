@@ -41,12 +41,12 @@
             <ion-button (click)="addOneForAll()">{{'house.transactions.allPlusOne' | translate}}</ion-button>
         </ion-list-header>
 
-        <ion-item class="account-item" *ngFor="let account of house.accounts">
+        <ion-item class="account-item" button="false" *ngFor="let account of house.accounts">
             <app-account-avatar [account]="account" size="small" slot="start"></app-account-avatar>
             <ion-label class="account-name">
                 <h3>{{account.name}}</h3>
             </ion-label>
-            <app-quantity-input [actions]="this.accountQuantityInput[account.id]"
+            <app-quantity-input slot="end" [actions]="this.accountQuantityInput[account.id]"
                                 (valueChange)="onValueChange(account, $event)"></app-quantity-input>
         </ion-item>
 
@@ -55,19 +55,19 @@
                 <ion-label>{{'house.overview.sharedAccounts' | translate}}</ion-label>
             </ion-list-header>
 
-            <ion-item class="account-item" *ngFor="let account of house.sharedAccounts">
+            <ion-item class="account-item" button="false" *ngFor="let account of house.sharedAccounts">
                 <app-account-avatar [account]="account" size="small" slot="start"></app-account-avatar>
                 <ion-label class="account-name">
                     <h3>{{account.name}}</h3>
                 </ion-label>
-                <app-quantity-input [actions]="this.accountQuantityInput[account.id]"
+                <app-quantity-input slot="end" [actions]="this.accountQuantityInput[account.id]"
                                     (valueChange)="onValueChange(account, $event)"></app-quantity-input>
             </ion-item>
         </ng-container>
     </ion-list>
 
     <ion-fab horizontal="center" slot="fixed" vertical="bottom">
-        <ion-fab-button (click)="checkout()" color="success" disabled="{{transactionCount === 0}}">
+        <ion-fab-button (click)="checkout()" color="success" disabled="{{ transactionCount === 0 }}">
             <ion-icon name="cart-outline"></ion-icon>
         </ion-fab-button>
     </ion-fab>

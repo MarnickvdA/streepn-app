@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {Keyboard} from '@capacitor/keyboard';
+import {Capacitor} from '@capacitor/core';
 
 @Component({
     selector: 'app-quantity-input',
@@ -52,11 +54,19 @@ export class QuantityInputComponent implements OnInit, OnDestroy {
                 this.ignoreChange = false;
                 this.decrement(this.currentValue);
             });
+
+        if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
+            Keyboard.setAccessoryBarVisible({isVisible: true});
+        }
     }
 
     ngOnDestroy() {
         this.onDestroyNotifier.next();
         this.onDestroyNotifier.complete();
+
+        if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
+            Keyboard.setAccessoryBarVisible({isVisible: false});
+        }
     }
 
     decrement(by: number) {

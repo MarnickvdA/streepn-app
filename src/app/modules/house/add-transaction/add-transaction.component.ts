@@ -101,7 +101,7 @@ export class AddTransactionComponent implements OnInit {
 
         this.transactions[account.id][this.currentProduct.id].amount += by;
         this.productTotals[this.currentProduct.id] += by;
-        this.transactionCount++;
+        this.transactionCount += by;
     }
 
     addOneForAll() {
@@ -118,6 +118,18 @@ export class AddTransactionComponent implements OnInit {
         });
 
         await loading.present();
+
+        Object.keys(this.transactions).forEach(x => {
+            Object.keys(this.transactions[x]).forEach(y => {
+                if (this.transactions[x][y].amount === 0) {
+                    delete this.transactions[x][y];
+                }
+            });
+
+            if (Object.values(this.transactions[x]).length === 0) {
+                delete this.transactions[x];
+            }
+        });
 
         this.transactionService.addTransaction(this.house, this.transactions)
             .pipe(
@@ -145,7 +157,7 @@ export class AddTransactionComponent implements OnInit {
 
         this.transactions[account.id][this.currentProduct.id].amount -= by;
         this.productTotals[this.currentProduct.id] -= by;
-        this.transactionCount -= 1;
+        this.transactionCount -= by;
     }
 
     reset() {
