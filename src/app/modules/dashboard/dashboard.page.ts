@@ -32,6 +32,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     private user: User;
     private loadingHouseJoin?: HTMLIonLoadingElement;
     private onboarding: boolean;
+    private promptingHouseInvite = false;
 
     constructor(private authService: AuthService,
                 private navController: NavController,
@@ -75,17 +76,13 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
 
-        this.eventsService.subscribe('app:resume', () => {
-            this.checkForHouseInvite();
-        });
+        this.eventsService.subscribe('app:resume', this.checkHouseInviteListener);
     }
 
     ngOnDestroy() {
         this.userSub.unsubscribe();
         this.housesSub?.unsubscribe();
-        this.eventsService.unsubscribe('app:resume', () => {
-            this.checkForHouseInvite();
-        });
+        this.eventsService.unsubscribe('app:resume', this.checkHouseInviteListener);
     }
 
     ngAfterViewInit() {
@@ -167,6 +164,8 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
         }, 350);
     }
 
+    private checkHouseInviteListener = () => this.checkForHouseInvite();
+
     private launchOnBoarding() {
         this.onboarding = true;
         this.modalController.create({
@@ -189,7 +188,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
             this.storage.get('houseInvite'),
             this.storage.get('hasOnboarded')
         ]).then(([invite, hasOnboarded]) => {
-            if (invite && hasOnboarded) {
+            if (invite && hasOnboarded && !this.promptingHouseInvite) {
                 this.promptHouseInvite(invite as string);
             }
         }).catch(() => {
@@ -197,6 +196,8 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private promptHouseInvite(houseInvite: string) {
+        this.promptingHouseInvite = true;
+
         // Fuck this item, don't want it more than once.
         this.storage.delete('houseInvite');
 
@@ -205,20 +206,22 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 if (invite) {
                     this.zone.run(() => {
                         this.alertController.create({
-                            header: this.translate.instant('dashboard.houseInvite.header'),
-                            message: this.translate.instant('dashboard.houseInvite.question') + '<b>' + invite.houseName + '</b>?',
-                            buttons: [
-                                {
-                                    text: this.translate.instant('actions.deny'),
-                                    role: 'cancel'
-                                }, {
-                                    text: this.translate.instant('actions.accept'),
-                                    handler: () => {
-                                        this.joinHouse(invite);
+                                header: this.translate.instant('dashboard.houseInvite.header'),
+                                message: this.translate.instant('dashboard.houseInvite.question') + '<b>' + invite.houseName + '</b>?',
+                                buttons: [
+                                    {
+                                        text: this.translate.instant('actions.deny'),
+                                        role: 'cancel'
+                                    }, {
+                                        text: this.translate.instant('actions.accept'),
+                                        handler: () => {
+                                            this.joinHouse(invite);
+                                        }
                                     }
-                                }
-                            ]
-                        }).then(alert => alert.present());
+                                ]
+                            })
+                            .then(alert => alert.present())
+                            .finally(() => this.promptingHouseInvite = false);
                     });
                 }
             })
@@ -228,6 +231,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                     message: err
                 });
                 this.uiService.showError(this.translate.instant('errors.error'), err);
+                this.promptingHouseInvite = false;
             });
     }
 
