@@ -1,21 +1,24 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {House, Settlement} from '@core/models';
-import {HouseService, LoggerService} from '@core/services';
+import {AccountPayout, House} from '@core/models';
+import {SharedAccountSettlement} from '@core/models/settlement';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
+import {HouseService} from '@core/services';
 import {SettlementService} from '@core/services/api/settlement.service';
-import {HouseSettlement} from '@core/models/settlement';
 
 @Component({
-    selector: 'app-house-settlement-detail',
-    templateUrl: './house-settlement-detail.component.html',
-    styleUrls: ['./house-settlement-detail.component.scss'],
+    selector: 'app-shared-account-settlement-detail',
+    templateUrl: './shared-account-settlement-detail.component.html',
+    styleUrls: ['./shared-account-settlement-detail.component.scss'],
 })
-export class HouseSettlementDetailComponent implements OnInit, OnDestroy {
+export class SharedAccountSettlementDetailComponent implements OnInit, OnDestroy {
     houseId: string;
     house: House;
-    settlement?: HouseSettlement;
-    settleOrder?: string[];
+    settlement?: SharedAccountSettlement;
+    debtors: {
+        accountId: string;
+        payed: AccountPayout;
+    }[] = [];
     private houseSub: Subscription;
     private routeSub: Subscription;
     private settlementId: string;
@@ -37,19 +40,14 @@ export class HouseSettlementDetailComponent implements OnInit, OnDestroy {
                 this.house = house;
 
                 if (house) {
-                    this.settlement = this.settlementService.getHouseSettlement(house.id, this.settlementId);
-
-                    if (this.settlement) {
-                        this.settleOrder = Object.keys(this.settlement.items).sort((a, b) => {
-                            if (this.settlement.items[a].settle > this.settlement.items[b].settle) {
-                                return -1;
-                            } else if (this.settlement.items[a].settle < this.settlement.items[b].settle) {
-                                return 1;
-                            } else {
-                                return 0;
-                            }
+                    this.settlement = this.settlementService.getSharedAccountSettlement(house.id, this.settlementId);
+                    this.debtors = [];
+                    Object.keys(this.settlement.debtors).forEach(key => {
+                        this.debtors.push({
+                            accountId: key,
+                            payed: this.settlement.debtors[key]
                         });
-                    }
+                    });
                 }
             });
     }

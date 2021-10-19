@@ -204,7 +204,7 @@
       "empty": "Nog geen transacties... Tijd om die borrel aan te slingeren!",
       "currentProduct": "Geselecteerd product",
       "allPlusOne": "Allemaal +1",
-      "disabledEditing": "Sommige transacties zijn reeds verrekend waardoor je ze niet meer kan bewerken."
+      "disabledEditing": "Sommige deelnemers/potjes zijn reeds verrekend waardoor je (een deel van) de transactie niet meer kan bewerken."
     },
     "transaction": {
       "title": "Transactie",
@@ -397,8 +397,10 @@
           "description-alert-prefix": "Pas op: deze handeling is niet terug te draaien!",
           "description-alert": "Er wordt bij het bijhouden van het krediet en de overdracht ervan geen rekening gehouden met het verschil tussen inkoop en verkoopprijs. Wij raden aan om eerst het hele huis te verrekenen voordat je een deelnemer's krediet overdraagt zodat er geen verschil meer zit tussen inkoop en verkoopprijs van het krediet.",
           "detail": {
+            "header": "Krediet overgedragen",
             "settlement": "{{name}}'s krediet overgedragen",
-            "createdAt": "Op {{date}} door {{name}}"
+            "createdAt": "Op {{date}} door {{name}}",
+            "settled": "<strong>{{settler}}</strong> heeft krediet overgedragen naar <strong>{{receiver}}</strong> en nu moet <strong>{{debtor}}</strong> een bedrag van <strong>{{amount}}</strong> betalen aan <strong>{{creditor}}</strong>"
           }
         },
         "sharedAccount": {
@@ -412,8 +414,10 @@
           "description": "Het bovenstaande bedrag wordt verrekend over de personen die je selecteert.",
           "description-alert": "Pas op: deze handeling is niet terug te draaien!",
           "detail": {
+            "header": "Potje verrekend",
             "settlement": "Potje {{name}} verrekend",
-            "createdAt": "Op {{date}} door {{name}}"
+            "createdAt": "Op {{date}} door {{name}}",
+            "settled": "<strong>{{creditor}}</strong> is verrekend over {{number}} deelnemer(s) met een totaalbedrag van <strong>{{amount}}</strong>"
           }
         }
       }

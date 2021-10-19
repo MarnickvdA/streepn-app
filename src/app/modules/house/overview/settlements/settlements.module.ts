@@ -13,6 +13,10 @@ import {SettleHouseComponent} from '@modules/house/overview/settlements/settle-h
 import {HouseSettlementDetailComponent} from '@modules/house/overview/settlements/house-settlement-detail/house-settlement-detail.component';
 import {SettleSharedAccountComponent} from '@modules/house/overview/settlements/settle-shared-account/settle-shared-account.component';
 import {SettleUserAccountComponent} from '@modules/house/overview/settlements/settle-user-account/settle-user-account.component';
+// eslint-disable-next-line max-len
+import {SharedAccountSettlementDetailComponent} from '@modules/house/overview/settlements/shared-account-settlement-detail/shared-account-settlement-detail.component';
+// eslint-disable-next-line max-len
+import {UserAccountSettlementDetailComponent} from '@modules/house/overview/settlements/user-account-settlement-detail/user-account-settlement-detail.component';
 
 @NgModule({
     imports: [
@@ -26,6 +30,8 @@ import {SettleUserAccountComponent} from '@modules/house/overview/settlements/se
         SettlementsPage,
         SettleHouseComponent,
         HouseSettlementDetailComponent,
+        SharedAccountSettlementDetailComponent,
+        UserAccountSettlementDetailComponent,
         SettleUserAccountComponent,
         SettleSharedAccountComponent,
     ]

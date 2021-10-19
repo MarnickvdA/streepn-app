@@ -9,8 +9,8 @@
         </ion-buttons>
         <ion-title>{{(house$ | async)?.name}}</ion-title>
         <ion-buttons slot="end">
-            <ion-button>
-                <fa-duotone-icon (click)="openInfo()" [icon]="['fad', 'info-circle']" class="primary" [fixedWidth]="true"
+            <ion-button (click)="openInfo()">
+                <fa-duotone-icon [icon]="['fad', 'info-circle']" class="primary" [fixedWidth]="true"
                                  slot="start"></fa-duotone-icon>
             </ion-button>
         </ion-buttons>

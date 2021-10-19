@@ -125,6 +125,14 @@ export class UserAccountSettlement extends Settlement {
         this.receiverAccountId = receiverAccountId;
         this.balanceSettled = balanceSettled;
     }
+
+    get settlerName(): string {
+        return this.getAccountName(this.settlerAccountId);
+    }
+
+    get receiverName(): string {
+        return this.getAccountName(this.receiverAccountId);
+    }
 }
 
 export const settlementConverter: FirestoreDataConverter<Settlement> = {

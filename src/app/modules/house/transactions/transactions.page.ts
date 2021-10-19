@@ -136,7 +136,7 @@ export class TransactionsPage implements OnInit, OnDestroy {
             this.modalController,
             'house.transactions.title',
             transactionsPageGuide
-        );
+        ).catch(err => console.error(err));
     }
 
     accountIdToColor(id: string) {
