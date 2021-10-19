@@ -54,7 +54,8 @@ export class IconsModule {
             DuoIcons.faSack,
             DuoIcons.faArrowAltCircleDown,
             DuoIcons.faHeadset,
-            DuoIcons.faExternalLink
+            DuoIcons.faExternalLink,
+            DuoIcons.faUserTag
         );
     }
 }

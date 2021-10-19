@@ -1,0 +1,61 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{userAccount?.name}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="dismiss()">
+                <fa-duotone-icon [icon]="['fad', 'times-circle']" class="primary" [fixedWidth]="true"
+                                 slot="icon-only"></fa-duotone-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{userAccount?.name}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <ion-item lines="full">
+        <ion-label>
+            <h3>{{'house.overview.settle.userAccount.amount' | translate}}</h3>
+        </ion-label>
+        <span [ngClass]="userAccount?.balance.amount >= 0 ? 'positive-amount' : 'negative-amount'"
+              slot="end">{{userAccount?.balance.amount | money}}</span>
+    </ion-item>
+
+    <p class="description ion-text-wrap">
+        {{'house.overview.settle.userAccount.description' | translate}}<br><br>
+        <strong>{{'house.overview.settle.userAccount.description-alert-prefix' | translate}}</strong><br>
+        {{'house.overview.settle.userAccount.description-alert' | translate}}
+    </p>
+
+    <ion-list>
+        <ion-list-header lines="inset">
+            <ion-label class="ion-margin-top">
+                {{'house.overview.settle.userAccount.select-receiver' | translate}}
+            </ion-label>
+        </ion-list-header>
+        <ion-radio-group (ionChange)="updateReceiver($event)">
+            <ion-item *ngFor="let account of accounts; let i = index" class="account-item">
+                <app-account-avatar [account]="account" size="small" slot="start"></app-account-avatar>
+                <div class="content">
+                    <ion-label>
+                        <h3>{{account.name}}</h3>
+                        <p>
+                            {{'house.overview.settle.userAccount.balance' | translate}}
+                            <span *ngIf="account.balance; let accBalance" [ngClass]="accBalance.amount + (account.id === receiverAccountId ? userAccount.balance.amount : 0) >= 0
+                        ? 'positive-amount' : 'negative-amount'">{{accBalance.amount + (account.id === receiverAccountId ? userAccount.balance.amount : 0) | money}}</span>
+                        </p>
+                    </ion-label>
+                </div>
+                <ion-radio slot="end" value="{{account.id}}"></ion-radio>
+            </ion-item>
+        </ion-radio-group>
+    </ion-list>
+
+    <ion-button (click)="settleAccount()" [disabled]="!receiverAccountId" class="settle" expand="block">
+        <ion-label>{{'house.overview.settle.userAccount.settle' | translate}}</ion-label>
+    </ion-button>
+</ion-content>

@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {House, UserAccount, UserRole} from '@core/models';
 import {Subscription} from 'rxjs';
-import {AlertController, LoadingController, NavController} from '@ionic/angular';
+import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {
     AccountService,
@@ -14,6 +14,8 @@ import {
     PushTopic,
     StorageService
 } from '@core/services';
+import {SettleSharedAccountComponent} from '@modules/house/overview/settlements/settle-shared-account/settle-shared-account.component';
+import {SettleUserAccountComponent} from '@modules/house/overview/settlements/settle-user-account/settle-user-account.component';
 
 @Component({
     selector: 'app-account-detail',
@@ -44,6 +46,7 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                 private accountService: AccountService,
                 private loadingController: LoadingController,
                 private alertController: AlertController,
+                private modalController: ModalController,
                 private translate: TranslateService,
                 private events: EventsService,
                 private navController: NavController) {
@@ -188,5 +191,17 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                     loading.dismiss();
                 });
         }
+    }
+
+    settleUser() {
+        this.modalController.create({
+            component: SettleUserAccountComponent,
+            componentProps: {
+                userAccountId: this.account.id
+            },
+            swipeToClose: true
+        }).then((modal) => {
+            modal.present();
+        });
     }
 }

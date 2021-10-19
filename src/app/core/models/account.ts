@@ -52,6 +52,8 @@ export abstract class Account {
                 }
             }
         }
+
+        return true;
     }
 
     deepCopy(): Account {

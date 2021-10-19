@@ -50,6 +50,9 @@
             <app-shared-account-settlement-item *ngSwitchCase="'sharedAccount'"
                                                 [settlement]="getSharedAccountSettlement(settlement)">
             </app-shared-account-settlement-item>
+            <app-user-account-settlement-item *ngSwitchCase="'userAccount'"
+                                                [settlement]="getUserAccountSettlement(settlement)">
+            </app-user-account-settlement-item>
         </div>
     </ion-list>
 </ion-content>

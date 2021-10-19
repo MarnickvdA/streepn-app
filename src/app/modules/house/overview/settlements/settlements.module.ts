@@ -12,6 +12,7 @@ import {SettleHouseComponent} from '@modules/house/overview/settlements/settle-h
 // eslint-disable-next-line max-len
 import {HouseSettlementDetailComponent} from '@modules/house/overview/settlements/house-settlement-detail/house-settlement-detail.component';
 import {SettleSharedAccountComponent} from '@modules/house/overview/settlements/settle-shared-account/settle-shared-account.component';
+import {SettleUserAccountComponent} from '@modules/house/overview/settlements/settle-user-account/settle-user-account.component';
 
 @NgModule({
     imports: [
@@ -25,6 +26,7 @@ import {SettleSharedAccountComponent} from '@modules/house/overview/settlements/
         SettlementsPage,
         SettleHouseComponent,
         HouseSettlementDetailComponent,
+        SettleUserAccountComponent,
         SettleSharedAccountComponent,
     ]
 })

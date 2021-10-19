@@ -1,0 +1,15 @@
+<ion-item class="large" lines="inset">
+  <fa-duotone-icon [icon]="['fad', 'user-tag']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
+  <ion-label>
+    <h3>{{'house.overview.settle.userAccount.detail.settlement'
+            | translate:{
+      name: settlement?.getAccountName(settlement?.settlerAccountId)
+    } }}</h3>
+    <p class="small">
+      {{'house.overview.settle.userAccount.detail.createdAt' | translate:{
+      date: settlement?.createdAt | date,
+      name: settlement?.getAccountName(settlement?.createdBy)
+    } }}
+    </p>
+  </ion-label>
+</ion-item>

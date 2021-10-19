@@ -111,6 +111,22 @@ export class SharedAccountSettlement extends Settlement {
     }
 }
 
+export class UserAccountSettlement extends Settlement {
+    settledAtBefore: Timestamp;
+    settlerAccountId: string;
+    receiverAccountId: string;
+    balanceSettled: Balance;
+
+    constructor(id: string, createdAt: Timestamp, createdBy: string, accounts: { [p: string]: { name: string } },
+                settledAtBefore: Timestamp, settlerAccountId: string, receiverAccountId: string, balanceSettled: Balance) {
+        super(id, createdAt, createdBy, 'userAccount', accounts);
+        this.settledAtBefore = settledAtBefore;
+        this.settlerAccountId = settlerAccountId;
+        this.receiverAccountId = receiverAccountId;
+        this.balanceSettled = balanceSettled;
+    }
+}
+
 export const settlementConverter: FirestoreDataConverter<Settlement> = {
     toFirestore: (settlement: Settlement) => ({}),
     fromFirestore: (snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Settlement => {
@@ -120,7 +136,7 @@ export const settlementConverter: FirestoreDataConverter<Settlement> = {
             case 'sharedAccount':
                 return newSharedAccountSettlement(snapshot.id, data);
             case 'userAccount':
-                break;
+                return newUserAccountSettlement(snapshot.id, data);
             default:
                 return newHouseSettlement(snapshot.id, data);
         }
@@ -135,3 +151,7 @@ export const newSharedAccountSettlement
     = (id: string, data: { [key: string]: any }): SharedAccountSettlement => new SharedAccountSettlement(id, data.createdAt as Timestamp,
     data.createdBy, data.settledAtBefore as Timestamp, data.creditorId, JSON.parse(JSON.stringify(data.creditor)),
     JSON.parse(JSON.stringify(data.debtors)), data.accounts);
+
+export const newUserAccountSettlement
+    = (id: string, data: { [key: string]: any }): UserAccountSettlement => new UserAccountSettlement(id, data.createdAt as Timestamp,
+    data.createdBy, data.accounts, data.settledAtBefore as Timestamp, data.settlerAccountId, data.receiverAccountId, data.balanceSettled);

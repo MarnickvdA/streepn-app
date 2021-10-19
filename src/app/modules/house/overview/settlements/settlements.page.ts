@@ -6,7 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ModalController} from '@ionic/angular';
 import {SettleHouseComponent} from '@modules/house/overview/settlements/settle-house/settle-house.component';
 import {SettlementService} from '@core/services/api/settlement.service';
-import {HouseSettlement, SharedAccountSettlement} from '@core/models/settlement';
+import {HouseSettlement, SharedAccountSettlement, UserAccountSettlement} from '@core/models/settlement';
 
 @Component({
     selector: 'app-settlements',
@@ -71,5 +71,9 @@ export class SettlementsPage implements OnInit, OnDestroy {
 
     getSharedAccountSettlement(settlement: Settlement): SharedAccountSettlement {
         return settlement as SharedAccountSettlement;
+    }
+
+    getUserAccountSettlement(settlement: Settlement): UserAccountSettlement {
+        return settlement as UserAccountSettlement;
     }
 }

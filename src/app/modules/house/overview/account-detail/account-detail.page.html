@@ -20,22 +20,24 @@
     <ion-list>
         <ion-item-divider class="bottom-line"></ion-item-divider>
         <ion-item lines="inset">
-            <fa-duotone-icon [icon]="['fad', 'user']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'user']" class="primary" [fixedWidth]="true"
+                             slot="start"></fa-duotone-icon>
             <ion-input [(ngModel)]="newName" value="{{account?.name}}"></ion-input>
             <ion-button (click)="setName()"
                         [attr.disabled]="newName === account?.name || newName?.length < 2">{{'actions.edit' | translate}}</ion-button>
         </ion-item>
-<!--        <ion-item *ngIf="isSelf">-->
-<!--            <fa-duotone-icon [icon]="['fad', 'bell']" class="primary-reversed" [fixedWidth]="true"-->
-<!--                             slot="start"></fa-duotone-icon>-->
-<!--            <ion-label>-->
-<!--                <h3>{{'house.overview.account.enablePush' | translate}}</h3>-->
-<!--            </ion-label>-->
-<!--            <ion-toggle (ngModelChange)="togglePush()" [(ngModel)]="enablePush"-->
-<!--                        slot="end"></ion-toggle>-->
-<!--        </ion-item>-->
+        <!--        <ion-item *ngIf="isSelf">-->
+        <!--            <fa-duotone-icon [icon]="['fad', 'bell']" class="primary-reversed" [fixedWidth]="true"-->
+        <!--                             slot="start"></fa-duotone-icon>-->
+        <!--            <ion-label>-->
+        <!--                <h3>{{'house.overview.account.enablePush' | translate}}</h3>-->
+        <!--            </ion-label>-->
+        <!--            <ion-toggle (ngModelChange)="togglePush()" [(ngModel)]="enablePush"-->
+        <!--                        slot="end"></ion-toggle>-->
+        <!--        </ion-item>-->
         <ion-item *ngIf="isAdmin" lines="full">
-            <fa-duotone-icon [icon]="['fad', 'users-crown']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'users-crown']" class="primary" [fixedWidth]="true"
+                             slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'house.overview.account.enableAdmin' | translate}}</h3>
             </ion-label>
@@ -49,7 +51,8 @@
             </ion-label>
         </ion-list-header>
         <ion-item>
-            <fa-duotone-icon [icon]="['fad', 'wallet']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'wallet']" class="primary" [fixedWidth]="true"
+                             slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'house.overview.account.balanceAmount' | translate}}</h3>
             </ion-label>
@@ -57,14 +60,16 @@
                   slot="end">{{account?.balance.amount | money}}</span>
         </ion-item>
         <ion-item>
-            <fa-duotone-icon [icon]="['fad', 'plus-circle']" class="success" [fixedWidth]="true" slot="start"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'plus-circle']" class="success" [fixedWidth]="true"
+                             slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'house.overview.account.totalIn' | translate}}</h3>
             </ion-label>
             <span slot="end">{{account?.balance.totalIn | money}}</span>
         </ion-item>
         <ion-item lines="full">
-            <fa-duotone-icon [icon]="['fad', 'minus-circle']" class="danger" [fixedWidth]="true" slot="start"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'minus-circle']" class="danger" [fixedWidth]="true"
+                             slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3>{{'house.overview.account.totalOut' | translate}}</h3>
             </ion-label>
@@ -72,16 +77,32 @@
         </ion-item>
 
         <ion-item-divider class="bottom-line">
-            <ion-label *ngIf="!account?.isRemovable" class="ion-text-wrap" id="explanation">
-                <p class="small">{{'house.overview.account.deletePrecondition' | translate:{name: isSelf ? ('house.overview.account.you' | translate) : account?.name} }}</p>
-            </ion-label>
         </ion-item-divider>
+
         <ion-item (click)="deleteAccount()" [disabled]="!account?.isRemovable" button lines="full">
-            <fa-duotone-icon [icon]="['fad', 'sign-out']" class="danger" [fixedWidth]="true" slot="start"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'sign-out']" class="danger large" [fixedWidth]="true"
+                             slot="start"></fa-duotone-icon>
             <ion-label>
                 <h3 *ngIf="isAdmin && !isSelf"> {{'house.overview.account.deleteAccount' | translate:{name: account?.name} }}</h3>
                 <h3 *ngIf="isSelf"> {{'house.overview.account.leaveHouse' | translate:{houseName: house?.name} }}</h3>
+                <p *ngIf="!account?.isRemovable" class="small black ion-text-wrap">
+                    {{ 'house.overview.account.deletePrecondition' | translate:{name: isSelf ? ('house.overview.account.you' | translate) : account?.name} }}
+                </p>
             </ion-label>
         </ion-item>
+
+        <ion-item (click)="settleUser()" *ngIf="!account?.isRemovable" button class="list-button"
+                  detail="false"
+                  lines="full">
+            <fa-duotone-icon [icon]="['fad', 'calculator-alt']" class="primary large" [fixedWidth]="true"
+                             slot="start"></fa-duotone-icon>
+            <ion-label>
+                <h3>{{'house.overview.account.settleUser.title' | translate}}</h3>
+                <p class="small ion-text-wrap">
+                    {{'house.overview.account.settleUser.description' | translate}}
+                </p>
+            </ion-label>
+        </ion-item>
+
     </ion-list>
 </ion-content>

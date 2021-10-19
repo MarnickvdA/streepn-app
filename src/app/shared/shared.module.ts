@@ -25,6 +25,7 @@ import {IconsModule} from '@shared/icons.module';
 import {AccountAvatarComponent} from '@shared/components/account-avatar/account-avatar.component';
 import {HouseSettlementItemComponent} from '@shared/components/house-settlement-item/house-settlement-item.component';
 import {SharedAccountSettlementItemComponent} from '@shared/components/shared-account-settlement-item/shared-account-settlement-item.component';
+import { UserAccountSettlementItemComponent } from './components/user-account-settlement-item/user-account-settlement-item.component';
 
 export const components = [
     MoneyInputComponent,
@@ -37,7 +38,8 @@ export const components = [
     InfoModalComponent,
     AccountAvatarComponent,
     HouseSettlementItemComponent,
-    SharedAccountSettlementItemComponent
+    SharedAccountSettlementItemComponent,
+    UserAccountSettlementItemComponent
 ];
 
 export const pipes = [

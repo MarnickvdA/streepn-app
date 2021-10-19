@@ -23,6 +23,32 @@ export class SettlementService {
                 private fs: AngularFirestore) {
     }
 
+    settleUserAccount(houseId: string, settlerAccountId: string, receiverAccountId: string) {
+        const house = this.houseService.getLatestHouseValue(houseId);
+        if (!house) {
+            return throwError('House not found');
+        }
+
+        if (house.isSettling) {
+            return throwError('House is being settled');
+        }
+
+        if (!house.getUserAccountById(settlerAccountId)) {
+            return throwError('Shared account not found');
+        }
+
+        const callable = this.functions.httpsCallable('settleUserAccount');
+        return callable({
+            houseId,
+            settlerAccountId,
+            receiverAccountId,
+        }).pipe(
+            trace('settleUserAccount'),
+            map(result => {
+                console.log(result);
+            }));
+    }
+
     settleSharedAccount(houseId: string, sharedAccountId: string, settlement: AccountSettlement): Observable<any> {
         const house = this.houseService.getLatestHouseValue(houseId);
         if (!house) {
