@@ -293,7 +293,7 @@
           "message": "Weet je zeker dat je de beheerdersrechten van {{name}} wilt ontnemen?",
           "you": "jezelf"
         },
-        "deletePrecondition": "Om het huis te verlaten moet elke geldstroom op € 0,00 staan.",
+        "deletePrecondition": "Om het huis te verlaten mogen er geen openstaande schulden zijn.",
         "deleteAccount": "{{name}} verwijderen",
         "leaveHouse": "{{houseName}} verlaten",
         "you": "je",

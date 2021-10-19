@@ -26,7 +26,8 @@ export abstract class Account {
     // Moment in time when the account was last settled. Transactions until this time cannot be edited for this account.
     settledAt: Timestamp;
 
-    protected constructor(id: string, createdAt: Timestamp, name: string, type: AccountType, balance: Balance, settledAt?: Timestamp, photoUrl?: string) {
+    protected constructor(id: string, createdAt: Timestamp, name: string, type: AccountType, balance: Balance, settledAt?: Timestamp,
+                          photoUrl?: string) {
         this.id = id;
         this.createdAt = createdAt;
         this.name = name;
@@ -37,7 +38,20 @@ export abstract class Account {
     }
 
     get isRemovable(): boolean {
-        return this.balance.totalIn === 0 && this.balance.totalOut === 0;
+        if (!this.balance || this.balance.totalIn !== 0 || this.balance.totalOut !== 0) {
+            return false;
+        }
+
+        if (this.balance.products) {
+            for (const productBalance of Object.values(this.balance.products)) {
+                if (productBalance.totalIn !== 0
+                    && productBalance.totalOut !== 0
+                    && productBalance.amountIn !== 0
+                    && productBalance.amountOut !== 0) {
+                    return false;
+                }
+            }
+        }
     }
 
     deepCopy(): Account {
@@ -47,13 +61,13 @@ export abstract class Account {
 
 export const accountConverter = {
     toFirestore: (account: Account) => ({
-            id: account.id,
-            createdAt: account.createdAt,
-            name: account.name,
-            type: account.type,
-            settledAt: account.settledAt,
-            photoUrl: account.photoUrl
-        })
+        id: account.id,
+        createdAt: account.createdAt,
+        name: account.name,
+        type: account.type,
+        settledAt: account.settledAt,
+        photoUrl: account.photoUrl
+    })
 };
 
 export enum AccountType {
