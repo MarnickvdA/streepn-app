@@ -66,4 +66,4 @@ To create a build:
 ### Android
 To create a build: `Menu > Build > Generate Signed Bundle...`. Add the release key credentials and select the 'release' build variant. The release will be created and can be found in the Android Studio project under `app/prod/release`. The ABB can be uploaded to the Google Play console.
 
-- [Play Store](https://play.google.com/apps/publish)a
+- [Play Store](https://play.google.com/apps/publish)
