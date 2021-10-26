@@ -280,6 +280,13 @@
         "header": "Huislink vernieuwen",
         "message": "Je oude huislink is verlopen... Wil je deze vernieuwen? De nieuwe link is dan 1 week geldig."
       },
+      "statistics": {
+        "title": "Statistieken",
+        "in": "In",
+        "out": "Uit",
+        "account": "Naam",
+        "product": "Product"
+      },
       "preferences": {
         "title": "Voorkeuren voor {{name}}"
       },

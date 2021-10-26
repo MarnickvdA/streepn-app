@@ -27,14 +27,16 @@
 
     <ion-list>
         <ion-item lines="inset">
-            <fa-duotone-icon [icon]="['fad', 'edit']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
+            <fa-duotone-icon [icon]="['fad', 'edit']" class="primary" [fixedWidth]="true"
+                             slot="start"></fa-duotone-icon>
             <ion-input [(ngModel)]="newName" value="{{product?.name}}"></ion-input>
             <ion-button (click)="setName()"
                         [attr.disabled]="newName === product?.name || newName?.length < 2 || !uniqueName">{{'actions.edit' | translate}}</ion-button>
         </ion-item>
         <ion-item lines="full">
             <fa-duotone-icon [icon]="['fad', 'tag']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
-            <app-money-input [enabled]="isAdmin" (amountEntered)="amountChanged($event)" [amount]="''" [icon]="undefined" [precision]="2"
+            <app-money-input [enabled]="isAdmin" (amountEntered)="amountChanged($event)" [amount]="''"
+                             [icon]="undefined" [precision]="2"
                              padding="none"></app-money-input>
             <ion-button *ngIf="isAdmin" (click)="setPrice()"
                         [attr.disabled]="newPrice === product?.price">{{'actions.edit' | translate}}</ion-button>
@@ -44,5 +46,25 @@
                 <p [innerHTML]="'house.stock.detail.advisedPrice' | translate:{price: advisedPrice}" class="small"></p>
             </ion-label>
         </ion-item>
+
+        <ion-list-header lines="full">
+            <ion-label>
+                {{'house.overview.statistics.title' | translate}}
+            </ion-label>
+        </ion-list-header>
+        <ion-grid>
+            <ion-row class="header">
+                <ion-col size="4">{{'house.overview.statistics.account' | translate}}</ion-col>
+                <ion-col class="divider" size="4">{{'house.overview.statistics.in' | translate}}</ion-col>
+                <ion-col class="divider" size="4">{{'house.overview.statistics.out' | translate}}</ion-col>
+            </ion-row>
+            <ion-row *ngFor="let item of statisticItems; let i = index" [ngClass]="i % 2 === 0 ? 'even' : 'odd'">
+                <ion-col size="4">{{item.accountName}}</ion-col>
+                <ion-col size="1">{{item.amountIn | abs }}</ion-col>
+                <ion-col size="3">{{item.totalIn | abs | money}}</ion-col>
+                <ion-col size="1">{{item.amountOut | abs }}</ion-col>
+                <ion-col size="3">{{item.totalOut | abs | money}}</ion-col>
+            </ion-row>
+        </ion-grid>
     </ion-list>
 </ion-content>

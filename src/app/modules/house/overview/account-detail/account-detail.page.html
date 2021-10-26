@@ -76,6 +76,26 @@
             <span slot="end">{{account?.balance.totalOut | money}}</span>
         </ion-item>
 
+        <ion-list-header lines="full">
+            <ion-label>
+                {{'house.overview.statistics.title' | translate}}
+            </ion-label>
+        </ion-list-header>
+        <ion-grid>
+            <ion-row class="header">
+                <ion-col size="4">{{'house.overview.statistics.product' | translate}}</ion-col>
+                <ion-col class="divider" size="4">{{'house.overview.statistics.in' | translate}}</ion-col>
+                <ion-col class="divider" size="4">{{'house.overview.statistics.out' | translate}}</ion-col>
+            </ion-row>
+            <ion-row *ngFor="let item of statisticItems; let i = index" [ngClass]="i % 2 === 0 ? 'even' : 'odd'">
+                <ion-col size="4">{{item.productName}}</ion-col>
+                <ion-col size="1">{{item.amountIn | abs }}</ion-col>
+                <ion-col size="3">{{item.totalIn | abs | money}}</ion-col>
+                <ion-col size="1">{{item.amountOut | abs }}</ion-col>
+                <ion-col size="3">{{item.totalOut | abs | money}}</ion-col>
+            </ion-row>
+        </ion-grid>
+
         <ion-item-divider class="bottom-line">
         </ion-item-divider>
 

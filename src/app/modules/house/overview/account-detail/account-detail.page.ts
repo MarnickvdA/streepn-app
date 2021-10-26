@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {House, UserAccount, UserRole} from '@core/models';
+import {House, Product, UserAccount, UserRole} from '@core/models';
 import {Subscription} from 'rxjs';
 import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
@@ -32,6 +32,13 @@ export class AccountDetailPage implements OnInit, OnDestroy {
     house: House;
     newName: string;
     isAdmin: boolean;
+    statisticItems: {
+        productName: string;
+        totalIn: number;
+        totalOut: number;
+        amountIn: number;
+        amountOut: number;
+    }[] = [];
     private readonly logger = LoggerService.getLogger(AccountDetailPage.name);
     private routeSub: Subscription;
     private houseSub: Subscription;
@@ -77,6 +84,7 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                             this.enablePush = false;
                         });
 
+                    this.generateStatistics(house, this.account);
                 }
             });
     }
@@ -203,5 +211,22 @@ export class AccountDetailPage implements OnInit, OnDestroy {
         }).then((modal) => {
             modal.present();
         });
+    }
+
+    private generateStatistics(house: House, account: UserAccount) {
+        const items = [];
+        house.products.forEach((product) => {
+            const productItem = account.balance.products[product.id];
+
+            items.push({
+                productName: product.name,
+                totalIn: productItem?.totalIn ?? 0,
+                totalOut: productItem?.totalOut ?? 0,
+                amountIn: productItem?.amountIn ?? 0,
+                amountOut: productItem?.amountOut ?? 0,
+            });
+        });
+
+        this.statisticItems = items;
     }
 }

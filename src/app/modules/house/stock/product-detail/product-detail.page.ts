@@ -24,6 +24,13 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
     productId: string;
     product: Product;
     isAdmin: boolean;
+    statisticItems: {
+        accountName: string;
+        totalIn: number;
+        totalOut: number;
+        amountIn: number;
+        amountOut: number;
+    }[] = [];
     private house: House;
     private houseSub: Subscription;
 
@@ -59,6 +66,8 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
                         this.newName = this.product.name;
                         this.moneyInput?.setAmount(this.product?.price);
                         this.isAdmin = house.isAdmin(this.authService.currentUser.uid);
+
+                        this.generateStatistics(house, product);
                     }
                 }
             });
@@ -121,6 +130,23 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
 
     amountChanged($event: number) {
         this.newPrice = $event;
+    }
+
+    private generateStatistics(house: House, product: Product) {
+        const items = [];
+        house.allAccounts.forEach((acc) => {
+            const productItem = acc.balance.products[product.id];
+
+            items.push({
+                accountName: acc.name,
+                totalIn: productItem?.totalIn ?? 0,
+                totalOut: productItem?.totalOut ?? 0,
+                amountIn: productItem?.amountIn ?? 0,
+                amountOut: productItem?.amountOut ?? 0,
+            });
+        });
+
+        this.statisticItems = items;
     }
 
     private async editProduct(product: Product) {

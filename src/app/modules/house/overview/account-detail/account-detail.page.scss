@@ -13,3 +13,30 @@ ion-item {
 p.black {
   color: #000;
 }
+
+ion-grid {
+  font-size: 12px;
+  padding: 0;
+
+  ion-row {
+    padding-left: 20px;
+
+    &.header {
+      font-weight: bold;
+      border-bottom: .25px solid rgba(#9d9fa6, .5);
+    }
+
+    &.odd {
+      background-color: rgba(#9d9fa6, .125);
+    }
+
+    ion-col {
+      &.center {
+        text-align: center;
+      }
+    }
+  }
+
+  border-bottom: .25px solid rgba(#9d9fa6, .5);
+
+}

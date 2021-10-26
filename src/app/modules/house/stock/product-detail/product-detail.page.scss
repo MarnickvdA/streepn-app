@@ -15,3 +15,25 @@ app-money-input {
     padding-inline: 0;
   }
 }
+
+ion-grid {
+  font-size: 12px;
+  padding: 0;
+
+  ion-row {
+    padding-left: 20px;
+
+    &.header {
+      font-weight: bold;
+      border-bottom: .25px solid rgba(#9d9fa6, .5);
+      //background-color: rgba(#9d9fa6, .2);
+    }
+
+    &.odd {
+      background-color: rgba(#9d9fa6, .125);
+    }
+  }
+
+  border-bottom: .25px solid rgba(#9d9fa6, .5);
+
+}
