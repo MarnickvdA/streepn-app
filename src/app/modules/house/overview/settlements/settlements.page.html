@@ -11,14 +11,18 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true">
+    <ion-refresher (ionRefresh)="reset($event)" slot="fixed">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
     <ion-header collapse="condense">
         <ion-toolbar>
             <ion-title size="large">{{'house.overview.settle.house.title' | translate}}</ion-title>
         </ion-toolbar>
     </ion-header>
 
-    <ion-list>
+    <ion-list class="no-bg">
         <ion-item *ngIf="isAdmin" (click)="settleHouse()" [disabled]="!canSettle()" button class="list-button"
                   detail="false"
                   lines="full">
@@ -57,5 +61,13 @@
                                                 [settlement]="getUserAccountSettlement(settlement)">
             </app-user-account-settlement-item>
         </div>
+
+        <ion-button (click)="loadNext()" class="no-bg more-button" expand="block" fill="clear"
+                    *ngIf="settlements?.length > 0 && !doneLoading" [disabled]="isLoadingMore">
+            <fa-duotone-icon [icon]="['fad', 'arrow-alt-circle-down']" class="primary download-icon" [fixedWidth]="true"
+                             slot="start"></fa-duotone-icon>
+            <ion-label *ngIf="!isLoadingMore" color="primary">{{'actions.loadMore' | translate}}</ion-label>
+            <ion-progress-bar *ngIf="isLoadingMore" type="indeterminate"></ion-progress-bar>
+        </ion-button>
     </ion-list>
 </ion-content>
