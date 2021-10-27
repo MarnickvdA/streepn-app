@@ -22,6 +22,7 @@ ion-grid {
 
   ion-row {
     padding-left: 20px;
+    padding-right: 8px;
 
     &.header {
       font-weight: bold;
@@ -31,6 +32,12 @@ ion-grid {
 
     &.odd {
       background-color: rgba(#9d9fa6, .125);
+    }
+
+    ion-col.space-between {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
     }
   }
 

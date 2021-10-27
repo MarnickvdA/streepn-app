@@ -60,10 +60,8 @@
             </ion-row>
             <ion-row *ngFor="let item of statisticItems; let i = index" [ngClass]="i % 2 === 0 ? 'even' : 'odd'">
                 <ion-col size="4">{{item.accountName}}</ion-col>
-                <ion-col size="1">{{item.amountIn | abs }}</ion-col>
-                <ion-col size="3">{{item.totalIn | abs | money}}</ion-col>
-                <ion-col size="1">{{item.amountOut | abs }}</ion-col>
-                <ion-col size="3">{{item.totalOut | abs | money}}</ion-col>
+                <ion-col class="space-between ion-padding-end" size="4"><span>{{item.amountIn | number:'1.0-0' }}</span><span>{{item.totalIn | abs | money}}</span></ion-col>
+                <ion-col class="space-between" size="4"><span>{{item.amountOut | number:'1.0-0' }}</span><span>{{item.totalOut | abs | money}}</span></ion-col>
             </ion-row>
         </ion-grid>
     </ion-list>
