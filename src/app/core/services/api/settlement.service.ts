@@ -43,10 +43,8 @@ export class SettlementService {
             settlerAccountId,
             receiverAccountId,
         }).pipe(
-            trace('settleUserAccount'),
-            map(result => {
-                console.log(result);
-            }));
+            trace('settleUserAccount')
+        );
     }
 
     settleSharedAccount(houseId: string, sharedAccountId: string, settlement: AccountSettlement): Observable<any> {
@@ -69,10 +67,8 @@ export class SettlementService {
             sharedAccountId,
             settlement,
         }).pipe(
-            trace('settleSharedAccount'),
-            map(result => {
-                console.log(result);
-            }));
+            trace('settleSharedAccount')
+        );
     }
 
     settleHouse(house: House): Observable<any> {
@@ -84,10 +80,8 @@ export class SettlementService {
         return callable({
             houseId: house.id,
         }).pipe(
-            trace('settleHouse'),
-            map(result => {
-                console.log(result);
-            }));
+            trace('settleHouse')
+        );
     }
 
     getHouseSettlement(houseId: string, settlementId: string): HouseSettlement {
@@ -120,22 +114,8 @@ export class SettlementService {
         }
     }
 
-    getSettlements(houseId: string): Promise<Settlement[]> {
-        return this.fs.collection('houses')
-            .doc(houseId)
-            .collection('settlements')
-            .ref
-            .withConverter(settlementConverter)
-            .orderBy('createdAt', 'desc')
-            .get()
-            .then((querySnapshot) => {
-                this.houseId = houseId;
-                this.settlements = querySnapshot?.docs?.map(doc => doc.data()) || [];
-                return this.settlements;
-            })
-            .catch(err => {
-                this.logger.error({message: 'getSettlements', data: {houseId}, error: err});
-                return Promise.reject('get settlements failed'); // FIXME Add error.
-            });
+    setSettlements(houseId: string, settlements: Settlement[]) {
+        this.houseId = houseId;
+        this.settlements = settlements;
     }
 }

@@ -2,10 +2,16 @@ form {
   ion-button {
     margin-top: 1rem !important;
   }
+
+  ion-input {
+    font-size: 14px;
+  }
 }
 
 .register-content {
+  margin: 0 auto;
   padding: 2rem;
+  max-width: 30rem;
 
   ion-button {
     margin-top: 2rem;

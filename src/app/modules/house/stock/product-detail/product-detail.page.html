@@ -63,6 +63,11 @@
                 <ion-col class="space-between ion-padding-end" size="4"><span>{{item.amountIn | number:'1.0-0' }}</span><span>{{item.totalIn | abs | money}}</span></ion-col>
                 <ion-col class="space-between" size="4"><span>{{item.amountOut | number:'1.0-0' }}</span><span>{{item.totalOut | abs | money}}</span></ion-col>
             </ion-row>
+            <ion-row class="bold-text" [ngClass]="statisticItems.length % 2 === 0 ? 'even' : 'odd'">
+                <ion-col size="4">{{'house.overview.statistics.total' | translate}}</ion-col>
+                <ion-col class="space-between ion-padding-end" size="4"><span>{{product.amountIn | number:'1.0-0' }}</span><span>{{product.totalIn | abs | money}}</span></ion-col>
+                <ion-col class="space-between" size="4"><span>{{product.amountOut | number:'1.0-0' }}</span><span>{{product.totalOut | abs | money}}</span></ion-col>
+            </ion-row>
         </ion-grid>
     </ion-list>
 </ion-content>

@@ -126,6 +126,9 @@ export class SettlementsPage implements OnInit, OnDestroy {
                         result.docs.forEach((doc) => {
                             this.settlements.push(doc.data());
                         });
+
+                        this.settlements.sort((a, b) => a.createdAt.toMillis() > b.createdAt.toMillis() ? -1 : 1);
+                        this.settlementService.setSettlements(houseId, this.settlements);
                     }
                 });
             });

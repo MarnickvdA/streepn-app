@@ -8,6 +8,17 @@
   }
 }
 
+ion-item {
+  ion-input {
+    font-size: 14px;
+  }
+}
+
+.bold-text {
+  ion-col {
+    font-weight: bold;
+  }
+}
 
 app-money-input {
   ion-item::part(native) {

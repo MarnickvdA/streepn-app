@@ -62,16 +62,18 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                     this.houses$ = this.houseService.observeHouses(user.uid);
                     this.housesSub = this.houses$
                         .subscribe(houses => {
-                            this.houses = houses;
-                            this.houseAccounts = {};
+                            if (houses) {
+                                this.houses = houses;
+                                this.houseAccounts = {};
 
-                            houses?.forEach(house => {
-                                this.houseAccounts[house.id] = house.getUserAccountByUserId(user.uid);
-                            });
+                                houses?.forEach(house => {
+                                    this.houseAccounts[house.id] = house.getUserAccountByUserId(user.uid);
+                                });
 
-                            this.zone.run(() => setTimeout(() => {
-                                this.loading = false;
-                            }, 500));
+                                this.zone.run(() => setTimeout(() => {
+                                    this.loading = false;
+                                }, 500));
+                            }
                         });
                 }
             });

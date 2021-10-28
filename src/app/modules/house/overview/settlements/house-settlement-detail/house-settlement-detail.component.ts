@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {House, Settlement} from '@core/models';
-import {HouseService, LoggerService} from '@core/services';
+import {House} from '@core/models';
+import {HouseService} from '@core/services';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {SettlementService} from '@core/services/api/settlement.service';

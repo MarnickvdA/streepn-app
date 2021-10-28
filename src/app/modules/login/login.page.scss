@@ -2,10 +2,16 @@ form {
   ion-button {
     margin-top: 1rem !important;
   }
+
+  ion-input {
+    font-size: 14px;
+  }
 }
 
 .login-content {
+  margin: 0 auto;
   padding: 2rem;
+  max-width: 30rem;
 
   .apple-login {
     margin-top: 0.5rem;

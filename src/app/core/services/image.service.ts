@@ -74,6 +74,8 @@ export class ImageService {
                     console.error(err);
                 } else if (err.message !== 'User cancelled photos app') {
                     console.error(err);
+                } else {
+                    console.error(err);
                 }
             });
     }
@@ -86,7 +88,6 @@ export class ImageService {
                     cacheControl: 'public,max-age=604800'
                 })
                 .then((result) => {
-                    console.log(result.metadata);
                     return ref.getDownloadURL().toPromise();
                 }));
     }

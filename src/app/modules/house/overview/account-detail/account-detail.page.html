@@ -22,7 +22,7 @@
         <ion-item lines="inset">
             <fa-duotone-icon [icon]="['fad', 'user']" class="primary" [fixedWidth]="true"
                              slot="start"></fa-duotone-icon>
-            <ion-input [(ngModel)]="newName" value="{{account?.name}}"></ion-input>
+            <ion-input class="name-input" [(ngModel)]="newName" value="{{account?.name}}"></ion-input>
             <ion-button (click)="setName()"
                         [attr.disabled]="newName === account?.name || newName?.length < 2">{{'actions.edit' | translate}}</ion-button>
         </ion-item>

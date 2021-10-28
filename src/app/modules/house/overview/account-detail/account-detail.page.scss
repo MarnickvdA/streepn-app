@@ -3,11 +3,8 @@
   padding: 1.5rem 0 .5rem;
 }
 
-
-ion-item {
-  span {
-    font-size: 16px;
-  }
+h3, .name-input, ion-item > span{
+  font-size: 14px;
 }
 
 p.black {
