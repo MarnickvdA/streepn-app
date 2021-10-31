@@ -38,9 +38,9 @@
                 <h3 class="ion-text-wrap" [innerHTML]="'house.overview.settle.userAccount.detail.settled' | translate:{
                     settler: settlement.settlerName,
                     receiver: settlement.receiverName,
-                    creditor: settlement.balanceSettled.totalIn - settlement.balanceSettled.totalOut > 0 ? settlement.receiverName : settlement.settlerName,
+                    creditor: settlement.balanceSettled.totalIn - settlement.balanceSettled.totalOut < 0 ? settlement.receiverName : settlement.settlerName,
                     amount: (settlement.balanceSettled.totalIn - settlement.balanceSettled.totalOut | abs) | money,
-                    debtor: settlement.balanceSettled.totalIn - settlement.balanceSettled.totalOut > 0 ? settlement.settlerName : settlement.receiverName
+                    debtor: settlement.balanceSettled.totalIn - settlement.balanceSettled.totalOut < 0 ? settlement.settlerName : settlement.receiverName
                 }">
                 </h3>
             </ion-label>

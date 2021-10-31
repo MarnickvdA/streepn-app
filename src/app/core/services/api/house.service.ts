@@ -195,7 +195,8 @@ export class HouseService {
 
         const callable = this.functions.httpsCallable('leaveHouse');
         return callable({
-            houseId
+            houseId,
+            userId
         })
             .pipe(
                 trace('leaveHouse'),
