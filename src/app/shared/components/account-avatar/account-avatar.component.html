@@ -1,7 +1,7 @@
 <ion-avatar [ngClass]="size">
-    <img *ngIf="account.photoUrl" alt="" src="{{account.photoUrl}}">
-    <div class="svg-thumb" *ngIf="!account.photoUrl">
-        <svg [attr.fill]="accountIdToColor(account.id)" viewBox="0 0 512 512" x="0px" y="0px"
+    <img *ngIf="photoUrl" alt="" src="{{photoUrl}}">
+    <div class="svg-thumb" *ngIf="!photoUrl">
+        <svg [attr.fill]="color" viewBox="0 0 512 512" x="0px" y="0px"
              xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                         <path class="st0" style="opacity: 0.4" d="M0,0h512v512H0V0z"/>
             <path class="st1" d="M256,304c61.6,0,112-50.4,112-112S317.6,80,256,80s-112,50.4-112,112S194.4,304,256,304z M256,344

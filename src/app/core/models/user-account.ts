@@ -11,8 +11,8 @@ export class UserAccount extends Account {
     roles: UserRole[]; // Permission-system for a house.
 
     constructor(id: string, userId: string, createdAt: Timestamp, name: string, roles: UserRole[],
-                photoUrl: string, balance: Balance, settledAt?: Timestamp) {
-        super(id, createdAt, name, AccountType.user, balance, settledAt, photoUrl);
+                photoUrl: string, balance: Balance, settledAt?: Timestamp, removed?: boolean) {
+        super(id, createdAt, name, AccountType.user, balance, settledAt, photoUrl, removed);
         this.userId = userId;
         this.roles = roles || [];
     }
@@ -22,7 +22,7 @@ export class UserAccount extends Account {
     }
 
     static new(id: string, userId: string, name: string, roles: UserRole[], photoUrl: string) {
-        return new UserAccount(id, userId, TimestampFn.now(), name, roles, photoUrl, Balance.new());
+        return new UserAccount(id, userId, TimestampFn.now(), name, roles, photoUrl, Balance.new(), undefined, false);
     }
 
     deepCopy(): UserAccount {
@@ -42,7 +42,7 @@ export const userAccountConverter = {
         return {...accountObject, ...userAccountObject};
     },
     newAccount: (data: { [key: string]: any }): UserAccount => new UserAccount(data.id, data.userId, data.createdAt, data.name, data.roles,
-        data.photoUrl, data.balance, data.settledAt)
+        data.photoUrl, data.balance, data.settledAt, data.removed)
 };
 
 /**

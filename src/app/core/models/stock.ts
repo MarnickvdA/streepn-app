@@ -29,8 +29,8 @@ export class Stock {
     /**
      * Check if the stock can be edited.
      */
-    get isMutable(): boolean {
-        return !this.removed && !this.writtenOff;
+    isMutable(house: House): boolean {
+        return !this.removed && !this.writtenOff && house.getUserAccountById(this.paidById) !== undefined;
     }
 
     static new(id: string, paidById: string, productId: string, cost: number, amount: number) {
@@ -38,7 +38,7 @@ export class Stock {
     }
 
     paidByString(house: House) {
-        return house.getUserAccountById(this.paidById)?.name;
+        return house.getUserAccountById(this.paidById)?.name || house.getRemovedItemById(this.paidById)?.name;
     }
 
     deepCopy(): Stock {

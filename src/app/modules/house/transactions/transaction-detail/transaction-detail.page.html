@@ -22,28 +22,26 @@
 </ion-header>
 
 <ion-content>
-    <div *ngIf="house?.getUserAccountById(transaction?.createdBy) as account" class="createdBy">
-        <app-account-avatar [account]="account" size="large"></app-account-avatar>
+    <div *ngIf="transaction" class="createdBy">
+        <app-account-avatar *ngIf="house?.getUserAccountById(transaction?.createdBy) ?? house?.getRemovedItemById(transaction?.createdBy); let account"
+                            [photoUrl]="account['photoUrl']" [seed]="account.id" size="large"></app-account-avatar>
         <ion-label>
-            <h2>{{account.name}}</h2>
+            <h2>{{house?.getUserAccountById(transaction?.createdBy)?.name || house?.getRemovedItemById(transaction?.createdBy)?.name }}</h2>
             <p class="small">{{'house.transaction.at' | translate:{date: transaction?.createdAt | dateTime} }}</p>
-            <p *ngIf="!canEdit" class="small"><b>{{'house.transactions.disabledEditing' | translate}}</b></p>
+            <p *ngIf="!canEdit" class="small"><strong>{{'house.transactions.disabledEditing' | translate}}</strong></p>
         </ion-label>
     </div>
     <ion-list *ngIf="transaction?.items">
-        <ion-item *ngFor="let item of transaction.items; index as i">
-            <app-account-avatar *ngIf="house?.getUserAccountById(item.accountId); let user"
-                                [account]="user" size="small" class="ion-margin-end">
+        <ion-item class="large" *ngFor="let item of transaction.items; index as i">
+            <app-account-avatar *ngIf="house?.getUserAccountById(item.accountId) ?? house?.getRemovedItemById(item.accountId); let account"
+                                [photoUrl]="account['photoUrl']" [seed]="account.id" size="small" class="ion-margin-end">
             </app-account-avatar>
             <ion-label>
                 <h3>{{'house.transaction.header' | translate:{
                     amount: item.amount,
                     productName: house?.getProductById(item.productId)?.name,
-                    accountName: house?.getAccountById(item.accountId)?.name
+                    accountName: house?.getAccountById(item.accountId)?.name || house?.getRemovedItemById(item.accountId)?.name
                 } }}</h3>
-                <p class="small">
-                    {{'house.transaction.for' | translate:{accountName: house?.getAccountById(item.accountId)?.name} }}
-                </p>
             </ion-label>
             <ion-fab-button (click)="removeItem(item)" *ngIf="editing && canEditItem(item)"
                             [attr.disabled]="item.amount === 0"
@@ -59,7 +57,7 @@
         </ion-item>
     </ion-list>
 
-    <ion-fab *ngIf="editing" horizontal="end" slot="fixed" vertical="bottom">
+    <ion-fab *ngIf="editing && canDelete" horizontal="end" slot="fixed" vertical="bottom">
         <ion-fab-button (click)="deleteTransaction()" color="danger">
             <ion-icon name="trash-outline"></ion-icon>
         </ion-fab-button>

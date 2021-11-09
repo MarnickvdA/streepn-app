@@ -294,6 +294,11 @@
         },
         "deletePrecondition": "TRANSLATE: ",
         "deleteAccount": "TRANSLATE: ",
+        "deletePrompt": {
+          "header": "TRANSLATE: ",
+          "message-other": "TRANSLATE: ",
+          "message-self": "TRANSLATE: "
+        },
         "leaveHouse": "TRANSLATE: ",
         "you": "TRANSLATE: ",
         "balanceAmount": "TRANSLATE: ",

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {House, Product, UserAccount, UserRole} from '@core/models';
+import {House, UserAccount, UserRole} from '@core/models';
 import {Subscription} from 'rxjs';
 import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
@@ -14,7 +14,6 @@ import {
     PushTopic,
     StorageService
 } from '@core/services';
-import {SettleSharedAccountComponent} from '@modules/house/overview/settlements/settle-shared-account/settle-shared-account.component';
 import {SettleUserAccountComponent} from '@modules/house/overview/settlements/settle-user-account/settle-user-account.component';
 
 @Component({
@@ -72,19 +71,22 @@ export class AccountDetailPage implements OnInit, OnDestroy {
                 if (house) {
                     this.isAdmin = this.house.getUserAccountByUserId(this.authService.currentUser?.uid)?.isAdmin;
                     this.account = this.house.getUserAccountById(this.accountId);
-                    this.newName = this.account.name;
-                    this.isSelf = this.authService.currentUser.uid === this.account.userId;
-                    this.canDisableAdmin = this.house.accounts.filter(acc => acc.isAdmin)?.length > 1 || !this.isSelf;
-                    this.enableAdmin = this.account.isAdmin;
-                    this.storage.get(`${this.account.id}_enablePush`)
-                        .then((enabled: boolean) => {
-                            this.enablePush = enabled;
-                        })
-                        .catch(() => {
-                            this.enablePush = false;
-                        });
 
-                    this.generateStatistics(house, this.account);
+                    if (this.account) {
+                        this.newName = this.account.name;
+                        this.isSelf = this.authService.currentUser.uid === this.account.userId;
+                        this.canDisableAdmin = this.house.accounts.filter(acc => acc.isAdmin)?.length > 1 || !this.isSelf;
+                        this.enableAdmin = this.account.isAdmin;
+                        this.storage.get(`${this.account.id}_enablePush`)
+                            .then((enabled: boolean) => {
+                                this.enablePush = enabled;
+                            })
+                            .catch(() => {
+                                this.enablePush = false;
+                            });
+
+                        this.generateStatistics(house, this.account);
+                    }
                 }
             });
     }
@@ -123,7 +125,26 @@ export class AccountDetailPage implements OnInit, OnDestroy {
             });
     }
 
-    async deleteAccount() {
+    async promptDeleteAccountDialog() {
+        const alert = await this.alertController.create({
+            header: this.translate.instant('house.overview.account.deletePrompt.header'),
+            message: this.translate.instant(`house.overview.account.deletePrompt.message-${this.isSelf ? 'self' : 'other'}`,
+                {name: this.isSelf ? this.house.name : this.account.name}),
+            buttons: [
+                {
+                    text: this.translate.instant('actions.cancel'),
+                    role: 'cancel'
+                }, {
+                    text: this.translate.instant('actions.yes'),
+                    handler: async () => this.deleteAccount()
+                }
+            ]
+        });
+
+        await alert.present();
+    }
+
+    private async deleteAccount() {
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.deleting'),
             translucent: true,
@@ -136,7 +157,11 @@ export class AccountDetailPage implements OnInit, OnDestroy {
             loading.dismiss();
 
             if (success) {
-                this.navController.navigateRoot('dashboard', {animationDirection: 'back'});
+                if (this.isSelf) {
+                    this.navController.navigateRoot('dashboard', {animationDirection: 'back'});
+                } else {
+                    this.navController.navigateBack(`house/${this.house.id}/preferences`);
+                }
             }
 
             this.events.unsubscribe('house:left');

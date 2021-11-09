@@ -307,6 +307,11 @@
         },
         "deletePrecondition": "Om het huis te verlaten mag er geen openstaand krediet zijn.",
         "deleteAccount": "{{name}} verwijderen",
+        "deletePrompt": {
+          "header": "Waarschuwing",
+          "message-other": "Weet je zeker dat je {{name}} wil verwijderen?",
+          "message-self": "Weet je zeker dat je {{name}} wilt verlaten?"
+        },
         "leaveHouse": "{{houseName}} verlaten",
         "you": "je",
         "balanceAmount": "Saldo",

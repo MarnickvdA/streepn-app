@@ -16,6 +16,7 @@ export abstract class Account {
     createdAt: Timestamp;
     name: string;
     photoUrl?: string;
+    removed?: boolean;
 
     // Filter label for the sub-types of Account. Useful for quick checking which type the account is.
     type: AccountType;
@@ -27,7 +28,7 @@ export abstract class Account {
     settledAt: Timestamp;
 
     protected constructor(id: string, createdAt: Timestamp, name: string, type: AccountType, balance: Balance, settledAt?: Timestamp,
-                          photoUrl?: string) {
+                          photoUrl?: string, removed?: boolean) {
         this.id = id;
         this.createdAt = createdAt;
         this.name = name;
@@ -35,6 +36,7 @@ export abstract class Account {
         this.balance = new Balance(balance?.totalIn, balance?.totalOut, balance?.products);
         this.settledAt = settledAt;
         this.photoUrl = photoUrl;
+        this.removed = removed;
     }
 
     get isRemovable(): boolean {
@@ -68,7 +70,8 @@ export const accountConverter = {
         name: account.name,
         type: account.type,
         settledAt: account.settledAt,
-        photoUrl: account.photoUrl
+        photoUrl: account.photoUrl,
+        removed: account.removed
     })
 };
 

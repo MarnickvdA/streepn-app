@@ -10,18 +10,20 @@ import {Account} from '@core/models';
 export class AccountAvatarComponent implements OnInit {
 
     @Input()
-    account: Account;
+    photoUrl?: string;
+
+    @Input()
+    seed?: string;
 
     @Input()
     size: 'small' | 'normal' | 'large' = 'normal';
+
+    color: string;
 
     constructor() {
     }
 
     ngOnInit() {
-    }
-
-    accountIdToColor(id) {
-        return toPastelColor(id);
+        this.color = toPastelColor(this.seed);
     }
 }

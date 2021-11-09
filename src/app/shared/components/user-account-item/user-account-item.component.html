@@ -1,5 +1,5 @@
 <ion-item class="large" (click)="openAccount()" [button]="canEditAccount" [detail]="canEditAccount">
-    <app-account-avatar slot="start" [account]="account"></app-account-avatar>
+    <app-account-avatar slot="start" [photoUrl]="account.photoUrl" [seed]="account.id"></app-account-avatar>
 
     <div class="content">
         <ion-label>

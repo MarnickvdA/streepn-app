@@ -39,7 +39,7 @@
                     (click)="selectAll()">{{'house.overview.settle.sharedAccount.select-all' | translate}}</ion-button>
         </ion-list-header>
         <ion-item *ngFor="let account of house?.accounts; let i = index" class="account-item">
-            <app-account-avatar [account]="account" size="small" slot="start"></app-account-avatar>
+            <app-account-avatar [photoUrl]="account.photoUrl" [seed]="account.id" size="small" slot="start"></app-account-avatar>
             <div class="content">
                 <ion-label>
                     <h3>{{account.name}}</h3>

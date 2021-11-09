@@ -19,6 +19,11 @@ export enum Currency {
     euro = 'EUR'
 }
 
+export class RemovedItem {
+    id: string;
+    name: string;
+}
+
 /**
  * A House is used for keeping track of transactions and stock for a house with students (represented as UserAccounts).
  */
@@ -46,11 +51,15 @@ export class House {
         products: {
             [productId: string]: Product;
         };
+        removedItems: {
+            [id: string]: RemovedItem;
+        }
     };
     // Private arrays for the accounts and products. They need to be in sync with the houseDictionary.
     private mAccounts: UserAccount[];
     private mSharedAccounts: SharedAccount[];
     private mProducts: Product[];
+    private mRemovedItems: RemovedItem[];
 
     constructor(id: string,
                 createdAt: Timestamp,
@@ -65,7 +74,8 @@ export class House {
                 totalIn: number,
                 totalOut: number,
                 settledAt?: Timestamp,
-                isSettling?: boolean) {
+                isSettling?: boolean,
+                removedItems?: RemovedItem[]) {
         this.id = id;
         this.createdAt = createdAt;
         this.name = name;
@@ -80,6 +90,7 @@ export class House {
         this.totalOut = totalOut;
         this.settledAt = settledAt;
         this.isSettling = isSettling || false;
+        this.mRemovedItems = removedItems || [];
 
         this.setDictionary();
     }
@@ -122,6 +133,15 @@ export class House {
         this.setProducts();
     }
 
+    set removedItems(value: RemovedItem[]) {
+        this.mRemovedItems = value;
+        this.setRemovedItems();
+    }
+
+    get removedItems(): RemovedItem[] {
+        return this.mRemovedItems;
+    }
+
     get isSettleable(): boolean {
         return !(this.mSharedAccounts.find((acc) => !acc.isRemovable) || this.mProducts.find((product) => product.stock < 0));
     }
@@ -158,7 +178,7 @@ export class House {
         return accounts;
     }
 
-    getUserAccountById(accountId: string): UserAccount | undefined {
+    getUserAccountById(accountId: string): UserAccount | undefined{
         return this.houseDictionary.accounts[accountId];
     }
 
@@ -168,6 +188,10 @@ export class House {
 
     getProductById(productId: string): Product | undefined {
         return this.houseDictionary.products[productId];
+    }
+
+    getRemovedItemById(id: string): RemovedItem | undefined {
+        return this.houseDictionary.removedItems[id];
     }
 
     deepCopy(): House {
@@ -183,11 +207,13 @@ export class House {
             accounts: {},
             sharedAccounts: {},
             products: {},
+            removedItems: {},
         };
 
         newDict.accounts = this.setUserAccounts(false);
         newDict.sharedAccounts = this.setSharedAccounts(false);
         newDict.products = this.setProducts(false);
+        newDict.removedItems = this.setRemovedItems(false);
 
         this.houseDictionary = newDict;
     }
@@ -233,6 +259,20 @@ export class House {
             return newDict;
         }
     }
+
+    private setRemovedItems(persist: boolean = true) {
+        const newDict = {};
+
+        this.mRemovedItems.forEach(ri => {
+            newDict[ri.id] = ri;
+        });
+
+        if (persist) {
+            this.houseDictionary.removedItems = newDict;
+        } else {
+            return newDict;
+        }
+    }
 }
 
 export const houseConverter: FirestoreDataConverter<House> = {
@@ -267,6 +307,7 @@ export const houseConverter: FirestoreDataConverter<House> = {
             accounts: house.accounts.map((account) => userAccountConverter.toFirestore(account)),
             products: house.products.map((product) => productConverter.toFirestore(product)),
             sharedAccounts: house.sharedAccounts.map((account) => sharedAccountConverter.toFirestore(account)),
+            removedItems: house.removedItems,
             totalIn: house.totalIn,
             totalOut: house.totalOut,
             balances,
@@ -310,5 +351,5 @@ export const newHouse = (id: string, data: { [key: string]: any }): House => {
 
     return new House(id, data.createdAt, data.name, data.currency, data.inviteLink,
         data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts, data.totalIn,
-        data.totalOut, data.settledAt, data.isSettling);
+        data.totalOut, data.settledAt, data.isSettling, data.removedItems);
 };

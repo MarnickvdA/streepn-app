@@ -17,7 +17,7 @@ export class Balance {
                 products?: { [p: string]: { totalIn: number; totalOut: number; amountIn: number; amountOut: number } }) {
         this.totalIn = totalIn;
         this.totalOut = totalOut;
-        this.products = products;
+        this.products = products ?? {};
     }
 
     get amount(): number {

@@ -55,7 +55,7 @@ export class StockLogPage implements OnInit, OnDestroy {
     }
 
     openStockItem(stockItem: Stock) {
-        if (!stockItem.isMutable) {
+        if (!stockItem.isMutable(this.house)) {
             return;
         }
 

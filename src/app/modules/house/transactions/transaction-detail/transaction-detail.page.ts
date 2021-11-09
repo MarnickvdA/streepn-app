@@ -17,6 +17,7 @@ import {getMoneyString} from '@core/utils/formatting-utils';
 export class TransactionDetailPage implements OnInit, OnDestroy {
     editing = false;
     canEdit = false;
+    canDelete = false;
     transactionId?: string;
     house?: House;
     transaction?: Transaction;
@@ -52,7 +53,7 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
         this.transactionSub = this.transactionService.observeTransaction(this.houseService.currentHouseId, this.transactionId)
             .subscribe((transaction) => {
                 // TODO Show error if transaction was edited by someone else while editing.
-                if (transaction) {
+                if (transaction && transaction.id === this.transactionId) {
                     this.setTransaction(transaction);
                 }
             });
@@ -74,15 +75,15 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
         this.transactionObject = transaction;
         this.transaction = newTransaction(transaction.id, transaction);
 
-        for (const item of this.transaction.items) {
-            if (!this.canEdit) {
-                const canEditItem = this.canEditItem(item);
-                if (canEditItem) {
-                    this.canEdit = true;
-                    break;
-                }
+        let canEditCount = 0;
+        this.transaction.items?.forEach((item) => {
+            if (this.canEditItem(item)) {
+                canEditCount++;
             }
-        }
+        });
+
+        this.canEdit = canEditCount > 0;
+        this.canDelete = this.transaction.items && canEditCount === this.transaction.items.length;
     }
 
     getPriceString(price: number): string {
@@ -130,8 +131,13 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
     }
 
     canEditItem(item: TransactionItem) {
+        const acc = this.house?.getAccountById(item.accountId);
+        if (!acc) {
+            return false;
+        }
+
         // If this account was settled after this transaction was created, we cannot edit this transaction item.
-        const settleTimestamp = this.house?.getAccountById(item.accountId)?.settledAt;
+        const settleTimestamp = acc.settledAt;
         if (settleTimestamp) {
             return this.transaction.createdAt > settleTimestamp;
         } else {

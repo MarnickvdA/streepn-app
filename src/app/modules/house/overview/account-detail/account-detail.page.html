@@ -76,12 +76,12 @@
             <span slot="end">{{account?.balance.totalOut | money}}</span>
         </ion-item>
 
-        <ion-list-header lines="full">
+        <ion-list-header *ngIf="statisticItems.length > 0" lines="full">
             <ion-label>
                 {{'house.overview.statistics.title' | translate}}
             </ion-label>
         </ion-list-header>
-        <ion-grid>
+        <ion-grid *ngIf="statisticItems.length > 0">
             <ion-row class="header">
                 <ion-col size="4">{{'house.overview.statistics.product' | translate}}</ion-col>
                 <ion-col class="divider" size="4">{{'house.overview.statistics.in' | translate}}</ion-col>
@@ -97,7 +97,7 @@
         <ion-item-divider class="bottom-line">
         </ion-item-divider>
 
-        <ion-item (click)="deleteAccount()" [disabled]="!account?.isRemovable" button lines="full">
+        <ion-item (click)="promptDeleteAccountDialog()" [disabled]="!account?.isRemovable" button lines="full">
             <fa-duotone-icon [icon]="['fad', 'sign-out']" class="danger large" [fixedWidth]="true"
                              slot="start"></fa-duotone-icon>
             <ion-label>

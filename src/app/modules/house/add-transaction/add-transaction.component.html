@@ -42,7 +42,7 @@
         </ion-list-header>
 
         <ion-item class="account-item" button="false" *ngFor="let account of house.accounts">
-            <app-account-avatar [account]="account" size="small" slot="start"></app-account-avatar>
+            <app-account-avatar [photoUrl]="account.photoUrl" [seed]="account.id" size="small" slot="start"></app-account-avatar>
             <ion-label class="account-name">
                 <h3>{{account.name}}</h3>
             </ion-label>
@@ -56,7 +56,7 @@
             </ion-list-header>
 
             <ion-item class="account-item" button="false" *ngFor="let account of house.sharedAccounts">
-                <app-account-avatar [account]="account" size="small" slot="start"></app-account-avatar>
+                <app-account-avatar [photoUrl]="account.photoUrl" [seed]="account.id" size="small" slot="start"></app-account-avatar>
                 <ion-label class="account-name">
                     <h3>{{account.name}}</h3>
                 </ion-label>

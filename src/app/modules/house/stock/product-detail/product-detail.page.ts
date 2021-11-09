@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {House, Product} from '@core/models';
 import {Subscription} from 'rxjs';
@@ -43,7 +43,8 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
                 private houseService: HouseService,
                 private alertController: AlertController,
                 private authService: AuthService,
-                private navController: NavController) {
+                private navController: NavController,
+                private zone: NgZone) {
         this.route.params.subscribe((params: Params) => {
             this.productId = params.productId;
         });
@@ -146,7 +147,9 @@ export class ProductDetailPage implements OnInit, OnDestroy, AfterViewInit {
             });
         });
 
-        this.statisticItems = items;
+        this.zone.run(_ => {
+            this.statisticItems = items;
+        });
     }
 
     private async editProduct(product: Product) {
