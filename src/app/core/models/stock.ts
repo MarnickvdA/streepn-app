@@ -26,15 +26,15 @@ export class Stock {
         this.writtenOff = writtenOff || false;
     }
 
+    static new(id: string, paidById: string, productId: string, cost: number, amount: number) {
+        return new Stock(undefined, undefined, id, paidById, productId, cost, amount, false, false);
+    }
+
     /**
      * Check if the stock can be edited.
      */
     isMutable(house: House): boolean {
         return !this.removed && !this.writtenOff && house.getUserAccountById(this.paidById) !== undefined;
-    }
-
-    static new(id: string, paidById: string, productId: string, cost: number, amount: number) {
-        return new Stock(undefined, undefined, id, paidById, productId, cost, amount, false, false);
     }
 
     paidByString(house: House) {

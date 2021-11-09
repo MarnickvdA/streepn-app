@@ -23,6 +23,7 @@ import {SettlementService} from '@core/services/api/settlement.service';
 import {AngularFirePerformanceModule} from '@angular/fire/performance';
 import {AngularFireStorageModule} from '@angular/fire/storage';
 import {ImageService} from '@core/services/image.service';
+import {AlertService} from '@core/services/alert.service';
 
 require('./firebase-init');
 
@@ -31,6 +32,7 @@ export const services = [
     StorageService,
     UIService,
     ImageService,
+    AlertService,
 
     // Firebase services
     AuthService,

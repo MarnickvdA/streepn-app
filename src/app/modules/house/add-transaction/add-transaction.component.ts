@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Account, House, Product} from '@core/models';
-import {LoadingController, ModalController} from '@ionic/angular';
+import {LoadingController, ModalController, ToastController} from '@ionic/angular';
 import {catchError} from 'rxjs/operators';
 import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
 import {TransactionService, TransactionSet} from '@core/services';
@@ -38,6 +38,7 @@ export class AddTransactionComponent implements OnInit {
     constructor(private modalController: ModalController,
                 private transactionService: TransactionService,
                 private loadingController: LoadingController,
+                private toastController: ToastController,
                 private translate: TranslateService) {
     }
 
@@ -134,6 +135,11 @@ export class AddTransactionComponent implements OnInit {
         this.transactionService.addTransaction(this.house, this.transactions)
             .pipe(
                 catchError(err => {
+                    console.error(err);
+                    this.toastController.create({
+                        message: JSON.stringify(err),
+                        duration: 3000,
+                    }).then((toast) => toast.present());
                     loading.dismiss();
                     return EMPTY;
                 })

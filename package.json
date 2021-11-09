@@ -57,7 +57,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "@sentry/browser": "^6.10.0",
-    "firebase": "^8.7.1",
+    "firebase": "^8.10.0",
     "date-fns": "^2.25.0",
     "image-conversion": "^2.1.1",
     "random": "^3.0.6",

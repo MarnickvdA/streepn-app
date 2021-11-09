@@ -75,10 +75,6 @@ export class TransactionService {
             transaction
         }).pipe(
             trace('addTransaction'),
-            catchError((err) => {
-                this.logger.error({message: 'addTransaction', error: err});
-                return err;
-            }),
             tap(() => {
                 this.analyticsService.logTransaction(this.authService.currentUser.uid, house.id);
             })
@@ -92,10 +88,6 @@ export class TransactionService {
             updatedTransaction
         }).pipe(
             trace('editTransaction'),
-            catchError((err) => {
-                this.logger.error({message: 'editTransaction', error: err});
-                return err;
-            })
         );
     }
 
