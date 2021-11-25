@@ -3,14 +3,14 @@ import {IonicModule} from '@ionic/angular';
 
 import {TransactionsPage} from './transactions.page';
 import {RouterTestingModule} from '@angular/router/testing';
-import {AngularFireModule} from '@angular/fire';
+import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {TranslationModule} from '../../../translation.module';
 import {HttpClientModule} from '@angular/common/http';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import {AngularFireAuth} from '@angular/fire/auth';
+import {AngularFireFunctions} from '@angular/fire/compat/functions';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
 
 describe('TransactionsPage', () => {
     let component: TransactionsPage;

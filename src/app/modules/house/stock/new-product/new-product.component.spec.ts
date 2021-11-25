@@ -3,9 +3,9 @@ import {IonicModule} from '@ionic/angular';
 
 import {NewProductComponent} from './new-product.component';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire';
+import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {Observable} from 'rxjs';
 import {TranslationModule} from '../../../../translation.module';
 

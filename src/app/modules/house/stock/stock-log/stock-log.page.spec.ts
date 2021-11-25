@@ -3,13 +3,13 @@ import {IonicModule} from '@ionic/angular';
 
 import {StockLogPage} from './stock-log.page';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire';
+import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFireAuth} from '@angular/fire/auth';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslationModule} from '../../../../translation.module';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {AngularFireFunctions} from '@angular/fire/functions';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {AngularFireFunctions} from '@angular/fire/compat/functions';
 
 describe('StockLogPage', () => {
     let component: StockLogPage;

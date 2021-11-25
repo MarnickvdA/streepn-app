@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
-import firebase from 'firebase/app';
+import firebase from 'firebase/compat/app';
 import {House, HouseInvite, UserAccount} from '@core/models';
-import {AuthService, EventsService, HouseService, LoggerService, StorageService, UIService} from '@core/services';
+import {AuthService, EventsService, HouseService, LoggerService, StorageService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {take} from 'rxjs/operators';
 import {OnboardingComponent} from '@modules/dashboard/onboarding/onboarding.component';
@@ -11,6 +11,7 @@ import {Capacitor} from '@capacitor/core';
 import {NewHouseComponent} from '@modules/dashboard/new-house/new-house.component';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
 import {dashboardPageGuide} from '@shared/components/info-modal/info-guides';
+import {AlertService, ApiErrorMessage} from '@core/services/alert.service';
 import User = firebase.User;
 
 @Component({
@@ -44,7 +45,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                 private loadingController: LoadingController,
                 private modalController: ModalController,
                 private storage: StorageService,
-                private uiService: UIService) {
+                private alertService: AlertService) {
         this.iOS = Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios';
         this.loading = true;
     }
@@ -121,10 +122,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                         if (result.houseCode.length === 8) {
                             this.promptHouseInvite(result.houseCode);
                         } else {
-                            this.uiService.showError(
-                                this.translate.instant('errors.error'),
-                                this.translate.instant('dashboard.houseInvite.invalidCode')
-                            );
+                            this.alertService.promptApiError(ApiErrorMessage.houseCodeInvalid);
                         }
                     }
                 }
@@ -227,12 +225,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
                     });
                 }
             })
-            .catch((err) => {
-                console.error(err);
-                this.logger.error({
-                    message: err
-                });
-                this.uiService.showError(this.translate.instant('errors.error'), err);
+            .catch(() => {
                 this.promptingHouseInvite = false;
             });
     }

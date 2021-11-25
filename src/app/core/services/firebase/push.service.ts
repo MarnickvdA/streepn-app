@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
-import {EventsService} from '../events.service';
-import {StorageService} from '../storage.service';
-import {LoggerService} from '../logger.service';
+import {EventsService, LoggerService, StorageService} from '@core/services';
 import {Capacitor} from '@capacitor/core';
 import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from '@capacitor/push-notifications';
 
@@ -21,7 +19,6 @@ export class PushService {
 
     initialize(): Promise<boolean> {
         if (!Capacitor.isPluginAvailable('PushNotifications')) {
-            console.log('We are missing the push plugin!');
             return Promise.resolve(false);
         }
 
@@ -138,7 +135,7 @@ export class PushService {
                         message: 'requestPermissionsIfNotPromptedYet',
                         error: err
                     });
-                })
+                });
         }
     }
 

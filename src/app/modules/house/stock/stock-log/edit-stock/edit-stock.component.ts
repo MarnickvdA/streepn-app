@@ -9,6 +9,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 import {catchError} from 'rxjs/operators';
 import {MoneyInputComponent} from '@shared/components/money-input/money-input.component';
+import {AlertService} from '@core/services/alert.service';
 
 @Component({
     selector: 'app-edit-stock',
@@ -44,6 +45,7 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
                 private alertController: AlertController,
                 private modalController: ModalController,
                 private authService: AuthService,
+                private alertService: AlertService,
                 private analytics: AnalyticsService,
                 private stockService: StockService) {
         this.paidByTitle = this.translate.instant('house.stock.add.paidByTitle');
@@ -134,7 +136,7 @@ export class EditStockComponent implements OnInit, OnDestroy, AfterViewInit {
         this.stockService.editStockItem(this.house, this.stockItem, productId, cost, amount, paidBy)
             .pipe(
                 catchError(err => {
-                    this.logger.error({message: err});
+                    this.alertService.promptApiError(err.message);
                     loading.dismiss();
                     return EMPTY;
                 })

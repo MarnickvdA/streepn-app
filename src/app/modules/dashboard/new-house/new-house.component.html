@@ -20,7 +20,7 @@
     <div class="form-content">
         <h5>{{'dashboard.createHouse.step1.title' | translate}}</h5>
         <p>{{'dashboard.createHouse.step1.description' | translate}}</p>
-        <form (ngSubmit)="setName()" [formGroup]="houseForm">
+        <form (ngSubmit)="submitHouseInformation()" [formGroup]="houseForm">
             <ion-item class="form-input" lines="none">
                 <ion-icon name="people-outline"></ion-icon>
                 <ion-input [attr.disabled]="houseCreated" autocapitalize="words"
@@ -33,6 +33,19 @@
             </span>
             <span *ngIf="isSubmitted && form.name.errors?.length" class="form-input-error">
                 {{'dashboard.createHouse.errors.name-length' | translate}}
+            </span>
+
+            <ion-item class="form-input ion-margin-top" lines="none">
+                <ion-icon name="location-outline"></ion-icon>
+                <ion-select [attr.disabled]="houseCreated"
+                            interface="popover"
+                            formControlName="city"
+                            placeholder="{{'dashboard.createHouse.city' | translate}}">
+                    <ion-select-option *ngFor="let city of selectableCities" [value]="city">{{city}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <span *ngIf="isSubmitted && form.name.errors?.required" class="form-input-error">
+                {{'dashboard.createHouse.errors.city-required' | translate}}
             </span>
 
             <ion-button [attr.disabled]="houseCreated" [color]="houseCreated && !loading ? 'success' : 'primary'"

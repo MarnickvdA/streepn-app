@@ -1,14 +1,15 @@
 import {Injectable} from '@angular/core';
 import {Currency, House, houseConverter, HouseInvite, houseInviteConverter, UserAccount} from '@core/models';
 import {AnalyticsService, AuthService, EventsService, LoggerService} from '@core/services';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import firebase from 'firebase/app';
-import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFireFunctions} from '@angular/fire/compat/functions';
+import firebase from 'firebase/compat/app';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {BehaviorSubject, EMPTY, Observable, Subject} from 'rxjs';
 import {catchError, map, take, takeUntil} from 'rxjs/operators';
 import {PushService, PushTopic} from '../firebase/push.service';
 import {TranslateService} from '@ngx-translate/core';
-import {AngularFirePerformance, trace} from '@angular/fire/performance';
+import {AngularFirePerformance, trace} from '@angular/fire/compat/performance';
+import {AlertService, ApiErrorMessage, AppErrorMessage} from '@core/services/alert.service';
 import User = firebase.User;
 
 @Injectable({
@@ -30,6 +31,7 @@ export class HouseService {
                 private eventsService: EventsService,
                 private analyticsService: AnalyticsService,
                 private pushService: PushService,
+                private alertService: AlertService,
                 private translate: TranslateService) {
         this.houses$ = new Observable<House[]>();
     }
@@ -100,13 +102,15 @@ export class HouseService {
             .get()
             .then((snapshot) => {
                 if (!snapshot.exists) {
-                    return Promise.reject(this.translate.instant('errors.house-not-found'));
+                    this.alertService.promptApiError(ApiErrorMessage.houseCodeInvalid);
+                    return Promise.reject();
                 }
 
                 const invite: HouseInvite = snapshot.data();
 
                 if (invite.isExpired) {
-                    return Promise.reject(this.translate.instant('errors.house-invite-expired'));
+                    this.alertService.promptApiError(ApiErrorMessage.houseCodeExpired);
+                    return Promise.reject();
                 }
 
                 return this.houses$.pipe(take(1)).toPromise().then((houses) => {
@@ -118,15 +122,9 @@ export class HouseService {
             });
     }
 
-    /**
-     * Create a new house
-     *
-     * @param name Name of house
-     * @return newly created house's uid
-     */
-    createHouse(name: string): Promise<string> {
+    createHouse(name: string, city: string): Promise<string> {
         const user = this.authService.currentUser;
-        const house = House.new(user, name, Currency.euro);
+        const house = House.new(user, name, city, Currency.euro);
 
         return this.fs.collection('houses')
             .add(houseConverter.toFirestore(house))
@@ -138,8 +136,8 @@ export class HouseService {
             .then((houseId: string) => this.renewInviteLink(houseId, name).then(() => houseId))
             .catch(err => {
                 this.logger.error({message: 'createHouse', error: err});
-
-                return Promise.reject(this.translate.instant('errors.house-creation-error'));
+                this.alertService.promptAppError(AppErrorMessage.houseCreationFailed);
+                return Promise.reject();
             });
     }
 
@@ -153,9 +151,9 @@ export class HouseService {
             .pipe(
                 trace('joinHouse'),
                 catchError((err) => {
-                    this.logger.error({message: 'joinHouse', error: err});
+                    this.alertService.promptApiError(err.message);
                     this.eventsService.publish('house:joined');
-                    return err;
+                    return EMPTY;
                 }))
             .subscribe((account: UserAccount) => {
                 if (account) {
@@ -169,27 +167,23 @@ export class HouseService {
     leaveHouse(houseId: string, userId: string) {
         const house = this.housesSubject.getValue().find(h => h.id === houseId);
         if (!house) {
-            // TODO: Throw some error
-            console.error('leaveHouse: House not found');
+            this.alertService.promptApiError(ApiErrorMessage.houseNotFound);
             return;
         }
 
         const userAccount = house.getUserAccountByUserId(userId);
         if (!userAccount) {
-            // TODO: Throw some error
-            console.error('leaveHouse: User account not found');
+            this.alertService.promptApiError(ApiErrorMessage.userAccountNotFound);
             return;
         }
 
         if (!userAccount.isRemovable) {
-            // TODO: Throw some error
-            console.error('leaveHouse: User account is not removable at the moment');
+            this.alertService.promptApiError(ApiErrorMessage.houseLeaveDenied);
             return;
         }
 
         if (this.currentUserId !== userId && !this.authService.currentUserIsAdmin(house)) {
-            // TODO: Throw some error
-            console.error('leaveHouse: Only admins can remove other users from a house');
+            this.alertService.promptApiError(ApiErrorMessage.houseNotAdmin);
             return;
         }
 
@@ -201,7 +195,7 @@ export class HouseService {
             .pipe(
                 trace('leaveHouse'),
                 catchError((err) => {
-                    this.logger.error({message: 'leaveHouse', error: err});
+                    this.alertService.promptApiError(err.message);
                     this.eventsService.publish('house:left', false);
                     return EMPTY;
                 }))
@@ -217,10 +211,12 @@ export class HouseService {
     async renewInviteLink(houseId: string, houseName: string, oldInvite?: string): Promise<string> {
         const house = this.housesSubject.getValue().find(h => h.id === houseId);
         if (!house) {
+            this.alertService.promptApiError(ApiErrorMessage.houseNotFound);
             return Promise.reject('renewInviteLink: House not found');
         }
 
         if (!this.authService.currentUserIsAdmin(house)) {
+            this.alertService.promptApiError(ApiErrorMessage.houseNotAdmin);
             return Promise.reject('renewInviteLink: Only admins can remove other users from a house');
         }
 

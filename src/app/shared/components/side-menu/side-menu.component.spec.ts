@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {SideMenuComponent} from './side-menu.component';
-import {AngularFireModule} from '@angular/fire';
+import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
 import {RouterTestingModule} from '@angular/router/testing';

@@ -62,7 +62,7 @@
 
         <ion-item-divider class="bottom-line"></ion-item-divider>
 
-        <ion-item (click)="logOut()" lines="full">
+        <ion-item button (click)="logOut()" lines="full">
             <fa-duotone-icon [icon]="['fad', 'sign-out']" class="danger" [fixedWidth]="true" slot="start"></fa-duotone-icon>
             <ion-label>
                 {{'actions.logout' | translate}}

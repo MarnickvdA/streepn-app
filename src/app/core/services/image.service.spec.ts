@@ -3,9 +3,9 @@ import {TestBed} from '@angular/core/testing';
 import {ImageService} from './image.service';
 import {IonicModule} from '@ionic/angular';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire';
+import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFireAuth} from '@angular/fire/auth';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {TranslationModule} from '../../translation.module';
 
 describe('ImageService', () => {

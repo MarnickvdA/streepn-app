@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
 
-import { AccountAvatarComponent } from './account-avatar.component';
+import {AccountAvatarComponent} from './account-avatar.component';
 
 describe('AccountAvatarComponent', () => {
   let component: AccountAvatarComponent;

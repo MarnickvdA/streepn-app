@@ -7,7 +7,7 @@ import {ModalController} from '@ionic/angular';
 import {SettleHouseComponent} from '@modules/house/overview/settlements/settle-house/settle-house.component';
 import {SettlementService} from '@core/services/api/settlement.service';
 import {HouseSettlement, SharedAccountSettlement, UserAccountSettlement} from '@core/models/settlement';
-import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
+import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/compat/firestore';
 
 @Component({
     selector: 'app-settlements',

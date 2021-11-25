@@ -1,13 +1,13 @@
 export const environment = {
     production: true,
     firebaseConfig: {
-        apiKey: 'AIzaSyBFg-okgC8q0Axa_CH_RJu4v1Oz98bSF8M',
+        apiKey: 'AIzaSyDfIykH2j6XY7sT0k_4KoYE0SI5Ok27kDM',
         authDomain: 'streepn-app.firebaseapp.com',
         projectId: 'streepn-app',
         storageBucket: 'streepn-app.appspot.com',
         messagingSenderId: '378314194804',
-        appId: '1:378314194804:web:f4c0a7211732be701d7621',
-        measurementId: 'G-6WS0MPPH9D'
+        appId: '1:378314194804:web:fdcf8d1aeba0eb401d7621',
+        measurementId: 'G-D380G3HEPZ'
     },
     adId: {
         android: {

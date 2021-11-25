@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
 
-import { UserAccountSettlementDetailComponent } from './user-account-settlement-detail.component';
+import {UserAccountSettlementDetailComponent} from './user-account-settlement-detail.component';
 
 describe('UserAccountSettlementDetailComponent', () => {
   let component: UserAccountSettlementDetailComponent;

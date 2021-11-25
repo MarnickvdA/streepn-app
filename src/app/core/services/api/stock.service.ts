@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFireFunctions} from '@angular/fire/compat/functions';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {Observable, throwError} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {House, Stock, stockConverter} from '../../models';
 import {newStock} from '../../models/stock';
 import {AuthService} from '@core/services';
-import {AngularFirePerformance, trace} from '@angular/fire/performance';
+import {AngularFirePerformance, trace} from '@angular/fire/compat/performance';
 
 @Injectable({
     providedIn: 'root'

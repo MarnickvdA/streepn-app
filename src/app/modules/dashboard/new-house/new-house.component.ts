@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {House} from '@core/models';
 import {AlertController, ModalController, NavController} from '@ionic/angular';
-import {HouseService, LoggerService, PushService, PushTopic, UIService} from '@core/services';
+import {HouseService, LoggerService, PushService, PushTopic} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {Share} from '@capacitor/share';
 import {Clipboard} from '@capacitor/clipboard';
@@ -18,14 +18,31 @@ export class NewHouseComponent implements OnInit {
     houseCreated: boolean;
     loading: boolean;
     name: string;
+    city: string;
     house: House;
     sharedHouse: boolean;
+    readonly selectableCities = [
+        'Amsterdam',
+        'Delft',
+        'Den Haag',
+        'Eindhoven',
+        'Enschede',
+        'Groningen',
+        'Leeuwarden',
+        'Leiden',
+        'Maastricht',
+        'Nijmegen',
+        'Rotterdam',
+        'Tilburg',
+        'Utrecht',
+        'Wageningen',
+        'Overig'
+    ];
 
     private readonly logger = LoggerService.getLogger(NewHouseComponent.name);
 
     constructor(private formBuilder: FormBuilder,
                 public houseService: HouseService,
-                private uiService: UIService,
                 private translate: TranslateService,
                 private alertController: AlertController,
                 private pushService: PushService,
@@ -33,6 +50,7 @@ export class NewHouseComponent implements OnInit {
                 private modalController: ModalController) {
         this.houseForm = this.formBuilder.group({
             name: ['', [Validators.required]],
+            city: ['', [Validators.required]],
         });
     }
 
@@ -43,18 +61,19 @@ export class NewHouseComponent implements OnInit {
     ngOnInit() {
     }
 
-    setName() {
+    submitHouseInformation() {
         this.isSubmitted = true;
         if (this.houseForm.invalid) {
             return;
         }
 
         this.name = this.form.name.value;
+        this.city = this.form.city.value;
 
         if (this.name.length >= 3) {
             this.houseCreated = true;
             this.loading = true;
-            this.houseService.createHouse(this.name)
+            this.houseService.createHouse(this.name, this.city)
                 .then((houseId) => this.houseService.getHouse(houseId))
                 .then((house) => {
                     if (house) {
@@ -64,9 +83,7 @@ export class NewHouseComponent implements OnInit {
                         // FIXME
                     }
                 })
-                .catch((err) => {
-                    this.logger.error({message: err});
-                    this.uiService.showError(this.translate.instant('errors.error'), err);
+                .catch(() => {
                     this.houseCreated = false;
                 })
                 .finally(() => {

@@ -1,10 +1,7 @@
-import firebase from 'firebase/app';
-import {Timestamp} from '@firebase/firestore-types';
 import {Account, accountConverter, AccountType} from '@core/models/account';
 import {Balance} from '@core/models/balance';
-
-require('firebase/firestore');
-import TimestampFn = firebase.firestore.Timestamp;
+import {Timestamp} from '@firebase/firestore-types';
+import firebase from 'firebase/compat/app';
 
 export class UserAccount extends Account {
     userId: string; // UID of the Firebase Auth user associated with this account.
@@ -22,7 +19,7 @@ export class UserAccount extends Account {
     }
 
     static new(id: string, userId: string, name: string, roles: UserRole[], photoUrl: string) {
-        return new UserAccount(id, userId, TimestampFn.now(), name, roles, photoUrl, Balance.new(), undefined, false);
+        return new UserAccount(id, userId, firebase.firestore.Timestamp.now(), name, roles, photoUrl, Balance.new(), undefined, false);
     }
 
     deepCopy(): UserAccount {

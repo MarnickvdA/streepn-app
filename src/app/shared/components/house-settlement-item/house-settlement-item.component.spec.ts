@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
 
-import { HouseSettlementItemComponent } from './house-settlement-item.component';
+import {HouseSettlementItemComponent} from './house-settlement-item.component';
 
 describe('SettlementItemComponent', () => {
   let component: HouseSettlementItemComponent;

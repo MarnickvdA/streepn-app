@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
 
-import { SharedAccountSettlementItemComponent } from './shared-account-settlement-item.component';
+import {SharedAccountSettlementItemComponent} from './shared-account-settlement-item.component';
 
 describe('SharedAccountSettlementItemComponent', () => {
   let component: SharedAccountSettlementItemComponent;

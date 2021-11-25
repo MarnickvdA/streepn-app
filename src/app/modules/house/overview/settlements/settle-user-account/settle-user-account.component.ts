@@ -1,10 +1,12 @@
-import {Component, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
-import {House, SharedAccount, UserAccount} from '@core/models';
-import {Observable, Subscription} from 'rxjs';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {House, UserAccount} from '@core/models';
+import {EMPTY, Observable, Subscription} from 'rxjs';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
 import {HouseService} from '@core/services';
 import {SettlementService} from '@core/services/api/settlement.service';
 import {TranslateService} from '@ngx-translate/core';
+import {catchError} from 'rxjs/operators';
+import {AlertService} from '@core/services/alert.service';
 
 @Component({
     selector: 'app-settle-user-account',
@@ -29,7 +31,7 @@ export class SettleUserAccountComponent implements OnInit, OnDestroy {
                 private alertController: AlertController,
                 private loadingController: LoadingController,
                 private translate: TranslateService,
-                private zone: NgZone) {
+                private alertService: AlertService) {
     }
 
     ngOnInit() {
@@ -73,6 +75,13 @@ export class SettleUserAccountComponent implements OnInit, OnDestroy {
                         await loading.present();
 
                         this.settlementService.settleUserAccount(this.house?.id, this.userAccount?.id, this.receiverAccountId)
+                            .pipe(
+                                catchError(err => {
+                                    this.alertService.promptApiError(err.message);
+                                    loading.dismiss();
+                                    return EMPTY;
+                                })
+                            )
                             .subscribe(() => {
                                 loading.dismiss();
                                 this.dismiss();

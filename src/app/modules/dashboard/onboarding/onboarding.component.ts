@@ -3,10 +3,11 @@ import {IonSlides, LoadingController, ModalController} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HouseInvite} from '@core/models';
 import {environment} from '@env/environment';
-import {AuthService, EventsService, HouseService, PushService, StorageService, UIService} from '@core/services';
+import {AuthService, EventsService, HouseService, PushService, StorageService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {Browser} from '@capacitor/browser';
 import {Subscription} from 'rxjs';
+import {AlertService, AppErrorMessage} from '@core/services/alert.service';
 
 @Component({
     selector: 'app-onboarding',
@@ -37,7 +38,7 @@ export class OnboardingComponent implements OnInit, OnDestroy {
                 private storage: StorageService,
                 private houseService: HouseService,
                 private events: EventsService,
-                private uiService: UIService) {
+                private alertService: AlertService) {
         this.nameForm = this.formBuilder.group({
             name: ['', [Validators.required]],
         });
@@ -123,10 +124,7 @@ export class OnboardingComponent implements OnInit, OnDestroy {
             if (accepted) {
                 this.slideNext();
             } else {
-                this.uiService.showError(
-                    this.translate.instant('errors.error'),
-                    this.translate.instant('onboarding.legal.error')
-                );
+                this.alertService.promptAppError(AppErrorMessage.legalError);
             }
 
             loading.dismiss();
@@ -178,9 +176,6 @@ export class OnboardingComponent implements OnInit, OnDestroy {
             .then(invite => {
                 this.houseInvite = invite;
                 this.slides?.update();
-            })
-            .catch(err => {
-                this.uiService.showError(this.translate.instant('errors.error'), err);
             });
     }
 }

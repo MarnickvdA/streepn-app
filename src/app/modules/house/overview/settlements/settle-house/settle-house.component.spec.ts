@@ -3,7 +3,7 @@ import {IonicModule} from '@ionic/angular';
 
 import {SettleHouseComponent} from './settle-house.component';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire';
+import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
 import {TranslationModule} from '../../../../../translation.module';
 

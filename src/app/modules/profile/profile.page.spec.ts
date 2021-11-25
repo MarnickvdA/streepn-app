@@ -3,9 +3,9 @@ import {IonicModule} from '@ionic/angular';
 
 import {ProfilePage} from './profile.page';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire';
+import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFireAuth} from '@angular/fire/auth';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
 import {TranslationModule} from '../../translation.module';
 

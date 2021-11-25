@@ -1,10 +1,7 @@
-import {Timestamp} from '@firebase/firestore-types';
 import {v4 as uuid} from 'uuid';
-import firebase from 'firebase/app';
 import {getMoneyString} from '@core/utils/formatting-utils';
-
-require('firebase/firestore');
-import TimestampFn = firebase.firestore.Timestamp;
+import {Timestamp} from '@firebase/firestore-types';
+import firebase from 'firebase/compat/app';
 
 export class Product {
     id: string;
@@ -64,7 +61,7 @@ export class Product {
     }
 
     static new(name: string, price: number) {
-        return new Product(uuid(), TimestampFn.now(), name, price, 0, 0, 0, 0);
+        return new Product(uuid(), firebase.firestore.Timestamp.now(), name, price, 0, 0, 0, 0);
     }
 
     deepCopy(): Product {

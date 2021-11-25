@@ -4,12 +4,12 @@ import {IonicModule} from '@ionic/angular';
 import {AccountDetailPage} from './account-detail.page';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
 import {RouterTestingModule} from '@angular/router/testing';
-import {AngularFireModule} from '@angular/fire';
+import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {SharedModule} from '@shared/shared.module';
 import {TranslationModule} from '../../../../translation.module';
-import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
 
 describe('AccountDetailPage', () => {
     let component: AccountDetailPage;

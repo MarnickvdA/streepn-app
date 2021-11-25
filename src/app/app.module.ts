@@ -17,9 +17,6 @@ import {TranslationModule} from './translation.module';
     providedIn: 'root'
 })
 export class SentryErrorHandler implements ErrorHandler {
-    constructor() {
-    }
-
     handleError(error) {
         LoggerService.handleError(error);
     }

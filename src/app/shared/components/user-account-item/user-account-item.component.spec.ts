@@ -2,15 +2,15 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {UserAccountItemComponent} from './user-account-item.component';
-import {AngularFireModule} from '@angular/fire';
+import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {RouterTestingModule} from '@angular/router/testing';
 import {UserAccount, UserRole} from '@core/models';
 import {SharedModule} from '@shared/shared.module';
 import {TranslationModule} from '../../../translation.module';
-import {AngularFireAuth} from '@angular/fire/auth';
-import {AngularFireFunctions} from '@angular/fire/functions';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
+import {AngularFireFunctions} from '@angular/fire/compat/functions';
 
 describe('UserAccountItemComponent', () => {
     let component: UserAccountItemComponent;

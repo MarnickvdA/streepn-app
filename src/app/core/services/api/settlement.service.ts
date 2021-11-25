@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
-import {House, Settlement, settlementConverter} from '@core/models';
-import {map} from 'rxjs/operators';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import {AngularFirestore} from '@angular/fire/firestore';
+import {House, Settlement} from '@core/models';
+import {AngularFireFunctions} from '@angular/fire/compat/functions';
 import {LoggerService} from '@core/services/logger.service';
-import {AngularFirePerformance, trace} from '@angular/fire/performance';
+import {trace} from '@angular/fire/compat/performance';
 import {HouseService} from '@core/services';
 import {Observable, throwError} from 'rxjs';
 import {AccountSettlement, HouseSettlement, SharedAccountSettlement, UserAccountSettlement} from '@core/models/settlement';
@@ -18,9 +16,7 @@ export class SettlementService {
     private houseId: string;
 
     constructor(private houseService: HouseService,
-                private functions: AngularFireFunctions,
-                private performance: AngularFirePerformance,
-                private fs: AngularFirestore) {
+                private functions: AngularFireFunctions) {
     }
 
     settleUserAccount(houseId: string, settlerAccountId: string, receiverAccountId: string) {

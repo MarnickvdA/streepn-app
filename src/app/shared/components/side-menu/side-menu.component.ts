@@ -7,7 +7,7 @@ import {environment} from '@env/environment';
 import {TranslateService} from '@ngx-translate/core';
 import {Capacitor} from '@capacitor/core';
 import {StatusBar, Style} from '@capacitor/status-bar';
-import { AppLauncher } from '@capacitor/app-launcher';
+import {AppLauncher} from '@capacitor/app-launcher';
 
 @Component({
     selector: 'app-side-menu',

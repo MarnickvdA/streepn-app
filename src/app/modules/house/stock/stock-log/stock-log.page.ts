@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {House, Stock, stockConverter} from '@core/models';
-import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
+import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/compat/firestore';
 import {Observable, Subscription} from 'rxjs';
 import {ModalController} from '@ionic/angular';
 import {EventsService, HouseService} from '@core/services';

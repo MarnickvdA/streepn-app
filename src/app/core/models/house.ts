@@ -1,16 +1,13 @@
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
-import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {Product, productConverter} from './product';
 import {v4 as uuid} from 'uuid';
-import firebase from 'firebase/app';
 import {Account} from '@core/models/account';
 import {UserAccount, userAccountConverter, UserRole} from '@core/models/user-account';
 import {SharedAccount, sharedAccountConverter} from '@core/models/shared-account';
 import {balanceConverter} from '@core/models/balance';
-import User = firebase.User;
-import TimestampFn = firebase.firestore.Timestamp;
+import {DocumentData, QueryDocumentSnapshot, SnapshotOptions} from '@angular/fire/compat/firestore';
 
-require('firebase/firestore');
+import firebase from 'firebase/compat/app';
 
 /**
  * List of supported currencies currently available in the application.
@@ -33,6 +30,7 @@ export class House {
     settledAt?: Timestamp;
     isSettling?: boolean;
     name: string;
+    city?: string;
     currency: Currency;
     inviteLink: string;
     inviteLinkExpiry: Timestamp; // A week after generation.
@@ -53,7 +51,7 @@ export class House {
         };
         removedItems: {
             [id: string]: RemovedItem;
-        }
+        };
     };
     // Private arrays for the accounts and products. They need to be in sync with the houseDictionary.
     private mAccounts: UserAccount[];
@@ -73,6 +71,7 @@ export class House {
                 sharedAccounts: SharedAccount[],
                 totalIn: number,
                 totalOut: number,
+                city?: string,
                 settledAt?: Timestamp,
                 isSettling?: boolean,
                 removedItems?: RemovedItem[]) {
@@ -88,6 +87,7 @@ export class House {
         this.mSharedAccounts = sharedAccounts;
         this.totalIn = totalIn;
         this.totalOut = totalOut;
+        this.city = city;
         this.settledAt = settledAt;
         this.isSettling = isSettling || false;
         this.mRemovedItems = removedItems || [];
@@ -146,13 +146,13 @@ export class House {
         return !(this.mSharedAccounts.find((acc) => !acc.isRemovable) || this.mProducts.find((product) => product.stock < 0));
     }
 
-    static new(user: User, name: string, currency: Currency) {
+    static new(user: any, name: string, city: string, currency: Currency) {
         const uid = uuid();
         const hid = uuid();
         const account = UserAccount.new(uid, user.uid, user.displayName, [UserRole.admin], user.photoURL);
 
-        return new House(hid, TimestampFn.now(), name, currency, undefined, undefined, [user.uid], [account],
-            [], [], 0, 0);
+        return new House(hid, firebase.firestore.Timestamp.now(), name, currency, undefined, undefined, [user.uid], [account],
+            [], [], 0, 0, city);
     }
 
     isAdmin(userId: string): boolean {
@@ -310,11 +310,12 @@ export const houseConverter: FirestoreDataConverter<House> = {
             removedItems: house.removedItems,
             totalIn: house.totalIn,
             totalOut: house.totalOut,
+            city: house.city,
             balances,
             productData,
         };
     },
-    fromFirestore: (snapshot: DocumentSnapshot<any>, options: SnapshotOptions): House => {
+    fromFirestore: (snapshot: QueryDocumentSnapshot<DocumentData>, options: SnapshotOptions): House => {
         const data = snapshot.data(options);
 
         return newHouse(snapshot.id, data);
@@ -351,5 +352,5 @@ export const newHouse = (id: string, data: { [key: string]: any }): House => {
 
     return new House(id, data.createdAt, data.name, data.currency, data.inviteLink,
         data.inviteLinkExpiry, data.members, accounts, products, sharedAccounts, data.totalIn,
-        data.totalOut, data.settledAt, data.isSettling, data.removedItems);
+        data.totalOut, data.city, data.settledAt, data.isSettling, data.removedItems);
 };

@@ -8,6 +8,7 @@ import {Location} from '@angular/common';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AnalyticsService, AuthService, HouseService, LoggerService, ProductService, StockService} from '@core/services';
+import {AlertService} from '@core/services/alert.service';
 
 @Component({
     selector: 'app-add-stock',
@@ -37,6 +38,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
                 private houseService: HouseService,
                 private alertController: AlertController,
                 private modalController: ModalController,
+                private alertService: AlertService,
                 private authService: AuthService,
                 private analytics: AnalyticsService,
                 private stockService: StockService) {
@@ -116,7 +118,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
             +this.form.amount.value, this.selectedAccount.id)
             .pipe(
                 catchError(err => {
-                    this.logger.error({message: err});
+                    this.alertService.promptApiError(err.message);
                     loading.dismiss(); // TODO Check if this is necessary.
                     return EMPTY;
                 })

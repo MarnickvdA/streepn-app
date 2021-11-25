@@ -3,8 +3,8 @@ import {IonicModule} from '@ionic/angular';
 
 import {RegisterPage} from './register.page';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
-import {AngularFireAuth} from '@angular/fire/auth';
-import {AngularFireModule} from '@angular/fire';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
+import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
 import {RouterTestingModule} from '@angular/router/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';

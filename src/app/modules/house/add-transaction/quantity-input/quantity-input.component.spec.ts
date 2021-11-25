@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
 
-import { QuantityInputComponent } from './quantity-input.component';
+import {QuantityInputComponent} from './quantity-input.component';
 
 describe('QuantityInputComponent', () => {
   let component: QuantityInputComponent;

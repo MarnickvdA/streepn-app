@@ -8,6 +8,7 @@ import {EventsService, HouseService, LoggerService, TransactionService} from '@c
 import {LoadingController, NavController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {getMoneyString} from '@core/utils/formatting-utils';
+import {AlertService} from '@core/services/alert.service';
 
 @Component({
     selector: 'app-transaction-detail',
@@ -37,6 +38,7 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
                 private translate: TranslateService,
                 private navController: NavController,
                 private houseService: HouseService,
+                private alertService: AlertService,
                 private events: EventsService) {
         this.routeSub = this.route.params.subscribe((params: Params) => {
             this.transactionId = params.transactionId;
@@ -157,6 +159,7 @@ export class TransactionDetailPage implements OnInit, OnDestroy {
         this.transactionService.editTransaction(this.houseService.currentHouseId, transaction)
             .pipe(
                 catchError((err) => {
+                    this.alertService.promptApiError(err.message);
                     loading.dismiss();
                     this.logger.error({message: err});
                     return EMPTY;

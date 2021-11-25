@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
 
-import { SettleUserAccountComponent } from './settle-user-account.component';
+import {SettleUserAccountComponent} from './settle-user-account.component';
 
 describe('SettleUserAccountComponent', () => {
   let component: SettleUserAccountComponent;

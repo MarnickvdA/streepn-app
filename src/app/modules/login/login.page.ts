@@ -3,9 +3,10 @@ import {LoadingController, ModalController, NavController} from '@ionic/angular'
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Capacitor} from '@capacitor/core';
 import {TranslateService} from '@ngx-translate/core';
-import {AuthService, EventsService, LoggerService, StorageService, UIService} from '@core/services';
+import {AuthService, EventsService, LoggerService, StorageService} from '@core/services';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
 import {loginPageGuide} from '@shared/components/info-modal/info-guides';
+import {AlertService, AppErrorMessage} from '@core/services/alert.service';
 
 @Component({
     selector: 'app-login',
@@ -25,7 +26,7 @@ export class LoginPage implements OnInit, OnDestroy {
                 private eventsService: EventsService,
                 private translate: TranslateService,
                 private loadingController: LoadingController,
-                private uiService: UIService,
+                private alertService: AlertService,
                 private storage: StorageService,
                 private modalController: ModalController) {
         this.loginForm = this.formBuilder.group({
@@ -113,7 +114,7 @@ export class LoginPage implements OnInit, OnDestroy {
             .catch(err => {
                 this.logger.error({message: err});
 
-                this.uiService.showError(this.translate.instant('errors.error'), this.translate.instant('login.errors.unknown-login'));
+                this.alertService.promptAppError(AppErrorMessage.unknownLogin);
             })
             .finally(() => {
                 loading.dismiss();
@@ -132,7 +133,7 @@ export class LoginPage implements OnInit, OnDestroy {
             .catch(err => {
                 this.logger.error({message: err});
 
-                this.uiService.showError(this.translate.instant('errors.error'), this.translate.instant('login.errors.unknown-login'));
+                this.alertService.promptAppError(AppErrorMessage.unknownLogin);
             })
             .finally(() => {
                 loading.dismiss();

@@ -1,10 +1,7 @@
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
-import {DocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {v4 as uuid} from 'uuid';
-import firebase from 'firebase/app';
-
-require('firebase/firestore'); // Required for accessing Timestamp functions
-import TimestampFn = firebase.firestore.Timestamp;
+import {DocumentData, QueryDocumentSnapshot, SnapshotOptions} from '@angular/fire/compat/firestore';
+import firebase from 'firebase/compat/app';
 
 export class HouseInvite {
     inviteLink: string;
@@ -24,7 +21,7 @@ export class HouseInvite {
     }
 
     static generate(houseId: string, houseName: string): HouseInvite {
-        const nextWeek = TimestampFn.fromDate(new Date(new Date().getTime() + (7 * 24 * 60 * 60 * 1000)));
+        const nextWeek = firebase.firestore.Timestamp.fromDate(new Date(new Date().getTime() + (7 * 24 * 60 * 60 * 1000)));
         const randomLink = uuid().substring(0, 8).toUpperCase();
 
         return new HouseInvite(randomLink, houseName, houseId, nextWeek);
@@ -41,7 +38,7 @@ export const houseInviteConverter: FirestoreDataConverter<HouseInvite> = {
         houseId: invite.houseId,
         expiry: invite.expiry,
     }),
-    fromFirestore: (snapshot: DocumentSnapshot<any>, options: SnapshotOptions): HouseInvite => {
+    fromFirestore: (snapshot: QueryDocumentSnapshot<DocumentData>, options: SnapshotOptions): HouseInvite => {
         const data = snapshot.data(options);
 
         return new HouseInvite(snapshot.id, data.houseName, data.houseId, data.expiry);

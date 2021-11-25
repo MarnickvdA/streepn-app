@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Account, House, Product} from '@core/models';
-import {LoadingController, ModalController, ToastController} from '@ionic/angular';
+import {LoadingController, ModalController} from '@ionic/angular';
 import {catchError} from 'rxjs/operators';
 import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
 import {TransactionService, TransactionSet} from '@core/services';
@@ -9,6 +9,7 @@ import {Capacitor} from '@capacitor/core';
 import {Haptics, ImpactStyle} from '@capacitor/haptics';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
 import {addTransactionGuide} from '@shared/components/info-modal/info-guides';
+import {AlertService} from '@core/services/alert.service';
 
 @Component({
     selector: 'app-add-transaction',
@@ -38,7 +39,7 @@ export class AddTransactionComponent implements OnInit {
     constructor(private modalController: ModalController,
                 private transactionService: TransactionService,
                 private loadingController: LoadingController,
-                private toastController: ToastController,
+                private alertService: AlertService,
                 private translate: TranslateService) {
     }
 
@@ -135,11 +136,7 @@ export class AddTransactionComponent implements OnInit {
         this.transactionService.addTransaction(this.house, this.transactions)
             .pipe(
                 catchError(err => {
-                    console.error(err);
-                    this.toastController.create({
-                        message: JSON.stringify(err),
-                        duration: 3000,
-                    }).then((toast) => toast.present());
+                    this.alertService.promptApiError(err.message);
                     loading.dismiss();
                     return EMPTY;
                 })

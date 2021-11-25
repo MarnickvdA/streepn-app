@@ -1,10 +1,10 @@
 // Utility services
 export {LoggerService} from './logger.service';
 export {EventsService} from './events.service';
+export {AlertService} from './alert.service';
 
 // Capacitor services
 export {StorageService} from './storage.service';
-export {UIService} from './ui.service';
 
 // Firebase services
 export {AuthService} from './firebase/auth.service';

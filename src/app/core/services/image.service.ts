@@ -1,14 +1,15 @@
 import {Injectable} from '@angular/core';
 import {LoadingController} from '@ionic/angular';
-import {AngularFireStorage} from '@angular/fire/storage';
+import {AngularFireStorage} from '@angular/fire/compat/storage';
 import {compressAccurately, dataURLtoFile, EImageType} from 'image-conversion';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import {trace} from '@angular/fire/performance';
+import {AngularFireFunctions} from '@angular/fire/compat/functions';
+import {trace} from '@angular/fire/compat/performance';
 import {catchError, tap} from 'rxjs/operators';
 import {AnalyticsService} from '@core/services/firebase/analytics.service';
 import {LoggerService} from '@core/services/logger.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Camera, CameraDirection, CameraResultType, CameraSource, ImageOptions} from '@capacitor/camera';
+import {AlertService, AppErrorMessage} from '@core/services/alert.service';
 
 @Injectable({
     providedIn: 'root'
@@ -37,6 +38,7 @@ export class ImageService {
                 private storage: AngularFireStorage,
                 private functions: AngularFireFunctions,
                 private translate: TranslateService,
+                private alertService: AlertService,
                 private analyticsService: AnalyticsService) {
     }
 
@@ -71,9 +73,7 @@ export class ImageService {
             .catch(err => {
                 if (err.message === 'User denied access to camera'
                     || err.message === 'Unable to access camera, user denied permission request') {
-                    console.error(err);
-                } else if (err.message !== 'User cancelled photos app') {
-                    console.error(err);
+                    this.alertService.promptAppError(AppErrorMessage.cameraAccessDenied);
                 } else {
                     console.error(err);
                 }
@@ -87,9 +87,7 @@ export class ImageService {
             .then(compressedImage => ref.put(compressedImage, {
                     cacheControl: 'public,max-age=604800'
                 })
-                .then((result) => {
-                    return ref.getDownloadURL().toPromise();
-                }));
+                .then((result) => ref.getDownloadURL().toPromise()));
     }
 
     compressImage(dataUrl: string): Promise<Blob> {

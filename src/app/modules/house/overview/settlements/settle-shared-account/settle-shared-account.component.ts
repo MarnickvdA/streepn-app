@@ -1,12 +1,14 @@
 import {Component, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, LoadingController, ModalController} from '@ionic/angular';
-import {Observable, Subscription} from 'rxjs';
+import {EMPTY, Observable, Subscription} from 'rxjs';
 import {AccountSettlement, House, SharedAccount} from '@core/models';
 import {HouseService} from '@core/services';
 import {calculatePayout} from '@core/utils/streepn-logic';
 import {TranslateService} from '@ngx-translate/core';
 import {getMoneyString} from '@core/utils/formatting-utils';
 import {SettlementService} from '@core/services/api/settlement.service';
+import {catchError} from 'rxjs/operators';
+import {AlertService} from '@core/services/alert.service';
 
 @Component({
     selector: 'app-settle-shared-account',
@@ -36,6 +38,7 @@ export class SettleSharedAccountComponent implements OnInit, OnDestroy {
                 private alertController: AlertController,
                 private loadingController: LoadingController,
                 private translate: TranslateService,
+                private alertService: AlertService,
                 private zone: NgZone) {
     }
 
@@ -103,6 +106,13 @@ export class SettleSharedAccountComponent implements OnInit, OnDestroy {
                         await loading.present();
 
                         this.settlementService.settleSharedAccount(this.house?.id, this.sharedAccount?.id, this.settlement)
+                            .pipe(
+                                catchError(err => {
+                                    this.alertService.promptApiError(err.message);
+                                    loading.dismiss();
+                                    return EMPTY;
+                                })
+                            )
                             .subscribe(() => {
                                 loading.dismiss();
                                 this.dismiss();

@@ -1,18 +1,14 @@
 import {Injectable} from '@angular/core';
-import {AngularFireAuth} from '@angular/fire/auth';
-import firebase from 'firebase/app';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
+import firebase from 'firebase/compat/app';
 import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
-import {EventsService} from '../events.service';
+import {AnalyticsService, EventsService, LoggerService, StorageService} from '@core/services';
 import {SignInWithApple, SignInWithAppleResponse} from '@capacitor-community/apple-sign-in';
-import {StorageService} from '../storage.service';
 import {environment} from '@env/environment';
-import {AnalyticsService} from './analytics.service';
 import {catchError} from 'rxjs/operators';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import {LoggerService} from '../logger.service';
+import {AngularFireFunctions} from '@angular/fire/compat/functions';
 import {House} from '@core/models';
 import User = firebase.User;
-
 
 @Injectable({
     providedIn: 'root'
@@ -73,17 +69,7 @@ export class AuthService {
             }).then((id) => {
                 this.eventsService.publish('auth:login', {userId: id});
             })
-            .catch(error => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-
-                this.logger.error({
-                    message: errorMessage,
-                    error
-                });
-
-                return Promise.reject(errorCode);
-            });
+            .catch(error => Promise.reject(error.code));
     }
 
     login(email: string, password: string) {
@@ -92,10 +78,7 @@ export class AuthService {
                 this.analytics.logUserLogin(data.user.uid);
                 this.eventsService.publish('auth:login', {userId: data.user.uid});
             })
-            .catch(error => {
-                const errorCode = error.code;
-                return Promise.reject(errorCode);
-            });
+            .catch(error => Promise.reject(error.code));
     }
 
     loginWithApple(): Promise<void> {

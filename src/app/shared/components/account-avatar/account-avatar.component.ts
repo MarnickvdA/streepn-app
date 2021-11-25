@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {toPastelColor} from '@core/utils/string-to-hsl';
-import {Account} from '@core/models';
 
 @Component({
     selector: 'app-account-avatar',
