@@ -50,7 +50,7 @@ export class LoggerService {
         try {
             LoggerService.log({
                 type: 'error',
-                message: 'Error occured and handled by handleError',
+                message: 'Error occured and handled by handleError: ' + JSON.stringify(error),
                 error: error.originalError || error
             }, Severity.Error, 'Logger');
         } catch (e) {
