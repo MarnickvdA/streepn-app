@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
-import firebase from 'firebase/compat/app';
+import firebase from 'firebase/app';
 import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {AuthService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';

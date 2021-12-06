@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Balance, House, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from '../../models';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFireFunctions} from '@angular/fire/functions';
 import {Observable, throwError} from 'rxjs';
 import {AuthService} from '@core/services';
 

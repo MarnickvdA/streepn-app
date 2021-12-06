@@ -2,7 +2,7 @@ import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {House, Transaction, transactionConverter, UserAccount} from '@core/models';
 import {ModalController} from '@ionic/angular';
-import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/compat/firestore';
+import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/firestore';
 import {Observable, Subscription} from 'rxjs';
 import {AuthService, EventsService, HouseService, TransactionService} from '@core/services';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';

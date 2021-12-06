@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {SharedAccountItemComponent} from './shared-account-item.component';
-import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
 import {SharedAccount} from '@core/models';
 import {SharedModule} from '@shared/shared.module';

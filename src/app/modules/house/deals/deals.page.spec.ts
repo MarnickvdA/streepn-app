@@ -2,13 +2,13 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {DealsPage} from './deals.page';
-import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {AngularFirestore} from '@angular/fire/firestore';
 import {TranslationModule} from '../../../translation.module';
 import {HttpClientModule} from '@angular/common/http';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
+import {AngularFireFunctions} from '@angular/fire/functions';
 
 describe('DealsPage', () => {
     let component: DealsPage;

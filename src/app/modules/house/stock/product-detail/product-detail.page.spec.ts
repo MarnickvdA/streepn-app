@@ -3,12 +3,12 @@ import {IonicModule} from '@ionic/angular';
 
 import {ProductDetailPage} from './product-detail.page';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {AngularFirestore} from '@angular/fire/firestore';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslationModule} from '../../../../translation.module';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
+import {AngularFireFunctions} from '@angular/fire/functions';
 
 describe('ProductDetailPage', () => {
     let component: ProductDetailPage;

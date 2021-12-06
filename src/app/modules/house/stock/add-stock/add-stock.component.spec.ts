@@ -3,9 +3,9 @@ import {IonicModule} from '@ionic/angular';
 
 import {AddStockComponent} from './add-stock.component';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {AngularFirestore} from '@angular/fire/firestore';
 import {RouterTestingModule} from '@angular/router/testing';
 import {House} from '@core/models';
 import {Observable} from 'rxjs';

@@ -1,8 +1,8 @@
 import {TestBed} from '@angular/core/testing';
 import {ProductService} from '@core/services';
-import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {AngularFirestore} from '@angular/fire/firestore';
 
 describe('ProductsService', () => {
     let service: ProductService;

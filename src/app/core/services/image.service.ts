@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {LoadingController} from '@ionic/angular';
-import {AngularFireStorage} from '@angular/fire/compat/storage';
+import {AngularFireStorage} from '@angular/fire/storage';
 import {compressAccurately, dataURLtoFile, EImageType} from 'image-conversion';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
-import {trace} from '@angular/fire/compat/performance';
+import {AngularFireFunctions} from '@angular/fire/functions';
+import {trace} from '@angular/fire/performance';
 import {catchError, tap} from 'rxjs/operators';
 import {AnalyticsService} from '@core/services/firebase/analytics.service';
 import {LoggerService} from '@core/services/logger.service';

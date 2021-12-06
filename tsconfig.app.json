@@ -9,7 +9,9 @@
   },
   "files": [
     "src/main.ts",
-    "src/polyfills.ts"
+    "src/polyfills.ts",
+    "src/app/core/firebase-init.ts",
+    "src/app/core/firebase-init.prod.ts"
   ],
   "include": [
     "src/**/*.d.ts"

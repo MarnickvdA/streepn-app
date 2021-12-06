@@ -2,11 +2,11 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {OnboardingComponent} from './onboarding.component';
-import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
 import {SharedModule} from '@shared/shared.module';
 import {TranslationModule} from '../../../translation.module';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {AngularFirestore} from '@angular/fire/firestore';
 
 describe('OnboardingComponent', () => {
     let component: OnboardingComponent;

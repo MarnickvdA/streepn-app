@@ -11,18 +11,20 @@ import {
     PushService,
     StockService,
     StorageService,
-    TransactionService
+    TransactionService,
 } from '@core/services';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment';
-import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/compat/auth';
-import {AngularFireFunctionsModule, REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR} from '@angular/fire/compat/functions';
-import {SETTINGS, USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/compat/firestore';
+import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/auth';
+import {AngularFireFunctionsModule, REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR} from '@angular/fire/functions';
+import {SETTINGS, USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/firestore';
 import {SettlementService} from '@core/services/api/settlement.service';
-import {AngularFirePerformanceModule} from '@angular/fire/compat/performance';
-import {AngularFireStorageModule} from '@angular/fire/compat/storage';
+import {AngularFirePerformanceModule} from '@angular/fire/performance';
+import {AngularFireStorageModule} from '@angular/fire/storage';
 import {ImageService} from '@core/services/image.service';
 import {AlertService} from '@core/services/alert.service';
-import {AngularFireModule} from '@angular/fire/compat';
+
+require('./firebase-init');
 
 export const services = [
     EventsService,
@@ -63,10 +65,10 @@ export const services = [
 
         // Firebase
         {provide: REGION, useValue: 'europe-west1'},
-        {provide: USE_AUTH_EMULATOR, useValue: !environment.production ? ['http://localhost:9099'] : undefined},
+        {provide: USE_AUTH_EMULATOR, useValue: !environment.production ? ['localhost', 9099] : undefined},
         {provide: USE_FIRESTORE_EMULATOR, useValue: !environment.production ? ['localhost', 8080] : undefined},
         {provide: USE_FUNCTIONS_EMULATOR, useValue: !environment.production ? ['localhost', 5001] : undefined},
-        {provide: SETTINGS, useValue: {ignoreUndefinedProperties: true, merge: true, cacheSizeBytes: 1048576}},
+        {provide: SETTINGS, useValue: {ignoreUndefinedProperties: true, cacheSizeBytes: 1048576}},
     ]
 })
 export class CoreModule {

@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
-import firebase from 'firebase/compat/app';
+import firebase from 'firebase/app';
 import {House, HouseInvite, UserAccount} from '@core/models';
 import {AuthService, EventsService, HouseService, LoggerService, StorageService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';

@@ -4,9 +4,9 @@ import {IonicModule} from '@ionic/angular';
 import {NewHouseComponent} from './new-house.component';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {AngularFirestore} from '@angular/fire/firestore';
 import {TranslationModule} from '../../../translation.module';
 
 describe('NewHouseComponent', () => {

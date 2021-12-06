@@ -1,9 +1,9 @@
 import {TestBed} from '@angular/core/testing';
 
-import {StockService} from '@core/services';
-import {AngularFireModule} from '@angular/fire/compat';
+import {StockService} from './stock.service';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
+import {AngularFireFunctions} from '@angular/fire/functions';
 
 describe('SupplyService', () => {
     let service: StockService;

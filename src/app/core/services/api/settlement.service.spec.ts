@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 
 import {SettlementService} from './settlement.service';
-import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
 
 describe('SettlementService', () => {

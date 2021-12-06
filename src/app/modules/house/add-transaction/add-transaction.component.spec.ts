@@ -2,13 +2,13 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {AddTransactionComponent} from './add-transaction.component';
-import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {House} from '@core/models';
 import {Observable} from 'rxjs';
 import {TranslationModule} from '../../../translation.module';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {AngularFirestore} from '@angular/fire/firestore';
 import {HttpClientModule} from '@angular/common/http';
 
 describe('AddTransactionComponent', () => {

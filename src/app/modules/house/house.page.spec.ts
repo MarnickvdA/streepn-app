@@ -4,12 +4,12 @@ import {IonicModule} from '@ionic/angular';
 import {HousePage} from './house.page';
 import {RouterTestingModule} from '@angular/router/testing';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
-import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {TranslationModule} from '../../translation.module';
 import {HttpClientModule} from '@angular/common/http';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {AngularFirestore} from '@angular/fire/firestore';
 
 describe('HousePage', () => {
     let component: HousePage;

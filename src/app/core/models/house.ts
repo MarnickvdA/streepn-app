@@ -1,13 +1,16 @@
 import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
+import {DocumentData, DocumentSnapshot, QueryDocumentSnapshot, SnapshotOptions} from '@angular/fire/firestore';
 import {Product, productConverter} from './product';
 import {v4 as uuid} from 'uuid';
+import firebase from 'firebase/app';
 import {Account} from '@core/models/account';
 import {UserAccount, userAccountConverter, UserRole} from '@core/models/user-account';
 import {SharedAccount, sharedAccountConverter} from '@core/models/shared-account';
 import {balanceConverter} from '@core/models/balance';
-import {DocumentData, QueryDocumentSnapshot, SnapshotOptions} from '@angular/fire/compat/firestore';
+import User = firebase.User;
+import TimestampFn = firebase.firestore.Timestamp;
 
-import firebase from 'firebase/compat/app';
+require('firebase/firestore');
 
 /**
  * List of supported currencies currently available in the application.

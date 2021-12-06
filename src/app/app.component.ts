@@ -5,13 +5,14 @@ import {StorageService} from '@core/services/storage.service';
 import {EventsService} from '@core/services/events.service';
 import {PushService} from '@core/services/firebase/push.service';
 import {NavigationEnd, Router} from '@angular/router';
+import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {App, AppState} from '@capacitor/app';
 import {SplashScreen} from '@capacitor/splash-screen';
 import {StatusBar, Style} from '@capacitor/status-bar';
 import {Storage} from '@capacitor/storage';
 import {Capacitor} from '@capacitor/core';
 import {environment} from '@env/environment';
-import {AngularFireStorage} from '@angular/fire/compat/storage';
+import {AngularFireStorage} from '@angular/fire/storage';
 
 @Component({
     selector: 'app-root',

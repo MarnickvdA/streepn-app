@@ -3,10 +3,10 @@ import {IonicModule} from '@ionic/angular';
 
 import {DashboardPage} from './dashboard.page';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
-import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
 import {RouterTestingModule} from '@angular/router/testing';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
+import {AngularFireAuth} from '@angular/fire/auth';
 import {ionRouterOutletMock} from '@core/mocks/ion-router-outlet.mock';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {SharedModule} from '@shared/shared.module';

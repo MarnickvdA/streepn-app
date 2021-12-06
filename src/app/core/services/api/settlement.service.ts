@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {House, Settlement} from '@core/models';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
-import {LoggerService} from '@core/services/logger.service';
-import {trace} from '@angular/fire/compat/performance';
+import {AngularFireFunctions} from '@angular/fire/functions';
+import {trace} from '@angular/fire/performance';
 import {HouseService} from '@core/services';
 import {Observable, throwError} from 'rxjs';
 import {AccountSettlement, HouseSettlement, SharedAccountSettlement, UserAccountSettlement} from '@core/models/settlement';
@@ -11,7 +10,6 @@ import {AccountSettlement, HouseSettlement, SharedAccountSettlement, UserAccount
     providedIn: 'root'
 })
 export class SettlementService {
-    private readonly logger = LoggerService.getLogger(SettlementService.name);
     private settlements?: Settlement[];
     private houseId: string;
 

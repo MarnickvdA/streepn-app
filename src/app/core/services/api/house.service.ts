@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
 import {Currency, House, houseConverter, HouseInvite, houseInviteConverter, UserAccount} from '@core/models';
-import {AnalyticsService, AuthService, EventsService, LoggerService} from '@core/services';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
-import firebase from 'firebase/compat/app';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {AlertService, AnalyticsService, AuthService, EventsService, LoggerService} from '@core/services';
+import {AngularFireFunctions} from '@angular/fire/functions';
+import firebase from 'firebase/app';
+import {AngularFirestore} from '@angular/fire/firestore';
 import {BehaviorSubject, EMPTY, Observable, Subject} from 'rxjs';
 import {catchError, map, take, takeUntil} from 'rxjs/operators';
 import {PushService, PushTopic} from '../firebase/push.service';
 import {TranslateService} from '@ngx-translate/core';
-import {AngularFirePerformance, trace} from '@angular/fire/compat/performance';
-import {AlertService, ApiErrorMessage, AppErrorMessage} from '@core/services/alert.service';
+import {AngularFirePerformance, trace} from '@angular/fire/performance';
 import User = firebase.User;
+import {ApiErrorMessage, AppErrorMessage} from '@core/services/alert.service';
 
 @Injectable({
     providedIn: 'root'

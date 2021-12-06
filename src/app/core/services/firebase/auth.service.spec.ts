@@ -4,9 +4,9 @@ import {AuthService} from './auth.service';
 import {IonicModule} from '@ionic/angular';
 import {SharedModule} from '@shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
-import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment.test';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
+import {AngularFireAuth} from '@angular/fire/auth';
 
 describe('AuthService', () => {
     let service: AuthService;
