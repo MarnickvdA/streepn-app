@@ -1,16 +1,15 @@
 import {Injectable} from '@angular/core';
 import {Currency, House, houseConverter, HouseInvite, houseInviteConverter, UserAccount} from '@core/models';
 import {AnalyticsService, AuthService, EventsService, LoggerService} from '@core/services';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
-import firebase from 'firebase/compat/app';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {BehaviorSubject, EMPTY, Observable, Subject} from 'rxjs';
 import {catchError, map, take, takeUntil} from 'rxjs/operators';
 import {PushService, PushTopic} from '../firebase/push.service';
 import {TranslateService} from '@ngx-translate/core';
-import {AngularFirePerformance, trace} from '@angular/fire/compat/performance';
 import {AlertService, ApiErrorMessage, AppErrorMessage} from '@core/services/alert.service';
-import User = firebase.User;
+import {Performance, trace} from '@angular/fire/performance';
+import {Functions, httpsCallable} from '@angular/fire/functions';
+import {addDoc, collection, deleteDoc, doc, Firestore, getDoc, onSnapshot, query, setDoc, where} from '@angular/fire/firestore';
+import {User} from '@angular/fire/auth';
 
 @Injectable({
     providedIn: 'root'
@@ -24,9 +23,9 @@ export class HouseService {
     private houses$: Observable<House[]>;
     private housesSub;
 
-    constructor(private fs: AngularFirestore,
-                private functions: AngularFireFunctions,
-                private performance: AngularFirePerformance,
+    constructor(private firestore: Firestore,
+                private functions: Functions,
+                private performance: Performance,
                 private authService: AuthService,
                 private eventsService: EventsService,
                 private analyticsService: AnalyticsService,
@@ -75,15 +74,14 @@ export class HouseService {
         return this.housesSubject.getValue().find(h => h.id === houseId);
     }
 
-    getHouse(id: string): Promise<House | undefined> {
-        return this.fs.collection('houses')
-            .doc(id)
-            .ref
-            .withConverter(houseConverter)
-            .get()
-            .then(querySnapshot => {
-                if (querySnapshot.exists) {
-                    return querySnapshot.data();
+    getHouse(id: string): Promise<House> {
+        const houseRef = doc(this.firestore, `houses/${id}`)
+            .withConverter(houseConverter);
+
+        return getDoc(houseRef)
+            .then(docSnapshot => {
+                if (docSnapshot.exists()) {
+                    return docSnapshot.data();
                 } else {
                     return Promise.reject(this.translate.instant('errors.house-creation-error'));
                 }
@@ -95,13 +93,12 @@ export class HouseService {
     }
 
     getHouseByInviteLink(link: string): Promise<HouseInvite> {
-        return this.fs.collection('houseInvites')
-            .doc(link)
-            .ref
-            .withConverter(houseInviteConverter)
-            .get()
+        const houseInviteRef = doc(this.firestore, `houseInvites/${link}`)
+            .withConverter(houseInviteConverter);
+
+        return getDoc(houseInviteRef)
             .then((snapshot) => {
-                if (!snapshot.exists) {
+                if (!snapshot.exists()) {
                     this.alertService.promptApiError(ApiErrorMessage.houseCodeInvalid);
                     return Promise.reject();
                 }
@@ -126,8 +123,7 @@ export class HouseService {
         const user = this.authService.currentUser;
         const house = House.new(user, name, city, Currency.euro);
 
-        return this.fs.collection('houses')
-            .add(houseConverter.toFirestore(house))
+        return addDoc(collection(this.firestore, 'houses').withConverter(houseConverter), house)
             .then(docRef => {
                 this.analyticsService.logCreateHouse(this.authService.currentUser.uid, docRef.id);
 
@@ -142,26 +138,24 @@ export class HouseService {
     }
 
     joinHouse(houseInvite: HouseInvite, user: User) {
-        const callable = this.functions.httpsCallable('joinHouse');
-        callable({
+        httpsCallable(this.functions, 'joinHouse').call({
             houseId: houseInvite.houseId,
             inviteLink: houseInvite.inviteLink,
             user: user.toJSON(),
-        })
-            .pipe(
-                trace('joinHouse'),
-                catchError((err) => {
-                    this.alertService.promptApiError(err.message);
-                    this.eventsService.publish('house:joined');
-                    return EMPTY;
-                }))
-            .subscribe((account: UserAccount) => {
-                if (account) {
-                    this.analyticsService.logJoinHouse(user.uid, houseInvite.houseId);
-                    this.pushService.subscribeTopic(PushTopic.houseAll, {houseId: houseInvite.houseId, accountId: account.id});
-                    this.eventsService.publish('house:joined');
-                }
-            });
+        }).pipe(
+            trace(this.performance, 'joinHouse'),
+            catchError((err) => {
+                this.alertService.promptApiError(err.message);
+                this.eventsService.publish('house:joined');
+                return EMPTY;
+            })
+        ).subscribe((account: UserAccount) => {
+            if (account) {
+                this.analyticsService.logJoinHouse(user.uid, houseInvite.houseId);
+                this.pushService.subscribeTopic(PushTopic.houseAll, {houseId: houseInvite.houseId, accountId: account.id});
+                this.eventsService.publish('house:joined');
+            }
+        });
     }
 
     leaveHouse(houseId: string, userId: string) {
@@ -187,25 +181,23 @@ export class HouseService {
             return;
         }
 
-        const callable = this.functions.httpsCallable('leaveHouse');
-        return callable({
+        httpsCallable(this.functions, 'leaveHouse').call({
             houseId,
             userId
-        })
-            .pipe(
-                trace('leaveHouse'),
-                catchError((err) => {
-                    this.alertService.promptApiError(err.message);
-                    this.eventsService.publish('house:left', false);
-                    return EMPTY;
-                }))
-            .subscribe((account) => {
-                if (account) {
-                    this.analyticsService.logLeaveHouse(userId, houseId);
-                    this.eventsService.publish('house:left', true);
-                    this.pushService.unsubscribeTopic(PushTopic.houseAll, {houseId, accountId: account.id});
-                }
-            });
+        }).pipe(
+            trace(this.performance, 'leaveHouse'),
+            catchError((err) => {
+                this.alertService.promptApiError(err.message);
+                this.eventsService.publish('house:left', false);
+                return EMPTY;
+            })
+        ).subscribe((account) => {
+            if (account) {
+                this.analyticsService.logLeaveHouse(userId, houseId);
+                this.eventsService.publish('house:left', true);
+                this.pushService.unsubscribeTopic(PushTopic.houseAll, {houseId, accountId: account.id});
+            }
+        });
     }
 
     async renewInviteLink(houseId: string, houseName: string, oldInvite?: string): Promise<string> {
@@ -223,18 +215,20 @@ export class HouseService {
         const houseInvite: HouseInvite = HouseInvite.generate(houseId, houseName);
 
         if (oldInvite) {
-            await this.fs.collection('houseInvites').doc(oldInvite).delete();
+            await deleteDoc(doc(this.firestore, `houseInvites/${oldInvite}`));
         }
 
-        await this.fs.collection('houseInvites')
-            .doc(houseInvite.inviteLink)
-            .set(houseInviteConverter.toFirestore(houseInvite));
+        await setDoc(
+            doc(this.firestore, `houseInvites/${houseInvite.inviteLink}`).withConverter(houseInviteConverter),
+            houseInvite
+        );
 
-        await this.fs.collection('houses').doc(houseId)
-            .set({
-                inviteLink: houseInvite.inviteLink,
-                inviteLinkExpiry: houseInvite.expiry
-            }, {merge: true});
+        await setDoc(doc(this.firestore, `houses/${houseId}`), {
+            inviteLink: houseInvite.inviteLink,
+            inviteLinkExpiry: houseInvite.expiry
+        }, {
+            merge: true
+        });
 
         return houseInvite.inviteLink;
     }
@@ -244,31 +238,30 @@ export class HouseService {
             this.housesSub();
         }
 
-        this.housesSub = this.fs.collection('houses')
-            .ref
-            .where('members', 'array-contains', userId)
-            .withConverter(houseConverter)
-            .onSnapshot(snapshot => {
-                if (snapshot.empty) {
-                    this.housesSubject.next([]);
-                } else {
-                    this.housesSubject.next(snapshot.docs
-                        .map((doc) => doc.data())
-                        .sort((g1: House, g2: House) => {
-                            const d1 = g1.createdAt.toDate().getTime();
-                            const d2 = g2.createdAt.toDate().getTime();
+        const housesRef = collection(this.firestore, 'houses').withConverter(houseConverter);
+        const q = query(housesRef, where('members', 'array-contains', userId));
 
-                            if (d1 === d2) {
-                                return 0;
-                            }
-                            if (d1 > d2) {
-                                return 1;
-                            }
-                            if (d1 < d2) {
-                                return -1;
-                            }
-                        }));
-                }
-            });
+        this.housesSub = onSnapshot(q, (snapshot) => {
+            if (snapshot.empty) {
+                this.housesSubject.next([]);
+            } else {
+                this.housesSubject.next(snapshot.docs
+                    .map((doc) => doc.data())
+                    .sort((g1: House, g2: House) => {
+                        const d1 = g1.createdAt.toDate().getTime();
+                        const d2 = g2.createdAt.toDate().getTime();
+
+                        if (d1 === d2) {
+                            return 0;
+                        }
+                        if (d1 > d2) {
+                            return 1;
+                        }
+                        if (d1 < d2) {
+                            return -1;
+                        }
+                    }));
+            }
+        });
     }
 }

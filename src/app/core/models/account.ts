@@ -1,5 +1,5 @@
-import {Timestamp} from '@firebase/firestore-types';
 import {Balance} from '@core/models/balance';
+import { Timestamp } from '@angular/fire/firestore';
 
 /**
  * The account class is the abstract super class of several types of accounts. It holds the basic information for interacting within a

@@ -1,14 +1,20 @@
 import {Injectable} from '@angular/core';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
-import firebase from 'firebase/compat/app';
 import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
 import {AnalyticsService, EventsService, LoggerService, StorageService} from '@core/services';
 import {SignInWithApple, SignInWithAppleResponse} from '@capacitor-community/apple-sign-in';
 import {environment} from '@env/environment';
 import {catchError} from 'rxjs/operators';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
 import {House} from '@core/models';
-import User = firebase.User;
+import {
+    Auth,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    updateProfile,
+    User,
+    OAuthProvider, signInWithCredential
+} from '@angular/fire/auth';
+import {Functions, httpsCallable} from '@angular/fire/functions';
 
 @Injectable({
     providedIn: 'root'
@@ -20,17 +26,16 @@ export class AuthService {
     legalVersion: string;
     private readonly logger = LoggerService.getLogger(AuthService.name);
 
-    constructor(private auth: AngularFireAuth,
+    constructor(private auth: Auth,
                 private eventsService: EventsService,
                 private storage: StorageService,
                 private analytics: AnalyticsService,
-                private functions: AngularFireFunctions) {
+                private functions: Functions) {
         this.eventsService.subscribe('auth:login', (userId) => {
             this.analytics.setCurrentUser(userId);
         });
 
-        this.user = this.auth.authState;
-        this.user.subscribe(user => {
+        onAuthStateChanged(auth, (user) => {
             this.currentUser = user;
 
             // For debug purposes when using page reloads which resets the auth state
@@ -60,7 +65,7 @@ export class AuthService {
     }
 
     register(displayName: string, email: string, password: string) {
-        return this.auth.createUserWithEmailAndPassword(email, password)
+        return createUserWithEmailAndPassword(this.auth, email, password)
             .then(data => {
                 this.analytics.logUserRegister(data.user.uid);
                 this.setUserProfile(data.user, displayName);
@@ -73,7 +78,7 @@ export class AuthService {
     }
 
     login(email: string, password: string) {
-        return this.auth.signInWithEmailAndPassword(email, password)
+        return signInWithEmailAndPassword(this.auth, email, password)
             .then(data => {
                 this.analytics.logUserLogin(data.user.uid);
                 this.eventsService.publish('auth:login', {userId: data.user.uid});
@@ -84,12 +89,12 @@ export class AuthService {
     loginWithApple(): Promise<void> {
         return SignInWithApple.authorize()
             .then((response: SignInWithAppleResponse) => {
-                const provider = new firebase.auth.OAuthProvider('apple.com');
+                const provider = new OAuthProvider('apple.com');
                 const authCredential = provider.credential({
                     idToken: response.response.identityToken
                 });
 
-                return firebase.auth().signInWithCredential(authCredential)
+                return signInWithCredential(this.auth, authCredential)
                     .then(data => {
                         const displayName = response.response.givenName;
                         if (displayName) {
@@ -97,7 +102,8 @@ export class AuthService {
                         }
 
                         return data.user.uid;
-                    }).then((id) => {
+                    })
+                    .then((id) => {
                         this.eventsService.publish('auth:login', {userId: id});
                     });
             });
@@ -139,20 +145,22 @@ export class AuthService {
     }
 
     setName(newName: string): Promise<void> {
-        return this.currentUser.updateProfile({
-                displayName: newName
-            })
-            .catch(err => {
-                this.logger.error({
-                    message: 'setName failed!',
-                    error: err
-                });
+        if (!this.currentUser) {
+            return Promise.reject('User not found!');
+        }
+
+        return updateProfile(this.currentUser, {
+            displayName: newName
+        }).catch(err => {
+            this.logger.error({
+                message: 'setName failed!',
+                error: err
             });
+        });
     }
 
     acceptTerms() {
-        const callable = this.functions.httpsCallable('acceptTerms');
-        callable({version: environment.legalVersion})
+        httpsCallable(this.functions, 'acceptTerms').call({version: environment.legalVersion})
             .pipe(catchError((err) => {
                 this.logger.error({message: 'acceptTerms', error: err});
                 return EMPTY;
@@ -175,7 +183,7 @@ export class AuthService {
     }
 
     private setUserProfile(user: User, displayName: string, photoUrl?: string): Promise<void> {
-        return user.updateProfile({
+        return updateProfile(user, {
             displayName,
             photoURL: photoUrl
         });

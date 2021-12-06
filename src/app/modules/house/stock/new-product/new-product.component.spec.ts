@@ -3,11 +3,13 @@ import {IonicModule} from '@ionic/angular';
 
 import {NewProductComponent} from './new-product.component';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {Observable} from 'rxjs';
 import {TranslationModule} from '../../../../translation.module';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
+import {Auth} from '@angular/fire/auth';
+import {Functions} from '@angular/fire/functions';
 
 describe('NewProductComponent', () => {
     let component: NewProductComponent;
@@ -17,8 +19,8 @@ describe('NewProductComponent', () => {
         TestBed.configureTestingModule({
             declarations: [NewProductComponent],
             imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(),
-                AngularFireModule.initializeApp(environment.firebaseConfig),],
-            providers: [AngularFirestore]
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
+            providers: [Firestore, Auth, Functions,]
         }).compileComponents();
 
         fixture = TestBed.createComponent(NewProductComponent);

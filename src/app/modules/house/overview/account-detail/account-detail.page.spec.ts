@@ -4,12 +4,14 @@ import {IonicModule} from '@ionic/angular';
 import {AccountDetailPage} from './account-detail.page';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
 import {RouterTestingModule} from '@angular/router/testing';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {SharedModule} from '@shared/shared.module';
 import {TranslationModule} from '../../../../translation.module';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
+import {Auth} from '@angular/fire/auth';
+import {Functions} from '@angular/fire/functions';
 
 describe('AccountDetailPage', () => {
     let component: AccountDetailPage;
@@ -19,12 +21,9 @@ describe('AccountDetailPage', () => {
         TestBed.configureTestingModule({
             declarations: [AccountDetailPage],
             imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(), RouterTestingModule,
-                AngularFireModule.initializeApp(environment.firebaseConfig)],
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
+            providers: [Firestore, Auth, Functions, navControllerMock],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [
-                navControllerMock,
-                AngularFirestore
-            ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(AccountDetailPage);

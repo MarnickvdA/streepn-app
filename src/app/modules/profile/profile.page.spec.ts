@@ -3,11 +3,13 @@ import {IonicModule} from '@ionic/angular';
 
 import {ProfilePage} from './profile.page';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
 import {TranslationModule} from '../../translation.module';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
+import {Auth} from '@angular/fire/auth';
+import {Functions} from '@angular/fire/functions';
 
 describe('ProfilePage', () => {
     let component: ProfilePage;
@@ -17,8 +19,8 @@ describe('ProfilePage', () => {
         TestBed.configureTestingModule({
             declarations: [ProfilePage],
             imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(),
-                AngularFireModule.initializeApp(environment.firebaseConfig),],
-            providers: [AngularFireAuth, navControllerMock]
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
+            providers: [Firestore, Auth, Functions, navControllerMock]
         }).compileComponents();
 
         fixture = TestBed.createComponent(ProfilePage);

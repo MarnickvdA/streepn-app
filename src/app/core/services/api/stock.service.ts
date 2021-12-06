@@ -1,21 +1,21 @@
 import {Injectable} from '@angular/core';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {Observable, throwError} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {House, Stock, stockConverter} from '../../models';
 import {newStock} from '../../models/stock';
 import {AuthService} from '@core/services';
-import {AngularFirePerformance, trace} from '@angular/fire/compat/performance';
+import {doc, Firestore, getDoc} from '@angular/fire/firestore';
+import {Functions, httpsCallable} from '@angular/fire/functions';
+import {Performance, trace} from '@angular/fire/performance';
 
 @Injectable({
     providedIn: 'root'
 })
 export class StockService {
 
-    constructor(private functions: AngularFireFunctions,
-                private fs: AngularFirestore,
-                private performance: AngularFirePerformance,
+    constructor(private functions: Functions,
+                private firestore: Firestore,
+                private performance: Performance,
                 private authService: AuthService) {
     }
 
@@ -31,13 +31,13 @@ export class StockService {
 
         const stock = Stock.new(currentAccount.id, paidById, productId, cost, amount);
 
-        const callable = this.functions.httpsCallable('addStock');
-        return callable({
+        httpsCallable(this.functions, 'addStock').call({
             houseId: house.id,
             stock
         }).pipe(
-            trace('addStock'),
-            map(result => newStock(result.id, result)));
+            trace(this.performance, 'addStock'),
+            map((result: any) => newStock(result.id, result))
+        );
     }
 
     removeStockItem(house: House, productId: string, amount: number) {
@@ -53,13 +53,13 @@ export class StockService {
         const stock = new Stock('', undefined, currentAccount.id, undefined, productId,
             undefined, amount, false, true);
 
-        const callable = this.functions.httpsCallable('removeStock');
-        return callable({
+        httpsCallable(this.functions, 'removeStock').call({
             houseId: house.id,
             stock,
         }).pipe(
-            trace('removeStock'),
-            map(result => newStock(result.id, result)));
+            trace(this.performance, 'removeStock'),
+            map((result: any) => newStock(result.id, result))
+        );
     }
 
     editStockItem(house: House, original: Stock, productId: string, cost: number, amount: number, paidById: string): Observable<Stock> {
@@ -74,20 +74,16 @@ export class StockService {
         const updatedStock = new Stock(original.id, original.createdAt, currentAccount.id, paidById,
             productId, cost, amount, false, false);
 
-        const callable = this.functions.httpsCallable('editStock');
-        return callable({
+        httpsCallable(this.functions, 'editStock').call({
             houseId: house.id,
             updatedStock
         }).pipe(
-            trace('editStock'),
+            trace(this.performance, 'editStock'),
         );
     }
 
     getStockItem(houseId: string, stockId: string): Promise<Stock> {
-        return this.fs.collection('houses').doc(houseId).collection('stock').doc(stockId)
-            .ref
-            .withConverter(stockConverter)
-            .get()
-            .then((stock) => stock.data());
+        const stockRef = doc(this.firestore, `houses/${houseId}/stock/${stockId}`).withConverter(stockConverter);
+        return getDoc(stockRef).then((stock) => stock.data());
     }
 }

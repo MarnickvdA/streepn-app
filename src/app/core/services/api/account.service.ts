@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
 import {Balance, House, SharedAccount, sharedAccountConverter, UserAccount, userAccountConverter} from '../../models';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
 import {Observable, throwError} from 'rxjs';
 import {AuthService} from '@core/services';
+import {doc, Firestore, setDoc, updateDoc} from '@angular/fire/firestore';
+import {Functions, httpsCallable} from '@angular/fire/functions';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AccountService {
     constructor(private authService: AuthService,
-                private fs: AngularFirestore,
-                private functions: AngularFireFunctions) {
+                private firestore: Firestore,
+                private functions: Functions) {
     }
 
     updateUserAccount(house: House, account: UserAccount) {
@@ -78,23 +78,28 @@ export class AccountService {
             return throwError('Shared account cannot be removed');
         }
 
-        const callable = this.functions.httpsCallable('removeSharedAccount');
-        return callable({
+        httpsCallable(this.functions, 'removeSharedAccount').call({
             houseId: house.id,
             sharedAccountId: account.id,
         });
     }
 
     private setUserAccounts(house: House): Promise<void> {
-        return this.fs.collection('houses').doc(house.id).set({
+        const houseRef = doc(this.firestore, `houses/${house.id}`);
+        return setDoc(houseRef, {
             accounts: house.accounts.map(ua => userAccountConverter.toFirestore(ua))
-        }, {merge: true});
+        }, {
+            merge: true
+        });
     }
 
     private setSharedAccounts(house: House): Promise<void> {
-        return this.fs.collection('houses').doc(house.id).set({
+        const houseRef = doc(this.firestore, `houses/${house.id}`);
+        return setDoc(houseRef, {
             sharedAccounts: house.sharedAccounts.map(sa => sharedAccountConverter.toFirestore(sa))
-        }, {merge: true});
+        }, {
+            merge: true
+        });
     }
 
     private addSharedAccountBalance(houseId: string, accountId: string) {
@@ -104,7 +109,8 @@ export class AccountService {
             totalOut: 0,
         };
 
-        return this.fs.collection('houses').doc(houseId).update({
+        const houseRef = doc(this.firestore, `houses/${houseId}`);
+        return updateDoc(houseRef, {
             [`balances.${accountId}`]: newBalance
         });
     }

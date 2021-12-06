@@ -3,10 +3,10 @@ import {TestBed} from '@angular/core/testing';
 import {ImageService} from './image.service';
 import {IonicModule} from '@ionic/angular';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {TranslationModule} from '../../translation.module';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Auth} from '@angular/fire/auth';
 
 describe('ImageService', () => {
     let service: ImageService;
@@ -14,8 +14,8 @@ describe('ImageService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(),
-                AngularFireModule.initializeApp(environment.firebaseConfig),],
-            providers: [AngularFireAuth]
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
+            providers: [Auth]
         });
         service = TestBed.inject(ImageService);
     });

@@ -3,11 +3,14 @@ import {IonicModule} from '@ionic/angular';
 
 import {NewSharedAccountComponent} from './new-shared-account.component';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
 import {Observable} from 'rxjs';
 import {House} from '@core/models';
 import {TranslationModule} from '../../../../translation.module';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
+import {Auth} from '@angular/fire/auth';
+import {Functions} from '@angular/fire/functions';
 
 describe('NewSharedAccountComponent', () => {
     let component: NewSharedAccountComponent;
@@ -17,7 +20,8 @@ describe('NewSharedAccountComponent', () => {
         TestBed.configureTestingModule({
             declarations: [NewSharedAccountComponent],
             imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(),
-                AngularFireModule.initializeApp(environment.firebaseConfig),]
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
+            providers: [Firestore, Auth, Functions]
         }).compileComponents();
 
         fixture = TestBed.createComponent(NewSharedAccountComponent);

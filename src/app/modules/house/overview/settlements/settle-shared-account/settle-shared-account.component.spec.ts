@@ -1,14 +1,13 @@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
-
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {SharedModule} from '@shared/shared.module';
 import {TranslationModule} from '../../../../../translation.module';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {SettleSharedAccountComponent} from './settle-shared-account.component';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
+import {Auth} from '@angular/fire/auth';
+import {Functions} from '@angular/fire/functions';
 
 describe('SettleComponent', () => {
     let component: SettleSharedAccountComponent;
@@ -18,8 +17,8 @@ describe('SettleComponent', () => {
         TestBed.configureTestingModule({
             declarations: [SettleSharedAccountComponent],
             imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(),
-                AngularFireModule.initializeApp(environment.firebaseConfig),],
-            providers: [AngularFirestore, AngularFireFunctions, AngularFireAuth]
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
+            providers: [Firestore, Auth, Functions,]
         }).compileComponents();
 
         fixture = TestBed.createComponent(SettleSharedAccountComponent);

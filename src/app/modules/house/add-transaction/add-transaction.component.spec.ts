@@ -2,14 +2,14 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {AddTransactionComponent} from './add-transaction.component';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {House} from '@core/models';
 import {Observable} from 'rxjs';
 import {TranslationModule} from '../../../translation.module';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {HttpClientModule} from '@angular/common/http';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
 
 describe('AddTransactionComponent', () => {
     let component: AddTransactionComponent;
@@ -19,9 +19,9 @@ describe('AddTransactionComponent', () => {
         TestBed.configureTestingModule({
             declarations: [AddTransactionComponent],
             imports: [IonicModule.forRoot(), TranslationModule.forRoot(), HttpClientModule,
-                AngularFireModule.initializeApp(environment.firebaseConfig),],
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [AngularFirestore]
+            providers: [Firestore]
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddTransactionComponent);

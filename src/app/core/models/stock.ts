@@ -1,6 +1,5 @@
-import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {House} from '@core/models/house';
-import {DocumentData, QueryDocumentSnapshot, SnapshotOptions} from '@angular/fire/compat/firestore';
+import {Timestamp} from '@angular/fire/firestore';
 
 export class Stock {
     id: string;
@@ -46,18 +45,18 @@ export class Stock {
     }
 }
 
-export const stockConverter: FirestoreDataConverter<Stock> = {
+export const stockConverter = {
     toFirestore: (stock: Stock) => ({
-            createdAt: stock.createdAt,
-            createdBy: stock.createdBy,
-            paidById: stock.paidById,
-            product: stock.productId,
-            cost: stock.cost,
-            amount: stock.amount,
-            removed: stock.removed,
-            writtenOff: stock.writtenOff,
-        }),
-    fromFirestore: (snapshot: QueryDocumentSnapshot<DocumentData>, options: SnapshotOptions): Stock => {
+        createdAt: stock.createdAt,
+        createdBy: stock.createdBy,
+        paidById: stock.paidById,
+        product: stock.productId,
+        cost: stock.cost,
+        amount: stock.amount,
+        removed: stock.removed,
+        writtenOff: stock.writtenOff,
+    }),
+    fromFirestore: (snapshot, options): Stock => {
         const data = snapshot.data(options);
 
         return newStock(snapshot.id, data);

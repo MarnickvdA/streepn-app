@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
-import firebase from 'firebase/compat/app';
 import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {AuthService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {ImageService} from '@core/services/image.service';
-import User = firebase.User;
-import Timestamp = firebase.firestore.Timestamp;
+import {User} from '@angular/fire/auth';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
     selector: 'app-profile',

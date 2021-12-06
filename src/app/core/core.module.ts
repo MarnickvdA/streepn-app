@@ -14,15 +14,15 @@ import {
     TransactionService
 } from '@core/services';
 import {environment} from '@env/environment';
-import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/compat/auth';
-import {AngularFireFunctionsModule, REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR} from '@angular/fire/compat/functions';
-import {SETTINGS, USE_EMULATOR as USE_FIRESTORE_EMULATOR} from '@angular/fire/compat/firestore';
 import {SettlementService} from '@core/services/api/settlement.service';
-import {AngularFirePerformanceModule} from '@angular/fire/compat/performance';
-import {AngularFireStorageModule} from '@angular/fire/compat/storage';
 import {ImageService} from '@core/services/image.service';
 import {AlertService} from '@core/services/alert.service';
-import {AngularFireModule} from '@angular/fire/compat';
+import {getApp, initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {connectFirestoreEmulator, initializeFirestore, provideFirestore} from '@angular/fire/firestore';
+import {connectFunctionsEmulator, getFunctions, provideFunctions} from '@angular/fire/functions';
+import {getPerformance, providePerformance} from '@angular/fire/performance';
+import {connectStorageEmulator, getStorage, provideStorage} from '@angular/fire/storage';
+import {connectAuthEmulator, getAuth, provideAuth} from '@angular/fire/auth';
 
 export const services = [
     EventsService,
@@ -48,11 +48,31 @@ export const services = [
         CommonModule,
         HttpClientModule,
         TranslateModule,
-        AngularFireModule.initializeApp(environment.firebaseConfig),
-        AngularFireAuthModule,
-        AngularFireFunctionsModule,
-        AngularFirePerformanceModule,
-        AngularFireStorageModule,
+        provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+        provideAuth(() => {
+            const auth = getAuth();
+            connectAuthEmulator(auth, 'http://localhost:9099');
+            return auth;
+        }),
+        provideFirestore(() => {
+            const firestore = initializeFirestore(getApp(), {
+                ignoreUndefinedProperties: true,
+                cacheSizeBytes: 1048576
+            });
+            connectFirestoreEmulator(firestore, 'localhost', 8080);
+            return firestore;
+        }),
+        provideFunctions(() => {
+            const functions = getFunctions(getApp(), 'europe-west1');
+            connectFunctionsEmulator(functions, 'localhost', 5001);
+            return functions;
+        }),
+        providePerformance(() => getPerformance()),
+        provideStorage(() => {
+            const storage = getStorage();
+            connectStorageEmulator(storage, 'localhost', 9199);
+            return storage;
+        }),
     ],
     providers: [
         // Cordova plugins
@@ -60,13 +80,6 @@ export const services = [
 
         // Core services
         ...services,
-
-        // Firebase
-        {provide: REGION, useValue: 'europe-west1'},
-        {provide: USE_AUTH_EMULATOR, useValue: !environment.production ? ['http://localhost:9099'] : undefined},
-        {provide: USE_FIRESTORE_EMULATOR, useValue: !environment.production ? ['localhost', 8080] : undefined},
-        {provide: USE_FUNCTIONS_EMULATOR, useValue: !environment.production ? ['localhost', 5001] : undefined},
-        {provide: SETTINGS, useValue: {ignoreUndefinedProperties: true, merge: true, cacheSizeBytes: 1048576}},
     ]
 })
 export class CoreModule {

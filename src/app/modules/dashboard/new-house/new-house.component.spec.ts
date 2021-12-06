@@ -4,10 +4,10 @@ import {IonicModule} from '@ionic/angular';
 import {NewHouseComponent} from './new-house.component';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {TranslationModule} from '../../../translation.module';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
 
 describe('NewHouseComponent', () => {
     let component: NewHouseComponent;
@@ -17,10 +17,10 @@ describe('NewHouseComponent', () => {
         TestBed.configureTestingModule({
             declarations: [NewHouseComponent],
             imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(),
-                AngularFireModule.initializeApp(environment.firebaseConfig)],
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
             providers: [
                 navControllerMock,
-                AngularFirestore
+                Firestore
             ]
         }).compileComponents();
 

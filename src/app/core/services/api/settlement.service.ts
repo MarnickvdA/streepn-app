@@ -1,22 +1,21 @@
 import {Injectable} from '@angular/core';
 import {House, Settlement} from '@core/models';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
-import {LoggerService} from '@core/services/logger.service';
-import {trace} from '@angular/fire/compat/performance';
 import {HouseService} from '@core/services';
 import {Observable, throwError} from 'rxjs';
 import {AccountSettlement, HouseSettlement, SharedAccountSettlement, UserAccountSettlement} from '@core/models/settlement';
+import {Functions, httpsCallable} from '@angular/fire/functions';
+import {Performance, trace} from '@angular/fire/performance';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SettlementService {
-    private readonly logger = LoggerService.getLogger(SettlementService.name);
     private settlements?: Settlement[];
     private houseId: string;
 
     constructor(private houseService: HouseService,
-                private functions: AngularFireFunctions) {
+                private functions: Functions,
+                private performance: Performance) {
     }
 
     settleUserAccount(houseId: string, settlerAccountId: string, receiverAccountId: string) {
@@ -33,13 +32,13 @@ export class SettlementService {
             return throwError('Shared account not found');
         }
 
-        const callable = this.functions.httpsCallable('settleUserAccount');
-        return callable({
+        const settleUserAccountFn = httpsCallable(this.functions, 'settleUserAccount');
+        return settleUserAccountFn.call({
             houseId,
             settlerAccountId,
             receiverAccountId,
         }).pipe(
-            trace('settleUserAccount')
+            trace(this.performance, 'settleUserAccount')
         );
     }
 
@@ -57,13 +56,12 @@ export class SettlementService {
             return throwError('Shared account not found');
         }
 
-        const callable = this.functions.httpsCallable('settleSharedAccount');
-        return callable({
+        httpsCallable(this.functions, 'settleSharedAccount').call({
             houseId,
             sharedAccountId,
             settlement,
         }).pipe(
-            trace('settleSharedAccount')
+            trace(this.performance, 'settleSharedAccount')
         );
     }
 
@@ -72,11 +70,10 @@ export class SettlementService {
             return throwError('House is not settleable');
         }
 
-        const callable = this.functions.httpsCallable('settleHouse');
-        return callable({
+        httpsCallable(this.functions, 'settleHouse').call({
             houseId: house.id,
         }).pipe(
-            trace('settleHouse')
+            trace(this.performance, 'settleHouse')
         );
     }
 

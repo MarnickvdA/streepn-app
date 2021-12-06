@@ -1,15 +1,15 @@
 import {Injectable} from '@angular/core';
 import {LoadingController} from '@ionic/angular';
-import {AngularFireStorage} from '@angular/fire/compat/storage';
 import {compressAccurately, dataURLtoFile, EImageType} from 'image-conversion';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
-import {trace} from '@angular/fire/compat/performance';
 import {catchError, tap} from 'rxjs/operators';
 import {AnalyticsService} from '@core/services/firebase/analytics.service';
 import {LoggerService} from '@core/services/logger.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Camera, CameraDirection, CameraResultType, CameraSource, ImageOptions} from '@capacitor/camera';
 import {AlertService, AppErrorMessage} from '@core/services/alert.service';
+import {Functions, httpsCallable} from '@angular/fire/functions';
+import {getDownloadURL, ref, Storage, uploadBytes} from '@angular/fire/storage';
+import {Performance, trace} from '@angular/fire/performance';
 
 @Injectable({
     providedIn: 'root'
@@ -35,8 +35,9 @@ export class ImageService {
     };
 
     constructor(private loadingController: LoadingController,
-                private storage: AngularFireStorage,
-                private functions: AngularFireFunctions,
+                private storage: Storage,
+                private functions: Functions,
+                private performance: Performance,
                 private translate: TranslateService,
                 private alertService: AlertService,
                 private analyticsService: AnalyticsService) {
@@ -52,11 +53,10 @@ export class ImageService {
                     loading.present();
                     return this.uploadImageToStorage('thumbnails/' + userId + '.jpeg', image.dataUrl)
                         .then(downloadUrl => {
-                            const callable = this.functions.httpsCallable('setProfilePhoto');
-                            callable({
+                            httpsCallable(this.functions, 'setProfilePhoto').call({
                                 downloadUrl
                             }).pipe(
-                                trace('setProfilePhoto'),
+                                trace(this.performance, 'setProfilePhoto'),
                                 catchError((err) => {
                                     this.logger.error({message: 'setProfilePhoto', error: err});
                                     return err;
@@ -81,13 +81,13 @@ export class ImageService {
     }
 
     uploadImageToStorage(url: string, dataUrl: string): Promise<string> {
-        const ref = this.storage.ref(url);
+        const imageRef = ref(this.storage, url);
 
         return this.compressImage(dataUrl)
-            .then(compressedImage => ref.put(compressedImage, {
+            .then(compressedImage => uploadBytes(imageRef, compressedImage, {
                     cacheControl: 'public,max-age=604800'
-                })
-                .then((result) => ref.getDownloadURL().toPromise()));
+                }
+            ).then((result) => getDownloadURL(result.ref)));
     }
 
     compressImage(dataUrl: string): Promise<Blob> {

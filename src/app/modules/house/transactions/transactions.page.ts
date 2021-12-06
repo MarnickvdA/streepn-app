@@ -2,7 +2,7 @@ import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {House, Transaction, transactionConverter, UserAccount} from '@core/models';
 import {ModalController} from '@ionic/angular';
-import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/compat/firestore';
+import {collection, endBefore, Firestore, getDocs, limit, orderBy, query, QueryDocumentSnapshot, startAfter} from '@angular/fire/firestore';
 import {Observable, Subscription} from 'rxjs';
 import {AuthService, EventsService, HouseService, TransactionService} from '@core/services';
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
@@ -31,7 +31,7 @@ export class TransactionsPage implements OnInit, OnDestroy {
                 private houseService: HouseService,
                 private authService: AuthService,
                 private transactionService: TransactionService,
-                private fs: AngularFirestore,
+                private firestore: Firestore,
                 private modalController: ModalController,
                 private events: EventsService,
                 private zone: NgZone) {
@@ -97,23 +97,18 @@ export class TransactionsPage implements OnInit, OnDestroy {
             return;
         }
 
-        let ref = this.fs.collection('houses')
-            .doc(houseId)
-            .collection('transactions')
-            .ref
-            .withConverter(transactionConverter)
-            .orderBy('createdAt', 'desc')
-            .limit(this.limit);
+        let transactionsRef = collection(this.firestore, `houses/${houseId}/transactions`).withConverter(transactionConverter);
+        let queryConstraints = [orderBy('createdAt', 'desc'), limit(this.limit)];
 
         if (this.lastSnapshot) {
-            ref = ref.startAfter(this.lastSnapshot);
+            queryConstraints.push(startAfter(this.lastSnapshot));
         }
 
         if (this.house.settledAt) {
-            ref = ref.endBefore(this.house.settledAt);
+            queryConstraints.push(endBefore(this.house.settledAt));
         }
 
-        return ref.get()
+        getDocs(query(transactionsRef, ...queryConstraints))
             .then((result) => {
                 this.zone.run(_ => {
                     if (result.docs.length < this.limit) {

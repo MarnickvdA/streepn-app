@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {format} from 'date-fns';
-import {Timestamp} from '@firebase/firestore-types';
+import {Timestamp} from '@angular/fire/firestore';
 
 @Pipe({
     name: 'date'

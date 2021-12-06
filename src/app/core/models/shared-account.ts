@@ -1,8 +1,7 @@
 import {v4 as uuid} from 'uuid';
 import {Account, accountConverter, AccountType} from '@core/models/account';
 import {Balance} from '@core/models/balance';
-import {Timestamp} from '@firebase/firestore-types';
-import firebase from 'firebase/compat/app';
+import { Timestamp } from '@angular/fire/firestore';
 
 export class SharedAccount extends Account {
 
@@ -12,7 +11,7 @@ export class SharedAccount extends Account {
     }
 
     static new(accountName: string) {
-        return new SharedAccount(uuid(), firebase.firestore.Timestamp.now(), accountName, Balance.new());
+        return new SharedAccount(uuid(), Timestamp.now(), accountName, Balance.new());
     }
 
     deepCopy(): SharedAccount {

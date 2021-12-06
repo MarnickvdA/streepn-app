@@ -2,11 +2,14 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {SharedAccountItemComponent} from './shared-account-item.component';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
 import {SharedAccount} from '@core/models';
 import {SharedModule} from '@shared/shared.module';
 import {TranslationModule} from '../../../translation.module';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
+import {Auth} from '@angular/fire/auth';
+import {Functions} from '@angular/fire/functions';
 
 describe('SharedAccountItemComponent', () => {
     let component: SharedAccountItemComponent;
@@ -16,7 +19,8 @@ describe('SharedAccountItemComponent', () => {
         TestBed.configureTestingModule({
             declarations: [SharedAccountItemComponent],
             imports: [IonicModule.forRoot(), TranslationModule.forRoot(), SharedModule.forRoot(),
-                AngularFireModule.initializeApp(environment.firebaseConfig),],
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
+            providers: [Firestore, Auth, Functions,]
         }).compileComponents();
 
         fixture = TestBed.createComponent(SharedAccountItemComponent);

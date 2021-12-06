@@ -1,15 +1,14 @@
 import {Injectable} from '@angular/core';
 import {House, Product, productConverter} from '../../models';
-import firebase from 'firebase/compat/app';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {AuthService} from '@core/services';
+import {deleteField, doc, Firestore, serverTimestamp, setDoc} from '@angular/fire/firestore';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ProductService {
 
-    constructor(private fs: AngularFirestore,
+    constructor(private firestore: Firestore,
                 private authService: AuthService) {
     }
 
@@ -20,7 +19,7 @@ export class ProductService {
 
         const products = house.products.map(p => productConverter.toFirestore(p));
 
-        return this.fs.collection('houses').doc(house.id).set({
+        return setDoc(doc(this.firestore, `houses/${house.id}`), {
             products,
             productData: {
                 [`${product.id}`]: {
@@ -30,7 +29,9 @@ export class ProductService {
                     totalOut: product.totalOut,
                 },
             },
-        }, {merge: true});
+        }, {
+            merge: true
+        });
     }
 
     editProduct(house: House, product: Product): Promise<void> {
@@ -53,9 +54,11 @@ export class ProductService {
 
         const products = house.products.map(p => productConverter.toFirestore(p));
 
-        return this.fs.collection('houses').doc(house.id).set({
+        return setDoc(doc(this.firestore, `houses/${house.id}`), {
             products,
-        }, {merge: true});
+        }, {
+            merge: true
+        });
     }
 
     removeProduct(house: House, product: Product) {
@@ -75,11 +78,13 @@ export class ProductService {
         house.products = house.products.filter(obj => obj.id !== product.id);
         const products = house.products.map(p => productConverter.toFirestore(p));
 
-        return this.fs.collection('houses').doc(house.id).set({
+        return setDoc(doc(this.firestore, `houses/${house.id}`), {
             products,
             productData: {
-                [`${product.id}`]: firebase.firestore.FieldValue.delete()
+                [`${product.id}`]: deleteField
             },
-        }, {merge: true});
+        }, {
+            merge: true
+        });
     }
 }

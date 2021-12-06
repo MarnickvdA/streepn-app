@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {House, Stock, stockConverter} from '@core/models';
-import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/compat/firestore';
+import {collection, endBefore, Firestore, getDocs, limit, orderBy, query, QueryDocumentSnapshot, startAfter} from '@angular/fire/firestore';
 import {Observable, Subscription} from 'rxjs';
 import {ModalController} from '@ionic/angular';
 import {EventsService, HouseService} from '@core/services';
@@ -27,7 +27,7 @@ export class StockLogPage implements OnInit, OnDestroy {
     constructor(private modalController: ModalController,
                 private houseService: HouseService,
                 private events: EventsService,
-                private fs: AngularFirestore) {
+                private firestore: Firestore) {
         this.refreshSub = () => {
             this.reset();
         };
@@ -104,23 +104,20 @@ export class StockLogPage implements OnInit, OnDestroy {
             return;
         }
 
-        let ref = this.fs.collection('houses')
-            .doc(houseId)
-            .collection('stock')
-            .ref
-            .withConverter(stockConverter)
-            .orderBy('createdAt', 'desc')
-            .limit(this.limit);
+        let stocksRef = collection(this.firestore, `houses/${houseId}/stock`).withConverter(stockConverter);
+        let queryConstraints = [orderBy('createdAt', 'desc'), limit(this.limit)];
 
         if (this.lastSnapshot) {
-            ref = ref.startAfter(this.lastSnapshot);
+            queryConstraints.push(startAfter(this.lastSnapshot));
         }
 
         if (this.house.settledAt) {
-            ref = ref.endBefore(this.house.settledAt);
+            queryConstraints.push(endBefore(this.house.settledAt));
         }
 
-        return ref.get()
+        let q = query(stocksRef, ...queryConstraints);
+
+        return getDocs(q)
             .then((result) => {
                 if (result.docs.length < this.limit) {
                     this.doneLoading = true;

@@ -3,12 +3,13 @@ import {IonicModule} from '@ionic/angular';
 
 import {ProductDetailPage} from './product-detail.page';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslationModule} from '../../../../translation.module';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
+import {Auth} from '@angular/fire/auth';
+import {Functions} from '@angular/fire/functions';
 
 describe('ProductDetailPage', () => {
     let component: ProductDetailPage;
@@ -18,8 +19,8 @@ describe('ProductDetailPage', () => {
         TestBed.configureTestingModule({
             declarations: [ProductDetailPage],
             imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(), RouterTestingModule,
-                AngularFireModule.initializeApp(environment.firebaseConfig),],
-            providers: [AngularFirestore, AngularFireFunctions]
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
+            providers: [Firestore, Auth, Functions,]
         }).compileComponents();
 
         fixture = TestBed.createComponent(ProductDetailPage);

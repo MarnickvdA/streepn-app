@@ -1,7 +1,6 @@
 import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, LoadingController, ModalController, NavController} from '@ionic/angular';
 import {Observable, Subscription} from 'rxjs';
-import firebase from 'firebase/compat/app';
 import {House, HouseInvite, UserAccount} from '@core/models';
 import {AuthService, EventsService, HouseService, LoggerService, StorageService} from '@core/services';
 import {TranslateService} from '@ngx-translate/core';
@@ -12,7 +11,7 @@ import {NewHouseComponent} from '@modules/dashboard/new-house/new-house.componen
 import {InfoModalComponent} from '@shared/components/info-modal/info-modal.component';
 import {dashboardPageGuide} from '@shared/components/info-modal/info-guides';
 import {AlertService, ApiErrorMessage} from '@core/services/alert.service';
-import User = firebase.User;
+import {User} from '@angular/fire/auth';
 
 @Component({
     selector: 'app-dashboard',
@@ -29,7 +28,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     private houses$: Observable<House[]>;
     private housesSub: Subscription;
     private userSub: Subscription;
-    private readonly logger = LoggerService.getLogger(DashboardPage.name);
     private user: User;
     private loadingHouseJoin?: HTMLIonLoadingElement;
     private onboarding: boolean;

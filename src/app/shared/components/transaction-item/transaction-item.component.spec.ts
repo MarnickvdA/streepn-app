@@ -4,14 +4,14 @@ import {IonicModule} from '@ionic/angular';
 import {TransactionItemComponent} from './transaction-item.component';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
 import {RouterTestingModule} from '@angular/router/testing';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
 import {SharedModule} from '@shared/shared.module';
 import {Transaction} from '@core/models';
 import {TranslationModule} from '../../../translation.module';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
-import firebase from 'firebase/compat/app';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore, Timestamp} from '@angular/fire/firestore';
+import {Auth} from '@angular/fire/auth';
+import {Functions} from '@angular/fire/functions';
 
 describe('TransactionItemComponent', () => {
     let component: TransactionItemComponent;
@@ -21,17 +21,13 @@ describe('TransactionItemComponent', () => {
         TestBed.configureTestingModule({
             declarations: [TransactionItemComponent],
             imports: [IonicModule.forRoot(), RouterTestingModule, SharedModule.forRoot(), TranslationModule.forRoot(),
-                AngularFireModule.initializeApp(environment.firebaseConfig),],
-            providers: [
-                navControllerMock,
-                AngularFirestore,
-                AngularFireAuth
-            ]
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
+            providers: [Firestore, Auth, Functions, navControllerMock]
         }).compileComponents();
 
         fixture = TestBed.createComponent(TransactionItemComponent);
         component = fixture.componentInstance;
-        component.transaction = new Transaction('', firebase.firestore.Timestamp.now(), '', [], false);
+        component.transaction = new Transaction('', Timestamp.now(), '', [], false);
         fixture.detectChanges();
     }));
 

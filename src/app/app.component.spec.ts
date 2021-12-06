@@ -7,9 +7,9 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
 import {TranslationModule} from './translation.module';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Auth} from '@angular/fire/auth';
 
 describe('AppComponent', () => {
 
@@ -26,13 +26,13 @@ describe('AppComponent', () => {
                 RouterTestingModule,
                 TranslationModule.forRoot(),
                 SharedModule.forRoot(),
-                AngularFireModule.initializeApp(environment.firebaseConfig)
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig))
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 {provide: Platform, useValue: platformSpy},
                 navControllerMock,
-                AngularFireAuth
+                Auth
             ],
         }).compileComponents();
     }));

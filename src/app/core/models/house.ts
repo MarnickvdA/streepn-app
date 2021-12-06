@@ -1,13 +1,10 @@
-import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {Product, productConverter} from './product';
 import {v4 as uuid} from 'uuid';
 import {Account} from '@core/models/account';
 import {UserAccount, userAccountConverter, UserRole} from '@core/models/user-account';
 import {SharedAccount, sharedAccountConverter} from '@core/models/shared-account';
 import {balanceConverter} from '@core/models/balance';
-import {DocumentData, QueryDocumentSnapshot, SnapshotOptions} from '@angular/fire/compat/firestore';
-
-import firebase from 'firebase/compat/app';
+import { Timestamp, FirestoreDataConverter } from '@angular/fire/firestore';
 
 /**
  * List of supported currencies currently available in the application.
@@ -151,7 +148,7 @@ export class House {
         const hid = uuid();
         const account = UserAccount.new(uid, user.uid, user.displayName, [UserRole.admin], user.photoURL);
 
-        return new House(hid, firebase.firestore.Timestamp.now(), name, currency, undefined, undefined, [user.uid], [account],
+        return new House(hid, Timestamp.now(), name, currency, undefined, undefined, [user.uid], [account],
             [], [], 0, 0, city);
     }
 
@@ -178,7 +175,7 @@ export class House {
         return accounts;
     }
 
-    getUserAccountById(accountId: string): UserAccount | undefined{
+    getUserAccountById(accountId: string): UserAccount | undefined {
         return this.houseDictionary.accounts[accountId];
     }
 
@@ -315,7 +312,7 @@ export const houseConverter: FirestoreDataConverter<House> = {
             productData,
         };
     },
-    fromFirestore: (snapshot: QueryDocumentSnapshot<DocumentData>, options: SnapshotOptions): House => {
+    fromFirestore: (snapshot, options): House => {
         const data = snapshot.data(options);
 
         return newHouse(snapshot.id, data);

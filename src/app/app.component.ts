@@ -10,8 +10,6 @@ import {SplashScreen} from '@capacitor/splash-screen';
 import {StatusBar, Style} from '@capacitor/status-bar';
 import {Storage} from '@capacitor/storage';
 import {Capacitor} from '@capacitor/core';
-import {environment} from '@env/environment';
-import {AngularFireStorage} from '@angular/fire/compat/storage';
 
 @Component({
     selector: 'app-root',
@@ -26,17 +24,13 @@ export class AppComponent {
         private translate: TranslateService,
         private zone: NgZone,
         private storage: StorageService,
-        private afStorage: AngularFireStorage,
+        private afStorage: Storage,
         private events: EventsService,
         private pushService: PushService,
         private router: Router,
         public menuCtrl: MenuController,
     ) {
         Storage.migrate();
-
-        if (!environment.production) {
-            this.afStorage.storage.useEmulator('localhost', 9199);
-        }
 
         this.initializeApp();
 

@@ -2,13 +2,15 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {LoginPage} from './login.page';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
 import {RouterTestingModule} from '@angular/router/testing';
 import {navControllerMock} from '@core/mocks/nav-controller.mock';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {TranslationModule} from '../../translation.module';
 import {SharedModule} from '@shared/shared.module';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
+import {Auth} from '@angular/fire/auth';
+import {Functions} from '@angular/fire/functions';
 
 describe('LoginPage', () => {
     let component: LoginPage;
@@ -20,13 +22,11 @@ describe('LoginPage', () => {
             imports: [
                 IonicModule.forRoot(),
                 TranslationModule.forRoot(),
-                AngularFireModule.initializeApp(environment.firebaseConfig),
                 SharedModule.forRoot(),
                 RouterTestingModule,
-            ],
-            providers: [
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
+            providers: [Firestore, Auth, Functions,
                 navControllerMock,
-                AngularFireAuth
             ]
         }).compileComponents();
 

@@ -29,8 +29,6 @@ export class SentryErrorHandler implements ErrorHandler {
     entryComponents: [],
     imports: [
         BrowserModule,
-        CoreModule,
-        SharedModule.forRoot(),
         IonicModule.forRoot({
             backButtonIcon: 'arrow-back-outline',
             backButtonText: ''
@@ -38,6 +36,8 @@ export class SentryErrorHandler implements ErrorHandler {
         TranslationModule.forRoot(),
         AppRoutingModule,
         FontAwesomeModule,
+        CoreModule,
+        SharedModule.forRoot(),
     ],
     exports: [TranslateModule],
     providers: [

@@ -1,23 +1,27 @@
 import {TestBed} from '@angular/core/testing';
 
 import {HouseService} from '@core/services';
-import {AngularFireModule} from '@angular/fire/compat/';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
-import {AngularFirePerformance} from '@angular/fire/compat/performance';
 import {IonicModule} from '@ionic/angular';
 import {TranslationModule} from '../../../translation.module';
 import {HttpClientModule} from '@angular/common/http';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
+import {Functions} from '@angular/fire/functions';
+import {Performance} from '@angular/fire/performance';
 
 describe('HouseService', () => {
     let service: HouseService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [IonicModule.forRoot(), TranslationModule.forRoot(), HttpClientModule,
-                AngularFireModule.initializeApp(environment.firebaseConfig),],
-            providers: [AngularFirestore, AngularFireFunctions, AngularFirePerformance]
+            imports: [
+                IonicModule.forRoot(),
+                TranslationModule.forRoot(),
+                HttpClientModule,
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+            ],
+            providers: [Firestore, Functions, Performance]
         });
         service = TestBed.inject(HouseService);
     });

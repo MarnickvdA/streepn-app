@@ -1,5 +1,4 @@
-import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
-import {DocumentData, QueryDocumentSnapshot, SnapshotOptions} from '@angular/fire/compat/firestore';
+import { Timestamp, FirestoreDataConverter } from '@angular/fire/firestore';
 
 export interface TransactionItem {
     productId: string; // Id of bought product
@@ -61,7 +60,7 @@ export const transactionConverter: FirestoreDataConverter<Transaction> = {
         items: transaction.items,
         removed: transaction.removed,
     }),
-    fromFirestore: (snapshot: QueryDocumentSnapshot<DocumentData>, options: SnapshotOptions): Transaction => {
+    fromFirestore: (snapshot, options): Transaction => {
         const data = snapshot.data(options);
 
         return newTransaction(snapshot.id, data);

@@ -2,13 +2,13 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 
 import {DealsPage} from './deals.page';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {TranslationModule} from '../../../translation.module';
 import {HttpClientModule} from '@angular/common/http';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
+import {Functions} from '@angular/fire/functions';
 
 describe('DealsPage', () => {
     let component: DealsPage;
@@ -18,9 +18,9 @@ describe('DealsPage', () => {
         TestBed.configureTestingModule({
             declarations: [DealsPage],
             imports: [IonicModule.forRoot(), TranslationModule.forRoot(), HttpClientModule,
-                AngularFireModule.initializeApp(environment.firebaseConfig)],
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [AngularFirestore, AngularFireFunctions]
+            providers: [Firestore, Functions]
         }).compileComponents();
 
         fixture = TestBed.createComponent(DealsPage);

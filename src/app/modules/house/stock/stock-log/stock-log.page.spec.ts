@@ -3,13 +3,13 @@ import {IonicModule} from '@ionic/angular';
 
 import {StockLogPage} from './stock-log.page';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslationModule} from '../../../../translation.module';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
+import {Auth} from '@angular/fire/auth';
+import {Functions} from '@angular/fire/functions';
 
 describe('StockLogPage', () => {
     let component: StockLogPage;
@@ -19,8 +19,8 @@ describe('StockLogPage', () => {
         TestBed.configureTestingModule({
             declarations: [StockLogPage],
             imports: [IonicModule.forRoot(), SharedModule.forRoot(), TranslationModule.forRoot(), RouterTestingModule,
-                AngularFireModule.initializeApp(environment.firebaseConfig),],
-            providers: [AngularFireAuth, AngularFirestore, AngularFireFunctions]
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
+            providers: [Firestore, Auth, Functions,]
         }).compileComponents();
 
         fixture = TestBed.createComponent(StockLogPage);

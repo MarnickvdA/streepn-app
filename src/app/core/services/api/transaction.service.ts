@@ -1,15 +1,14 @@
 import {Injectable} from '@angular/core';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
 import {House, Transaction, transactionConverter} from '../../models';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {takeUntil, tap} from 'rxjs/operators';
 import {TransactionItem} from '@core/models';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {AuthService} from '@core/services/firebase/auth.service';
-import {LoggerService} from '@core/services/logger.service';
 import {AnalyticsService} from '@core/services/firebase/analytics.service';
-import {AngularFirePerformance, trace} from '@angular/fire/compat/performance';
 import {HouseService} from '@core/services';
+import {Functions, httpsCallable} from '@angular/fire/functions';
+import {doc, Firestore, getDoc, onSnapshot} from '@angular/fire/firestore';
+import {Performance, trace} from '@angular/fire/performance';
 
 export interface TransactionSet {
     [accountId: string]: {
@@ -23,8 +22,6 @@ export interface TransactionSet {
     providedIn: 'root'
 })
 export class TransactionService {
-    private readonly logger = LoggerService.getLogger(TransactionService.name);
-
     private curTransactionId: string;
     private transactionSubject: BehaviorSubject<Transaction> = new BehaviorSubject<Transaction>(undefined);
     private transaction$: Observable<Transaction>;
@@ -33,10 +30,10 @@ export class TransactionService {
 
     constructor(private authService: AuthService,
                 private houseService: HouseService,
-                private functions: AngularFireFunctions,
-                private performance: AngularFirePerformance,
                 private analyticsService: AnalyticsService,
-                private fs: AngularFirestore) {
+                private functions: Functions,
+                private performance: Performance,
+                private firestore: Firestore) {
     }
 
     unsubscribe() {
@@ -69,12 +66,11 @@ export class TransactionService {
 
         const transaction = new Transaction(undefined, undefined, currentUserAccount.id, transactionItems, false);
 
-        const callable = this.functions.httpsCallable('addTransaction');
-        return callable({
+        return httpsCallable(this.functions, 'addTransaction').call({
             houseId: house.id,
             transaction
         }).pipe(
-            trace('addTransaction'),
+            trace(this.performance, 'addTransaction'),
             tap(() => {
                 this.analyticsService.logTransaction(this.authService.currentUser.uid, house.id);
             })
@@ -82,21 +78,19 @@ export class TransactionService {
     }
 
     editTransaction(houseId: string, updatedTransaction: Transaction): Observable<void> {
-        const callable = this.functions.httpsCallable('editTransaction');
-        return callable({
+        return httpsCallable(this.functions, 'editTransaction').call({
             houseId,
             updatedTransaction
         }).pipe(
-            trace('editTransaction'),
+            trace(this.performance, 'editTransaction'),
         );
     }
 
     getTransaction(houseId: string, transactionId: string): Promise<Transaction> {
-        return this.fs.collection('houses').doc(houseId).collection('transactions').doc(transactionId)
-            .ref
-            .withConverter(transactionConverter)
-            .get()
-            .then((house) => house.data());
+        const transactionRef = doc(this.firestore, `houses/${houseId}/transactions/${transactionId}`)
+            .withConverter(transactionConverter);
+
+        return getDoc(transactionRef).then((house) => house.data());
     }
 
     observeTransaction(houseId: string, transactionId: string) {
@@ -119,12 +113,12 @@ export class TransactionService {
             this.transactionSub();
         }
 
-        this.transactionSub = this.fs.collection('houses').doc(houseId).collection('transactions').doc(transactionId)
-            .ref
-            .withConverter(transactionConverter)
-            .onSnapshot((snapshot) => {
-                this.transactionSubject.next(snapshot.data());
-            });
+        const transactionRef = doc(this.firestore, `houses/${houseId}/transactions/${transactionId}`)
+            .withConverter(transactionConverter);
+
+        this.transactionSub = onSnapshot(transactionRef, (snapshot) => {
+            this.transactionSubject.next(snapshot.data());
+        });
     }
 
 

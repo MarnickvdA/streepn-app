@@ -7,7 +7,7 @@ import {ModalController} from '@ionic/angular';
 import {SettleHouseComponent} from '@modules/house/overview/settlements/settle-house/settle-house.component';
 import {SettlementService} from '@core/services/api/settlement.service';
 import {HouseSettlement, SharedAccountSettlement, UserAccountSettlement} from '@core/models/settlement';
-import {AngularFirestore, QueryDocumentSnapshot} from '@angular/fire/compat/firestore';
+import {collection, Firestore, getDocs, limit, orderBy, query, QueryDocumentSnapshot, startAfter} from '@angular/fire/firestore';
 
 @Component({
     selector: 'app-settlements',
@@ -35,7 +35,7 @@ export class SettlementsPage implements OnInit, OnDestroy {
                 private storage: StorageService,
                 private modalController: ModalController,
                 private zone: NgZone,
-                private fs: AngularFirestore,
+                private firestore: Firestore,
                 private events: EventsService) {
         this.refreshSub = () => {
             this.zone.run(_ => this.reset());
@@ -101,19 +101,14 @@ export class SettlementsPage implements OnInit, OnDestroy {
             return;
         }
 
-        let ref = this.fs.collection('houses')
-            .doc(houseId)
-            .collection('settlements')
-            .ref
-            .withConverter(settlementConverter)
-            .orderBy('createdAt', 'desc')
-            .limit(this.limit);
+        let settlementsRef = collection(this.firestore, `houses/${houseId}/settlements`).withConverter(settlementConverter);
+        let queryConstraints = [orderBy('createdAt', 'desc'), limit(this.limit)];
 
         if (this.lastSnapshot) {
-            ref = ref.startAfter(this.lastSnapshot);
+            queryConstraints.push(startAfter(this.lastSnapshot));
         }
 
-        return ref.get()
+        return getDocs(query(settlementsRef, ...queryConstraints))
             .then((result) => {
                 this.zone.run(_ => {
                     if (result.docs.length < this.limit) {

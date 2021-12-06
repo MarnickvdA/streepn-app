@@ -1,6 +1,5 @@
-import {FirestoreDataConverter, Timestamp} from '@firebase/firestore-types';
 import {Balance} from '@core/models/balance';
-import {DocumentData, QueryDocumentSnapshot, SnapshotOptions} from '@angular/fire/compat/firestore';
+import {Timestamp, FirestoreDataConverter} from '@angular/fire/firestore';
 
 export interface HouseSettleItem {
     settle: number;
@@ -137,7 +136,7 @@ export class UserAccountSettlement extends Settlement {
 
 export const settlementConverter: FirestoreDataConverter<Settlement> = {
     toFirestore: (settlement: Settlement) => ({}),
-    fromFirestore: (snapshot: QueryDocumentSnapshot<DocumentData>, options: SnapshotOptions): Settlement => {
+    fromFirestore: (snapshot, options): Settlement => {
         const data = snapshot.data(options);
 
         switch (data.type) {

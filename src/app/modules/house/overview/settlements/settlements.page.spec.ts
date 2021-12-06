@@ -3,12 +3,14 @@ import {IonicModule} from '@ionic/angular';
 
 import {SettlementsPage} from './settlements.page';
 import {RouterTestingModule} from '@angular/router/testing';
-import {AngularFireModule} from '@angular/fire/compat';
 import {environment} from '@env/environment.test';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {TranslationModule} from '../../../../translation.module';
 import {HttpClientModule} from '@angular/common/http';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {Firestore} from '@angular/fire/firestore';
+import {Auth} from '@angular/fire/auth';
+import {Functions} from '@angular/fire/functions';
 
 describe('SettlementsPage', () => {
     let component: SettlementsPage;
@@ -18,9 +20,9 @@ describe('SettlementsPage', () => {
         TestBed.configureTestingModule({
             declarations: [SettlementsPage],
             imports: [IonicModule.forRoot(), RouterTestingModule, TranslationModule.forRoot(), HttpClientModule,
-                AngularFireModule.initializeApp(environment.firebaseConfig)],
+                provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),],
+            providers: [Firestore, Auth, Functions],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [AngularFirestore]
         }).compileComponents();
 
         fixture = TestBed.createComponent(SettlementsPage);
