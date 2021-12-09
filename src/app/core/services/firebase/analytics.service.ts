@@ -23,7 +23,7 @@ export class AnalyticsService {
     }
 
     setCurrentUser(uid: string) {
-        if (AnalyticsService.isAnalyticsAvailable()) {
+        if (AnalyticsService.isAnalyticsAvailable() && uid) {
             FirebaseAnalytics.setUserId({
                 userId: uid,
             });
