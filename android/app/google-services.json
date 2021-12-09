@@ -7,6 +7,46 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:378314194804:android:45a69f909a3773c31d7621",
+        "android_client_info": {
+          "package_name": "nl.streepn.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "378314194804-7vf0qt5olu01c9s356s4dbqmmbvn4vq5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkMQBRXKIXSJKFth4BammH-OxYbwmxb6g"
+        },
+        {
+          "current_key": "AIzaSyB4N4SeMfad54L_8iW3FDlomQNUbbAQn4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "378314194804-7vf0qt5olu01c9s356s4dbqmmbvn4vq5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "378314194804-27qpv1l1n76dio61ts03d2rqmtj4i1ri.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "nl.streepn.app",
+                "app_store_id": "1599493986"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:378314194804:android:dbafe1c23cfb7e9a1d7621",
         "android_client_info": {
           "package_name": "nl.strype.streepn"
@@ -30,11 +70,22 @@
           }
         },
         {
+          "client_id": "378314194804-e3op85pu3ei7piesl0ookagtaq5fpbuk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nl.strype.streepn",
+            "certificate_hash": "79e654699ea8e6d277d97f92907c2d520c8d8a54"
+          }
+        },
+        {
           "client_id": "378314194804-7vf0qt5olu01c9s356s4dbqmmbvn4vq5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
+        {
+          "current_key": "AIzaSyBkMQBRXKIXSJKFth4BammH-OxYbwmxb6g"
+        },
         {
           "current_key": "AIzaSyB4N4SeMfad54L_8iW3FDlomQNUbbAQn4I"
         }
@@ -47,10 +98,11 @@
               "client_type": 3
             },
             {
-              "client_id": "378314194804-b0rvrg7ae1crp6pu6ec15us3d8vhroqd.apps.googleusercontent.com",
+              "client_id": "378314194804-27qpv1l1n76dio61ts03d2rqmtj4i1ri.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "nl.strype.streepn"
+                "bundle_id": "nl.streepn.app",
+                "app_store_id": "1599493986"
               }
             }
           ]

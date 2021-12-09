@@ -1,12 +1,9 @@
 apply plugin: 'com.android.application'
 
-// On top of your file import a JSON parser
-import groovy.json.JsonSlurper
-
 ext.getAppVersion = { ->
     //  Read and parse package.json file from project root
     def inputFile = new File("$rootDir/../package.json")
-    def packageJson = new JsonSlurper().parseText(inputFile.text)
+    def packageJson = new groovy.json.JsonSlurper().parseText(inputFile.text)
 
     // Return the version, you can get any value this way
     return packageJson["version"]
@@ -27,7 +24,7 @@ ext.getGitVersionCode = { ->
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "nl.strype.streepn"
+        applicationId "nl.streepn.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode getGitVersionCode()

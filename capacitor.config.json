@@ -1,5 +1,5 @@
 {
-  "appId": "nl.strype.streepn",
+  "appId": "nl.streepn.app",
   "appName": "Streepn",
   "bundledWebRuntime": false,
   "npmClient": "npm",
