@@ -1,4 +1,4 @@
-package nl.strype.streepn;
+package nl.streepn.app;
 
 import android.os.Bundle;
 
