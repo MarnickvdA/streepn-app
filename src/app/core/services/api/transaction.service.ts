@@ -76,7 +76,7 @@ export class TransactionService {
         }).pipe(
             trace('addTransaction'),
             tap(() => {
-                this.analyticsService.logTransaction(this.authService.currentUser.uid, house.id);
+                this.analyticsService.logTransaction(house.id);
             })
         );
     }

@@ -56,18 +56,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Om een profielfoto te maken</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Always allow Geolocation?</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Allow Geolocation?</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>To Record Audio With Video</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Store camera photos to camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Om foto's te kiezen uit de galerij</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>This identifier will be used to deliver personalized ads to you.</string>
+	<string>Om een profielfoto in te stellen met een foto uit je gallerij</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

@@ -129,7 +129,7 @@ export class HouseService {
         return this.fs.collection('houses')
             .add(houseConverter.toFirestore(house))
             .then(docRef => {
-                this.analyticsService.logCreateHouse(this.authService.currentUser.uid, docRef.id);
+                this.analyticsService.logCreateHouse(docRef.id);
 
                 return docRef.id;
             })
@@ -157,7 +157,7 @@ export class HouseService {
                 }))
             .subscribe((account: UserAccount) => {
                 if (account) {
-                    this.analyticsService.logJoinHouse(user.uid, houseInvite.houseId);
+                    this.analyticsService.logJoinHouse(houseInvite.houseId);
                     this.pushService.subscribeTopic(PushTopic.houseAll, {houseId: houseInvite.houseId, accountId: account.id});
                     this.eventsService.publish('house:joined');
                 }
@@ -201,7 +201,7 @@ export class HouseService {
                 }))
             .subscribe((account) => {
                 if (account) {
-                    this.analyticsService.logLeaveHouse(userId, houseId);
+                    this.analyticsService.logLeaveHouse(houseId);
                     this.eventsService.publish('house:left', true);
                     this.pushService.unsubscribeTopic(PushTopic.houseAll, {houseId, accountId: account.id});
                 }

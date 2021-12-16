@@ -62,7 +62,7 @@ export class ImageService {
                                     return err;
                                 }),
                                 tap(() => {
-                                    this.analyticsService.logProfilePhotoChange(userId);
+                                    this.analyticsService.logProfilePhotoChange();
                                 })
                             ).subscribe();
                         })

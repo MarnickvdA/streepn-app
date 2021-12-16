@@ -125,7 +125,7 @@ export class AddStockComponent implements OnInit, OnDestroy {
             )
             .subscribe((t) => {
                 if (t) {
-                    this.analytics.logAddStock(this.authService.currentUser.uid, this.house.id, t.id);
+                    this.analytics.logAddStock(this.house.id, t.id);
                 }
 
                 loading.dismiss();

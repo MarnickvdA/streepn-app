@@ -29,9 +29,6 @@ export class AuthService {
                 private storage: StorageService,
                 private analytics: AnalyticsService,
                 private functions: AngularFireFunctions) {
-        this.eventsService.subscribe('auth:login', (userId) => {
-            this.analytics.setCurrentUser(userId);
-        });
 
         this.user = this.auth.authState;
         this.user.subscribe(user => {
@@ -42,7 +39,6 @@ export class AuthService {
                 localStorage.setItem('userId', user?.uid);
             }
 
-            this.analytics.setCurrentUser(user?.uid);
             LoggerService.setUserId(user?.uid);
 
             user?.getIdToken(true)
@@ -66,7 +62,7 @@ export class AuthService {
     register(displayName: string, email: string, password: string) {
         return this.auth.createUserWithEmailAndPassword(email, password)
             .then(data => {
-                this.analytics.logUserRegister(data.user.uid);
+                this.analytics.logUserRegister();
                 this.setUserProfile(data.user, displayName);
 
                 return data.user.uid;
@@ -89,7 +85,7 @@ export class AuthService {
     login(email: string, password: string) {
         return this.auth.signInWithEmailAndPassword(email, password)
             .then(data => {
-                this.analytics.logUserLogin(data.user.uid);
+                this.analytics.logUserLogin();
                 this.eventsService.publish('auth:login', {userId: data.user.uid});
             })
             .catch(error => {
