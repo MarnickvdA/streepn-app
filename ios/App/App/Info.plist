@@ -56,6 +56,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Om een profielfoto te maken</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Om een profielfoto op te slaan in je gallerij</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Om een profielfoto in te stellen met een foto uit je gallerij</string>
 	<key>UIBackgroundModes</key>
