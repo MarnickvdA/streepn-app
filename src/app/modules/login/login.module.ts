@@ -9,6 +9,7 @@ import {LoginPageRoutingModule} from './login-routing.module';
 import {LoginPage} from './login.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {IconsModule} from '@shared/icons.module';
+import {PasswordResetPage} from '@modules/login/password-reset/password-reset.page';
 
 @NgModule({
     imports: [
@@ -19,7 +20,10 @@ import {IconsModule} from '@shared/icons.module';
         TranslateModule,
         IconsModule,
     ],
-    declarations: [LoginPage]
+    declarations: [
+        LoginPage,
+        PasswordResetPage
+    ]
 })
 export class LoginPageModule {
 }

@@ -54,6 +54,11 @@
             </ion-button>
         </form>
 
+        <div class="small-text-container">
+            <span routerLink="reset-password">{{'login.reset-password-button' | translate}}</span>
+        </div>
+
+
         <div *ngIf="isIos" class="horizontal-or">
             <hr>
             <span>{{'login.or' | translate}}</span>
@@ -71,7 +76,7 @@
         </ion-button>
     </div>
 
-    <div class="register-container">
+    <div class="small-text-container">
         <span>{{'login.registerQuestion' | translate}}</span>
         <ion-button fill="none" routerLink="/register">
             <ion-label>{{'login.registerNow' | translate}}</ion-label>

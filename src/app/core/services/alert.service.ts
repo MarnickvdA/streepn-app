@@ -23,12 +23,22 @@ export class AlertService {
                 private navController: NavController) {
     }
 
-    promptAppError(error: AppErrorMessage) {
+    promptAppError(error: AppErrorMessage, data?: Record<string, any>) {
         switch (error) {
             case AppErrorMessage.cameraAccessDenied:
+            case AppErrorMessage.expiredPasswordResetCode:
+            case AppErrorMessage.invalidPasswordResetCode:
+            case AppErrorMessage.userDisabled:
+            case AppErrorMessage.userNotFound:
                 this.promptError(
                     this.translate.instant('errors.error'),
                     this.translate.instant(error));
+                break;
+            case AppErrorMessage.unknown:
+                this.promptError(
+                    this.translate.instant('errors.error'),
+                    this.translate.instant(error, { errorCode: data.errorCode })
+                );
                 break;
         }
     }
@@ -128,36 +138,41 @@ export class AlertService {
  */
 
 export enum AppErrorMessage {
-    cameraAccessDenied = 'errors.camera_access_denied',
-    houseCreationFailed = 'errors.house_creation_failed',
-    legalError = 'errors.legal_error',
-    unknownLogin = 'errors.auth.unknown_login',
-    unknownRegister = 'errors.auth.unknown_register',
+    unknown = 'errors.unknown-error',
+    cameraAccessDenied = 'errors.camera-access-denied',
+    houseCreationFailed = 'errors.house-creation-failed',
+    legalError = 'errors.legal-error',
+    unknownLogin = 'errors.auth.unknown-login',
+    unknownRegister = 'errors.auth.unknown-register',
+    invalidPasswordResetCode = 'errors.auth.invalid-reset-code',
+    expiredPasswordResetCode = 'errors.auth.expired-reset-code',
+    userDisabled = 'errors.auth.user-disabled',
+    userNotFound = 'errors.auth.user-not-found'
 }
 
 export enum ApiErrorMessage {
     // GENERAL
     internal = 'errors.functions.internal',
     unauthenticated = 'errors.functions.unauthenticated',
-    permissionDenied = 'errors.functions.permission_denied',
-    invalidData = 'errors.functions.invalid_data',
+    permissionDenied = 'errors.functions.permission-denied',
+    invalidData = 'errors.functions.invalid-data',
 
     // HOUSES
-    houseNotFound = 'errors.functions.house_not_found',
-    userAccountNotFound = 'errors.functions.user_account_not_found',
-    sharedAccountNotFound = 'errors.functions.shared_account_not_found',
-    productNotFound = 'errors.functions.product_not_found',
-    houseNotMember = 'errors.functions.house_not_member',
-    houseAlreadyMember = 'errors.functions.house_already_member',
-    houseNotAdmin = 'errors.functions.house_not_admin',
-    houseLeaveDenied = 'errors.functions.house_leave_denied',
-    houseCodeInvalid = 'errors.functions.house_code_invalid',
-    houseCodeExpired = 'errors.functions.house_code_expired',
+    houseNotFound = 'errors.functions.house-not-found',
+    userAccountNotFound = 'errors.functions.user-account-not-found',
+    sharedAccountNotFound = 'errors.functions.shared-account-not-found',
+    productNotFound = 'errors.functions.product-not-found',
+    houseNotMember = 'errors.functions.house-not-member',
+    houseAlreadyMember = 'errors.functions.house-already-member',
+    houseNotAdmin = 'errors.functions.house-not-admin',
+    houseLeaveDenied = 'errors.functions.house-leave-denied',
+    houseCodeInvalid = 'errors.functions.house-code-invalid',
+    houseCodeExpired = 'errors.functions.house-code-expired',
 
     // STOCKS
-    stockNotFound = 'errors.functions.stock_not_found',
+    stockNotFound = 'errors.functions.stock-not-found',
 
     // TRANSACTIONS
-    transactionNotFound = 'errors.functions.transaction_not_found',
-    accountAlreadySettled = 'errors.functions.account_already_settled',
+    transactionNotFound = 'errors.functions.transaction-not-found',
+    accountAlreadySettled = 'errors.functions.account-already-settled',
 }

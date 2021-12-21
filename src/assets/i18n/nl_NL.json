@@ -59,33 +59,38 @@
   "errors": {
     "error": "Foutmelding",
     "warning": "Waarschuwing",
+    "unknown-error": "Een onbekende fout is opgetreden (code: {{errorCode}})",
     "house-not-found": "Huis niet gevonden",
     "house-not-retrieved": "Huis kon niet worden opgehaald",
     "house-invite-expired": "Huislink verlopen",
-    "camera_access_denied": "Je hebt ons geen toegang gegeven tot je camera. Pas dit aan in Instellingen.",
-    "house_creation_failed": "Er is een fout opgetreden bij het aanmaken van het huis.",
-    "legal_error": "Het is niet gelukt om je voorkeur op te slaan. Probeer het nogmaals.",
+    "camera-access-denied": "Je hebt ons geen toegang gegeven tot je camera. Pas dit aan in Instellingen.",
+    "house-creation-failed": "Er is een fout opgetreden bij het aanmaken van het huis.",
+    "legal-error": "Het is niet gelukt om je voorkeur op te slaan. Probeer het nogmaals.",
     "auth": {
       "unknown-login": "Het is niet gelukt om je in te loggen. Probeer het nog eens.",
-      "unknown-register": "Het is niet gelukt om je in te registeren. Probeer het nog eens of neem contact op met support."
+      "unknown-register": "Het is niet gelukt om je in te registeren. Probeer het nog eens of neem contact op met support.",
+      "invalid-reset-code": "De gebruikte link is niet geldig.",
+      "expired-reset-code": "De gebruikte link is verlopen. Vraag een nieuwe wachtwoord reset aan.",
+      "user-disabled": "De gebruiker is gedeactiveerd en kan geen gebruik maken van Streepn.",
+      "user-not-found": "De gebruiker is niet gevonden."
     },
     "functions": {
       "default": "Er ging iets mis, probeer het nogmaals (code: {{errorCode}})",
       "unauthenticated": "Je bent niet ingelogd.",
-      "permission_denied": "Je hebt geen toegang voor deze actie.",
-      "house_not_found": "Huis niet gevonden.",
-      "user_account_not_found": "Deelnemer van het huis niet gevonden.",
-      "shared_account_not_found": "Potje niet gevonden.",
-      "product_not_found": "Product niet gevonden.",
-      "stock_not_found": "Voorraaditem niet gevonden.",
-      "transaction_not_found": "Transactie niet gevonden.",
-      "house_not_member": "Je bent geen deelnemer van dit huis.",
-      "house_already_member": "Je bent al deelnemer van dit huis.",
-      "house_not_admin": "Je moet administrator van dit huis zijn om deze actie uit te voeren.",
-      "house_leave_denied": "Je kan op dit moment het huis niet verlaten. Herzie de criteria om het huis te verlaten.",
-      "house_code_invalid": "De huis invite code is ongeldig.",
-      "house_code_expired": "De huis invite is verlopen.",
-      "account_already_settled": "Dit account is al verrekend."
+      "permission-denied": "Je hebt geen toegang voor deze actie.",
+      "house-not-found": "Huis niet gevonden.",
+      "user-account-not-found": "Deelnemer van het huis niet gevonden.",
+      "shared-account-not-found": "Potje niet gevonden.",
+      "product-not-found": "Product niet gevonden.",
+      "stock-not-found": "Voorraaditem niet gevonden.",
+      "transaction-not-found": "Transactie niet gevonden.",
+      "house-not-member": "Je bent geen deelnemer van dit huis.",
+      "house-already-member": "Je bent al deelnemer van dit huis.",
+      "house-not-admin": "Je moet administrator van dit huis zijn om deze actie uit te voeren.",
+      "house-leave-denied": "Je kan op dit moment het huis niet verlaten. Herzie de criteria om het huis te verlaten.",
+      "house-code-invalid": "De huis invite code is ongeldig.",
+      "house-code-expired": "De huis invite is verlopen.",
+      "account-already-settled": "Dit account is al verrekend."
     }
   },
   "login": {
@@ -115,7 +120,27 @@
     "loginWithApple": "Inloggen met Apple",
     "loginWithGoogle": "Inloggen met Google",
     "registerQuestion": "Heb je nog geen account?",
-    "registerNow": "Registreer je nu"
+    "registerNow": "Registreer je nu",
+    "reset-password-button": "Wachtwoord vergeten? Klik hier.",
+    "reset-password": {
+      "title": "Reset wachtwoord",
+      "description": "Te veel gedronken? Een beetje geheugenverlies? Geef hier je e-mailadres door zodat we je een mail kunnen sturen met een linkje om je wachtwoord opnieuw in te stellen!",
+      "reset-description": "Check je mail (dit kan even duren) voor een mailtje van ons! Klik de link in de mail om terug te gaan naar de app.",
+      "request-button": "Wachtwoord reset aanvragen",
+      "submit-button": "Reset wachtwoord",
+      "email": "E-mailadres",
+      "password": "Wachtwoord",
+      "passwordAgain": "Herhaal wachtwoord",
+      "errors": {
+        "email-required": "Vul je e-mailadres in",
+        "password-required": "Vul een wachtwoord in",
+        "invalid-email": "Incorrect e-mailadres",
+        "user-not-found": "Dit e-mailadres is niet bij ons bekend",
+        "different-password": "Wachtwoorden komen niet overeen",
+        "unknown-request": "Het is niet gelukt om een nieuw wachtwoord op te vragen. Probeer het nog eens.",
+        "unknown-code": "Het is niet gelukt om je wachtwoord opnieuw in te stellen. Probeer het nog eens."
+      }
+    }
   },
   "side-menu": {
     "settings": "Instellingen",

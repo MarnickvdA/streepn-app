@@ -59,6 +59,22 @@ export class AppComponent {
 
                     this.storage.set('houseInvite', houseCode);
                 }
+
+                if (slug.startsWith('/auth/action')) {
+                    const queryParams = new URL(data.url).searchParams;
+                    const mode = queryParams.get('mode');
+                    const oobCode = queryParams.get('oobCode');
+
+                    switch (mode) {
+                        case 'resetPassword':
+                            this.storage.set('passwordResetCode', oobCode);
+                            break;
+                        case 'recoverEmail':
+                            break;
+                        case 'verifyEmail':
+                            break;
+                    }
+                }
             });
         });
 

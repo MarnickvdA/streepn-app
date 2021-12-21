@@ -44,10 +44,9 @@ export class LoginPage implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.isIos = Capacitor.getPlatform() === 'ios';
+        this.isIos = Capacitor.getPlatform() === 'ios' || true;
 
-        this.eventsService
-            .subscribe('auth:login', this.loginHandler);
+        this.eventsService.subscribe('auth:login', this.loginHandler);
 
         // this.storage.delete('hasOnboarded');
         this.storage.delete('pushToken');
@@ -102,7 +101,6 @@ export class LoginPage implements OnInit, OnDestroy {
     }
 
     async loginWithApple() {
-
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.login') + '...',
             backdropDismiss: false,
