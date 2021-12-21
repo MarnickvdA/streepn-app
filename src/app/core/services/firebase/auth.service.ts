@@ -193,4 +193,19 @@ export class AuthService {
             photoURL: photoUrl
         });
     }
+
+    requestPasswordReset(email: string) {
+        return this.auth.sendPasswordResetEmail(email)
+            .catch((error) => {
+                const errorCode = error.code;
+                return Promise.reject(errorCode);
+            })
+    }
+
+    resetPassword(resetCode: string, password: string) {
+        return this.auth.confirmPasswordReset(resetCode, password)
+            .catch((error) => {
+                return Promise.reject(error.code);
+            })
+    }
 }

@@ -74,11 +74,9 @@ export class ProfilePage implements OnInit {
     }
 
     updateEmail() {
-
     }
 
     updatePassword() {
-
     }
 
     takePicture(userId: string) {

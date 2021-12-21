@@ -93,6 +93,7 @@ export class OverviewPage implements OnInit, OnDestroy {
                             this.houseService.renewInviteLink(this.house.id, this.house.name, this.house.inviteLink)
                                 .then((inviteLink) => {
                                     this.inviteLink = inviteLink;
+                                    this.inviteLinkExpired = false;
                                     this.shareHouse();
                                 })
                                 .finally(() => {
