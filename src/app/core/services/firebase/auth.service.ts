@@ -61,9 +61,9 @@ export class AuthService {
 
     register(displayName: string, email: string, password: string) {
         return this.auth.createUserWithEmailAndPassword(email, password)
-            .then(data => {
+            .then(async data => {
                 this.analytics.logUserRegister();
-                this.setUserProfile(data.user, displayName);
+                await this.setUserProfile(data.user, displayName);
 
                 return data.user.uid;
             }).then((id) => {

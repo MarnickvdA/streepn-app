@@ -24,7 +24,8 @@ export class RegisterPage implements OnInit, OnDestroy {
         this.registerForm = this.formBuilder.group({
             name: ['', [Validators.required]],
             email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required]]
+            password: ['', [Validators.required]],
+            passwordRepeat: ['', [Validators.required]],
         });
 
         this.registerHandler = () => {
@@ -52,6 +53,17 @@ export class RegisterPage implements OnInit, OnDestroy {
             return;
         }
 
+        if (this.form.password.value !== this.form.passwordRepeat.value) {
+            this.form.passwordRepeat.setErrors({
+                noMatch: true
+            });
+            return;
+        } else {
+            this.form.passwordRepeat.setErrors({
+                noMatch: false
+            });
+        }
+
         const loading = await this.loadingController.create({
             message: this.translate.instant('actions.register') + '...',
             backdropDismiss: false,
@@ -60,7 +72,7 @@ export class RegisterPage implements OnInit, OnDestroy {
         await loading.present();
 
         this.authService.register(this.registerForm.controls.name.value, this.registerForm.controls.email.value,
-            this.registerForm.controls.password.value)
+                this.registerForm.controls.password.value)
             .catch(errorCode => {
                 switch (errorCode) {
                     case 'auth/email-already-in-use':

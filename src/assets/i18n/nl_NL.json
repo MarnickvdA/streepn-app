@@ -98,6 +98,7 @@
     "name": "Naam",
     "email": "E-mailadres",
     "password": "Wachtwoord",
+    "password-repeat": "Herhaal wachtwoord",
     "termsAndConditions": "Algemene voorwaarden",
     "privacyStatement": "Privacyverklaring",
     "registerAcceptance": "Door je te registreren ga je akkoord met de ",
@@ -113,6 +114,7 @@
       "user-disabled": "Deze login is geblokkeerd",
       "user-not-found": "Deze login is niet bij ons bekend",
       "wrong-password": "Onjuist wachtwoord",
+      "non-matching-password": "Wachtwoorden komen niet overeen",
       "unknown-login": "Het is niet gelukt om je in te loggen. Probeer het nog eens.",
       "unknown-register": "Het is niet gelukt om je in te registeren. Probeer het nog eens of neem contact op met support."
     },

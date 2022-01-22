@@ -21,7 +21,7 @@
 
             <ion-item class="form-input" lines="none">
                 <ion-icon name="person-outline"></ion-icon>
-                <ion-input [tabIndex]="0" autocapitalize="words" autocomplete="given-name" clearInput
+                <ion-input [tabIndex]="0" autocapitalize="words" autocomplete="given-name"
                            enterkeyhint="next" formControlName="name"
                            inputmode="text" placeholder="{{'login.name' | translate}}" type="text"></ion-input>
             </ion-item>
@@ -31,7 +31,7 @@
 
             <ion-item class="form-input ion-margin-top" lines="none">
                 <ion-icon name="mail-outline"></ion-icon>
-                <ion-input [tabIndex]="1" autocomplete="email" clearInput enterkeyhint="next" formControlName="email"
+                <ion-input [tabIndex]="1" autocomplete="email" enterkeyhint="next" formControlName="email"
                            inputmode="email" placeholder="{{'login.email' | translate}}" type="email"></ion-input>
             </ion-item>
             <span *ngIf="isSubmitted && form.email.errors?.required" class="form-input-error">
@@ -46,7 +46,7 @@
 
             <ion-item class="form-input ion-margin-top" lines="none">
                 <ion-icon name="key-outline"></ion-icon>
-                <ion-input [tabIndex]="2" autocomplete="current-password" clearInput enterkeyhint="go"
+                <ion-input [tabIndex]="2"
                            formControlName="password" placeholder="{{'login.password' | translate}}"
                            type="password"></ion-input>
             </ion-item>
@@ -57,7 +57,20 @@
                 {{'login.errors.weak-password' | translate}}
             </span>
 
-            <ion-button [tabIndex]="3" expand="block" type="submit">
+            <ion-item class="form-input ion-margin-top" lines="none">
+                <ion-icon name="key-outline"></ion-icon>
+                <ion-input [tabIndex]="3" enterkeyhint="go"
+                           formControlName="passwordRepeat" placeholder="{{'login.password-repeat' | translate}}"
+                           type="password"></ion-input>
+            </ion-item>
+            <span *ngIf="isSubmitted && form.passwordRepeat.errors?.required" class="form-input-error">
+                {{'login.errors.password-required' | translate}}
+            </span>
+            <span *ngIf="isSubmitted && form.passwordRepeat.errors?.noMatch" class="form-input-error">
+                {{'login.errors.non-matching-password' | translate}}
+            </span>
+
+            <ion-button [tabIndex]="4" expand="block" type="submit">
                 <ion-label>{{'actions.register' | translate}}</ion-label>
             </ion-button>
         </form>
