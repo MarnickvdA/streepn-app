@@ -12,6 +12,7 @@ import {
     StockService,
     StorageService,
     TransactionService,
+    AdvertisementService
 } from '@core/services';
 import {AngularFireModule} from '@angular/fire';
 import {environment} from '@env/environment';
@@ -43,6 +44,7 @@ export const services = [
     ProductService,
     StockService,
     SettlementService,
+    AdvertisementService
 ];
 
 @NgModule({

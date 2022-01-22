@@ -1,20 +1,25 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {HouseService} from '@core/services';
+import {AdvertisementService, HouseService} from '@core/services';
 import {Observable, Subscription} from 'rxjs';
 import {House} from '@core/models';
+import {AdvertisementItem} from '@core/models/advertisement';
+import { Browser } from '@capacitor/browser';
+import {ViewDidEnter, ViewWillEnter} from '@ionic/angular';
 
 @Component({
     selector: 'app-house-deals',
     templateUrl: './deals.page.html',
     styleUrls: ['./deals.page.scss'],
 })
-export class DealsPage implements OnInit, OnDestroy {
+export class DealsPage implements OnInit, OnDestroy, ViewDidEnter {
 
     house$: Observable<House>;
     house?: House;
+    advertisements: AdvertisementItem[];
     private houseSub: Subscription;
 
-    constructor(private houseService: HouseService) {
+    constructor(private houseService: HouseService,
+                private adsService: AdvertisementService) {
     }
 
     ngOnInit() {
@@ -28,9 +33,18 @@ export class DealsPage implements OnInit, OnDestroy {
         this.houseSub.unsubscribe();
     }
 
+    ionViewDidEnter() {
+        this.adsService.getAdvertisements()
+            .then((items) => this.advertisements = items);
+    }
+
     fakePull($event) {
         setTimeout(() => {
             $event.target.complete();
         }, 350);
+    }
+
+    async openUrl(ctaUrl: string) {
+        await Browser.open({ url: ctaUrl });
     }
 }

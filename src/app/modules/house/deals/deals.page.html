@@ -3,7 +3,8 @@
         <ion-buttons slot="start">
             <ion-menu-toggle>
                 <ion-button>
-                    <fa-duotone-icon [icon]="['fad', 'bars']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
+                    <fa-duotone-icon [icon]="['fad', 'bars']" class="primary" [fixedWidth]="true"
+                                     slot="start"></fa-duotone-icon>
                 </ion-button>
             </ion-menu-toggle>
         </ion-buttons>
@@ -18,7 +19,7 @@
         </ion-toolbar>
     </ion-header>
 
-    <div class="soon-container">
+    <div class="soon-container" *ngIf="!advertisements || advertisements.length === 0">
         <ion-img src="assets/svg/groceries.svg"></ion-img>
         <ion-label>
             <p>
@@ -26,4 +27,27 @@
             </p>
         </ion-label>
     </div>
+
+    <ion-list class="deals-list" *ngIf="advertisements?.length > 0">
+        <div class="card" *ngFor="let ad of advertisements">
+            <div class="card-header">
+                <img class="header-image" src="{{ad.imageUrl}}" alt="Ad Image">
+                <div class="header-text">
+                    <span class="subheader">{{ad.subheader | uppercase}}</span>
+                    <span class="header">{{ad.header}}</span>
+                </div>
+            </div>
+
+            <p class="card-content" [innerHTML]="ad.shortDescription"></p>
+
+            <div class="card-footer" [ngClass]="ad.visibleUntil ? '' : 'align-end'">
+                <span class="date" *ngIf="ad.visibleUntil">
+                    <fa-duotone-icon [icon]="['fad', 'clock']" class="primary" [fixedWidth]="true"
+                                     slot="start"></fa-duotone-icon>
+                    Loopt tot {{ad.visibleUntil | moment:'date' }}
+                </span>
+                <ion-button size="small" fill="outline" (click)="openUrl(ad.ctaUrl)">{{ad.cta}}</ion-button>
+            </div>
+        </div>
+    </ion-list>
 </ion-content>

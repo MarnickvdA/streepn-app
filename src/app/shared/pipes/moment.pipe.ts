@@ -12,13 +12,17 @@ export class MomentPipe implements PipeTransform {
     }
 
     transform(value: Timestamp, ...args: unknown[]): string {
+        if (args.length > 0 && args[0] === 'date') {
+            return format(value.toDate(), 'dd-MM-yyyy');
+        }
+
         if (differenceInHours(Date.now(), value.toDate()) > 3) {
             return 'Op ' + format(value.toDate(), 'HH:mm dd-MM-yyyy');
-        } else {
-            return formatDistanceToNow(value.toDate(), {
-                addSuffix: true,
-                locale: nl
-            });
         }
+
+        return formatDistanceToNow(value.toDate(), {
+            addSuffix: true,
+            locale: nl
+        });
     }
 }

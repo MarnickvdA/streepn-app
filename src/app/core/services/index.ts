@@ -17,3 +17,4 @@ export {AccountService} from './api/account.service';
 export {StockService} from './api/stock.service';
 export {ProductService} from './api/product.service';
 export {HouseService} from './api/house.service';
+export {AdvertisementService} from './api/advertisement.service';
