@@ -44,7 +44,7 @@ export class LoginPage implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.isIos = Capacitor.getPlatform() === 'ios' || true;
+        this.isIos = Capacitor.getPlatform() === 'ios';
 
         this.eventsService.subscribe('auth:login', this.loginHandler);
 
