@@ -40,7 +40,6 @@ export const dealsConverter: FirestoreDataConverter<Deal> = {
     toFirestore: (deal: Deal) => ({}),
     fromFirestore: (snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Deal => {
         const data = snapshot.data(options);
-        console.log(data);
         return newDeal(snapshot.id, data);
     },
 };

@@ -37,8 +37,7 @@ export class DealsPage implements OnInit, OnDestroy, ViewDidEnter {
     ionViewDidEnter() {
         this.analyticsService.logDealsPageView();
         this.dealsService.getDeals()
-            .then((items) => this.deals = items)
-            .finally(() => console.log(this.deals));
+            .then((items) => this.deals = items);
     }
 
     fakePull($event) {
