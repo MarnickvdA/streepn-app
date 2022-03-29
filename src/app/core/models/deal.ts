@@ -5,7 +5,8 @@ import firebase from 'firebase/app';
 require('firebase/firestore'); // Required for accessing Timestamp functions
 import TimestampFn = firebase.firestore.Timestamp;
 
-export interface AdvertisementItem {
+export interface DealItem {
+    id: string;
     priority: number;
     createdAt: Timestamp;
     visibleFrom: Timestamp;
@@ -17,13 +18,14 @@ export interface AdvertisementItem {
     description: string;
     cta: string; // Call to Action
     ctaUrl: string;
+    type: string;
 }
 
-export class Advertisement {
+export class Deal {
     readonly id: string;
-    items: AdvertisementItem[];
+    items: DealItem[];
 
-    constructor(id: string, items: AdvertisementItem[]) {
+    constructor(id: string, items: DealItem[]) {
         this.id = id;
         this.items = [...items]
             .sort((a, b) => a.priority < b.priority ? 0 : 1)
@@ -34,12 +36,13 @@ export class Advertisement {
     }
 }
 
-export const advertisementConverter: FirestoreDataConverter<Advertisement> = {
-    toFirestore: (advertisement: Advertisement) => ({}),
-    fromFirestore: (snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Advertisement => {
+export const dealsConverter: FirestoreDataConverter<Deal> = {
+    toFirestore: (deal: Deal) => ({}),
+    fromFirestore: (snapshot: DocumentSnapshot<any>, options: SnapshotOptions): Deal => {
         const data = snapshot.data(options);
-        return newAdvertisement(snapshot.id, data);
+        console.log(data);
+        return newDeal(snapshot.id, data);
     },
 };
 
-export const newAdvertisement = (id: string, data: { [key: string]: any }): Advertisement => new Advertisement(id, data.items);
+export const newDeal = (id: string, data: { [key: string]: any }): Deal => new Deal(id, data.items);

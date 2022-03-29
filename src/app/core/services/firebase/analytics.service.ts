@@ -64,16 +64,34 @@ export class AnalyticsService {
         });
     }
 
-    logEvent(event: string, data?: { [key: string]: any }) {
-        if (AnalyticsService.isAnalyticsAvailable()) {
-            FirebaseAnalytics.logEvent({
-                name: event,
-                params: data,
-            });
-        }
+    logDealsPageView() {
+        this.logEvent('view_deals_page');
+    }
+
+    logClickDeal(dealsId: string) {
+        this.logEvent('deals_click', {
+            deals_id: dealsId
+        });
     }
 
     logProfilePhotoChange() {
         this.logEvent('profile_picture_changed');
+    }
+
+    logEvent(event: string, data?: { [key: string]: any }) {
+        if (AnalyticsService.isAnalyticsAvailable()) {
+            let options = {
+                name: event,
+                params: data,
+            };
+
+            Object.keys(options).forEach(key => {
+                if (options[key] === undefined) {
+                    delete options[key];
+                }
+            });
+
+            FirebaseAnalytics.logEvent(options);
+        }
     }
 }

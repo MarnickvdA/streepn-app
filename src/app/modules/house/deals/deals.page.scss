@@ -23,10 +23,30 @@
 .card {
   margin: 16px;
   background: var(--color-neutral-100);
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
   transition: 0.3s;
   border-radius: 5px;
   overflow: hidden;
+
+  &.card-hero {
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+
+    .card-footer {
+      position: absolute;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      justify-content: flex-end;
+      align-items: flex-end;
+
+      ion-button {
+        --background: var(--color-neutral-100);
+      }
+    }
+  }
 }
 
 .card-header {

@@ -1,22 +1,22 @@
 import {Injectable} from '@angular/core';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {LoggerService} from '@core/services';
-import {advertisementConverter, AdvertisementItem} from '@core/models/advertisement';
+import {dealsConverter, DealItem} from '@core/models/deal';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AdvertisementService {
-    private readonly logger = LoggerService.getLogger(AdvertisementService.name);
+export class DealsService {
+    private readonly logger = LoggerService.getLogger(DealsService.name);
 
     constructor(private fs: AngularFirestore) {
     }
 
-    getAdvertisements(): Promise<AdvertisementItem[]> {
-        return this.fs.collection('advertisements')
+    getDeals(): Promise<DealItem[]> {
+        return this.fs.collection('deals')
             .doc('v1')
             .ref
-            .withConverter(advertisementConverter)
+            .withConverter(dealsConverter)
             .get()
             .then(querySnapshot => {
                 if (querySnapshot.exists) {
@@ -26,7 +26,7 @@ export class AdvertisementService {
                 }
             })
             .catch(err => {
-                this.logger.error({message: 'getAdvertisements', error: err});
+                this.logger.error({message: 'getDeals', error: err});
                 return [];
             });
     }
