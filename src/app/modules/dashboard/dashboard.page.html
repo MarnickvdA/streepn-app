@@ -3,11 +3,12 @@
         <ion-buttons slot="start">
             <ion-menu-toggle>
                 <ion-button>
-                    <fa-duotone-icon [icon]="['fad', 'bars']" class="primary" [fixedWidth]="true" slot="start"></fa-duotone-icon>
+                    <fa-duotone-icon [icon]="['fad', 'bars']" class="primary" [fixedWidth]="true"
+                                     slot="start"></fa-duotone-icon>
                 </ion-button>
             </ion-menu-toggle>
         </ion-buttons>
-        <ion-title>{{'dashboard.welcome' | translate:{name: (user$ | async)?.displayName } }}</ion-title>
+        <ion-title>{{'dashboard.welcome' | translate:{name: (user$ | async)?.displayName} }}</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="openInfo()">
                 <fa-duotone-icon [icon]="['fad', 'info-circle']" class="primary" [fixedWidth]="true"
@@ -20,7 +21,8 @@
 <ion-content>
     <ion-header collapse="condense">
         <ion-toolbar>
-            <ion-title size="large">{{'dashboard.welcome' | translate:{name: (user$ | async)?.displayName } }}</ion-title>
+            <ion-title
+                    size="large">{{'dashboard.welcome' | translate:{name: (user$ | async)?.displayName} }}</ion-title>
         </ion-toolbar>
     </ion-header>
 
@@ -39,6 +41,14 @@
                 </p>
             </ion-label>
         </ion-item>
+
+        <div class="eol-warning">
+            <ion-icon name="warning-outline"></ion-icon>
+            <div class="eol-text">
+                <h4>{{'eol.title' | translate }}</h4>
+                <p [innerHTML]="'eol.description' | translate "></p>
+            </div>
+        </div>
 
         <ion-list-header lines="full">
             <ion-label>{{'dashboard.houses' | translate}}</ion-label>

@@ -1,7 +1,7 @@
 {
   "name": "streepn",
   "description": "Dé digitale streeplijst",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "author": "Streepn B.V.",
   "homepage": "https://streepn.nl",
   "scripts": {

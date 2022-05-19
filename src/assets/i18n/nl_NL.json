@@ -53,6 +53,10 @@
     "uploading": "Aan het uploaden...",
     "loggingOut": "Uitloggen..."
   },
+  "eol": {
+    "title": "Wij gaan stoppen 🥺",
+    "description": "Met spijt moeten we mededelen dat wij per <b>1 juli onze dienst Streepn stoppen</b>. Wij hopen dat je onze dienst met veel plezier hebt kunnen gebruiken. Zorg ervoor dat je voor 1 juli al je verrekeningen hebt gedaan binnen je studentenhuis!"
+  },
   "date": {
     "at": "Op {{date}}"
   },
